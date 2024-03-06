@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('./assets/styles/layout.css');
+@import url('./assets/styles/navbar.css');
+@import url('./assets/styles/shopping-cart.css');
+
+@import url('./assets/styles/responsive.css');

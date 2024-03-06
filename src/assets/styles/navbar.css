@@ -1,0 +1,103 @@
+header.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #22292F;
+}
+
+nav.desktop {
+  display: none;
+}
+
+nav.mobile {
+  display: flex;
+  justify-content: center;
+  padding: 0 1em;
+  background-color: #3d3d3d;
+  width: 100%;
+}
+
+nav.mobile ul.navbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.5s;
+}
+
+a.title-icon::before,
+p.nav-icon::before,
+a.nav-icon::before {
+  display: inline-block;
+  font-family: FontAwesome;
+  padding-right: 0.3em;
+}
+
+a.title-icon.store::before {
+  content: "\f54e";
+  /* font-size: 3em; */
+}
+
+a.nav-icon.user::before {
+  content: "\f2bd";
+}
+
+a.nav-icon.home::before {
+  content: "\f015";
+}
+
+a.nav-icon.list:before {
+  content: "\f03a";
+}
+
+a.nav-icon.basket:before {
+  content: "\f291";
+}
+
+p.nav-icon.menu:before {
+  content: "\f0c9";
+}
+
+div.site-title,
+a.title-icon,
+p.nav-icon,
+a.nav-icon {
+  color: #5270FF;
+  border: 1px solid rgba(55, 255, 15, 0.001);
+}
+
+a.title-icon:hover,
+a.title-icon:focus,
+p.nav-icon:hover,
+p.nav-icon:focus,
+a.nav-icon:hover,
+a.nav-icon:focus {
+  border: 1px solid #5cb85c;
+  border-radius: 0.2em;
+  color: #fff;
+  outline: none;
+}
+
+div.site-title {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+div.site-title:active,
+p.nav-icon:active,
+a.nav-icon:active {
+  filter: blur(1px);
+}
+
+#check-box {
+  display: none;
+}
+
+#check-box:checked ~ nav.mobile ul.navbar {
+  max-height: 100px;
+  transition: all 0.5s;
+}

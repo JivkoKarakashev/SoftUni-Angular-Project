@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+html {
+    box-sizing: border-box;
+    font: 14px/1.5 "Montserrat Alternates", sans-serif;
+}
+
+body, table, input {
+    font: inherit;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+   font-weight: normal;
+   padding: 0;
+   margin: 0 0 0.3em 0;
+   line-height: 1.2;
+}
+
+h1 { font-size: 2.8em; } /* 14 * 2.8 = 39px */
+h2 { font-size: 2.2em; } /* 14 * 2.2 = 31px */
+h3 { font-size: 1.8em; } /* 14 * 1.8 = 25px */
+h4 { font-size: 1.6em; } /* 14 * 1.6 = 22px */
+h5 { font-size: 1.2em; } /* 14 * 2.2 = 17px */
+h6 { font-size: 1.0em; } /* 14 * 1.0 = 14px */
+
+p, ul, ol {
+    /* padding-bottom: 1.5em; */
+}
+
+ul, ol {
+    /* padding-left: 1.6em; */
+}
+
+li {
+    list-style-position: outside;
+    list-style-type: none;
+}
+
+div.site-container {
+    display: flex;
+    flex-direction: column;
+}
+
+[class*='section'] {
+    padding: 1em;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+

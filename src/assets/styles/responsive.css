@@ -1,0 +1,44 @@
+@media screen and (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+
+    div.drop-down,
+    section.nav-wrapper {
+        display: none;
+    }
+
+    nav.desktop,
+    nav.desktop ul.navbar {
+        display: flex;
+    }
+
+    nav.desktop ul.navbar {
+        gap: 1em;
+    }
+
+    a.title-icon,
+    a.nav-icon {
+        font-size: 0.8em;
+    }
+
+    div.modal {
+        padding-top: 56px;
+    }
+
+}
+
+@media screen and (min-width: 1100px) {
+    html {
+        font-size: 18px;
+    }
+
+    a.title-icon,
+    a.nav-icon {
+        font-size: 0.8em;
+    }
+
+    div.modal {
+        padding-top: 63px;
+    }
+}
