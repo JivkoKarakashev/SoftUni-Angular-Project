@@ -14,12 +14,12 @@ export function mobileModal() {
     const mobileCloseBtn: HTMLElement | null = document.querySelector('.mobile div.close');
 
     // When the user clicks the button, open the modal
-    if (mobileOpenBtn) {        
-        mobileOpenBtn.onclick = () => {
+    if (mobileOpenBtn) {
+        mobileOpenBtn.addEventListener('click', () => {
             if (mobileModal) {
-                mobileModal.style.display = 'block';                
+                mobileModal.style.display = 'block';
             }
-    
+
             const checkItAll: MyHTMLElement | null = document.querySelector('.mobile div.modal-body input#mobile-select_all');
             const table: HTMLElement | null = document.querySelector('.mobile table.table.table-borderless');
             const subTotalEl: Element | undefined = document.querySelector('.mobile .modal-content .modal-body .table tbody>tr.subtotal')?.children[1];
@@ -41,15 +41,15 @@ export function mobileModal() {
                                 input.checked = false;
                             });
                         }
-                    });                    
-                } 
+                    });
+                }
             }
-    
+
             const removeItemBtn: HTMLElement | null = document.querySelector('.mobile .modal-content .modal-body .header>input.remove-item');
             if (removeItemBtn) {
-                removeItemBtn.addEventListener('click', removeSelected);                
+                removeItemBtn.addEventListener('click', removeSelected);
             }
-    
+
             function removeSelected() {
                 // const checked = inputs.filter((item) => item.checked == true);
                 if (table && checkItAll) {
@@ -60,12 +60,12 @@ export function mobileModal() {
                     rows = Array.from(table.querySelectorAll('.mobile .modal-content .modal-body .table thead>tr'));
                     // console.log(rows);
                     if (rows.length != 0) {
-                        return cartCalc();            
-                    }                    
+                        return cartCalc();
+                    }
                 }
                 if (subTotalEl && totalEl) {
                     subTotalEl.textContent = '$0.00';
-                    totalEl.textContent = '$0.00';                    
+                    totalEl.textContent = '$0.00';
                 }
             }
             function cartCalc() {
@@ -79,22 +79,22 @@ export function mobileModal() {
                         subTotalEl.textContent = `$${subTotal}`;
                         const sumTotal = (Number(subTotal) + shipping - discount).toFixed(2);
                         // console.log(sumTotal);
-                        totalEl.textContent = `$${sumTotal}`;                        
+                        totalEl.textContent = `$${sumTotal}`;
                     }
                 }
             }
-        };
+        });
     }
 
     // When the user clicks on <span> (x), close the modal
     if (mobileCloseBtn && mobileModal) {
-        mobileCloseBtn.onclick = () => mobileModal.style.display = 'none';        
+        mobileCloseBtn.addEventListener('click', () => mobileModal.style.display = 'none');
     }
 
     // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (e) {
+    window.addEventListener('click', (e) => {
         if (mobileModal && e.target == mobileModal) {
             mobileModal.style.display = 'none';
         }
-    }
+    });
 }

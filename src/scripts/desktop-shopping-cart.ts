@@ -15,11 +15,11 @@ export function desktopModal() {
 
     // When the user clicks the button, open the modal 
     if (desktopOpenBtn) {
-        desktopOpenBtn.onclick = () => {
+        desktopOpenBtn.addEventListener('click', () => {
             if (desktopModal) {
-                desktopModal.style.display = 'block';                
+                desktopModal.style.display = 'block';
             }
-    
+
             const checkItAll: MyHTMLElement | null = document.querySelector('.desktop div.modal-body input#desktop-select_all');
             const table: HTMLElement | null = document.querySelector('.desktop table.table.table-borderless');
             const subTotalEl: Element | undefined = document.querySelector('.desktop .modal-content .modal-body .table tbody>tr.subtotal')?.children[1];
@@ -41,15 +41,15 @@ export function desktopModal() {
                                 input.checked = false;
                             });
                         }
-                    });                
+                    });
                 }
-            }            
-    
+            }
+
             const removeItemBtn: HTMLElement | null = document.querySelector('.desktop .modal-content .modal-body .header>input.remove-item');
             if (removeItemBtn) {
-                removeItemBtn.addEventListener('click', removeSelected);                
+                removeItemBtn.addEventListener('click', removeSelected);
             }
-    
+
             function removeSelected() {
                 // const checked = inputs.filter((item) => item.checked == true);
                 if (table && checkItAll) {
@@ -61,40 +61,40 @@ export function desktopModal() {
                     // console.log(rows);
                     if (rows.length != 0) {
                         return cartCalc();
-                    }                    
+                    }
                 }
                 if (subTotalEl && totalEl) {
                     subTotalEl.textContent = '$0.00';
-                    totalEl.textContent = '$0.00';                    
+                    totalEl.textContent = '$0.00';
                 }
             }
             function cartCalc() {
                 if (table) {
                     const rows: HTMLElement[] = Array.from(table.querySelectorAll('.desktop .modal-content .modal-body .table thead>tr'));
                     const values = rows.map((item) => Number(item?.children[4].textContent?.split('$')[1]));
-                    const subTotal = values.reduce((acc, currV) => acc += currV).toFixed(2);                    
+                    const subTotal = values.reduce((acc, currV) => acc += currV).toFixed(2);
                     const shipping = Number((document.querySelector('.desktop .modal-content .modal-body .table tbody>tr.shipping')?.children[1].textContent as string).split('$')[1]);
                     const discount = Number((document.querySelector('.desktop .modal-content .modal-body .table tbody>tr.discount')?.children[1].textContent as string).split('-$')[1]);
                     if (subTotalEl && totalEl) {
                         subTotalEl.textContent = `$${subTotal}`;
                         const sumTotal = (Number(subTotal) + shipping - discount).toFixed(2);
                         // console.log(sumTotal);
-                        totalEl.textContent = `$${sumTotal}`;                        
+                        totalEl.textContent = `$${sumTotal}`;
                     }
                 }
             }
-        };
+        });
     }
 
     // When the user clicks on <span> (x), close the modal
     if (desktopCloseBtn && desktopModal) {
-        desktopCloseBtn.onclick = () => desktopModal.style.display = 'none';        
+        desktopCloseBtn.addEventListener('click', () => desktopModal.style.display = 'none');
     }
 
     // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (e) {
+    window.addEventListener('click', (e) => {
         if (desktopModal && e.target == desktopModal) {
             desktopModal.style.display = 'none';
         }
-    }
+    });
 }
