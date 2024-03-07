@@ -52,7 +52,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": ["src/scripts/shopping-cart.js"]
+            "scripts": []
           },
           "configurations": {
             "production": {

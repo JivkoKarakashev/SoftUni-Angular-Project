@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as modal from '../../../scripts/shopping-cart.js';
+import { desktopModal } from '../../../scripts/desktop-shopping-cart';
 
 @Component({
   selector: 'app-header-desktop',
@@ -8,6 +8,6 @@ import * as modal from '../../../scripts/shopping-cart.js';
 })
 export class HeaderDesktopComponent implements OnInit {
   ngOnInit(): void {
-    modal.modal();
+    desktopModal();
   }
 }
