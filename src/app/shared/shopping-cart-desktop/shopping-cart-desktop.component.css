@@ -1,0 +1,7 @@
+.modal-is-shown {
+    display: block;
+}
+
+.modal-isNot-shown {
+    display: none;
+}
