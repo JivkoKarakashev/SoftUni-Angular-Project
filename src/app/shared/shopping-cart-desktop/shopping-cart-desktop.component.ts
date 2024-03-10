@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren, asNativeElements } from '@angular/core';
 
 interface item {
   id: string,
@@ -57,6 +57,8 @@ export class ShoppingCartDesktopComponent implements AfterViewInit {
   constructor() { }
 
   @Input() public curStatus: boolean = false;
+  @ViewChild('modal') private modal!: ElementRef;
+  @ViewChild('closeBtn') private closeBtn!: ElementRef;
   @ViewChildren('inputs') private inputs!: QueryList<ElementRef>;
   @ViewChildren('rows') private rows!: QueryList<ElementRef>;
   @ViewChild('checkItAll') private checkItAll!: ElementRef;
@@ -70,7 +72,7 @@ export class ShoppingCartDesktopComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     // console.log(this.modalToggle);
-    
+
     // console.log(this.inputs.toArray());
     // console.log(this.rows.toArray());
     // console.log(this.checkItAll.nativeElement);
@@ -114,11 +116,9 @@ export class ShoppingCartDesktopComponent implements AfterViewInit {
     });
     // console.log(this.listItems$);
     // console.log(this.rows);
-
     this.checkItAll.nativeElement.checked = false;
-    this.subTotalEl.nativeElement.textContent = '$0.00';
-    this.totalEl.nativeElement.textContent = '$0.00';
   }
+  
   cartCalc() {
 
     const values = this.listItems$.map(item => item.price);
@@ -132,8 +132,15 @@ export class ShoppingCartDesktopComponent implements AfterViewInit {
     this.totalEl.nativeElement.textContent = `$${sumTotal}`;
   }
 
-  callParent(): void {
-    this.toggleModal.emit();
+  callParent(event: Event): void {
+    event.stopPropagation();
+    const target = event.target as HTMLElement;
+    // console.log(event.target == this.desktopModal.nativeElement);
+    // console.log(event.target == this.closeBtn.nativeElement);
+    // console.log(target);    
+    if (target == this.modal.nativeElement || target == this.closeBtn.nativeElement) {
+      this.toggleModal.emit();
+    }
   }
 
 }

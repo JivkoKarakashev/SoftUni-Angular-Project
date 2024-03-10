@@ -7,10 +7,10 @@
             <li><a class="nav-icon list" href="/category.html">Category</a></li>
             <li>
                 <!-- Trigger/Open The Modal -->
-                <a class="nav-icon basket" href="javascript:void(0)">Cart</a>
+                <a class="nav-icon basket" href="javascript:void(0)" (click)="modalToggle()">Cart</a>
             </li>
             <!-- The Modal -->
-            <app-shopping-cart-mobile></app-shopping-cart-mobile>
+            <app-shopping-cart-mobile #modal  [curStatus]="isShown" (closeModal)="modalToggle()"></app-shopping-cart-mobile>
         </ul>
     </nav>
 </section>

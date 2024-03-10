@@ -1,284 +1,54 @@
 <!-- The Modal -->
 <li class="li-modal">
-    <div class="modal">
+    <div class="modal" #modal (click)="callParent($event)" [ngClass]="curStatus === true ? 'modal-is-shown' : 'modal-isNot-shown'">
         <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
                 <div class="btn-wrapper close">
-                    <span class="btn close-btn">&times;</span>
+                    <span #closeBtn (click)="callParent($event)" class="btn close-btn">&times;</span>
                 </div>
                 <h2>Shopping Cart</h2>
             </div>
             <div class="modal-body">
                 <section class="header">
                     <label for="mobile-select_all">Select all items</label>
-                    <input type="checkbox" id="mobile-select_all" name="mobile-select_all" value="1">
+                    <input #checkItAll (change)="toggleSelect()" type="checkbox" id="mobile-select_all" name="mobile-select_all" value="1">
                     <!-- <label for="remove-item">Remove selected</label> -->
-                    <input type="button" id="remove-item" name="remove-item" class="remove-item" value="Remove selected">
+                    <input (click)="removeSelected()" type="button" id="remove-item" name="remove-item" class="remove-item" value="Remove selected">
                 </section>
 
                 <section class="table">
-                    <table class="table table-borderless">
+                    <table #table class="table table-borderless">
                         <thead>
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image1.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
+                            <ng-container *ngFor="let item of listItems$">
+                                <tr #rows>
+                                    <th class="select-row"><input #inputs [id]="item.id" name="select-row" type="checkbox"></th>
+                                    <th class="media">
+                                        <img src="{{item.img}}" alt="image">
+                                    </th>
+                                    <th class="item-description">
+                                        <p>{{item.description}}</p>
+                                        <p>Color: {{item.color}}</p>
+                                    </th>
+                                    <th class="quantity">Quantity:11</th>
+                                    <th class="price">$79.99</th>
+                                </tr>
+                            </ng-container>
 
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image2.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image3.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image4.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image1.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image2.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image3.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image4.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image1.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image2.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image3.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image4.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image1.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image2.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image3.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image4.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image1.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image2.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image3.jpg" alt="image"></th>
-                                <th class="item-description">
-                                    <p>Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</p>
-                                    <p>Color:White</p>
-                                </th>
-                                <th class="quantity">Quantity:11</th>
-                                <th class="price">$79.99</th>
-                            </tr>
-
-                            <tr>
-                                <th class="select-row"><input name="select-row" type="checkbox"></th>
-                                <th class="media">
-                                    <img src="../../../assets/public/static/images/shoes/image4.jpg" alt="image">
-                                </th>
-                                <th class="item-description">
-                                    <p>Smartwatch IP68 Waterproof GPS and Bluetooth Support</p>
-                                    <p>Color:Red</p>
-                                </th>
-                                <th class="quantity">Quantity:4</th>
-                                <th class="price">$17.99</th>
-                            </tr>                                                
                         </thead>
 
                         <tbody>
                             <tr class="subtotal">
                                 <td colspan="2">Subtotal</td>
-                                <td class="amount"></td>
+                                <td #subTotalEl class="amount"></td>
                             </tr>
                             <tr class="shipping">
                                 <td colspan="2">Shipping</td>
-                                <td class="amount">$20.00</td>
+                                <td #shipping class="amount">$20.00</td>
                             </tr>
                             <tr class="discount">
                                 <td colspan="2">Discount (Code: NEWYEAR)</td>
-                                <td class="amount">-$10.00</td>
+                                <td #discount class="amount">-$10.00</td>
                             </tr>
                         </tbody>
 
@@ -287,7 +57,7 @@
             </div>
             <div class="modal-footer">
                 <h3>Total</h3>
-                <p></p>
+                <p #totalEl></p>
             </div>
             <div class="buttons">
                 <a class="button finish" href="javascript:void(0)">Finish</a>

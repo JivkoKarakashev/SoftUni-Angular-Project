@@ -20,11 +20,10 @@ export class HeaderDesktopComponent implements OnInit {
   }
 
   modalToggle(): void {
-    console.log('HERE');    
-    
+    // console.log('HERE');    
     this.isShown = !this.isShown;
     this.modalCartCalc();
-    console.log(this.isShown);    
+    // console.log(this.isShown);    
     // return this.isShown;
   }
 }

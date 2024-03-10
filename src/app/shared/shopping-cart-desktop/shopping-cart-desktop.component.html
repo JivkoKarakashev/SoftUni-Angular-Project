@@ -1,11 +1,11 @@
 <!-- The Modal -->
 <li class="li-modal">
-    <div class="modal" (click)="callParent()" [ngClass]="curStatus === true ? 'modal-is-shown' : 'modal-isNot-shown'">
+    <div class="modal" #modal (click)="callParent($event)" [ngClass]="curStatus === true ? 'modal-is-shown' : 'modal-isNot-shown'">
         <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
-                <div (click)="callParent()" class="btn-wrapper close">
-                    <span class="btn close-btn">&times;</span>
+                <div class="btn-wrapper close">
+                    <span #closeBtn (click)="callParent($event)" class="btn close-btn">&times;</span>
                 </div>
                 <h2>Shopping Cart</h2>
             </div>
@@ -14,8 +14,7 @@
                     <label for="desktop-select_all">Select all items</label>
                     <input #checkItAll (change)="toggleSelect()" type="checkbox" id="desktop-select_all" name="desktop-select_all" value="1">
                     <!-- <label for="remove-item">Remove selected</label> -->
-                    <input (click)="removeSelected()" type="button" id="remove-item" name="remove-item" class="remove-item"
-                        value="Remove selected">
+                    <input (click)="removeSelected()" type="button" id="remove-item" name="remove-item" class="remove-item" value="Remove selected">
                 </section>
 
                 <section class="table">
