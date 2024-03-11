@@ -30,7 +30,7 @@ div.wrapper {
     color: #5270FF;
 }
 
-.wrapper .title h1 {
+.wrapper .title h2 {
     font-weight: bold;
 }
 
@@ -52,7 +52,6 @@ div.wrapper {
     padding-left: 60px;
     border-radius: 5px;
     border: 1px solid lightgrey;
-    font-size: 16px;
     transition: all 0.3s ease;
 }
 
@@ -80,7 +79,6 @@ form .row input::placeholder {
 }
 
 .wrapper form .button input {
-    font-size: 20px;
     font-weight: 500;
     padding-left: 0px;
     background-color: #22292F;

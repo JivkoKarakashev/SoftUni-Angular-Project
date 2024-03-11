@@ -8,13 +8,16 @@ import { SharedModule } from './shared/shared.module';
 import { MainComponent } from './main/main.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserModule } from './user/user.module';
+import { CatalogModule } from './catalog/catalog.module';
+import { HomeComponent } from './home/home.component';
 // import { ShoppingCartDesktopComponent } from './shared/shopping-cart-desktop/shopping-cart-desktop.component';
 // import { ShoppingCartMobileComponent } from './shared/shopping-cart-mobile/shopping-cart-mobile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainComponent
+    MainComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -22,6 +25,7 @@ import { UserModule } from './user/user.module';
     CoreModule,
     SharedModule,
     UserModule,
+    CatalogModule,
     HttpClientModule
   ],
   providers: [],

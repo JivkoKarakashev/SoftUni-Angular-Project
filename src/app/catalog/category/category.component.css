@@ -89,6 +89,24 @@ p.cat-icon.suits::before {
     gap: .3em;
 }
 
+.card .slide.slide2 .content ul li a {
+    border: 1px solid rgba(55, 255, 15, 0.001);
+}
+
+.card .slide.slide2 .content ul li a:hover,
+.card .slide.slide2 .content ul li a:focus {
+    background-color: #22292F;
+    border: 1px solid  #5cb85c;
+    border-radius: 0.2em;
+    color: #fff;
+    outline: none;
+}
+
+.card .slide.slide1 .content .icon:active,
+.card .slide.slide2 .content ul li a:active {
+  filter: blur(1px);
+}
+
 .card .slide.slide2 .content h3,
 .card .slide.slide2 .content p,
 .card .slide.slide2 .content a {

@@ -30,7 +30,7 @@ div.wrapper {
     color: #5270FF;
 }
 
-.wrapper .title h1 {
+.wrapper .title h2 {
     font-weight: bold;
 }
 
@@ -52,17 +52,16 @@ div.wrapper {
     padding-left: 60px;
     border-radius: 5px;
     border: 1px solid lightgrey;
-    font-size: 16px;
     transition: all 0.3s ease;
 }
 
-form .row input:focus {
+.wrapper form .row input:focus {
     border-color: #5cb85c;
     box-shadow: inset 0px 0px 2px 2px rgba(27, 136, 187, 0.25);
     outline: none;
 }
 
-form .row input::placeholder {
+.wrapper form .row input::placeholder {
     color: #616161;
 }
 
@@ -80,7 +79,6 @@ form .row input::placeholder {
 }
 
 .wrapper form .button input {
-    font-size: 20px;
     font-weight: 500;
     padding-left: 0px;
     background-color: #22292F;
@@ -89,8 +87,8 @@ form .row input::placeholder {
     cursor: pointer;
 }
 
-form .button input:hover,
-form .button input:focus {
+.wrapper form .button input:hover,
+.wrapper form .button input:focus {
     color: #fff;
     background: #5cb85c;
     outline: none;

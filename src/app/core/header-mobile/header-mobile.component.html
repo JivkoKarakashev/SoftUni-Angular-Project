@@ -2,10 +2,10 @@
     <input type="checkbox" name="check-box" id="check-box">
     <nav class="mobile">
         <ul class="navbar">
-            <li><a class="nav-icon home" href="../../app.component.html">Home</a></li>
-            <li><a class="nav-icon guest" href="../../login.html">Login</a></li>
-            <li><a class="nav-icon user" href="../../register.html">Register</a></li>
-            <li><a class="nav-icon list" href="../../category.html">Category</a></li>
+            <li><a class="nav-icon home" routerLink="/">Home</a></li>
+            <li><a class="nav-icon guest" routerLink="/login">Login</a></li>
+            <li><a class="nav-icon user" routerLink="/register">Register</a></li>
+            <li><a class="nav-icon list" routerLink="/category">Category</a></li>
             <li>
                 <!-- Trigger/Open The Modal -->
                 <a class="nav-icon basket" href="javascript:void(0)" (click)="modalToggle()">Cart</a>
