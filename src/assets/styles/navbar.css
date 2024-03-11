@@ -42,7 +42,11 @@ a.title-icon.store::before {
 }
 
 a.nav-icon.user::before {
-  content: "\f2bd";
+  content: "\f21b";
+}
+
+a.nav-icon.guest::before {
+  content: "\f508";
 }
 
 a.nav-icon.home::before {

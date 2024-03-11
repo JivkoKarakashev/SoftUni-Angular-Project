@@ -102,7 +102,6 @@ export class ShoppingCartMobileComponent implements AfterViewInit {
   }
   
   cartCalc() {
-
     const values = this.listItems$.map(item => item.price);
     const subTotal = values.reduce((acc, currV) => acc += currV, 0).toFixed(2);
     // console.log(subTotal);

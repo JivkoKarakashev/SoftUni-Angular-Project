@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren, asNativeElements } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
 interface item {
   id: string,
@@ -120,7 +120,6 @@ export class ShoppingCartDesktopComponent implements AfterViewInit {
   }
   
   cartCalc() {
-
     const values = this.listItems$.map(item => item.price);
     const subTotal = values.reduce((acc, currV) => acc += currV, 0).toFixed(2);
     // console.log(subTotal);

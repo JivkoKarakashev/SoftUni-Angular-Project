@@ -4,6 +4,7 @@ import { HeaderDesktopComponent } from './header-desktop/header-desktop.componen
 import { HeaderMobileComponent } from './header-mobile/header-mobile.component';
 import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared/shared.module';
+import { RouterModule } from '@angular/router';
 // import { ShoppingCartDesktopComponent } from '../shared/shopping-cart-desktop/shopping-cart-desktop.component';
 
 
@@ -15,7 +16,7 @@ import { SharedModule } from '../shared/shared.module';
     FooterComponent,
   ],
   imports: [
-    CommonModule, SharedModule
+    CommonModule, SharedModule, RouterModule
   ],
   exports: [HeaderDesktopComponent, HeaderMobileComponent, FooterComponent]
 })
