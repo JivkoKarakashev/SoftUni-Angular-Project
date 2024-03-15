@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { ShoesService } from 'src/app/shoes.service';
 import { Item } from 'src/app/types/item';
+import { ShoesService } from 'src/app/shoes.service';
+import { ShoppingCartService } from '../shopping-cart.service';
 
 @Component({
   selector: 'app-shopping-cart-desktop',
@@ -13,7 +14,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit {
 
   public listItems$: Item[] = [];
 
-  constructor(private render: Renderer2, private shoesService: ShoesService, private location: Location) { }
+  constructor(private render: Renderer2, private shoesService: ShoesService, private location: Location, private cartService: ShoppingCartService) { }
 
   @ViewChild('modal') private modal!: ElementRef;
   @ViewChild('closeBtn') private closeBtn!: ElementRef;
@@ -30,8 +31,11 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit {
   @ViewChild('totalEl') private totalEl!: ElementRef;
 
   ngOnInit(): void {
-    this.shoesService.getShoes().subscribe(s => {
-      this.listItems$ = s;
+    // this.shoesService.getShoes().subscribe(s => {
+    //   this.listItems$ = s;
+    // });
+    this.cartService.getCartItems().subscribe(items => {
+      this.listItems$ = items
     });
   }
 

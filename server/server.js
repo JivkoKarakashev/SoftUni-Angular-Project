@@ -1345,7 +1345,9 @@
                 _id: "-MSbypx-13fHPDyzNRtf",
                 image: "https://cdn.pixabay.com/photo/2016/12/10/16/57/shoes-1897708_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
                 color: ["White", "Black", "Blue", "Red"],
+                brand: "Fusce vel",
                 quantity: 15,
                 price: 47
             },
@@ -1354,7 +1356,9 @@
                 _id: "-MSbz99qxklK-5rZWGmt",
                 image: "https://cdn.pixabay.com/photo/2016/09/02/11/10/boots-1638873_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
                 color: ["Yellow", "Brown"],
+                brand: "Fusce vel",
                 quantity: 10,
                 price: 40
             },
@@ -1363,7 +1367,9 @@
                 _id: "-MSbzSdzWBvBHJN7gdRw",
                 image: "https://cdn.pixabay.com/photo/2014/12/31/11/41/shoes-584850_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
                 color: ["Green", "Gray"],
+                brand: "Fusce vel",
                 quantity: 20,
                 price: 50
             },
@@ -1372,7 +1378,9 @@
                 _id: "-MSbziiMKjPeV03elBfK",
                 image: "https://cdn.pixabay.com/photo/2013/05/31/20/33/running-shoes-115149_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
                 color: ["Pink", "Orange"],
+                brand: "Fusce vel",
                 quantity: 25,
                 price: 33
             },
@@ -1381,7 +1389,9 @@
                 _id: "-MSbzvqGMJAXR1syO-nz",
                 image: "https://cdn.pixabay.com/photo/2016/10/15/23/09/shoe-1743929_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
                 color: ["Beige", "Chartreuse"],
+                brand: "Fusce vel",
                 quantity: 27,
                 price: 21
             },
@@ -1390,7 +1400,9 @@
                 _id: "-MSc-8DwUmBi8NG52eOH",
                 image: "https://cdn.pixabay.com/photo/2016/07/12/13/18/baby-1512018_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
                 color: ["Crimson", "GreenYellow"],
+                brand: "Fusce vel",
                 quantity: 44,
                 price: 56
             }
@@ -1401,6 +1413,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/12/10/16/57/shoes-1897708_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["White", "Black", "Blue", "Red"],
+                brand: "Fusce vel",
                 quantity: 15,
                 price: 47
             },
@@ -1409,6 +1422,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/09/02/11/10/boots-1638873_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Yellow", "Brown"],
+                brand: "Fusce vel",
                 quantity: 10,
                 price: 40
             },
@@ -1417,6 +1431,7 @@
                 image: "https://cdn.pixabay.com/photo/2014/12/31/11/41/shoes-584850_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Green", "Gray"],
+                brand: "Fusce vel",
                 quantity: 20,
                 price: 50
             },
@@ -1425,6 +1440,7 @@
                 image: "https://cdn.pixabay.com/photo/2013/05/31/20/33/running-shoes-115149_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Pink", "Orange"],
+                brand: "Fusce vel",
                 quantity: 25,
                 price: 33
             },
@@ -1433,6 +1449,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/10/15/23/09/shoe-1743929_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Beige", "Chartreuse"],
+                brand: "Fusce vel",
                 quantity: 27,
                 price: 21
             },
@@ -1441,6 +1458,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/07/12/13/18/baby-1512018_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Crimson", "GreenYellow"],
+                brand: "Fusce vel",
                 quantity: 44,
                 price: 56
             },
@@ -1449,6 +1467,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/12/10/16/57/shoes-1897708_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["White", "Black", "Blue", "Red"],
+                brand: "Fusce vel",
                 quantity: 15,
                 price: 47
             },
@@ -1457,6 +1476,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/09/02/11/10/boots-1638873_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Yellow", "Brown"],
+                brand: "Fusce vel",
                 quantity: 10,
                 price: 40
             },
@@ -1465,6 +1485,7 @@
                 image: "https://cdn.pixabay.com/photo/2014/12/31/11/41/shoes-584850_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Green", "Gray"],
+                brand: "Fusce vel",
                 quantity: 20,
                 price: 50
             },
@@ -1473,6 +1494,7 @@
                 image: "https://cdn.pixabay.com/photo/2013/05/31/20/33/running-shoes-115149_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Pink", "Orange"],
+                brand: "Fusce vel",
                 quantity: 25,
                 price: 33
             },
@@ -1481,6 +1503,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/10/15/23/09/shoe-1743929_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Beige", "Chartreuse"],
+                brand: "Fusce vel",
                 quantity: 27,
                 price: 21
             },
@@ -1489,6 +1512,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/07/12/13/18/baby-1512018_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Crimson", "GreenYellow"],
+                brand: "Fusce vel",
                 quantity: 44,
                 price: 56
             },
@@ -1497,6 +1521,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/12/10/16/57/shoes-1897708_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["White", "Black", "Blue", "Red"],
+                brand: "Fusce vel",
                 quantity: 15,
                 price: 47
             },
@@ -1505,6 +1530,7 @@
                 image: "https://cdn.pixabay.com/photo/2016/09/02/11/10/boots-1638873_960_720.jpg",
                 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
                 color: ["Yellow", "Brown"],
+                brand: "Fusce vel",
                 quantity: 10,
                 price: 40
             }

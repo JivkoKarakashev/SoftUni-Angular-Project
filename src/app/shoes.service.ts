@@ -1,18 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Item } from './types/item';
+import { Shoes } from './types/shoes';
 
-const URL = 'http://localhost:3030'
+const URL = 'http://localhost:3030/data/shoes'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoesService {
-  // shoes: Item[] = [];
+  shoes: Shoes[] = [];
 
   constructor(private http: HttpClient) { }
 
   getShoes() {
-    return this.http.get<Item[]>(`${URL}/data/shoes`);
+    return this.http.get<Shoes[]>(URL);
   }
 }

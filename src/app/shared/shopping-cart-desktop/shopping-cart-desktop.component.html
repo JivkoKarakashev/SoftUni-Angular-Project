@@ -49,8 +49,8 @@
                                     </td>
                                     <td class="quantity">
                                         <!-- <form #qtyForm> -->
-                                            <label for="quantity">&#40;between 1 &amp; {{item.quantity}}&#41;</label>
-                                            <input #qty [ngModel]="1"  type="number" id="quantity" name="quantity" min="1" max="{{item.quantity}}">
+                                            <label>&#40;between 1 &amp; {{item.quantity}}&#41;</label>
+                                            <input #qty [ngModel]="1"  type="number" name="quantity" min="1" max="{{item.quantity}}">
                                         <!-- </form> -->
                                     </td>
                                     <td class="price">${{item.price}}</td>
