@@ -1,0 +1,56 @@
+{
+    "-MSbypx-13fHPDyzNRtf": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "-MSbypx-13fHPDyzNRtf",
+        "image": "https://cdn.pixabay.com/photo/2016/12/10/16/57/shoes-1897708_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+		"color": ["White", "Black", "Blue", "Red"],
+		"quantity": 15,
+		"price": 47
+    },
+    "-MSbz99qxklK-5rZWGmt": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "-MSbz99qxklK-5rZWGmt",
+        "image": "https://cdn.pixabay.com/photo/2016/09/02/11/10/boots-1638873_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+		"color": ["Yellow", "Brown"],
+		"quantity": 10,
+		"price": 40
+    },
+    "-MSbzSdzWBvBHJN7gdRw": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "-MSbzSdzWBvBHJN7gdRw",
+        "image": "https://cdn.pixabay.com/photo/2014/12/31/11/41/shoes-584850_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+		"color": ["Green", "Gray"],
+		"quantity": 20,
+		"price": 50
+    },
+    "-MSbziiMKjPeV03elBfK": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "-MSbziiMKjPeV03elBfK",
+        "image": "https://cdn.pixabay.com/photo/2013/05/31/20/33/running-shoes-115149_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+		"color": ["Pink", "Orange"],
+		"quantity": 25,
+		"price": 33
+    },
+    "-MSbzvqGMJAXR1syO-nz": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "-MSbzvqGMJAXR1syO-nz",
+        "image": "https://cdn.pixabay.com/photo/2016/10/15/23/09/shoe-1743929_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+		"color": ["Beige", "Chartreuse"],
+		"quantity": 27,
+		"price": 21
+    },
+    "-MSc-8DwUmBi8NG52eOH": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "-MSc-8DwUmBi8NG52eOH",
+        "image": "https://cdn.pixabay.com/photo/2016/07/12/13/18/baby-1512018_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+		"color": ["Crimson", "GreenYellow"],
+		"quantity": 44,
+		"price": 56
+    }
+}

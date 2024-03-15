@@ -7,10 +7,9 @@
             <li><a class="nav-icon list" routerLink="/category">Category</a></li>
             <li>
                 <!-- Trigger/Open The Modal -->
-                <a class="nav-icon basket" href="javascript:void(0)" (click)="modalToggle()">Cart</a>
+                <a class="nav-icon basket" routerLink="/cart">Cart</a>
             </li>
             <!-- The Modal -->
-            <app-shopping-cart-desktop #modal  [curStatus]="isShown" (closeModal)="modalToggle()"></app-shopping-cart-desktop>
         </ul>
     </nav>
 

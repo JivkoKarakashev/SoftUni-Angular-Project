@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShoppingCartDesktopComponent } from './shopping-cart-desktop/shopping-cart-desktop.component';
 import { ShoppingCartMobileComponent } from './shopping-cart-mobile/shopping-cart-mobile.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -11,7 +12,7 @@ import { ShoppingCartMobileComponent } from './shopping-cart-mobile/shopping-car
     ShoppingCartMobileComponent
   ],
   imports: [
-    CommonModule
+    CommonModule, FormsModule, ReactiveFormsModule
   ],
   exports: [ShoppingCartDesktopComponent, ShoppingCartMobileComponent]
 })

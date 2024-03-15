@@ -1,145 +1,131 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { Location } from '@angular/common';
 
-interface item {
-  id: string,
-  img: string,
-  description: string,
-  color: string,
-  quantity: number,
-  price: number,
-}
-
-// const listItems$ = of([
-//   {
-//     id: '1',
-//     img: '../../../assets/public/static/images/shoes/image1.jpg',
-//     description: 'Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi',
-//     color: 'White',
-//     quantity: 1,
-//     price: 50
-//   },
-//   {
-//     id: '2',
-//     img: '../../../assets/public/static/images/shoes/image2.jpg',
-//     description: 'Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi',
-//     color: 'Red',
-//     quantity: 1,
-//     price: 40
-//   },
-// ]);
+import { ShoesService } from 'src/app/shoes.service';
+import { Item } from 'src/app/types/item';
 
 @Component({
   selector: 'app-shopping-cart-desktop',
   templateUrl: './shopping-cart-desktop.component.html',
   styleUrls: ['./shopping-cart-desktop.component.css']
 })
-export class ShoppingCartDesktopComponent implements AfterViewInit {
+export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit {
 
-  public listItems$: item[] = [
-    {
-      id: '1',
-      img: '../../../assets/public/static/images/shoes/image1.jpg',
-      description: 'Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi',
-      color: 'White',
-      quantity: 1,
-      price: 50
-    },
-    {
-      id: '2',
-      img: '../../../assets/public/static/images/shoes/image2.jpg',
-      description: 'Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi',
-      color: 'Red',
-      quantity: 1,
-      price: 40
-    },
-  ];
+  public listItems$: Item[] = [];
 
-  constructor() { }
+  constructor(private render: Renderer2, private shoesService: ShoesService, private location: Location) { }
 
-  @Input() public curStatus: boolean = false;
   @ViewChild('modal') private modal!: ElementRef;
   @ViewChild('closeBtn') private closeBtn!: ElementRef;
-  @ViewChildren('inputs') private inputs!: QueryList<ElementRef>;
-  @ViewChildren('rows') private rows!: QueryList<ElementRef>;
   @ViewChild('checkItAll') private checkItAll!: ElementRef;
-  // @ViewChild('table') private table!: ElementRef;
+  @ViewChild('removeItems') private removeItems!: ElementRef;
+  @ViewChildren('rows') private rows!: QueryList<ElementRef>;
+  @ViewChildren('inputs') private inputs!: QueryList<ElementRef>;
+  @ViewChildren('colorSelector') private colorSelector!: QueryList<ElementRef>;
+  @ViewChildren('qty') private qty!: QueryList<ElementRef>;
+  @ViewChildren('amounts') private amounts!: QueryList<ElementRef>;
   @ViewChild('subTotalEl') private subTotalEl!: ElementRef;
   @ViewChild('shipping') private shipping!: ElementRef;
   @ViewChild('discount') private discount!: ElementRef;
   @ViewChild('totalEl') private totalEl!: ElementRef;
 
-  @Output('closeModal') private toggleModal = new EventEmitter<any>();
-
-  ngAfterViewInit(): void {
-    // console.log(this.modalToggle);
-
-    // console.log(this.inputs.toArray());
-    // console.log(this.rows.toArray());
-    // console.log(this.checkItAll.nativeElement);
-    // console.log(this.table.nativeElement);
-    // console.log(this.subTotalEl.nativeElement);
-    // console.log(this.shipping.nativeElement);
-    // console.log(this.discount.nativeElement);
-    // console.log(this.totalEl.nativeElement);
-
-    this.inputs.changes.subscribe((i) => {
-      // console.log(i);      
-      // console.log("Inputs CHANGE");
-      this.cartCalc();
-    });
-    this.rows.changes.subscribe((r) => {
-      // console.log(r);      
-      // console.log("Rows CHANGE");
+  ngOnInit(): void {
+    this.shoesService.getShoes().subscribe(s => {
+      this.listItems$ = s;
     });
   }
 
-  toggleSelect() {
-    const inputEls = this.inputs.toArray();
+  ngAfterViewInit(): void {
+    this.render.listen(this.checkItAll.nativeElement, 'click', this.toggleSelect.bind(this));
+    this.render.listen(this.removeItems.nativeElement, 'click', this.removeSelected.bind(this));
+    this.render.listen(this.closeBtn.nativeElement, 'click', this.closeModal.bind(this));
+    this.render.listen(this.modal.nativeElement, 'click', this.closeModal.bind(this));
+
+    this.rows.changes.subscribe(() => {
+      this.rows = this.rows;
+      // console.log(this.rows.length);
+    });
+    
+    this.colorSelector.changes.subscribe(() => {
+      // console.log(this.colorSelector.toArray());
+      this.colorSelector.toArray().forEach(selector => {
+        this.render.listen(selector.nativeElement, 'change', this.changeColor.bind(this));
+      });
+    });
+
+    this.qty.changes.subscribe(() => { 
+      // console.log(this.qty.toArray());
+      this.qty.toArray().forEach(qty => {
+        this.render.listen(qty.nativeElement, 'change', this.amountsCalc.bind(this));
+      });
+    });
+
+    this.amounts.changes.subscribe(() => {
+      //  console.log(this.amounts.length);
+      this.amountsCalc();
+    })
+  };
+
+  closeModal(e: Event) {
+    // console.log(e.target);
+    e.stopPropagation();
+    if (e.target == this.closeBtn.nativeElement || e.target == this.modal.nativeElement) {
+      this.location.back();
+    }
+  }
+
+  toggleSelect(e: Event) {
+    // console.log(e.target);    
     if (this.checkItAll.nativeElement.checked) {
-      inputEls.forEach(input => {
-        input.nativeElement.checked = true;
+      this.inputs.toArray().forEach(input => {
+        this.render.setProperty(input.nativeElement, 'checked', true);
       });
     } else {
-      inputEls.forEach(input => {
-        input.nativeElement.checked = false;
+      this.inputs.toArray().forEach(input => {
+        this.render.setProperty(input.nativeElement, 'checked', false);
       });
     }
   }
 
-  removeSelected() {
-    // const checked = inputs.filter((item) => item.checked == true);
-    this.rows.toArray().forEach((item, index) => {
-      if ((item.nativeElement.children[0].children[0]).checked == true) {
-        item.nativeElement.remove();
-        this.listItems$.splice(index, 1);
-      }
-    });
+  removeSelected(e: Event) {
+    const selectedIds: string[] = this.rows.toArray().filter(r => r.nativeElement.children[0].children[0].checked).map(el => el.nativeElement.id);
+    this.listItems$ = this.listItems$.filter(item => !selectedIds.includes(item._id));
     // console.log(this.listItems$);
-    // console.log(this.rows);
-    this.checkItAll.nativeElement.checked = false;
+    this.render.setProperty(this.checkItAll.nativeElement, 'checked', false);
   }
-  
+
+  amountsCalc() {
+    this.rows.toArray().forEach(el => {
+      // console.log(el.nativeElement);
+      const qty = Number(el.nativeElement.children[3].children[1].value) || 1;
+      const price = Number(el.nativeElement.children[4].textContent.split('$')[1]);
+      const amount = el.nativeElement.children[5].textContent = `$${qty * price}`;
+      // console.log(qty, price, amount);
+    });
+    this.cartCalc();
+  }
+
+  changeColor(e: Event): void {
+    const el = e.target as HTMLSelectElement;
+    const color = el.options[el.selectedIndex].text;
+    this.render.setStyle(el, 'background-color', color);
+    if (color == 'Black') {
+      this.render.setStyle(el, 'color', 'white');
+    } else {
+      this.render.removeStyle(el, 'color');
+    }
+  }
+
   cartCalc() {
-    const values = this.listItems$.map(item => item.price);
-    const subTotal = values.reduce((acc, currV) => acc += currV, 0).toFixed(2);
+    const amountsArr = this.amounts.toArray().map(item => Number(item.nativeElement.textContent.split('$')[1]));
+    // console.log(amountsArr);
+    const subTotal = amountsArr.reduce((acc, currV) => acc += currV, 0).toFixed(2);
     // console.log(subTotal);
     const shippingPrice = Number(this.shipping.nativeElement.textContent?.split('$')[1]) || 0;
-    const discountAmount = Number(this.discount.nativeElement.textContent?.split('-$')[1]) || 0;
+    const discountAmount = Number(this.discount.nativeElement.textContent?.split('$')[1]) || 0;
     this.subTotalEl.nativeElement.textContent = `$${subTotal}`;
     const sumTotal = (Number(subTotal) + shippingPrice - discountAmount).toFixed(2);
     // console.log(sumTotal);
     this.totalEl.nativeElement.textContent = `$${sumTotal}`;
   }
-
-  callParent(event: Event): void {
-    event.stopPropagation();
-    const target = event.target as HTMLElement;
-    // console.log(event.target == this.desktopModal.nativeElement);
-    // console.log(event.target == this.closeBtn.nativeElement);
-    // console.log(target);    
-    if (target == this.modal.nativeElement || target == this.closeBtn.nativeElement) {
-      this.toggleModal.emit();
-    }
-  }
-
 }

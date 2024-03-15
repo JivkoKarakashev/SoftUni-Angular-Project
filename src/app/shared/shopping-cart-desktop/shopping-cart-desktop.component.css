@@ -1,7 +1,139 @@
-.modal-is-shown {
+.li-modal {
     display: block;
+    position: relative;
 }
 
-.modal-isNot-shown {
-    display: none;
+/* The Modal (background) */
+.modal {
+    display: block;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 10;
+    /* Sit on top */
+    padding-top: 140px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    max-height: 100%;
+    /* Full height */
+    overflow-y: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    /* position: absolute;
+    top: 0; */
+    background-color: #fefefe;
+    border: 1px solid rgba(136, 136, 136, 0.8);
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: .2s;
+    animation-name: animatetop;
+    animation-duration: .2s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+/* The Close Button */
+.close-btn {
+    color: #fff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5270FF;
+    color: #fff;
+}
+
+.modal-body {
+    padding: 2px 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-footer {
+    /* display: flex;
+    justify-content: space-between;
+    padding: 2px 16px;
+    background-color: #5270FF;
+    color: #fff; */
+    font-weight: bold;
+
+}
+
+div.buttons {
+    padding: .2em 0;
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    text-transform: uppercase;
+    font-weight: bold;
+
+    & a.button {
+        padding: .2em .3em;
+        border: 1px solid #000;
+        border-radius: .4em;
+        outline: none;
+    }
+
+    & {
+
+        a.button.finish:hover,
+        a.button.finish:focus,
+        a.button.cancel:hover,
+        a.button.cancel:focus {
+            background-color: #000;
+            color: #fff;
+        }
+    }
+}
+
+table {
+    border-spacing: 1em 0;
 }
