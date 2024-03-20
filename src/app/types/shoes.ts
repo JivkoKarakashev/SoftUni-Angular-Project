@@ -7,5 +7,6 @@ export interface Shoes {
     color: string[],
     brand: string,
     quantity: number,
-    price: number
+    price: number,
+    buyed?: boolean
 }

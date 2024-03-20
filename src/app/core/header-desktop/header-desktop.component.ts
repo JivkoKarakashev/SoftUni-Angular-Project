@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 
 @Component({
   selector: 'app-header-desktop',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header-desktop.component.css']
 })
 export class HeaderDesktopComponent implements OnInit {
+  
+  constructor(private cartService: ShoppingCartService) {}
   
   ngOnInit(): void {
     // desktopModal();

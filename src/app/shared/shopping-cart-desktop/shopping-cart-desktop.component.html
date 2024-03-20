@@ -42,15 +42,15 @@
                                         <p>{{item.description}}</p>
 
                                         <label>Choose color:</label>
-                                        <select #colorSelector name="colors" ngModel="">
-                                            <option *ngFor="let col of item.color" [ngValue]="col" [ngModel]>{{col}}</option>
+                                        <select #colorSelector [ngModel]="" name="colors" (change)="changeColor($event)">
+                                            <option *ngFor="let col of item.color" [ngValue]="col">{{col}}</option>
                                         </select>
                                         <!-- <p>Color: {{item.color}}</p> -->
                                     </td>
                                     <td class="quantity">
                                         <!-- <form #qtyForm> -->
                                             <label>&#40;between 1 &amp; {{item.quantity}}&#41;</label>
-                                            <input #qty [ngModel]="1"  type="number" name="quantity" min="1" max="{{item.quantity}}">
+                                            <input #qty [ngModel]=""  type="number" name="quantity" min="1" max="{{item.quantity}}" (change)="changeQuantity($event)">
                                         <!-- </form> -->
                                     </td>
                                     <td class="price">${{item.price}}</td>

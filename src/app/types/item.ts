@@ -5,5 +5,6 @@ export interface Item {
     description: string,
     color: string[],
     quantity: number,
-    price: number
+    price: number,
+    buyed?: boolean
 }

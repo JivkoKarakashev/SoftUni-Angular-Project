@@ -1,18 +1,23 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { Item } from 'src/app/types/item';
 import { ShoesService } from 'src/app/shoes.service';
 import { ShoppingCartService } from '../shopping-cart.service';
+import { Subscription } from 'rxjs';
+
+type MyVoid = () => void;
 
 @Component({
   selector: 'app-shopping-cart-desktop',
   templateUrl: './shopping-cart-desktop.component.html',
   styleUrls: ['./shopping-cart-desktop.component.css']
 })
-export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit {
+export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public listItems$: Item[] = [];
+  private unsubscriptionArray: Subscription[] = [];
+  private unsubscriptionEventsArray: MyVoid[] = [];
 
   constructor(private render: Renderer2, private shoesService: ShoesService, private location: Location, private cartService: ShoppingCartService) { }
 
@@ -34,9 +39,11 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit {
     // this.shoesService.getShoes().subscribe(s => {
     //   this.listItems$ = s;
     // });
-    this.cartService.getCartItems().subscribe(items => {
-      this.listItems$ = items
+    const cartItemsSubscription = this.cartService.items$.subscribe(items => {
+      this.listItems$ = items;
+      // console.log(this.listItems$);
     });
+    this.unsubscriptionArray.push(cartItemsSubscription);
   }
 
   ngAfterViewInit(): void {
@@ -45,30 +52,43 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit {
     this.render.listen(this.closeBtn.nativeElement, 'click', this.closeModal.bind(this));
     this.render.listen(this.modal.nativeElement, 'click', this.closeModal.bind(this));
 
-    this.rows.changes.subscribe(() => {
-      this.rows = this.rows;
-      // console.log(this.rows.length);
-    });
+    // this.rows.changes.subscribe(() => {
+    //   this.rows = this.rows;
+    //   console.log(this.rows.length);
+    // });
     
-    this.colorSelector.changes.subscribe(() => {
-      // console.log(this.colorSelector.toArray());
-      this.colorSelector.toArray().forEach(selector => {
-        this.render.listen(selector.nativeElement, 'change', this.changeColor.bind(this));
-      });
-    });
+    // this.colorSelector.changes.subscribe(() => {
+    //   // console.log(this.colorSelector.toArray());
+    //   console.log('HERE');
+      
+    //   this.colorSelector.toArray().forEach(selector => {      
+    //     console.log(selector.nativeElement);
+          
+    //     this.render.listen(selector.nativeElement, 'change', this.changeColor.bind(this));
+    //   });
+    // });
 
-    this.qty.changes.subscribe(() => { 
-      // console.log(this.qty.toArray());
-      this.qty.toArray().forEach(qty => {
-        this.render.listen(qty.nativeElement, 'change', this.amountsCalc.bind(this));
-      });
-    });
+    // this.qty.changes.subscribe(() => { 
+    //   // console.log(this.qty.toArray());
+    //   this.qty.toArray().forEach(qty => {
+    //     this.render.listen(qty.nativeElement, 'change', this.amountsCalc.bind(this));
+    //   });
+    // });
 
-    this.amounts.changes.subscribe(() => {
-      //  console.log(this.amounts.length);
-      this.amountsCalc();
-    })
+    // this.amounts.changes.subscribe(() => {
+    //   //  console.log(this.amounts.length);
+    //   this.amountsCalc();
+    // })
   };
+
+  ngOnDestroy(): void {
+    this.unsubscriptionArray.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+    this.unsubscriptionEventsArray.forEach((eventFn) => {
+      eventFn();
+    });    
+  }
 
   closeModal(e: Event) {
     // console.log(e.target);
@@ -93,8 +113,9 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit {
 
   removeSelected(e: Event) {
     const selectedIds: string[] = this.rows.toArray().filter(r => r.nativeElement.children[0].children[0].checked).map(el => el.nativeElement.id);
-    this.listItems$ = this.listItems$.filter(item => !selectedIds.includes(item._id));
+    // this.listItems$ = this.listItems$.filter(item => !selectedIds.includes(item._id));
     // console.log(this.listItems$);
+    this.cartService.removeCartItems(selectedIds);
     this.render.setProperty(this.checkItAll.nativeElement, 'checked', false);
   }
 
@@ -118,6 +139,10 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit {
     } else {
       this.render.removeStyle(el, 'color');
     }
+  }
+
+  changeQuantity(e: Event): void {
+    this.amountsCalc();
   }
 
   cartCalc() {

@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { UserModule } from './user/user.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { HomeComponent } from './home/home.component';
+import { appHttpInterceptorProvider } from './app-http.interceptor';
 // import { ShoppingCartDesktopComponent } from './shared/shopping-cart-desktop/shopping-cart-desktop.component';
 // import { ShoppingCartMobileComponent } from './shared/shopping-cart-mobile/shopping-cart-mobile.component';
 
@@ -28,7 +29,7 @@ import { HomeComponent } from './home/home.component';
     CatalogModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [appHttpInterceptorProvider],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
