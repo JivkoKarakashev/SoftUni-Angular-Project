@@ -1,20 +1,23 @@
-<app-main></app-main>
-<app-footer></app-footer>
+<app-authenticate>
 
-<div class="site-container">
-  <header class="section-header">
-    <div class="site-title">
-      <a class="title-icon store" routerLink="/">eStore</a>
-    </div>
-    <app-header-desktop></app-header-desktop>
-    <div class="drop-down">
-      <label for="check-box">
-        <p class="nav-icon menu">Menu</p>
-      </label>
-    </div>
-  </header>
-  <app-header-mobile></app-header-mobile>
-</div>
-
-
-<router-outlet></router-outlet>
+  <app-main></app-main>
+  <app-footer></app-footer>
+  
+  <div class="site-container">
+    <header class="section-header">
+      <div class="site-title">
+        <a class="title-icon store" routerLink="/">eStore</a>
+      </div>
+      <app-header-desktop></app-header-desktop>
+      <div class="drop-down">
+        <label for="check-box">
+          <p class="nav-icon menu">Menu</p>
+        </label>
+      </div>
+    </header>
+    <app-header-mobile></app-header-mobile>
+  </div>  
+  
+  <router-outlet></router-outlet>
+  
+</app-authenticate>

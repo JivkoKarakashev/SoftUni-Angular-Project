@@ -8,38 +8,57 @@ import {
   HttpResponse
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Item } from './types/item';
 import { ShoppingCartService } from './shared/shopping-cart.service';
+import { UserService } from './user/user.service';
+import { UserForAuth } from './types/user';
 
 @Injectable()
 export class AppHttpInterceptor implements HttpInterceptor {
   public cartItms$: Item[] = [];
 
-  constructor(private cartService: ShoppingCartService) { }
+  constructor(private userService: UserService, private cartService: ShoppingCartService) { }
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(map((res: HttpEvent<any>) => {
-      if (res instanceof HttpResponse) {
-        this.cartService.items$.subscribe(items => this.cartItms$ = items);
-        const cartItmsIds = this.cartItms$.map((itm) => itm._id);
-        // console.log(cartItmsIds);        
-        // console.log(Object.values(res.body));
-        const newBody: Item[] = Object.values(res.body);
-        newBody.forEach((itm) => {
-          if (cartItmsIds.includes(itm._id)) {
-            itm.buyed = true;
-          }          
+    if (req.url == 'http://localhost:3030/users/logout') {
+      let user: UserForAuth | undefined = undefined;
+      this.userService.user$.subscribe(usr => user = usr);
+      if (user) {
+        const { accessToken } = user;
+        // console.log(accessToken);
+        const authReq = req.clone({
+          headers: req.headers.set('X-Authorization', accessToken)
         });
-        // console.log(newBody);
-        const newRes = res.clone({ body: newBody });
-        // console.log(newRes);
-        return newRes;        
-      }      
-      return res;
-    }));
+        req = authReq;
+      }
+    }
+    return next.handle(req).pipe(
+      map((res: HttpEvent<any>) => {
+        if (req.url == 'http://localhost:3030/jsonstore/shoes' && res instanceof HttpResponse) {
+          this.cartService.items$.subscribe(items => this.cartItms$ = items);
+          const cartItmsIds = this.cartItms$.map((itm) => itm._id);
+          // console.log(cartItmsIds);        
+          // console.log(Object.values(res.body));
+          const newBody: Item[] = Object.values(res.body);
+          newBody.forEach((itm) => {
+            if (cartItmsIds.includes(itm._id)) {
+              itm.buyed = true;
+            }
+          });
+          // console.log(newBody);
+          const newRes = res.clone({ body: newBody });
+          // console.log(newRes);
+          return newRes;
+        }
+        return res;
+      }),
+      catchError((err) => {
+        return [err];
+      })
+    );
   }
 }
 

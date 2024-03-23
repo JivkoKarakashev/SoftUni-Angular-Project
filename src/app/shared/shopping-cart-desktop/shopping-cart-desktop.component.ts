@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 import { Item } from 'src/app/types/item';
-import { ShoesService } from 'src/app/shoes.service';
 import { ShoppingCartService } from '../shopping-cart.service';
-import { Subscription } from 'rxjs';
 
 type MyVoid = () => void;
 
@@ -19,7 +18,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   private unsubscriptionArray: Subscription[] = [];
   private unsubscriptionEventsArray: MyVoid[] = [];
 
-  constructor(private render: Renderer2, private shoesService: ShoesService, private location: Location, private cartService: ShoppingCartService) { }
+  constructor(private render: Renderer2, private location: Location, private cartService: ShoppingCartService) { }
 
   @ViewChild('modal') private modal!: ElementRef;
   @ViewChild('closeBtn') private closeBtn!: ElementRef;
@@ -27,8 +26,6 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   @ViewChild('removeItems') private removeItems!: ElementRef;
   @ViewChildren('rows') private rows!: QueryList<ElementRef>;
   @ViewChildren('inputs') private inputs!: QueryList<ElementRef>;
-  @ViewChildren('colorSelector') private colorSelector!: QueryList<ElementRef>;
-  @ViewChildren('qty') private qty!: QueryList<ElementRef>;
   @ViewChildren('amounts') private amounts!: QueryList<ElementRef>;
   @ViewChild('subTotalEl') private subTotalEl!: ElementRef;
   @ViewChild('shipping') private shipping!: ElementRef;
@@ -36,10 +33,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   @ViewChild('totalEl') private totalEl!: ElementRef;
 
   ngOnInit(): void {
-    // this.shoesService.getShoes().subscribe(s => {
-    //   this.listItems$ = s;
-    // });
-    const cartItemsSubscription = this.cartService.items$.subscribe(items => {
+    const cartItemsSubscription: Subscription = this.cartService.items$.subscribe(items => {
       this.listItems$ = items;
       // console.log(this.listItems$);
     });
@@ -47,46 +41,21 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   }
 
   ngAfterViewInit(): void {
-    this.render.listen(this.checkItAll.nativeElement, 'click', this.toggleSelect.bind(this));
-    this.render.listen(this.removeItems.nativeElement, 'click', this.removeSelected.bind(this));
-    this.render.listen(this.closeBtn.nativeElement, 'click', this.closeModal.bind(this));
-    this.render.listen(this.modal.nativeElement, 'click', this.closeModal.bind(this));
-
-    // this.rows.changes.subscribe(() => {
-    //   this.rows = this.rows;
-    //   console.log(this.rows.length);
-    // });
-    
-    // this.colorSelector.changes.subscribe(() => {
-    //   // console.log(this.colorSelector.toArray());
-    //   console.log('HERE');
-      
-    //   this.colorSelector.toArray().forEach(selector => {      
-    //     console.log(selector.nativeElement);
-          
-    //     this.render.listen(selector.nativeElement, 'change', this.changeColor.bind(this));
-    //   });
-    // });
-
-    // this.qty.changes.subscribe(() => { 
-    //   // console.log(this.qty.toArray());
-    //   this.qty.toArray().forEach(qty => {
-    //     this.render.listen(qty.nativeElement, 'change', this.amountsCalc.bind(this));
-    //   });
-    // });
-
-    // this.amounts.changes.subscribe(() => {
-    //   //  console.log(this.amounts.length);
-    //   this.amountsCalc();
-    // })
+    const selectToggleEvent = this.render.listen(this.checkItAll.nativeElement, 'click', this.toggleSelect.bind(this));
+    const removeSelectedEvent = this.render.listen(this.removeItems.nativeElement, 'click', this.removeSelected.bind(this));
+    const closeModalBtnEvent = this.render.listen(this.closeBtn.nativeElement, 'click', this.closeModal.bind(this));
+    const closeModalEvent = this.render.listen(this.modal.nativeElement, 'click', this.closeModal.bind(this));
+    this.unsubscriptionEventsArray.push(selectToggleEvent, removeSelectedEvent, closeModalBtnEvent, closeModalEvent);
   };
 
   ngOnDestroy(): void {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
+      // console.log('UnsubArray = 1');      
     });
     this.unsubscriptionEventsArray.forEach((eventFn) => {
       eventFn();
+      // console.log('UnsubEVENTSArray = 4'); 
     });    
   }
 

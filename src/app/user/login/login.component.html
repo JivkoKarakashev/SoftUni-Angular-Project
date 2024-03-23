@@ -3,21 +3,21 @@
         <div class="title">
             <h2>Login</h2>
         </div>
-        <form method="post" action="#">
+        <form #loginForm="ngForm" (ngSubmit)="login(loginForm)" method="post" action="#">
             <div class="row">
                 <i class="fa-solid fa-at"></i>
-                <input type="text" name="email" placeholder="Email" required>
+                <input ngModel type="text" id="email" name="email" placeholder="Email" required>
             </div>
             <div class="row">
                 <i class="fas fa-lock"></i>
-                <input type="password" name="pass" placeholder="Password" required>
+                <input ngModel type="password" id="pass" name="pass" placeholder="Password" required>
             </div>
             <div class="row button">
                 <input type="submit" value="Login">
             </div>
             <div class="signup-link">
                 <p>Not a member?</p>
-                <a routerLink="/register">Signup now</a>
+                <a routerLink="/auth/register">Signup now</a>
             </div>
         </form>
     </div>

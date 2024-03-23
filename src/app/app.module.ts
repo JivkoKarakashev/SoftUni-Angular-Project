@@ -7,25 +7,23 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { MainComponent } from './main/main.component';
 import { HttpClientModule } from '@angular/common/http';
-import { UserModule } from './user/user.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { HomeComponent } from './home/home.component';
 import { appHttpInterceptorProvider } from './app-http.interceptor';
-// import { ShoppingCartDesktopComponent } from './shared/shopping-cart-desktop/shopping-cart-desktop.component';
-// import { ShoppingCartMobileComponent } from './shared/shopping-cart-mobile/shopping-cart-mobile.component';
+import { AuthenticateComponent } from './authenticate/authenticate.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    HomeComponent
+    HomeComponent,
+    AuthenticateComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CoreModule,
     SharedModule,
-    UserModule,
     CatalogModule,
     HttpClientModule
   ],

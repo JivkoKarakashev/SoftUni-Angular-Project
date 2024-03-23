@@ -16,7 +16,7 @@
                     <p>Price: <span><strong>${{item.price}}</strong></span></p>
                     <div class="buttons">
                         <ul class="buttons">
-                            <li #buyBtn *ngIf="item.buyed == undefined" class="button buy" (click)="addItemtoCart($event, item)"><a href="javascript:void(0)">Add to basket</a></li>
+                            <li *ngIf="item.buyed == undefined" class="button buy" (click)="addItemtoCart($event, item)"><a href="javascript:void(0)">Add to basket</a></li>
                             <li class="button edit"><a href="javascript:void(0)">Edit</a></li>
                             <li class="button delete"><a href="javascript:void(0)">Delete</a></li>
                         </ul>

@@ -1,7 +1,8 @@
-import { ApplicationRef, Component, ElementRef, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
-import { ShoesService } from 'src/app/shoes.service';
+import { ShoesService } from './shoes.service';
 import { Item } from 'src/app/types/item';
 import { Shoes } from 'src/app/types/shoes';
 
@@ -10,27 +11,35 @@ import { Shoes } from 'src/app/types/shoes';
   templateUrl: './shoes.component.html',
   styleUrls: ['./shoes.component.css']
 })
-export class ShoesComponent implements OnInit {
+export class ShoesComponent implements OnInit, OnDestroy {
   public listItems$: Shoes[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
+  private unsubscriptionArray: Subscription[] = [];
 
-  constructor(private render: Renderer2, private shoesService: ShoesService, private cartService: ShoppingCartService, private appRef: ApplicationRef) { }
-
-  @ViewChildren('buyBtn') private buyBtn!: QueryList<ElementRef>;
+  constructor( private shoesService: ShoesService, private cartService: ShoppingCartService ) { }
 
   ngOnInit(): void {
-    this.shoesService.getShoes().subscribe(shoes => {
+    const shoesSubscription = this.shoesService.getShoes().subscribe(shoes => {
       // console.log(shoes[0].buyed);
       // this.listItems$ = Object.values(shoes);
       // console.log(Object.values(shoes));
       this.listItems$ = shoes;
     });
 
-    this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
       this.cartItms$$.next([...items])
       // this.cartItms$ = items;
     });
+
+    this.unsubscriptionArray.push(shoesSubscription, cartSubscription);
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscriptionArray.forEach((subscription) => {
+      subscription.unsubscribe();
+      // console.log('UnsubArray = 2');      
+    }); 
   }
 
   addItemtoCart(e: Event, item: Shoes) {

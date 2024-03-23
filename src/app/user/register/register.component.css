@@ -34,19 +34,19 @@ div.wrapper {
     font-weight: bold;
 }
 
-.wrapper form {
+.wrapper form fieldset {
     display: flex;
     flex-direction: column;
     gap: .5em;
     padding: 2em;
 }
 
-.wrapper form .row {
+.wrapper form fieldset .row {
     line-height: 2em;
     position: relative;
 }
 
-.wrapper form .row input {
+.wrapper form fieldset .row input {
     width: 100%;
     outline: none;
     padding-left: 60px;
@@ -55,17 +55,17 @@ div.wrapper {
     transition: all 0.3s ease;
 }
 
-.wrapper form .row input:focus {
+.wrapper form fieldset .row input:focus {
     border-color: #5cb85c;
     box-shadow: inset 0px 0px 2px 2px rgba(27, 136, 187, 0.25);
     outline: none;
 }
 
-.wrapper form .row input::placeholder {
+.wrapper form fieldset .row input::placeholder {
     color: #616161;
 }
 
-.wrapper form .row i {
+.wrapper form fieldset .row i {
     position: absolute;
     width: 3em;
     height: 100%;
@@ -78,7 +78,7 @@ div.wrapper {
     justify-content: center;
 }
 
-.wrapper form .button input {
+.wrapper form fieldset .button input {
     font-weight: 500;
     padding-left: 0px;
     background-color: #22292F;
@@ -87,39 +87,39 @@ div.wrapper {
     cursor: pointer;
 }
 
-.wrapper form .button input:hover,
-.wrapper form .button input:focus {
+.wrapper form fieldset .button input:hover,
+.wrapper form fieldset .button input:focus {
     color: #fff;
     background: #5cb85c;
     outline: none;
 }
 
-.wrapper form .login-link {
+.wrapper form fieldset .login-link {
     text-align: center;
     background-color: #22292F;
     border-radius: 0.2em;
     color: #5270FF;
 }
 
-.wrapper form .login-link p {
+.wrapper form fieldset .login-link p {
     color: #fff;
 }
 
-.wrapper form .login-link a {
+.wrapper form fieldset .login-link a {
     color: #5270FF;
     text-decoration: none;
     border: 1px solid rgba(55, 255, 15, 0.001);
 }
 
-.wrapper form .login-link a:hover,
-.wrapper form .login-link a:focus {
+.wrapper form fieldset .login-link a:hover,
+.wrapper form fieldset .login-link a:focus {
     color: #fff;
     border: 1px solid  #5cb85c;
     border-radius: 0.2em;
     outline: none;
 }
 
-.wrapper form div.row.button:active,
-.wrapper form div.login-link a:active {
+.wrapper form fieldset div.row.button:active,
+.wrapper form fieldset div.login-link a:active {
   filter: blur(1px);
 }

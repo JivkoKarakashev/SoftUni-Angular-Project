@@ -5,8 +5,6 @@ import { HeaderMobileComponent } from './header-mobile/header-mobile.component';
 import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared/shared.module';
 import { CoreRoutingModule } from './core-routing.modules';
-// import { ShoppingCartDesktopComponent } from '../shared/shopping-cart-desktop/shopping-cart-desktop.component';
-
 
 
 @NgModule({
