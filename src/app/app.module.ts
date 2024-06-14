@@ -21,11 +21,11 @@ import { AuthenticateComponent } from './authenticate/authenticate.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     CoreModule,
     SharedModule,
     CatalogModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule,
   ],
   providers: [appHttpInterceptorProvider],
   bootstrap: [AppComponent]

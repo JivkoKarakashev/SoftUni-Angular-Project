@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators,  } from '@angular/forms';
 import { emailValidator } from 'src/app/shared/utils/email-validator';
 import { passwordsValidator } from 'src/app/shared/utils/passwords-validator';
 
@@ -22,7 +22,7 @@ export class RegisterComponent {
         rePass: ['', [Validators.required]],
       },
       {
-        validators: [passwordsValidator('pass', 'rePass')],
+        validators: [passwordsValidator()],
       }
     ),
   });
@@ -34,9 +34,11 @@ export class RegisterComponent {
   constructor(private fb: FormBuilder, private userService: UserService, private router: Router) { }
 
   register(): void {
-    // if (this.registerForm.invalid) {
-    //   return;
-    // }
+    // console.log(this.passGroup?.value.rePass);
+    
+    if (this.registerForm.invalid) {      
+      return;
+    }
 
     const { email, username, passGroup: { pass } = {} } = this.registerForm.value;
     

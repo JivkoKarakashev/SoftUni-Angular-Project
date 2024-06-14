@@ -34,19 +34,19 @@ div.wrapper {
     font-weight: bold;
 }
 
-.wrapper form {
+.wrapper form fieldset {
     display: flex;
     flex-direction: column;
     gap: .5em;
     padding: 2em;
 }
 
-.wrapper form .row {
+.wrapper form fieldset .row {
     line-height: 2em;
     position: relative;
 }
 
-.wrapper form .row input {
+.wrapper form fieldset .row input {
     width: 100%;
     outline: none;
     padding-left: 60px;
@@ -55,17 +55,17 @@ div.wrapper {
     transition: all 0.3s ease;
 }
 
-form .row input:focus {
+form fieldset .row input:focus {
     border-color: #5cb85c;
     box-shadow: inset 0px 0px 2px 2px rgba(27, 136, 187, 0.25);
     outline: none;
 }
 
-form .row input::placeholder {
+form fieldset .row input::placeholder {
     color: #616161;
 }
 
-.wrapper form .row i {
+.wrapper form fieldset .row i {
     position: absolute;
     width: 3em;
     height: 100%;
@@ -78,7 +78,7 @@ form .row input::placeholder {
     justify-content: center;
 }
 
-.wrapper form .button input {
+.wrapper form fieldset .button input {
     font-weight: 500;
     padding-left: 0px;
     background-color: #22292F;
@@ -87,39 +87,64 @@ form .row input::placeholder {
     cursor: pointer;
 }
 
-form div.row.button input:hover,
-form div.row.button input:focus {
+form fieldset div.row.button input:hover,
+form fieldset div.row.button input:focus {
     color: #fff;
     background: #5cb85c;
     outline: none;
 }
 
-.wrapper form .signup-link {
+.wrapper form fieldset .signup-link {
     text-align: center;
     background-color: #22292F;
     border-radius: 0.2em;
     color: #5270FF;
 }
 
-.wrapper form .signup-link p {
+.wrapper form fieldset .signup-link p {
     color: #fff;
 }
 
-.wrapper form .signup-link a {
+.wrapper form fieldset .signup-link a {
     color: #5270FF;
     text-decoration: none;
     border: 1px solid rgba(55, 255, 15, 0.001);
 }
 
-.wrapper form div.signup-link a:hover,
-.wrapper form div.signup-link a:focus {
+.wrapper form fieldset div.signup-link a:hover,
+.wrapper form fieldset div.signup-link a:focus {
     color: #fff;
-    border: 1px solid  #5cb85c;
+    border: 1px solid #5cb85c;
     border-radius: 0.2em;
     outline: none;
 }
 
-.wrapper form div.row.button:active,
-.wrapper form div.signup-link a:active {
-  filter: blur(1px);
+.wrapper form fieldset div.row.button:active,
+.wrapper form fieldset div.signup-link a:active {
+    filter: blur(1px);
+}
+
+/* Error Styling */
+
+.wrapper form fieldset div.err-msg {
+    color: #cc0033;
+    text-align: center;
+}
+
+.wrapper form fieldset div.error {
+    background-color: #fce4e4;
+    border: none;
+    outline: none;
+
+    & > input[name='email'],
+    input[name='pass'],
+    input[name='email']:focus,
+    input[name='pass']:focus {
+        border-color: #cc0033;
+    }
+
+    & > input[name='email']:focus,
+    input[name='pass']:focus {
+        box-shadow: inset 0px 0px 2px 2px rgba(126, 15, 15, 0.25);
+    }
 }

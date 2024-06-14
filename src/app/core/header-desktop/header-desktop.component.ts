@@ -30,6 +30,6 @@ export class HeaderDesktopComponent implements OnInit {
 
   logout() {
     this.userService.logout();
-    this.router.navigate(['auth/login']);    
+    this.router.navigate(['login']);    
   }
 }

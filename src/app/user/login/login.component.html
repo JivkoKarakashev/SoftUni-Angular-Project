@@ -3,22 +3,31 @@
         <div class="title">
             <h2>Login</h2>
         </div>
-        <form #loginForm="ngForm" (ngSubmit)="login(loginForm)" method="post" action="#">
-            <div class="row">
-                <i class="fa-solid fa-at"></i>
-                <input ngModel type="text" id="email" name="email" placeholder="Email" required>
-            </div>
-            <div class="row">
-                <i class="fas fa-lock"></i>
-                <input ngModel type="password" id="pass" name="pass" placeholder="Password" required>
-            </div>
-            <div class="row button">
-                <input type="submit" value="Login">
-            </div>
-            <div class="signup-link">
-                <p>Not a member?</p>
-                <a routerLink="/auth/register">Signup now</a>
-            </div>
+        <form [formGroup]="loginForm" (ngSubmit)="login()" method="post" action="#">
+            <fieldset>
+                <div class="row" [ngClass]="{'error': loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['invalidEmail']}">
+                    <i class="fa-solid fa-at"></i>
+                    <input formControlName="email" type="text" id="email" name="email" placeholder="Email" required>
+                </div>
+                <ng-container *ngIf="loginForm.get('email')?.touched">
+                    <div *ngIf="loginForm.get('email')?.errors?.['required']" class="err-msg">Eamil is required.</div>
+                    <div *ngIf="!loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.errors?.['invalidEmail']" class="err-msg">Valid email is required.</div>
+                </ng-container>
+                <div class="row" [ngClass]="{'error': loginForm.get('pass')?.touched && loginForm.get('pass')?.errors?.['required']}">
+                    <i class="fas fa-lock"></i>
+                    <input formControlName="pass" type="password" id="pass" name="pass" placeholder="Password" required>
+                </div>
+                <ng-container *ngIf="loginForm.get('pass')?.touched">
+                    <div *ngIf="loginForm.get('pass')?.errors?.['required']" class="err-msg">Password is required.</div>
+                </ng-container>
+                <div class="row button">
+                    <input type="submit" value="Login">
+                </div>
+                <div class="signup-link">
+                    <p>Not a member?</p>
+                    <a routerLink="/register">Signup now</a>
+                </div>
+            </fieldset>
         </form>
     </div>
 
