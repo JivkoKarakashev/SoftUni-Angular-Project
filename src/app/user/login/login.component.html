@@ -5,23 +5,23 @@
         </div>
         <form [formGroup]="loginForm" (ngSubmit)="login()" method="post" action="#">
             <fieldset>
-                <div class="row" [ngClass]="{'error': loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['invalidEmail']}">
+                <div class="row" [ngClass]="{'error': (loginForm.get('email')?.touched || loginForm.get('email')?.dirty) && loginForm.get('email')?.invalid}">
                     <i class="fa-solid fa-at"></i>
-                    <input formControlName="email" type="text" id="email" name="email" placeholder="Email" required>
+                    <input formControlName="email" class="fieldCtr" type="text" id="email" name="email" placeholder="Email" required>
                 </div>
-                <ng-container *ngIf="loginForm.get('email')?.touched">
+                <ng-container *ngIf="loginForm.get('email')?.touched || loginForm.get('email')?.dirty">
                     <div *ngIf="loginForm.get('email')?.errors?.['required']" class="err-msg">Eamil is required.</div>
                     <div *ngIf="!loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.errors?.['invalidEmail']" class="err-msg">Valid email is required.</div>
                 </ng-container>
-                <div class="row" [ngClass]="{'error': loginForm.get('pass')?.touched && loginForm.get('pass')?.errors?.['required']}">
+                <div class="row" [ngClass]="{'error': (loginForm.get('pass')?.touched || loginForm.get('pass')?.dirty) && loginForm.get('pass')?.invalid}">
                     <i class="fas fa-lock"></i>
-                    <input formControlName="pass" type="password" id="pass" name="pass" placeholder="Password" required>
+                    <input formControlName="pass" class="fieldCtr" type="password" id="pass" name="pass" placeholder="Password" required>
                 </div>
-                <ng-container *ngIf="loginForm.get('pass')?.touched">
+                <ng-container *ngIf="loginForm.get('pass')?.touched || loginForm.get('pass')?.dirty">
                     <div *ngIf="loginForm.get('pass')?.errors?.['required']" class="err-msg">Password is required.</div>
                 </ng-container>
                 <div class="row button">
-                    <input type="submit" value="Login">
+                    <input [disabled]="loginForm.invalid" type="submit" value="Login">
                 </div>
                 <div class="signup-link">
                     <p>Not a member?</p>

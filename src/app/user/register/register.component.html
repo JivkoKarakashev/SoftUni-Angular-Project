@@ -5,30 +5,48 @@
         </div>
         <form [formGroup]="registerForm" (ngSubmit)="register()" method="post" action="#">
             <fieldset>
-                <div class="row" [ngClass]="{'error': registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['invalidEmail']}">
+                <div class="row" [ngClass]="{'error': (registerForm.get('email')?.touched || registerForm.get('email')?.dirty) && registerForm.get('email')?.invalid}">
                     <i class="fa-solid fa-at"></i>
-                    <input formControlName="email" type="text" id="email" name="email" placeholder="Email" required>
+                    <input formControlName="email" class="fieldCtr" type="text" id="email" name="email" placeholder="Email" required>
                 </div>
-                <ng-container *ngIf="registerForm.get('email')?.touched">
-                    <div *ngIf="registerForm.get('email')?.errors?.['required']" class="err-msg">Eamil is required.</div>
-                    <div *ngIf="!registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.errors?.['invalidEmail']" class="err-msg">Valid email is required.</div>
+                <ng-container *ngIf="registerForm.get('email')?.touched || registerForm.get('email')?.dirty">
+                    <div *ngIf="registerForm.get('email')?.errors?.['required']" class="err-msg">Eamil is required!</div>
+                    <div *ngIf="!registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.errors?.['invalidEmail']" class="err-msg">Valid email is required!</div>
                 </ng-container>
-                <div class="row">
+                <div class="row" [ngClass]="{'error': (registerForm.get('username')?.touched || registerForm.get('username')?.dirty) && registerForm.get('username')?.invalid}">
                     <i class="fas fa-user"></i>
-                    <input formControlName="username" type="text" id="username" name="username" placeholder="Username" required>
+                    <input formControlName="username" class="fieldCtr" type="text" id="username" name="username" placeholder="Username" required>
                 </div>
+                <ng-container *ngIf="registerForm.get('username')?.touched || registerForm.get('username')?.dirty">
+                    <div *ngIf="registerForm.get('username')?.errors?.['required']" class="err-msg">Username is required.</div>
+                    <div *ngIf="!registerForm.get('username')?.errors?.['required'] && registerForm.get('username')?.errors?.['minlength']" class="err-msg">Username must be at least 5 characters long!</div>
+                </ng-container>
                 <ng-container formGroupName="passGroup">
-                    <div class="row">
+                    <div class="row" [ngClass]="{'error': (registerForm.controls.passGroup.get('pass')?.touched || registerForm.controls.passGroup.get('pass')?.dirty) && registerForm.controls.passGroup.invalid}">
                         <i class="fas fa-lock"></i>
-                        <input formControlName="pass" type="password" id="pass" name="pass" placeholder="Password" required>
+                        <input formControlName="pass" class="fieldCtr" type="password" id="pass" name="pass" placeholder="Password" required>
                     </div>
-                    <div class="row">
+                    <ng-container *ngIf="registerForm.controls.passGroup.get('pass')?.touched || registerForm.controls.passGroup.get('pass')?.dirty">
+                        <div *ngIf="registerForm.controls.passGroup.get('pass')?.errors?.['required']" class="err-msg">Password is required!</div>
+                        <div *ngIf="registerForm.controls.passGroup.get('pass')?.errors?.['minlength']" class="err-msg">Password must be at least 6 characters long!</div>
+                    </ng-container>
+                    <div class="row" [ngClass]="{'error': (registerForm.controls.passGroup.get('rePass')?.touched || registerForm.controls.passGroup.get('rePass')?.dirty) && registerForm.controls.passGroup.invalid}">
                         <i class="fas fa-lock"></i>
-                        <input formControlName="rePass" type="password" id="rePass" name="rePass" placeholder="Confirm Password" required>
+                        <input formControlName="rePass" class="fieldCtr" type="password" id="rePass" name="rePass" placeholder="Confirm Password" required>
                     </div>
+                    <ng-container *ngIf="registerForm.controls.passGroup.get('rePass')?.touched || registerForm.controls.passGroup.get('rePass')?.dirty">
+                        <div *ngIf="registerForm.controls.passGroup.get('rePass')?.errors?.['required']" class="err-msg">Re-Password is required!</div>
+                        <div *ngIf="registerForm.controls.passGroup.get('rePass')?.errors?.['minlength']" class="err-msg">Re-Password must be at least 6 characters long!</div>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="registerForm.controls.passGroup.get('pass')?.touched 
+                || registerForm.controls.passGroup.get('pass')?.dirty 
+                || registerForm.controls.passGroup.get('rePass')?.touched 
+                || registerForm.controls.passGroup.get('rePass')?.dirty">
+                    <div *ngIf="registerForm.controls.passGroup.get('pass')?.value != registerForm.controls.passGroup.get('rePass')?.value" class="err-msg">Passwords don't match!</div>
                 </ng-container>
                 <div class="row button">
-                    <input type="submit" value="Signup">
+                    <input [disabled]="registerForm.invalid" type="submit" value="Signup">
                 </div>
                 <div class="login-link">
                     <p>Already have an account?</p>

@@ -19,7 +19,7 @@ export class RegisterComponent {
     passGroup: this.fb.group(
       {
         pass: ['', [Validators.required, Validators.minLength(6)]],
-        rePass: ['', [Validators.required]],
+        rePass: ['', [Validators.required, Validators.minLength(6)]],
       },
       {
         validators: [passwordsValidator()],
@@ -35,7 +35,7 @@ export class RegisterComponent {
 
   register(): void {
     // console.log(this.passGroup?.value.rePass);
-    
+
     if (this.registerForm.invalid) {      
       return;
     }

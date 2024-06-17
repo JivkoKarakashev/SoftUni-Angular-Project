@@ -134,12 +134,21 @@ div.wrapper {
     border: none;
     outline: none;
 
-    & > input[name=email],
-    input[name=email]:focus {
+    & > input.fieldCtr,
+    input.fieldCtr:focus {
         border-color: #cc0033;
     }
 
-    & > input[name=email]:focus {
+    & > input.fieldCtr:focus {
         box-shadow: inset 0px 0px 2px 2px rgba(126, 15, 15, 0.25);
     }
+}
+
+.wrapper form fieldset div.row.button input[type='submit']:disabled,
+.wrapper form fieldset div.row.button:active {
+    background-color: #696969;
+    color: #faf0e6;
+    opacity: 1;
+    filter: none;
+    cursor: not-allowed;
 }
