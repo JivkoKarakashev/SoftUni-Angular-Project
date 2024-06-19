@@ -56,7 +56,8 @@ export class AppHttpInterceptor implements HttpInterceptor {
         return res;
       }),
       catchError((err) => {
-        return [err];
+        // console.log(err);
+        throw err;
       })
     );
   }

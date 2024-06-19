@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Subscription, map, tap } from 'rxjs';
+import { BehaviorSubject, Subscription, catchError, map, tap } from 'rxjs';
 import { UserForAuth, UserForLogin, UserForRegister } from '../types/user';
 
 @Injectable({
@@ -41,7 +41,12 @@ export class UserService implements OnDestroy {
         this.user$$.next({ _id, accessToken, email, username } as unknown as UserForAuth);
         // console.log(user);        
         // console.log(this.user$$.value);
-      }));
+      }),
+      catchError((err) => {
+        // console.log(err);
+        throw err;
+      })
+      );
   }
 
   register(email: string, username: string, password: string,
