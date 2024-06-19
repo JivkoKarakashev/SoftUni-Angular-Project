@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { FormBuilder, Validators,  } from '@angular/forms';
 import { emailValidator } from 'src/app/shared/utils/email-validator';
 import { passwordsValidator } from 'src/app/shared/utils/passwords-validator';
+import { catchError, of } from 'rxjs';
+import { HttpError } from 'src/app/types/httpError';
 
 
 @Component({
@@ -12,6 +14,7 @@ import { passwordsValidator } from 'src/app/shared/utils/passwords-validator';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
+  public httpError: HttpError = {};
 
   registerForm = this.fb.group({
     email: ['', [Validators.required, emailValidator()]],
@@ -42,8 +45,16 @@ export class RegisterComponent {
 
     const { email, username, passGroup: { pass } = {} } = this.registerForm.value;
     
-    this.userService.register(email!, username!, pass!)
-      .subscribe(() => {
+    this.userService.register(email!, username!, pass!).pipe(
+      catchError((err) => {
+        // console.log(err);
+        this.httpError = err;        
+        return of(err);
+      })
+      ).subscribe((res) => {
+        if (res == this.httpError) {
+          return;
+        }
         this.router.navigate(['/']);
       });
   }

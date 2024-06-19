@@ -21,7 +21,7 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {}
 
-  login() {
+  login(): void {
     if (this.loginForm.invalid) {    
       return;
     }
@@ -33,7 +33,7 @@ export class LoginComponent {
         return of(err);
       })
     ).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       if (res == this.httpError) {
         return;
       }

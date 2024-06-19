@@ -39,6 +39,7 @@ div.wrapper {
     flex-direction: column;
     gap: .5em;
     padding: 2em;
+    border: none;
 }
 
 .wrapper form fieldset .row {
@@ -151,4 +152,12 @@ div.wrapper {
     opacity: 1;
     filter: none;
     cursor: not-allowed;
+}
+
+.wrapper div.alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f44336;
+    color: white;
 }

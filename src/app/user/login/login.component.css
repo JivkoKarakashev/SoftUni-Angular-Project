@@ -39,6 +39,7 @@ div.wrapper {
     flex-direction: column;
     gap: .5em;
     padding: 2em;
+    border: none;
 }
 
 .wrapper form fieldset .row {
@@ -136,12 +137,12 @@ form fieldset div.row.button input:focus {
     border: none;
     outline: none;
 
-    & > input.fieldCtr,
+    &>input.fieldCtr,
     input.fieldCtr:focus {
         border-color: #cc0033;
     }
 
-    & > input.fieldCtr:focus {
+    &>input.fieldCtr:focus {
         box-shadow: inset 0px 0px 2px 2px rgba(126, 15, 15, 0.25);
     }
 }
@@ -153,4 +154,12 @@ form fieldset div.row.button input:focus {
     opacity: 1;
     filter: none;
     cursor: not-allowed;
+}
+
+.wrapper div.alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f44336;
+    color: white;
 }
