@@ -52,6 +52,21 @@ export class AppHttpInterceptor implements HttpInterceptor {
           const newRes = res.clone({ body: newBody });
           // console.log(newRes);
           return newRes;
+        } else if (req.url == 'http://localhost:3030/jsonstore/jackets' && res instanceof HttpResponse) {
+          this.cartService.items$.subscribe(items => this.cartItms$ = items);
+          const cartItmsIds = this.cartItms$.map((itm) => itm._id);
+          // console.log(cartItmsIds);        
+          // console.log(Object.values(res.body));
+          const newBody: Item[] = Object.values(res.body);
+          newBody.forEach((itm) => {
+            if (cartItmsIds.includes(itm._id)) {
+              itm.buyed = true;
+            }
+          });
+          // console.log(newBody);
+          const newRes = res.clone({ body: newBody });
+          // console.log(newRes);
+          return newRes;
         }
         return res;
       }),

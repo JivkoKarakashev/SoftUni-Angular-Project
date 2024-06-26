@@ -5,7 +5,7 @@ div.items ul.items {
     gap: 1em;
 }
 
-div.items ul.items li.item {
+li.item {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -25,8 +25,8 @@ div.items ul.items li.item {
     }
 }
 
-div.items ul.items li.item:hover,
-div.items ul.items li.item:focus-within {
+li.item:hover,
+li.item:focus-within {
     & div.image a {
         outline: none;
     }
@@ -95,24 +95,24 @@ div.items ul.items li.item:focus-within {
     }
 }
 
-div.items ul.items div.image a {
+li.item div.image a {
     overflow: hidden;
     width: 100%;
     max-height: 200px;
 }
 
-div.items ul.items div.image a img {
+li.item div.image a img {
     max-width: inherit;
     max-height: inherit;
     object-fit: cover;
 }
 
-div.items p span {
+p span {
     color: #890000
 }
 
-div.items ul.items li.item:hover,
-div.items ul.items li.item:focus-within {
+li.item:hover,
+li.item:focus-within {
     background-color: #252525;
     color: #fff;
 

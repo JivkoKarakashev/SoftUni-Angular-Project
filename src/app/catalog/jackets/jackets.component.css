@@ -5,7 +5,7 @@ div.items ul.items {
     gap: 1em;
 }
 
-div.items ul.items li.item {
+li.item {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -18,14 +18,15 @@ div.items ul.items li.item {
         padding: .4em 0;
         min-height: 4em;
         background-color: #fff;
+
         & ul.buttons {
             display: none;
         }
     }
 }
 
-div.items ul.items li.item:hover,
-div.items ul.items li.item:focus-within {
+li.item:hover,
+li.item:focus-within {
     & div.image a {
         outline: none;
     }
@@ -46,6 +47,7 @@ div.items ul.items li.item:focus-within {
                 padding: .3em .5em;
                 background-color: #252525;
                 border-radius: 0.4em;
+
                 & a {
                     color: #cc5656;
                 }
@@ -53,9 +55,11 @@ div.items ul.items li.item:focus-within {
 
 
             & {
+
                 li.button.buy:hover,
                 li.button.buy:focus-within {
-                    background-color: #5cb85c;                    
+                    background-color: #5cb85c;
+
                     & a {
                         color: #fff;
                         outline: none;
@@ -65,7 +69,8 @@ div.items ul.items li.item:focus-within {
 
                 li.button.edit:hover,
                 li.button.edit:focus-within {
-                    background-color: #fdf90a;                    
+                    background-color: #fdf90a;
+
                     & a {
                         color: #000;
                         outline: none;
@@ -75,7 +80,8 @@ div.items ul.items li.item:focus-within {
 
                 li.button.delete:hover,
                 li.button.delete:focus-within {
-                    background-color: #cc5656;    
+                    background-color: #cc5656;
+
                     & a {
                         color: #fff;
                         outline: none;
@@ -89,12 +95,24 @@ div.items ul.items li.item:focus-within {
     }
 }
 
-div.items p span {
+li.item div.image a {
+    overflow: hidden;
+    width: 100%;
+    max-height: 200px;
+}
+
+li.item div.image a img {
+    max-width: inherit;
+    max-height: inherit;
+    object-fit: cover;
+}
+
+p span {
     color: #890000
 }
 
-div.items ul.items li.item:hover,
-div.items ul.items li.item:focus-within {
+li.item:hover,
+li.item:focus-within {
     background-color: #252525;
     color: #fff;
 
