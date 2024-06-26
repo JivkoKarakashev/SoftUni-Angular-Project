@@ -2,26 +2,26 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
-import { JacketsService } from './jackets.service';
+import { LongwearService } from './longwear.service';
 import { Item } from 'src/app/types/item';
-import { Jacket } from 'src/app/types/jacket';
+import { Longwear } from 'src/app/types/longwear';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
 
 @Component({
-  selector: 'app-jackets',
-  templateUrl: './jackets.component.html',
-  styleUrls: ['./jackets.component.css']
+  selector: 'app-longwear',
+  templateUrl: './longwear.component.html',
+  styleUrls: ['./longwear.component.css']
 })
-export class JacketsComponent implements OnInit, OnDestroy {
-  public listItems$: Jacket[] = [];
+export class LongwearComponent implements OnInit, OnDestroy {
+  public listItems$: Longwear[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
 
 
-  constructor( private userService:UserService, private jacketsService: JacketsService, private cartService: ShoppingCartService ) { }
+  constructor( private userService:UserService, private longwearService: LongwearService, private cartService: ShoppingCartService ) { }
 
   get isLoggedIn(): boolean {
     // console.log(this.userService.isLoggedIn);
@@ -30,23 +30,24 @@ export class JacketsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const jacketsSubscription = this.jacketsService.getJackets().subscribe(jacketsObjs => {
-      let jackets = Object.entries(jacketsObjs).map(jacket => jacket[1]);
-      jackets.forEach(jckt => jckt.buyed = this.cartItms$$.value.some(itm => itm._id == jckt._id));
-      // console.log(jackets);
-      // console.log(jackets instanceof(Array));
-      // console.log(jackets[0].buyed);
-      // this.listItems$ = Object.values(jackets);
-      // console.log(Object.values(jackets));
-      this.listItems$ = jackets;
+    const longwearSubscription = this.longwearService.getLongwear().subscribe(longwearObjs => {
+      let longwaer = Object.entries(longwearObjs).map(lngwear => lngwear[1]);
+      longwaer.forEach(lngwr => lngwr.buyed = this.cartItms$$.value.some(itm => itm._id == lngwr._id));
+      // console.log(longwaer);
+      // console.log(longwaer instanceof(Array));
+      // console.log(longwaer[0].buyed);
+      // this.listItems$ = Object.values(longwaer);
+      // console.log(Object.values(longwaer));
+      this.listItems$ = longwaer;
     });
 
     const cartSubscription = this.cartService.items$.subscribe(items => {
       this.cartItms$$.next([...items])
       // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
     });
 
-    this.unsubscriptionArray.push(jacketsSubscription, cartSubscription);
+    this.unsubscriptionArray.push(longwearSubscription, cartSubscription);
 
     this.user$ = JSON.parse(localStorage?.getItem('userData') as string);
   }
@@ -58,10 +59,10 @@ export class JacketsComponent implements OnInit, OnDestroy {
     }); 
   }
 
-  addItemtoCart(e: Event, item: Jacket) {
+  addItemtoCart(e: Event, item: Longwear) {
     // console.log(e.target);
-    item.buyed = true;
     const { _ownerId, _id, image, description, color, quantity, price } = item;
+    item.buyed = true;
     const el = e.target as HTMLSelectElement;
     // console.log(item._id);
     const idx = this.listItems$.findIndex(itm => itm._id == _id);

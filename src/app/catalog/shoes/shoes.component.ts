@@ -35,6 +35,7 @@ export class ShoesComponent implements OnInit, OnDestroy {
       // console.log(shoes[0].buyed);
       // this.listItems$ = Object.values(shoes);
       // console.log(Object.values(shoes));
+      shoes.forEach(shoes => shoes.buyed = this.cartItms$$.value.some(itm => itm._id == shoes._id))
       this.listItems$ = shoes;
     });
 

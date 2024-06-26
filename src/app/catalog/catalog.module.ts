@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CategoryComponent } from './category/category.component';
 import { CatalogRoutingModule } from './catalog-routing.module';
 import { JacketsComponent } from './jackets/jackets.component';
+import { LongwearComponent } from './longwear/longwear.component';
 import { ShoesComponent } from './shoes/shoes.component';
 
 
@@ -13,6 +14,7 @@ import { ShoesComponent } from './shoes/shoes.component';
   declarations: [
     CategoryComponent,
     JacketsComponent,
+    LongwearComponent,
     ShoesComponent,
   ],
   imports: [
