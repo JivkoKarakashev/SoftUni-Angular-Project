@@ -1407,6 +1407,74 @@
                 price: 56
             }
         },
+        longwear: {
+            "cf32d131-bd40-4b35-a31a-63f86672b81f": {
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
+                _id: "cf32d131-bd40-4b35-a31a-63f86672b81f",
+                image: "https://cdn.pixabay.com/photo/2017/09/07/04/54/khaki-2723896_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["S", "M", "L"],
+                color: ["White", "Black", "Blue", "Red"],
+                brand: "Fusce vel",
+                quantity: 3,
+                price: 67
+            },
+            "8cbacf3d-cd95-4bfe-ae01-bbcbac8bcabc": {
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
+                _id: "8cbacf3d-cd95-4bfe-ae01-bbcbac8bcabc",
+                image: "https://cdn.pixabay.com/photo/2018/10/22/21/44/fashion-3766441_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["S", "L"],
+                color: ["Yellow", "Brown"],
+                brand: "Fusce vel",
+                quantity: 2,
+                price: 55
+            },
+            "e2e8aa93-c44f-44c3-bde9-71d20fbfcd28": {
+                _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                _id: "e2e8aa93-c44f-44c3-bde9-71d20fbfcd28",
+                image: "https://cdn.pixabay.com/photo/2021/07/04/09/45/jacket-6385904_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["XS", "S"],
+                color: ["Green", "Gray"],
+                brand: "Fusce vel",
+                quantity: 7,
+                price: 38
+            },
+            "a782d9ad-5cff-4689-89ba-95eb608f6505": {
+                _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                _id: "a782d9ad-5cff-4689-89ba-95eb608f6505",
+                image: "https://cdn.pixabay.com/photo/2023/11/27/09/37/jacket-8414997_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["XS", "M", "L", "XL"],
+                color: ["Pink", "Orange"],
+                brand: "Fusce vel",
+                quantity: 25,
+                price: 49
+            },
+            "cadbc572-e875-44b6-9893-a9ce4225caad": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "cadbc572-e875-44b6-9893-a9ce4225caad",
+                image: "https://cdn.pixabay.com/photo/2018/10/03/17/42/leather-3721996_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["M", "L", "XXL"],
+                color: ["Beige", "Chartreuse"],
+                brand: "Fusce vel",
+                quantity: 14,
+                price: 55
+            },
+            "cdb259c1-2a5f-459c-b2e0-b898f40cbe1d": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "cdb259c1-2a5f-459c-b2e0-b898f40cbe1d",
+                image: "https://cdn.pixabay.com/photo/2023/06/03/05/41/jacket-8036987_960_720.png",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["S", "M", "L"],
+                color: ["Crimson", "GreenYellow"],
+                brand: "Fusce vel",
+                quantity: 22,
+                price: 56
+            }
+        },
         shoes: {
             "-MSbypx-13fHPDyzNRtf": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",

@@ -69,6 +69,15 @@ p.cat-icon.suits::before {
     position: relative;
     z-index: 1;
 }
+.card .slide.slide1:hover,
+.card .slide.slide1:focus,
+.card .slide.slide1:active {
+    & p.cat-icon,
+    p.cat-icon::before {
+        color: #22292F;
+        
+    }
+}
 
 .card .slide.slide2 {
     padding: .4em;
@@ -93,8 +102,12 @@ p.cat-icon.suits::before {
     border: 1px solid rgba(55, 255, 15, 0.001);
 }
 
+.card .slide.slide2 .content h3 a:hover,
+.card .slide.slide2 .content h3 a:focus,
+.card .slide.slide2 .content h3 a:active,
 .card .slide.slide2 .content ul li a:hover,
-.card .slide.slide2 .content ul li a:focus {
+.card .slide.slide2 .content ul li a:focus,
+.card .slide.slide2 .content ul li a:active {
     background-color: #22292F;
     border: 1px solid  #5cb85c;
     border-radius: 0.2em;
@@ -103,6 +116,7 @@ p.cat-icon.suits::before {
 }
 
 .card .slide.slide1 .content .icon:active,
+.card .slide.slide2 .content h3 a:active,
 .card .slide.slide2 .content ul li a:active {
   filter: blur(1px);
 }
