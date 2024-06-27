@@ -1,19 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ShoppingCartDesktopComponent } from './shopping-cart-desktop/shopping-cart-desktop.component';
-import { ShoppingCartMobileComponent } from './shopping-cart-mobile/shopping-cart-mobile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { ShoppingCartDesktopComponent } from './shopping-cart-desktop/shopping-cart-desktop.component';
 
 
 
 @NgModule({
   declarations: [
-    ShoppingCartDesktopComponent,
-    ShoppingCartMobileComponent
+    ShoppingCartDesktopComponent
   ],
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule
   ],
-  exports: [ShoppingCartDesktopComponent, ShoppingCartMobileComponent]
+  exports: [ShoppingCartDesktopComponent]
 })
 export class SharedModule { }

@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-// import { mobileModal } from 'src/scripts/mobile-shopping-cart';
-import { ShoppingCartMobileComponent } from 'src/app/shared/shopping-cart-mobile/shopping-cart-mobile.component';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
+import { UserService } from 'src/app/user/user.service';
 
 @Component({
   selector: 'app-header-mobile',
@@ -8,22 +10,28 @@ import { ShoppingCartMobileComponent } from 'src/app/shared/shopping-cart-mobile
   styleUrls: ['./header-mobile.component.css']
 })
 export class HeaderMobileComponent implements OnInit {
-  @ViewChild('modal') private modalCart!: ShoppingCartMobileComponent;
-  public isShown: boolean = false;
+
+  constructor(private userService: UserService, private router: Router, private cartService: ShoppingCartService) {}
+
+  get isLoggedIn(): boolean {
+    // console.log(this.userService.isLoggedIn);
+    // console.log(this.userService.user$);    
+    return this.userService.isLoggedIn;
+  }
+
+  get isLoggedOut(): boolean {
+    // console.log(this.userService.isLoggedOut);
+    // console.log(this.userService.user$);    
+    return this.userService.isLoggedOut;
+  }
 
   ngOnInit(): void {
     // mobileModal();
   }
 
-  modalCartCalc() {
-    this.modalCart.cartCalc();   
+  logout() {
+    this.userService.logout();
+    this.router.navigate(['login']);    
   }
 
-  modalToggle(): void {
-    // console.log('HERE');    
-    this.isShown = !this.isShown;
-    this.modalCartCalc();
-    // console.log(this.isShown);    
-    // return this.isShown;
-  }
 }
