@@ -21,7 +21,7 @@ export class HeaderDesktopComponent implements OnInit {
 
   get isLoggedOut(): boolean {
     // console.log(this.userService.isLoggedOut);
-    // console.log(this.userService.user$);    
+    // console.log(this.userService.user$);
     return this.userService.isLoggedOut;
   }
   
@@ -31,6 +31,6 @@ export class HeaderDesktopComponent implements OnInit {
 
   logout() {
     this.userService.logout();
-    this.router.navigate(['login']);    
+    this.router.navigate(['/auth/login']);
   }
 }

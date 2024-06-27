@@ -4,8 +4,8 @@
         <ul class="navbar">
             <li><a class="nav-icon home" routerLink="/">Home</a></li>
             <ng-container *ngIf="isLoggedOut">
-                <li><a class="nav-icon guest" routerLink="/login">Login</a></li>
-                <li><a class="nav-icon user" routerLink="/register">Register</a></li>
+                <li><a class="nav-icon guest" routerLink="/auth/login">Login</a></li>
+                <li><a class="nav-icon user" routerLink="/auth/register">Register</a></li>
             </ng-container>
             <li *ngIf="isLoggedIn"><a class="nav-icon logout" (click)="logout()">Logout</a></li>
             <li><a class="nav-icon list" routerLink="/category">Category</a></li>

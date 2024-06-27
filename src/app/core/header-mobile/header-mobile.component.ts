@@ -31,7 +31,7 @@ export class HeaderMobileComponent implements OnInit {
 
   logout() {
     this.userService.logout();
-    this.router.navigate(['login']);    
+    this.router.navigate(['/auth/login']);
   }
 
 }

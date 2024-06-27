@@ -8,9 +8,10 @@ import { CategoryComponent } from '../catalog/category/category.component';
 import { ShoppingCartDesktopComponent } from '../shared/shopping-cart-desktop/shopping-cart-desktop.component';
 
 const routes: Routes = [
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
-    { path: 'profile', component: ProfileComponent },
+    { path: 'auth', loadChildren:() => import('../user/user.module').then(m => m.UserModule) },
+    { path: 'auth/login', component: LoginComponent },
+    { path: 'auth/register', component: RegisterComponent },
+    { path: 'auth/profile', component: ProfileComponent },
     { path: 'category', component: CategoryComponent },
     { path: 'cart', component: ShoppingCartDesktopComponent },
 ];
