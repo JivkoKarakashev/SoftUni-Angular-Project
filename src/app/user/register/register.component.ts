@@ -15,6 +15,7 @@ import { HttpError } from 'src/app/types/httpError';
 })
 export class RegisterComponent {
   public httpError: HttpError = {};
+  public loading: boolean = false;
 
   registerForm = this.fb.group({
     email: ['', [Validators.required, emailValidator()]],
@@ -38,7 +39,7 @@ export class RegisterComponent {
 
   register(): void {
     // console.log(this.passGroup?.value.rePass);
-
+    this.loading = true;
     if (this.registerForm.invalid) {      
       return;
     }
@@ -52,6 +53,7 @@ export class RegisterComponent {
         return of(err);
       })
       ).subscribe((res) => {
+        this.loading = false;
         if (res == this.httpError) {
           return;
         }

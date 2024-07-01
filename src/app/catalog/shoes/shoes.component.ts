@@ -19,6 +19,7 @@ export class ShoesComponent implements OnInit, OnDestroy {
   public cartItms$ = this.cartItms$$.asObservable();
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
+  public loading: boolean = true;
   
 
   constructor( private userService:UserService, private shoesService: ShoesService, private cartService: ShoppingCartService ) { }
@@ -31,6 +32,7 @@ export class ShoesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const shoesSubscription = this.shoesService.getShoes().subscribe(shoes => {
+      this.loading = false;
       // console.log(shoes);
       // console.log(shoes[0].buyed);
       // this.listItems$ = Object.values(shoes);

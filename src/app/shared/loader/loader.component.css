@@ -1,0 +1,47 @@
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 65vh;
+}
+
+.loader {
+    position: relative;
+    font-size: 1.5em;
+    letter-spacing: 0.1em;
+}
+
+.loader:before {
+    content: "Loading...";
+    color: #22292F;
+}
+
+.loader:after {
+    content: "";
+    width: 1em;
+    height: 1em;
+    background-color: #5270FF;
+    border-radius: 50%;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    top: -70px;
+    animation: motion 3s ease-in-out infinite;
+}
+
+@keyframes motion {
+
+    0%,
+    50%,
+    100% {
+        transform: translateX(0) scale(1);
+    }
+
+    25% {
+        transform: translateX(-100px) scale(0.3);
+    }
+
+    75% {
+        transform: translateX(100px) scale(0.3);
+    }
+}

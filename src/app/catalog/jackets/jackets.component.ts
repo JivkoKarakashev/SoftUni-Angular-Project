@@ -19,6 +19,7 @@ export class JacketsComponent implements OnInit, OnDestroy {
   public cartItms$ = this.cartItms$$.asObservable();
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
+  public loading: boolean = true;
 
 
   constructor( private userService:UserService, private jacketsService: JacketsService, private cartService: ShoppingCartService ) { }
@@ -31,6 +32,7 @@ export class JacketsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const jacketsSubscription = this.jacketsService.getJackets().subscribe(jacketsObjs => {
+      this.loading = false;
       let jackets = Object.entries(jacketsObjs).map(jacket => jacket[1]);
       jackets.forEach(jckt => jckt.buyed = this.cartItms$$.value.some(itm => itm._id == jckt._id));
       // console.log(jackets);

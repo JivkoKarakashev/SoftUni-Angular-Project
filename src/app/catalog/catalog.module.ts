@@ -8,6 +8,7 @@ import { ClothesComponent } from './clothes/clothes.component';
 import { JacketsComponent } from './jackets/jackets.component';
 import { LongwearComponent } from './longwear/longwear.component';
 import { ShoesComponent } from './shoes/shoes.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -20,7 +21,7 @@ import { ShoesComponent } from './shoes/shoes.component';
     ShoesComponent,
   ],
   imports: [
-    CommonModule, CatalogRoutingModule, FormsModule
+    CommonModule, CatalogRoutingModule, FormsModule, SharedModule
   ]
 })
 export class CatalogModule { }

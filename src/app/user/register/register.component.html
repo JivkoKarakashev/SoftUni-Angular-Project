@@ -1,4 +1,7 @@
-<section class="section-register">
+<ng-container *ngIf="loading">
+    <app-loader />
+</ng-container>
+<section class="section-register" *ngIf="!loading">
     <div class="wrapper">
         <div class="title">
             <h2>Register</h2>

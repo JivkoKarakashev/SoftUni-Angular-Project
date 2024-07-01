@@ -13,6 +13,7 @@ import { HttpError } from 'src/app/types/httpError';
 })
 export class LoginComponent {
   public httpError: HttpError = {};
+  public loading: boolean = false;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, emailValidator()]],    
@@ -22,6 +23,7 @@ export class LoginComponent {
   constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {}
 
   login(): void {
+    this.loading = true;
     if (this.loginForm.invalid) {    
       return;
     }
@@ -34,6 +36,7 @@ export class LoginComponent {
       })
     ).subscribe((res) => {
       // console.log(res);
+      this.loading = false;
       if (res == this.httpError) {
         return;
       }

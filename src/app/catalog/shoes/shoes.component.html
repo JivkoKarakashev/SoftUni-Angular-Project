@@ -1,4 +1,7 @@
-<section class="section-catalog">
+<ng-container *ngIf="loading">
+    <app-loader />
+</ng-container>
+<section class="section-catalog" *ngIf="!loading">
     <div class="container">
         <div class="items">
             <ul class="items">

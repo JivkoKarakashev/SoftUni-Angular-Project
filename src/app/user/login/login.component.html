@@ -1,4 +1,7 @@
-<section class="section-login">
+<ng-container *ngIf="loading">
+    <app-loader />
+</ng-container>
+<section class="section-login" *ngIf="!loading">
     <div class="wrapper">
         <div class="title">
             <h2>Login</h2>
