@@ -9,6 +9,8 @@ import { JacketsComponent } from './jackets/jackets.component';
 import { LongwearComponent } from './longwear/longwear.component';
 import { ShoesComponent } from './shoes/shoes.component';
 import { SharedModule } from '../shared/shared.module';
+import { TrainersComponent } from './trainers/trainers.component';
+import { BootsComponent } from './boots/boots.component';
 
 
 
@@ -19,6 +21,8 @@ import { SharedModule } from '../shared/shared.module';
     JacketsComponent,
     LongwearComponent,
     ShoesComponent,
+    TrainersComponent,
+    BootsComponent,
   ],
   imports: [
     CommonModule, CatalogRoutingModule, FormsModule, SharedModule
