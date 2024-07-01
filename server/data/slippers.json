@@ -1,0 +1,68 @@
+{
+    "ce6b95ed-7703-4e75-92aa-cedca5140635": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "ce6b95ed-7703-4e75-92aa-cedca5140635",
+        "image": "https://cdn.pixabay.com/photo/2020/03/05/20/45/slippers-4905435_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [8, 8.5, 9.5, 10],
+		"color": ["White", "Black", "Blue", "Red"],
+        "brand": "Fusce vel",
+		"quantity": 15,
+		"price": 47
+    },
+    "9f80a27b-c0e0-433b-979f-91b6c32a31e1": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "9f80a27b-c0e0-433b-979f-91b6c32a31e1",
+        "image": "https://cdn.pixabay.com/photo/2015/04/03/06/50/slippers-704705_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [8, 8.5, 9.5, 10],
+		"color": ["Yellow", "Brown"],
+        "brand": "Fusce vel",
+		"quantity": 10,
+		"price": 40
+    },
+    "d53f37a7-857f-4758-83cf-16d16f924b83": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "d53f37a7-857f-4758-83cf-16d16f924b83",
+        "image": "https://cdn.pixabay.com/photo/2014/01/28/19/54/slippers-253923_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [8, 8.5, 9.5, 10],
+		"color": ["Green", "Gray"],
+        "brand": "Fusce vel",
+		"quantity": 20,
+		"price": 50
+    },
+    "fb01dfe8-7f86-4eca-8055-311324238f15": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "fb01dfe8-7f86-4eca-8055-311324238f15",
+        "image": "https://cdn.pixabay.com/photo/2016/06/03/06/02/slippers-1432817_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [8, 8.5, 9.5, 10],
+		"color": ["Pink", "Orange"],
+        "brand": "Fusce vel",
+		"quantity": 25,
+		"price": 33
+    },
+    "140b3d37-e2e6-4c7a-8567-da67d82b7c74": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "140b3d37-e2e6-4c7a-8567-da67d82b7c74",
+        "image": "https://cdn.pixabay.com/photo/2015/01/21/01/27/slippers-606277_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [8, 8.5, 9.5, 10],
+		"color": ["Beige", "Chartreuse"],
+        "brand": "Fusce vel",
+		"quantity": 27,
+		"price": 21
+    },
+    "19e5e727-b481-4eb8-95dd-5c5240bc5e3e": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "19e5e727-b481-4eb8-95dd-5c5240bc5e3e",
+        "image": "https://cdn.pixabay.com/photo/2014/07/19/11/53/shoes-396996_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [8, 8.5, 9.5, 10],
+		"color": ["Crimson", "GreenYellow"],
+        "brand": "Fusce vel",
+		"quantity": 44,
+		"price": 56
+    }
+}

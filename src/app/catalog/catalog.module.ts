@@ -11,6 +11,7 @@ import { ShoesComponent } from './shoes/shoes.component';
 import { SharedModule } from '../shared/shared.module';
 import { TrainersComponent } from './trainers/trainers.component';
 import { BootsComponent } from './boots/boots.component';
+import { SlippersComponent } from './slippers/slippers.component';
 
 
 
@@ -23,6 +24,7 @@ import { BootsComponent } from './boots/boots.component';
     ShoesComponent,
     TrainersComponent,
     BootsComponent,
+    SlippersComponent,
   ],
   imports: [
     CommonModule, CatalogRoutingModule, FormsModule, SharedModule

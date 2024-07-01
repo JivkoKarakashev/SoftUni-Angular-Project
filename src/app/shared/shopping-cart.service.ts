@@ -45,4 +45,8 @@ export class ShoppingCartService {
       });      
       // console.log(this.items$$.value);
   }
+
+  emptyCart(): void {    
+    this.items$$.next([]);
+  }
 }

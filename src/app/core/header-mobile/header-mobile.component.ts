@@ -30,6 +30,7 @@ export class HeaderMobileComponent implements OnInit {
   }
 
   logout() {
+    this.cartService.emptyCart();
     this.userService.logout();
     this.router.navigate(['/auth/login']);
   }
