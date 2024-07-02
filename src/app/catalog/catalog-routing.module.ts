@@ -9,6 +9,7 @@ import { BootsComponent } from './boots/boots.component';
 import { SlippersComponent } from './slippers/slippers.component';
 
 const routes: Routes = [
+  { path: 'catalog', loadChildren: () => import('./catalog.module').then(m => m.CatalogModule) },
   { path: 'catalog/clothes', component: ClothesComponent },
   { path: 'catalog/jackets', component: JacketsComponent },
   { path: 'catalog/longwear', component: LongwearComponent },
