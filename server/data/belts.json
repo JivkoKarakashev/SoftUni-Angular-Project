@@ -1,0 +1,68 @@
+{
+    "f867844d-eca5-4da0-ade0-ef2076bd5442": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "f867844d-eca5-4da0-ade0-ef2076bd5442",
+        "image": "https://cdn.pixabay.com/photo/2013/06/16/21/56/belt-139757_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [30, 32, 34, 36],
+		"color": ["White", "Black", "Blue", "Red"],
+        "brand": "Fusce vel",
+		"quantity": 15,
+		"price": 47
+    },
+    "0c7e01a6-fae7-40b8-b579-613c9aae776d": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "0c7e01a6-fae7-40b8-b579-613c9aae776d",
+        "image": "https://cdn.pixabay.com/photo/2015/05/29/22/18/waist-belt-789903_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [27, 28, 29, 30],
+		"color": ["Yellow", "Brown"],
+        "brand": "Fusce vel",
+		"quantity": 10,
+		"price": 40
+    },
+    "9e57f29a-2910-4c4f-b211-e3271f7c07db": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "9e57f29a-2910-4c4f-b211-e3271f7c07db",
+        "image": "https://cdn.pixabay.com/photo/2018/06/03/23/47/belt-3451963_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [35, 36, 37, 38],
+		"color": ["Green", "Gray"],
+        "brand": "Fusce vel",
+		"quantity": 20,
+		"price": 50
+    },
+    "8e7979ce-50f7-41e7-9bc6-12af5e692516": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "8e7979ce-50f7-41e7-9bc6-12af5e692516",
+        "image": "https://cdn.pixabay.com/photo/2021/02/02/08/48/belt-5973152_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [27, 28, 29, 30],
+		"color": ["Pink", "Orange"],
+        "brand": "Fusce vel",
+		"quantity": 25,
+		"price": 33
+    },
+    "572883fb-4f2e-443e-8bd9-280fc1072fa6": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "572883fb-4f2e-443e-8bd9-280fc1072fa6",
+        "image": "https://cdn.pixabay.com/photo/2018/06/26/13/29/belt-buckle-3499410_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [30, 32, 34, 36],
+		"color": ["Beige", "Chartreuse"],
+        "brand": "Fusce vel",
+		"quantity": 27,
+		"price": 21
+    },
+    "3019e643-54f5-4767-b90c-e102d8de51f2": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "3019e643-54f5-4767-b90c-e102d8de51f2",
+        "image": "https://cdn.pixabay.com/photo/2015/09/05/19/35/brown-924734_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [35, 36, 37, 38],
+		"color": ["Crimson", "GreenYellow"],
+        "brand": "Fusce vel",
+		"quantity": 44,
+		"price": 56
+    }
+}

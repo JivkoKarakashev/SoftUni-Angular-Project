@@ -49,7 +49,7 @@
                                     </td>
                                     <td class="quantity">
                                         <!-- <form #qtyForm> -->
-                                            <label>&#40;between 1 &amp; {{item.quantity}}&#41;</label>
+                                            <label>&ge;1 &amp; &le;{{item.quantity}}</label>
                                             <input #qty [ngModel]=""  type="number" name="quantity" min="1" max="{{item.quantity}}" (change)="changeQuantity($event)">
                                         <!-- </form> -->
                                     </td>

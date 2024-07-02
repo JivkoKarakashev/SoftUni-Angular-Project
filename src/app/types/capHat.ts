@@ -1,4 +1,4 @@
-export interface CapsHats {
+export interface CapHat {
     _ownerId: string,
     _id: string,
     image: string

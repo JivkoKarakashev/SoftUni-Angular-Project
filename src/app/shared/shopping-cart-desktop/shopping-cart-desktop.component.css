@@ -45,6 +45,10 @@
     animation-duration: .2s
 }
 
+input[type='number']{
+    width: 5em;
+} 
+
 /* Add Animation */
 @-webkit-keyframes animatetop {
     from {
