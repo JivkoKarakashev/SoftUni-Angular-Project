@@ -1815,6 +1815,74 @@
                 price: 56
             }
         },
+        gloves: {
+            "8ca111d0-3c8d-4042-8950-ef310d776cb4": {
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
+                _id: "8ca111d0-3c8d-4042-8950-ef310d776cb4",
+                image: "https://cdn.pixabay.com/photo/2020/01/04/08/53/fashion-4740023_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
+                color: ["White", "Black", "Blue", "Red"],
+                brand: "Fusce vel",
+                quantity: 15,
+                price: 47
+            },
+            "dea96f4e-1550-46b0-a6c7-9cc51b3f7ebd": {
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
+                _id: "dea96f4e-1550-46b0-a6c7-9cc51b3f7ebd",
+                image: "https://cdn.pixabay.com/photo/2016/02/03/14/56/mittens-1177211_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [7, 7.5, 8.5, 10],
+                color: ["Yellow", "Brown"],
+                brand: "Fusce vel",
+                quantity: 10,
+                price: 40
+            },
+            "4a7fa928-e054-4f2a-b2b5-f54ce046a0f7": {
+                _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                _id: "4a7fa928-e054-4f2a-b2b5-f54ce046a0f7",
+                image: "https://cdn.pixabay.com/photo/2017/08/05/03/02/el-2582138_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
+                color: ["Green", "Gray"],
+                brand: "Fusce vel",
+                quantity: 20,
+                price: 50
+            },
+            "299d18f0-6bf2-4605-8a00-82b9da04d2e6": {
+                _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                _id: "299d18f0-6bf2-4605-8a00-82b9da04d2e6",
+                image: "https://cdn.pixabay.com/photo/2021/04/26/13/34/gloves-6208920_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [7, 7.5, 8.5, 10],
+                color: ["Pink", "Orange"],
+                brand: "Fusce vel",
+                quantity: 25,
+                price: 33
+            },
+            "cc73d130-210a-4e79-8d7a-7b200ed4170d": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "cc73d130-210a-4e79-8d7a-7b200ed4170d",
+                image: "https://cdn.pixabay.com/photo/2016/02/11/20/21/mens-leather-gloves-1194450_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
+                color: ["Beige", "Chartreuse"],
+                brand: "Fusce vel",
+                quantity: 27,
+                price: 21
+            },
+            "a092c650-5761-4c2f-a2c9-d65dd82faa7a": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "a092c650-5761-4c2f-a2c9-d65dd82faa7a",
+                image: "https://cdn.pixabay.com/photo/2016/02/11/20/21/dark-brown-leather-gloves-1194453_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: [8, 8.5, 9.5, 10],
+                color: ["Crimson", "GreenYellow"],
+                brand: "Fusce vel",
+                quantity: 44,
+                price: 56
+            }
+        },
     	cart: {
             "-MSgyQMjBNfYjW2m6r97": {
                 _id: "-MSgyQMjBNfYjW2m6r97",
