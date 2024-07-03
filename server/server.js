@@ -1883,6 +1883,74 @@
                 price: 56
             }
         },
+        sunglasses: {
+            "853f3446-e27e-4e4d-8df1-e5dfde4ec22d": {
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
+                _id: "853f3446-e27e-4e4d-8df1-e5dfde4ec22d",
+                image: "https://cdn.pixabay.com/photo/2017/08/06/12/33/aviator-sunglasses-2592111_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["S", "M", "L"],
+                color: ["White", "Black", "Blue", "Red"],
+                brand: "Fusce vel",
+                quantity: 3,
+                price: 47
+            },
+            "995d201c-224b-492d-85dc-0f54c3caa1b8": {
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
+                _id: "995d201c-224b-492d-85dc-0f54c3caa1b8",
+                image: "https://cdn.pixabay.com/photo/2017/07/13/14/05/wood-sunglasses-2500491_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["S", "L"],
+                color: ["Yellow", "Brown"],
+                brand: "Fusce vel",
+                quantity: 2,
+                price: 40
+            },
+            "700ecdb8-8987-42d7-b3c8-2350bb0a9b48": {
+                _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                _id: "700ecdb8-8987-42d7-b3c8-2350bb0a9b48",
+                image: "https://cdn.pixabay.com/photo/2013/09/01/17/54/sunglasses-178153_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["XS", "S"],
+                color: ["Green", "Gray"],
+                brand: "Fusce vel",
+                quantity: 7,
+                price: 33
+            },
+            "e2dae4a7-77f2-43ec-943a-2a89222dd672": {
+                _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                _id: "e2dae4a7-77f2-43ec-943a-2a89222dd672",
+                image: "https://cdn.pixabay.com/photo/2019/05/05/18/27/glasses-4181316_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["XS", "M", "L", "XL"],
+                color: ["Pink", "Orange"],
+                brand: "Fusce vel",
+                quantity: 25,
+                price: 42
+            },
+            "af7a58f3-bb9d-4a09-9395-bfc124d6de37": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "af7a58f3-bb9d-4a09-9395-bfc124d6de37",
+                image: "https://cdn.pixabay.com/photo/2015/07/22/21/24/oakley-856122_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["M", "L", "XXL"],
+                color: ["Beige", "Chartreuse"],
+                brand: "Fusce vel",
+                quantity: 14,
+                price: 21
+            },
+            "bfb59ac0-328f-4f6d-afaa-fd74e5c1352f": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "bfb59ac0-328f-4f6d-afaa-fd74e5c1352f",
+                image: "https://cdn.pixabay.com/photo/2022/11/11/20/20/glasses-7585754_960_720.jpg",
+                description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                size: ["S", "M", "L"],
+                color: ["Crimson", "GreenYellow"],
+                brand: "Fusce vel",
+                quantity: 22,
+                price: 37
+            }
+        },
     	cart: {
             "-MSgyQMjBNfYjW2m6r97": {
                 _id: "-MSgyQMjBNfYjW2m6r97",
