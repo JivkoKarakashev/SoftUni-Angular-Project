@@ -3,7 +3,7 @@ export interface Slippers {
     _id: string,
     image: string
     description: string,
-    size: number [],
+    size: (string | number)[],
     color: string[],
     brand: string,
     quantity: number,

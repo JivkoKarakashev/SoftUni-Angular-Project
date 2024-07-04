@@ -25,6 +25,7 @@
                                 <td class="media">Image</td>
                                 <td class="item-description">Description</td>
                                 <td class="quantity">Quantity</td>
+                                <td class="size">Size</td>
                                 <td class="price">Price</td>
                                 <td class="prod">Amount</td>
                             </tr>
@@ -41,7 +42,7 @@
                                     <td class="item-description">
                                         <p>{{item.description}}</p>
 
-                                        <label>Choose color:</label>
+                                        <label>color:</label>
                                         <select #colorSelector [ngModel]="" name="colors" (change)="changeColor($event)">
                                             <option *ngFor="let col of item.color" [ngValue]="col">{{col}}</option>
                                         </select>
@@ -52,6 +53,12 @@
                                             <label>&ge;1 &amp; &le;{{item.quantity}}</label>
                                             <input #qty [ngModel]=""  type="number" name="quantity" min="1" max="{{item.quantity}}" (change)="changeQuantity($event)">
                                         <!-- </form> -->
+                                    </td>
+                                    <td class="size">
+                                        <label>size:</label>
+                                        <select #sizeSelector [ngModel]="" name="size">
+                                            <option *ngFor="let sz of item.size" [ngValue]="sz">{{sz}}</option>
+                                        </select>
                                     </td>
                                     <td class="price">${{item.price}}</td>
                                     <td class="prod" #amounts></td>

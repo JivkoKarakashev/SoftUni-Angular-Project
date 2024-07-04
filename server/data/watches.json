@@ -1,0 +1,68 @@
+{
+    "a8ca7709-8458-4392-8dce-fbd7220b89b6": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "a8ca7709-8458-4392-8dce-fbd7220b89b6",
+        "image": "https://cdn.pixabay.com/photo/2016/11/29/13/39/analog-watch-1869928_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [32, 34, 36, 37],
+		"color": ["White", "Black", "Blue", "Red"],
+        "brand": "Fusce vel",
+		"quantity": 15,
+		"price": 47
+    },
+    "c54ca5dc-c54b-4b76-b3b3-4bc70d191752": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "c54ca5dc-c54b-4b76-b3b3-4bc70d191752",
+        "image": "https://cdn.pixabay.com/photo/2014/07/31/23/00/wristwatch-407096_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [37, 39, 43, 45],
+		"color": ["Yellow", "Brown"],
+        "brand": "Fusce vel",
+		"quantity": 10,
+		"price": 40
+    },
+    "aab22e23-ce37-425b-b801-8f7f70f1061c": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "aab22e23-ce37-425b-b801-8f7f70f1061c",
+        "image": "https://cdn.pixabay.com/photo/2017/03/03/04/31/clock-2113254_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [32, 34, 36, 37],
+		"color": ["Green", "Gray"],
+        "brand": "Fusce vel",
+		"quantity": 20,
+		"price": 50
+    },
+    "2c02cf71-206b-40a3-a099-92ab9a51d018": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "2c02cf71-206b-40a3-a099-92ab9a51d018",
+        "image": "https://cdn.pixabay.com/photo/2018/01/18/19/06/time-3091031_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [22, 24, 26, 28],
+		"color": ["Pink", "Orange"],
+        "brand": "Fusce vel",
+		"quantity": 25,
+		"price": 33
+    },
+    "78741946-e9d2-4c76-8804-c1cb167d2413": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "78741946-e9d2-4c76-8804-c1cb167d2413",
+        "image": "https://cdn.pixabay.com/photo/2013/07/11/15/30/male-watch-144648_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [32, 34, 36, 37],
+		"color": ["Beige", "Chartreuse"],
+        "brand": "Fusce vel",
+		"quantity": 27,
+		"price": 21
+    },
+    "e947c90c-1237-483b-b10d-dc51b7817e09": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "e947c90c-1237-483b-b10d-dc51b7817e09",
+        "image": "https://cdn.pixabay.com/photo/2017/03/10/17/06/swatch-watch-2133289_960_720.jpg",
+        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "size": [22, 24, 26, 28],
+		"color": ["Crimson", "GreenYellow"],
+        "brand": "Fusce vel",
+		"quantity": 44,
+		"price": 56
+    }
+}

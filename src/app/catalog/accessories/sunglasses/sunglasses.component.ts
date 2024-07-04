@@ -63,13 +63,13 @@ export class SunglassesComponent implements OnInit, OnDestroy {
 
   addItemtoCart(e: Event, item: Sunglasses) {
     // console.log(e.target);
-    const { _ownerId, _id, image, description, color, quantity, price } = item;
+    const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
     const el = e.target as HTMLSelectElement;
     // console.log(item._id);
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
-    this.cartService.addCartItem({ _ownerId, _id, image, description, color, quantity, price });
+    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

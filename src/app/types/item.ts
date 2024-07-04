@@ -3,6 +3,7 @@ export interface Item {
     _id: string,
     image: string
     description: string,
+    size: (string | number)[],
     color: string[],
     quantity: number,
     price: number,

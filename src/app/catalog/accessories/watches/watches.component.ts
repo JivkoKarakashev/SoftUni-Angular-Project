@@ -2,19 +2,19 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
-import { BootsService } from './boots.service';
+import { WatchesService } from './watches.service';
 import { Item } from 'src/app/types/item';
-import { Boot } from 'src/app/types/boot';
+import { Watch } from 'src/app/types/watch';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
 
 @Component({
-  selector: 'app-boots',
-  templateUrl: './boots.component.html',
-  styleUrls: ['./boots.component.css']
+  selector: 'app-watches',
+  templateUrl: './watches.component.html',
+  styleUrls: ['./watches.component.css']
 })
-export class BootsComponent implements OnInit, OnDestroy {
-  public listItems$: Boot[] = [];
+export class WatchesComponent implements OnInit, OnDestroy {
+  public listItems$: Watch[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
   private unsubscriptionArray: Subscription[] = [];
@@ -22,7 +22,7 @@ export class BootsComponent implements OnInit, OnDestroy {
   public loading: boolean = true;
 
 
-  constructor( private userService:UserService, private bootsService: BootsService, private cartService: ShoppingCartService ) { }
+  constructor(private userService: UserService, private watchesService: WatchesService, private cartService: ShoppingCartService) { }
 
   get isLoggedIn(): boolean {
     // console.log(this.userService.isLoggedIn);
@@ -31,16 +31,16 @@ export class BootsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const bootsSubscription = this.bootsService.getBoots().subscribe(bootsObjs => {
+    const watchesSubscription = this.watchesService.getWatches().subscribe(watchesObjs => {
       this.loading = false;
-      let boots = Object.entries(bootsObjs).map(bts => bts[1]);
-      boots.forEach(bts => bts.buyed = this.cartItms$$.value.some(itm => itm._id == bts._id));
-      // console.log(boots);
-      // console.log(boots instanceof(Array));
-      // console.log(boots[0].buyed);
-      // this.listItems$ = Object.values(boots);
-      // console.log(Object.values(boots));
-      this.listItems$ = boots;
+      let watches = Object.entries(watchesObjs).map(wtches => wtches[1]);
+      watches.forEach(wtches => wtches.buyed = this.cartItms$$.value.some(itm => itm._id == wtches._id));
+      // console.log(watches);
+      // console.log(watches instanceof(Array));
+      // console.log(watches[0].buyed);
+      // this.listItems$ = Object.values(watches);
+      // console.log(Object.values(watches));
+      this.listItems$ = watches;
     });
 
     const cartSubscription = this.cartService.items$.subscribe(items => {
@@ -49,7 +49,7 @@ export class BootsComponent implements OnInit, OnDestroy {
       // console.log(this.cartItms$$.value);
     });
 
-    this.unsubscriptionArray.push(bootsSubscription, cartSubscription);
+    this.unsubscriptionArray.push(watchesSubscription, cartSubscription);
 
     this.user$ = JSON.parse(localStorage?.getItem('userData') as string);
   }
@@ -58,18 +58,18 @@ export class BootsComponent implements OnInit, OnDestroy {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 2');      
-    }); 
+    });
   }
 
-  addItemtoCart(e: Event, item: Boot) {
+  addItemtoCart(e: Event, item: Watch) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
     const el = e.target as HTMLSelectElement;
     // console.log(item._id);
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item );    
-    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });      
+    this.listItems$.splice(idx, 1, item);
+    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

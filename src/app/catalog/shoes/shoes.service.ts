@@ -17,7 +17,7 @@ export class ShoesService {
   trainers: Trainers[] = [];
   boots: Boot[] = [];
   slippers: Slippers[] = [];
-  shoes: Trainers[] & Boot[] & Slippers[] = [];
+  shoes: (Trainers & Boot & Slippers)[] = [];
 
   constructor(private http: HttpClient) { }
 

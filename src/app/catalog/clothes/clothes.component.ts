@@ -15,7 +15,7 @@ import { UserService } from 'src/app/user/user.service';
   styleUrls: ['./clothes.component.css']
 })
 export class ClothesComponent implements OnInit, OnDestroy {
-  public listItems$: Jacket[] & Longwear[] = [];
+  public listItems$: (Jacket & Longwear)[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
   private unsubscriptionArray: Subscription[] = [];
@@ -67,15 +67,15 @@ export class ClothesComponent implements OnInit, OnDestroy {
     }); 
   }
 
-  addItemtoCart(e: Event, item: Longwear) {
+  addItemtoCart(e: Event, item: Jacket | Longwear) {
     // console.log(e.target);
-    const { _ownerId, _id, image, description, color, quantity, price } = item;
+    const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
     const el = e.target as HTMLSelectElement;
     // console.log(item._id);
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
-    this.cartService.addCartItem({ _ownerId, _id, image, description, color, quantity, price });      
+    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });      
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

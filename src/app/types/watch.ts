@@ -1,4 +1,4 @@
-export interface Jacket {
+export interface Watch {
     _ownerId: string,
     _id: string,
     image: string

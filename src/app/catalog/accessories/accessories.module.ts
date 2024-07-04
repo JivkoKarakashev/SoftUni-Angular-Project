@@ -7,6 +7,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { BeltsComponent } from './belts/belts.component';
 import { GlovesComponent } from './gloves/gloves.component';
 import { SunglassesComponent } from './sunglasses/sunglasses.component';
+import { WatchesComponent } from './watches/watches.component';
+import { AccessoriesComponent } from './accessories/accessories.component';
 
 
 
@@ -15,7 +17,9 @@ import { SunglassesComponent } from './sunglasses/sunglasses.component';
     CapsHatsComponent,
     BeltsComponent,
     GlovesComponent,
-    SunglassesComponent
+    SunglassesComponent,
+    WatchesComponent,
+    AccessoriesComponent
   ],
   imports: [
     CommonModule, AccessoriesRoutingModule, SharedModule
