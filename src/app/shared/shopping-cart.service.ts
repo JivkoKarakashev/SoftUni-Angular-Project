@@ -46,6 +46,13 @@ export class ShoppingCartService {
       // console.log(this.items$$.value);
   }
 
+  removeCartItm(idx: number) {
+    const newItemsArr = [...this.items$$.value];
+    newItemsArr.splice(idx, 1);
+    this.items$$.next(newItemsArr);
+    // console.log(this.items$$.value);
+  }
+
   emptyCart(): void {    
     this.items$$.next([]);
   }

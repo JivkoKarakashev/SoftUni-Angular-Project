@@ -2,7 +2,7 @@
     "-MSgyQMjBNfYjW2m6r97": {
         "_id": "-MSgyQMjBNfYjW2m6r97",
         "image": "https://cdn.pixabay.com/photo/2016/12/10/16/57/shoes-1897708_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["White", "Black", "Blue", "Red"],
 		"quantity": 15,
 		"price": 47
@@ -10,7 +10,7 @@
     "-MSgySbWEFw3rhCfIIns": {
         "_id": "-MSgySbWEFw3rhCfIIns",
         "image": "https://cdn.pixabay.com/photo/2016/09/02/11/10/boots-1638873_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Yellow", "Brown"],
 		"quantity": 10,
 		"price": 40
@@ -18,7 +18,7 @@
     "-MSgyUeUxLUNUorksrlq": {
         "_id": "-MSgyUeUxLUNUorksrlq",
         "image": "https://cdn.pixabay.com/photo/2014/12/31/11/41/shoes-584850_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Green", "Gray"],
 		"quantity": 20,
 		"price": 50
@@ -26,7 +26,7 @@
     "-MSgyWOlRpJq2G2hBqYZ": {
         "_id": "-MSgyWOlRpJq2G2hBqYZ",
         "image": "https://cdn.pixabay.com/photo/2013/05/31/20/33/running-shoes-115149_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Pink", "Orange"],
 		"quantity": 25,
 		"price": 33
@@ -34,7 +34,7 @@
     "-MSgyY8fK5DetuiWvbbX": {
         "_id": "-MSgyY8fK5DetuiWvbbX",
         "image": "https://cdn.pixabay.com/photo/2016/10/15/23/09/shoe-1743929_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Beige", "Chartreuse"],
 		"quantity": 27,
 		"price": 21
@@ -42,7 +42,7 @@
     "-MSgyZoHC-v0eEdoy31Y": {
         "_id": "-MSgyZoHC-v0eEdoy31Y",
         "image": "https://cdn.pixabay.com/photo/2016/07/12/13/18/baby-1512018_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Crimson", "GreenYellow"],
 		"quantity": 44,
 		"price": 56
@@ -50,7 +50,7 @@
     "-MSgyacRSWOAMXra4lZ_": {
         "_id": "-MSgyacRSWOAMXra4lZ_",
         "image": "https://cdn.pixabay.com/photo/2016/12/10/16/57/shoes-1897708_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["White", "Black", "Blue", "Red"],
 		"quantity": 15,
 		"price": 47
@@ -58,7 +58,7 @@
     "-MSgycIUgNg2qojbj7e1": {
         "_id": "-MSgycIUgNg2qojbj7e1",
         "image": "https://cdn.pixabay.com/photo/2016/09/02/11/10/boots-1638873_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Yellow", "Brown"],
 		"quantity": 10,
 		"price": 40
@@ -66,7 +66,7 @@
     "-MSgydt2l0elQZ2vWXtL": {
         "_id": "-MSgydt2l0elQZ2vWXtL",
         "image": "https://cdn.pixabay.com/photo/2014/12/31/11/41/shoes-584850_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Green", "Gray"],
 		"quantity": 20,
 		"price": 50
@@ -74,7 +74,7 @@
     "-MSgyg1jo4ZATbbeLtCF": {
         "_id": "-MSgyg1jo4ZATbbeLtCF",
         "image": "https://cdn.pixabay.com/photo/2013/05/31/20/33/running-shoes-115149_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Pink", "Orange"],
 		"quantity": 25,
 		"price": 33
@@ -82,7 +82,7 @@
     "-MSgyhugLG4gmph9qIGB": {
         "_id": "-MSgyhugLG4gmph9qIGB",
         "image": "https://cdn.pixabay.com/photo/2016/10/15/23/09/shoe-1743929_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Beige", "Chartreuse"],
 		"quantity": 27,
 		"price": 21
@@ -90,7 +90,7 @@
     "-MSgyl1Umh0tKd3ISkJt": {
         "_id": "-MSgyl1Umh0tKd3ISkJt",
         "image": "https://cdn.pixabay.com/photo/2016/07/12/13/18/baby-1512018_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Crimson", "GreenYellow"],
 		"quantity": 44,
 		"price": 56
@@ -98,7 +98,7 @@
     "-MSgymXYyAU71cDX6-eK": {
         "_id": "-MSgymXYyAU71cDX6-eK",
         "image": "https://cdn.pixabay.com/photo/2016/12/10/16/57/shoes-1897708_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["White", "Black", "Blue", "Red"],
 		"quantity": 15,
 		"price": 47
@@ -106,7 +106,7 @@
     "-MSgyo88wO16izQZCVjh": {
         "_id": "-MSgyo88wO16izQZCVjh",
         "image": "https://cdn.pixabay.com/photo/2016/09/02/11/10/boots-1638873_960_720.jpg",
-        "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "description": "Lorem ipsum dolor sit amet....",
 		"color": ["Yellow", "Brown"],
 		"quantity": 10,
 		"price": 40

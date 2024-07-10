@@ -21,7 +21,7 @@ html {
     font: 14px/1.5 "Montserrat Alternates", sans-serif;
 }
 
-body, table, input {
+body, table, input, button, textarea, select {
     font: inherit;
 }
 

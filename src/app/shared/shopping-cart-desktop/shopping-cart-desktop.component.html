@@ -7,17 +7,20 @@
                 <div class="btn-wrapper close">
                     <span #closeBtn class="btn close-btn">&times;</span>
                 </div>
-                <h2>Shopping Cart</h2>
+                <h4>Shopping Cart</h4>
             </div>
             <div class="modal-body">
                 <section class="header">
-                    <label for="desktop-select_all">Select all items</label>
-                    <input #checkItAll type="checkbox" id="desktop-select_all" name="desktop-select_all">
+                    <!-- <label for="selectAll">Select all</label>
+                    <input #checkItAll type="checkbox" id="selectAll" name="selectAll" (change)="toggleSelectAll()"> -->
                     <!-- <label for="remove-item">Remove selected</label> -->
-                    <input #removeItems type="button" id="remove-item" name="remove-item" class="remove-item" value="Remove selected">
+                    <div class="buttons">
+                        <input #checkItAll type="button" id="selectAll" name="selectAll" class="button remove" [value]="selectAllButtonStatement ? 'deselect all' : 'select all'" (click)="toggleSelectAll()">
+                        <input #removeItems type="button" id="remove-item" name="remove-item" class="button remove" value="Remove selected" (click)="removeSelected()">
+                    </div>
                 </section>
 
-                <section class="table">
+                <!-- <section class="table">
                     <table #table class="table table-borderless">
                         <thead>
                             <tr>
@@ -30,9 +33,9 @@
                                 <td class="prod">Amount</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody> -->
                             <!-- <ng-container *ngFor="let item of listItems$"> -->
-                                <tr #rows *ngFor="let item of listItems$" [id]="item._id">
+                                <!-- <tr #rows *ngFor="let item of listItems$" [id]="item._id">
                                     <td class="select-row">
                                         <input #inputs name="select-row" type="checkbox">
                                     </td>
@@ -45,15 +48,15 @@
                                         <label>color:</label>
                                         <select #colorSelector [ngModel]="" name="colors" (change)="changeColor($event)">
                                             <option *ngFor="let col of item.color" [ngValue]="col">{{col}}</option>
-                                        </select>
+                                        </select> -->
                                         <!-- <p>Color: {{item.color}}</p> -->
-                                    </td>
-                                    <td class="quantity">
+                                    <!-- </td>
+                                    <td class="quantity"> -->
                                         <!-- <form #qtyForm> -->
-                                            <label>&ge;1 &amp; &le;{{item.quantity}}</label>
-                                            <input #qty [ngModel]=""  type="number" name="quantity" min="1" max="{{item.quantity}}" (change)="changeQuantity($event)">
+                                            <!-- <label>&ge;1 &amp; &le;{{item.quantity}}</label>
+                                            <input #qty [ngModel]=""  type="number" name="quantity" min="1" max="{{item.quantity}}" (change)="changeQuantity($event)"> -->
                                         <!-- </form> -->
-                                    </td>
+                                    <!-- </td>
                                     <td class="size">
                                         <label>size:</label>
                                         <select #sizeSelector [ngModel]="" name="size">
@@ -62,11 +65,11 @@
                                     </td>
                                     <td class="price">${{item.price}}</td>
                                     <td class="prod" #amounts></td>
-                                </tr>
+                                </tr> -->
                             <!-- </ng-container> -->
-                        </tbody>
+                        <!-- </tbody> -->
 
-                        <tfoot>
+                        <!-- <tfoot>
                             <tr class="subtotal">
                                 <th colspan="5">Subtotal</th>
                                 <td #subTotalEl colspan="1" class="amount"></td>
@@ -85,16 +88,66 @@
                             </tr>
                         </tfoot>
                     </table>
-                </section>
+                </section> -->
+
+                <form [formGroup]="form" (ngSubmit)="purchase()">
+                    <fieldset>
+                        <div class="label">
+                            <label class="label-header" for="select-row">Select</label>
+                            <label class="label-header" for="media">Image</label>
+                            <label class="label-header" for="description">Description</label>
+                            <label class="label-header" for="selectedColor">Color</label>
+                            <label class="label-header" for="selectedSize">Size</label>
+                            <label class="label-header" for="selectedQuantity">Quantity</label>
+                            <label class="label-header" for="price">Price</label>
+                            <label class="label-header" for="product">Amount</label>
+                            <div class="label-header">Remove</div>
+                        </div>
+                        <ng-container formArrayName="itms">
+                            <ng-container #rows *ngFor=" let row of itms.controls; let i = index;">
+                                <div [formGroupName]="i" class="itms">                                    
+                                    <!-- <div>Selected color:{{row.get('selectedColor')?.value}}</div>
+                                    <div>Colors count:{{row.get('colors')?.value.length}}</div>
+                                    <div>Available colors:{{row.get('colors')?.value}}</div> -->
+                                    <input formControlName="checked" [checked]="row.get('checked')?.value" class="itm selectRow" type="checkbox" name="selectRow">
+                                    <input #imgUrl formControlName="image" [hidden]="true" [value]="row.get('image')?.value" class="media" type="text" name="media">
+                                    <img class="itm" src="{{row.get('image')?.value}}" alt="image">
+                                    <input #descrp formControlName="description" [hidden]="true" [value]="row.get('description')?.value" class="description" type="text" name="description">
+                                    <span class="itm description">{{row.get('description')?.value}}</span>
+                                    <select class="itm" formControlName="selectedColor" name="selectedColor" (change)="selectColor($event, i)">
+                                        <option *ngFor="let col of row.get('colors')?.value; let i = index;" [value]="col">{{col}}</option>
+                                    </select>
+                                    <select class="itm" formControlName="selectedSize" name="selectedSize" (change)="selectSize($event, i)">
+                                        <option *ngFor="let sz of row.get('sizes')?.value; let i = index;" [value]="sz">{{sz}}</option>
+                                    </select>
+                                    <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="row.get('quantity')?.value">
+                                    <input formControlName="price" [hidden]="true" [value]="row.get('price')?.value" class="price" type="number" name="price">
+                                    <span class="itm price">${{row.get('price')?.value}}</span>
+                                    <input formControlName="product" [hidden]="true" [value]="getProduct(row, i)" class="prod" type="number" name="product">
+                                    <span class="itm prod">${{row.get('product')?.value}}</span>
+                                    <div class="itm buttons">
+                                        <button class="button remove" type="button" (click)="removeItm(i)">Remove item</button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        
+                        <div class="buttons">
+                            <input class="button finish" type="submit" value="Finish">
+                            <a class="button cancel" href="javascript:void(0)">Continue shopping</a>
+                        </div>
+                    </fieldset>
+                </form>
+
             </div>
             <!-- <div class="modal-footer">
                 <h3>Total</h3>
                 <p #totalEl></p>
             </div> -->
-            <div class="buttons">
+            <!-- <div class="buttons">
                 <a class="button finish" href="javascript:void(0)">Finish</a>
                 <a class="button cancel" href="javascript:void(0)">Continue shopping</a>
-            </div>
+            </div> -->
         </div>
     </div>
 </li>

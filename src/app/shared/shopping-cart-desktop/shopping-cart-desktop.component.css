@@ -45,9 +45,9 @@
     animation-duration: .2s
 }
 
-input[type='number']{
+input[type='number'] {
     width: 5em;
-} 
+}
 
 /* Add Animation */
 @-webkit-keyframes animatetop {
@@ -101,6 +101,53 @@ input[type='number']{
     flex-direction: column;
 }
 
+section.header {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 0;
+    & div.buttons {
+        display: flex;
+        flex-direction: row;
+        flex: 1 1 0;
+        justify-content: space-between;
+    }
+}
+
+fieldset {
+    display: flex;
+    flex-direction: column;
+}
+
+div.label {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+}
+
+.label-header {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    /* max-width: 12.5%; */
+}
+
+div.itms {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+*.itm {
+    display: flex;
+    flex: 1 1 0;
+    max-width: 12.5%;
+    align-items: center;
+    justify-content: center;
+}
+
 .modal-footer {
     /* display: flex;
     justify-content: space-between;
@@ -119,7 +166,7 @@ div.buttons {
     text-transform: uppercase;
     font-weight: bold;
 
-    & a.button {
+    & .button {
         padding: .2em .3em;
         border: 1px solid #000;
         border-radius: .4em;
@@ -127,11 +174,12 @@ div.buttons {
     }
 
     & {
-
-        a.button.finish:hover,
-        a.button.finish:focus,
-        a.button.cancel:hover,
-        a.button.cancel:focus {
+        .button.finish:hover,
+        .button.finish:focus,
+        .button.cancel:hover,
+        .button.cancel:focus,
+        .button.remove:hover,
+        .button.remove:focus {
             background-color: #000;
             color: #fff;
         }

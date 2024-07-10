@@ -18,7 +18,10 @@
     }
 
     a.title-icon,
-    a.nav-icon {
+    a.nav-icon,
+    .label-header,
+    .itm,
+    .button {
         font-size: 0.8em;
     }
 
@@ -34,7 +37,8 @@
     }
 
     a.title-icon,
-    a.nav-icon {
+    a.nav-icon,
+    .label-header {
         font-size: 0.8em;
     }
 
