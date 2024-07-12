@@ -49,6 +49,14 @@ input[type='number'] {
     width: 5em;
 }
 
+/* input::placeholder {
+    font-size: 0.5em;
+} */
+
+span {
+    font-weight: bold;
+}
+
 /* Add Animation */
 @-webkit-keyframes animatetop {
     from {
@@ -156,6 +164,26 @@ div.itms {
     color: #fff; */
     font-weight: bold;
 
+}
+
+div.subtotal,
+div.shipping,
+div.discount {
+    display: flex;
+    flex: 1 1 0;
+    gap: 2em;
+    & .title {
+        display: flex;        
+        flex: 0 0 77.78%;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    & .amount {
+        display: flex;
+        flex: 0 0 22.22%;
+        align-items: center;
+        justify-content: flex-start;
+    }
 }
 
 div.buttons {

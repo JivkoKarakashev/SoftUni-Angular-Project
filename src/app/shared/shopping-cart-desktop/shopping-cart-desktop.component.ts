@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, ElementRef, OnChanges, OnDestroy, OnInit, QueryList, Renderer2, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, FormControl, NgForm, Validators, AbstractControl } from '@angular/forms';
 
 import { Item } from 'src/app/types/item';
 import { ShoppingCartService } from '../shopping-cart.service';
+import { Shipping } from 'src/app/types/shipping';
+import { Discount } from 'src/app/types/discount';
 
 type MyVoid = () => void;
 
@@ -18,28 +20,81 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   public listItems$: Item[] = [];
   public selectAllButtonStatement: boolean = false;
   private unsubscriptionArray: Subscription[] = [];
-  private cartItemsSubscription: Subscription = new Subscription;
+  private cartItemsSubscription: Subscription = new Subscription; 
   private unsubscriptionEventsArray: MyVoid[] = [];
+  public subTotal$$ = new BehaviorSubject<number>(0);
+  private subTotalSubscription: Subscription = new Subscription;
+  public shippingMethods: Shipping[] = [
+    {
+      name: 'economic',
+      value: 7
+    },
+    {
+      name: 'standard',
+      value: 10
+    },
+    {
+      name: 'premium',
+      value: 15
+    }
+  ];
+  public shippingValue: number = 0;
+  public discountCodes: Discount[] = [
+    {
+      code: 'WINTERSALE',
+      rate: 25
+    },
+    {
+      code: 'SPRINGSALE',
+      rate: 10
+    },
+    {
+      code: 'EASTERSALE',
+      rate: 50
+    },
+    {
+      code: 'SUMMERSALE',
+      rate: 25
+    },
+    {
+      code: 'AUTUMNSALE',
+      rate: 15
+    },
+    {
+      code: 'NEWYEARSALE',
+      rate: 50
+    }
+  ];
+  public discountValue: number = 0;
 
   public itmsArr: FormArray = this.fb.array([]);
   public form: FormGroup = this.fb.group({
-    itms: this.itmsArr
+    itms: this.itmsArr,
+    shipping: ['', [Validators.required]],
+    discount: ['', [Validators.required]],
   });
 
   constructor(private render: Renderer2, private location: Location, private cartService: ShoppingCartService, private fb: FormBuilder) { }
 
   @ViewChild('modal') private modal!: ElementRef;
   @ViewChild('closeBtn') private closeBtn!: ElementRef;
-  @ViewChild('checkItAll') private checkItAll!: ElementRef;
-  @ViewChild('removeItems') private removeItems!: ElementRef;
-  @ViewChildren('rows') private rows!: QueryList<ElementRef>;
-  @ViewChildren('imgUrl') private imgUrl!: QueryList<ElementRef>;
-  @ViewChildren('inputs') private inputs!: QueryList<ElementRef>;
-  @ViewChildren('amounts') private amounts!: QueryList<ElementRef>;
+  // @ViewChild('checkItAll') private checkItAll!: ElementRef;
+  // @ViewChild('removeItems') private removeItems!: ElementRef;
+  // @ViewChildren('rows') private rows!: QueryList<ElementRef>;
+  // @ViewChildren('imgUrl') private imgUrl!: QueryList<ElementRef>;
+  // @ViewChildren('inputs') private inputs!: QueryList<ElementRef>;
+  // @ViewChildren('amounts') private amounts!: QueryList<ElementRef>;
   @ViewChild('subTotalEl') private subTotalEl!: ElementRef;
-  @ViewChild('shipping') private shipping!: ElementRef;
+  // @ViewChild('shipping') private shipping!: ElementRef;
   @ViewChild('discount') private discount!: ElementRef;
   @ViewChild('totalEl') private totalEl!: ElementRef;
+
+  get itms() {
+    return this.form.controls["itms"] as FormArray;
+  }
+  get shipping() {
+    return this.form.controls["shipping"] as FormArray;
+  }
 
   ngOnInit(): void {
     this.cartItemsSubscription = this.cartService.items$.subscribe(items => {
@@ -57,8 +112,8 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
           selectedQuantity: ['', [Validators.required,]],
           price: [itm.price, [Validators.required,]],
           buyed: [itm?.buyed,],
-          product: [''],
-          checked: false
+          product: [0],
+          checked: [false]
         });
         this.itms.push(rowItm);
       });
@@ -69,6 +124,38 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     });
     this.unsubscriptionArray.push(this.cartItemsSubscription);
     // console.log(this.unsubscriptionArray);
+
+    this.subTotalSubscription = this.subTotal$$.subscribe((val) => {
+      // console.log(val)
+      if(val === 0) {
+        this.discountValue = 0;
+        console.log('invoked subTotal change with 0.00 VALUE');
+      } else {
+        this.getDiscount(undefined, val);
+      }
+    });
+    this.unsubscriptionArray.push(this.subTotalSubscription);
+
+    this.itms.controls.forEach((itm, i) => {      
+      const valueChangeSub = itm.get('product')?.valueChanges.subscribe(val => {
+        // console.log(`${val} at index:${i}`);
+        if (val) {
+          // this.subTotal = this.getSubtotal();          
+          // console.log(this.subTotal);
+          this.subTotal$$.next(this.getSubtotal());
+          // console.log(this.subTotal$$);
+        }
+      }) as Subscription;
+      this.unsubscriptionArray.push(valueChangeSub);
+    });
+
+    // this.shippingMethods.forEach(method => {
+    //   const methodCtrl = this.fb.group({
+    //     image: [method.name, [Validators.required,]],
+    //     description: [method.value, [Validators.required,]],
+    //   });
+    //   this.shipping.push(methodCtrl);
+    // })
   }
 
   ngAfterViewInit(): void {
@@ -104,17 +191,11 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     }
     this.itms.controls.forEach(itm => {
       itm.patchValue({ checked: !this.selectAllButtonStatement });
+      // console.log(itm);
     });
     this.selectAllButtonStatement = !this.selectAllButtonStatement;
   }
 
-  // removeSelected(e: Event) {
-  //   const selectedIds: string[] = this.rows.toArray().filter(r => r.nativeElement.children[0].children[0].checked).map(el => el.nativeElement.id);
-  //   // this.listItems$ = this.listItems$.filter(item => !selectedIds.includes(item._id));
-  //   // console.log(this.listItems$);
-  //   this.cartService.removeCartItems(selectedIds);
-  //   this.render.setProperty(this.checkItAll.nativeElement, 'checked', false);
-  // }
   removeSelected(): void {
     const idxArr: number[] = [];
     const slectedItms: AbstractControl[] = this.itms.controls.filter((itm, index)=> {
@@ -128,18 +209,9 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     for (let i = idxArr.length - 1; i >= 0; i--) {
       this.removeItm(idxArr[i]);
     }
+    // this.subTotal = this.getSubtotal();
+    // this.subTotal$$.next(this.getSubtotal());
   }
-
-  // amountsCalc() {
-  //   this.rows.toArray().forEach(el => {
-  //     // console.log(el.nativeElement);
-  //     const qty = Number(el.nativeElement.children[3].children[1].value) || 1;
-  //     const price = Number(el.nativeElement.children[4].textContent.split('$')[1]);
-  //     const amount = el.nativeElement.children[5].textContent = `$${qty * price}`;
-  //     // console.log(qty, price, amount);
-  //   });
-  //   this.cartCalc();
-  // }
 
   selectColor(e: Event, i: number): void {
     const el = e.target as HTMLSelectElement;
@@ -162,34 +234,46 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   }
   selectSize(e: Event, i: number): void {
     const el = e.target as HTMLSelectElement;
-    // const color = el.options[el.selectedIndex].text;
-    const color = el.value;
-    // this.itms.controls[i].get('selectedColor')?.patchValue(color);
-    // this.itms.controls[i].patchValue({ selectedColor: color });
+    // const size = el.options[el.selectedIndex].text;
+    const size = el.value;
+    // this.itms.controls[i].get('selectedSize')?.patchValue(size);
+    // this.itms.controls[i].patchValue({ selectedSize: size });
     // console.log(this.itms.value);
     // console.log(this.itms.controls[i]);
     // console.log(i);
-    // console.log(this.selectedColor);
-    // console.log(this.itms.controls[i].get('selectedColor')?.value);
-    // console.log(this.itms.controls[i].get('color')?.value);
-
+    // console.log(this.selectedSize);
+    // console.log(this.itms.controls[i].get('selectedSize')?.value);
+    // console.log(this.itms.controls[i].get('size')?.value);
+  }
+  selectShipping(e: Event): void {
+    const el = e.target as HTMLSelectElement;
+    // const shipping = el.options[el.selectedIndex].text;
+    this.shippingValue = Number(el.value);
+  }
+  getDiscount(e?: Event, subTotVal?: number): void {
+    if (e) {
+      const el = e.target as HTMLSelectElement;
+      // const shipping = el.options[el.selectedIndex].text;
+      const discountRate = Number(el.value);
+      // const discountValue = this.subTotal * discountRate / 100;
+      const discountValue = this.subTotal$$.value * discountRate / 100;
+      this.discountValue = discountValue;
+      console.log('invoked getDiscout method with $EVENT parameter');
+    }else if(subTotVal) {
+      setTimeout(() => {
+        // console.log(Number(this.subTotalEl.nativeElement.textContent?.split('$')[1]) || 0);
+      })
+      // console.log(subTotVal);
+      console.log('invoked getDiscout method with subTotalVal parameter');
+      // console.log(this.discount.nativeElement.value || 0);
+      const discountRate = this.discount.nativeElement.value || 0;
+      this.discountValue = subTotVal * discountRate / 100;
+    }
   }
 
-  // changeQuantity(e: Event): void {
-  //   this.amountsCalc();
-  // }
-
-  // cartCalc() {
-  //   const amountsArr = this.amounts.toArray().map(item => Number(item.nativeElement.textContent.split('$')[1]));
-  //   // console.log(amountsArr);
-  //   const subTotal = amountsArr.reduce((acc, currV) => acc += currV, 0).toFixed(2);
-  //   // console.log(subTotal);
-  //   const shippingPrice = Number(this.shipping.nativeElement.textContent?.split('$')[1]) || 0;
-  //   const discountAmount = Number(this.discount.nativeElement.textContent?.split('$')[1]) || 0;
-  //   this.subTotalEl.nativeElement.textContent = `$${subTotal}`;
-  //   const sumTotal = (Number(subTotal) + shippingPrice - discountAmount).toFixed(2);
-  //   // console.log(sumTotal);
-  //   this.totalEl.nativeElement.textContent = `$${sumTotal}`;
+  // onQuantityChange(itm: AbstractControl): void {
+  //   this.getProduct(itm);
+  //   this.getDiscount();
   // }
 
   purchase() {
@@ -197,6 +281,8 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     // console.log(this.imgUrl.toArray().map(obj => obj.nativeElement.value));
     // console.log(this.rows.toArray().map(row => row.nativeElement));
     console.log(this.form.value);
+    console.log(this.form.get('itms'));
+    console.log(this.form.get('shipping')?.value);
     // console.log(this.rows.toArray().map(row => row.nativeElement.children[1].value)); //imgUrl
     // console.log(this.rows.toArray().map(row => row.nativeElement.children[2].value)); //descrip
     // console.log(this.rows.toArray().map(row => row.nativeElement.children[3].value)); //color
@@ -205,34 +291,31 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     // console.log(this.rows.toArray().map(row => row.nativeElement.children[6].value)); //price
   }
 
-  // toggle(event: Event) {
-  //   // console.log(event.target);
-  //   const target = event.target as HTMLElement;
-  //   // this.selectedRowImgUrl = itm.image;
-  //   // console.log(itm.image);
-  // }
-
-  get itms() {
-    return this.form.controls["itms"] as FormArray;
-  }
-
   removeItm(ItmIdx: number) {
     this.itms.removeAt(ItmIdx);
+    // this.subTotal = this.getSubtotal();
+    this.subTotal$$.next(this.getSubtotal());
     // this.unsubscriptionArray.forEach((subscription) => {
-    //   subscription.unsubscribe()});
+    // subscription.unsubscribe()});
     this.cartItemsSubscription.unsubscribe();
     this.cartService.removeCartItm(ItmIdx);
   }
 
-  getProduct(itm: AbstractControl, i: number): number {
-    // console.log(itm);
-    // console.log(typeof(itm));
-    const qty = itm.get('selectedQuantity')?.value;
-    const price = itm.get('price')?.value;
-    const product = Number(qty) * Number(price);
-    this.itms.controls[i].patchValue({ product: product });
-    return product;
-    // console.log(itm.get('selectedQuantity')?.value);
-    // console.log(itm.get('price')?.value);
+  getProduct(itm: AbstractControl): number {
+      // console.log(itm);
+      // console.log(typeof(itm));
+      const qty = itm.get('selectedQuantity')?.value;
+      const price = itm.get('price')?.value;
+      const product = Number(qty) * Number(price);
+      itm.patchValue({product: product});
+      // console.log('here');
+      // console.log(itm.get('selectedQuantity')?.value);
+      // console.log(itm.get('price')?.value);
+      // console.log(itm.get('product')?.value);
+      return product;
+  }
+
+  getSubtotal(): number {
+    return this.itms.controls.map(itm => itm.get('product')?.value).reduce((acc, currVal) => acc += currVal, 0);
   }
 }

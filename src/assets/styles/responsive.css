@@ -21,7 +21,10 @@
     a.nav-icon,
     .label-header,
     .itm,
-    .button {
+    .button,
+    .subtotal,
+    .shipping,
+    .discount {
         font-size: 0.8em;
     }
 
@@ -38,7 +41,12 @@
 
     a.title-icon,
     a.nav-icon,
-    .label-header {
+    .label-header,
+    .itm,
+    .button,
+    .subtotal,
+    .shipping,
+    .discount {
         font-size: 0.8em;
     }
 
