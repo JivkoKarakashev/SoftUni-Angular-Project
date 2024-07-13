@@ -1,3 +1,20 @@
+@media screen and (min-width: 480px) {
+    html {
+        font-size: 14px;
+    }
+
+    div.site-container,
+    section[class*="section"] {
+        font-size: 0.65em;
+    }
+
+    div.modal {
+        font-size: 0.65em;
+        padding-top: 80px;
+    }
+
+}
+
 @media screen and (min-width: 768px) {
     html {
         font-size: 16px;
@@ -12,24 +29,19 @@
     nav.desktop ul.navbar {
         display: flex;
     }
-
+    
     nav.desktop ul.navbar {
         gap: 1em;
     }
 
-    a.title-icon,
-    a.nav-icon,
-    .label-header,
-    .itm,
-    .button,
-    .subtotal,
-    .shipping,
-    .discount {
+    div.site-container,
+    section[class*="section"] {
         font-size: 0.8em;
     }
 
     div.modal {
-        padding-top: 56px;
+        font-size: 0.8em;
+        padding-top: 95px;
     }
 
 }
@@ -39,18 +51,13 @@
         font-size: 18px;
     }
 
-    a.title-icon,
-    a.nav-icon,
-    .label-header,
-    .itm,
-    .button,
-    .subtotal,
-    .shipping,
-    .discount {
-        font-size: 0.8em;
+    div.site-container,
+    section[class*="section"] {
+        font-size: 0.9em;
     }
 
     div.modal {
-        padding-top: 63px;
+        font-size: 0.9em;
+        padding-top: 115px;
     }
 }

@@ -1,0 +1,20 @@
+{
+    "bae9cfd4-0d29-4713-ae8a-dfd4a0aa23db": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "bae9cfd4-0d29-4713-ae8a-dfd4a0aa23db",
+        "name": "economic",
+		"value": 7
+    },
+    "5558d210-c329-4cc9-aecf-f72594b8caa8": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "5558d210-c329-4cc9-aecf-f72594b8caa8",
+        "name": "standard",
+		"value": 10
+    },
+    "882e509f-7939-43b5-8765-d39385ed7cca": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "882e509f-7939-43b5-8765-d39385ed7cca",
+        "name": "premium",
+		"value": 15
+    }
+}

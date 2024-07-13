@@ -11,7 +11,7 @@
     /* Stay in place */
     z-index: 10;
     /* Sit on top */
-    padding-top: 140px;
+    /* padding-top: 140px; */
     /* Location of the box */
     left: 0;
     top: 0;
@@ -86,7 +86,6 @@ span {
 .close-btn {
     color: #fff;
     float: right;
-    font-size: 28px;
     font-weight: bold;
 }
 
@@ -166,6 +165,7 @@ div.itms {
 
 }
 
+div.total,
 div.subtotal,
 div.shipping,
 div.discount {
@@ -187,7 +187,7 @@ div.discount {
 }
 
 div.buttons {
-    padding: .2em 0;
+    padding: .4em .6em;
     display: flex;
     justify-content: center;
     gap: 2em;

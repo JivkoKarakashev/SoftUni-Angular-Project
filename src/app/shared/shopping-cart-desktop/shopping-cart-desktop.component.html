@@ -90,7 +90,10 @@
                     </table>
                 </section> -->
 
-                <form [formGroup]="form" (ngSubmit)="purchase()">
+                <ng-container *ngIf="loading">
+                    <app-loader />
+                </ng-container>
+                <form [formGroup]="form" (ngSubmit)="purchase()"  *ngIf="!loading">
                     <fieldset>
                         <div class="label">
                             <label class="label-header" for="select-row">Select</label>
@@ -142,23 +145,23 @@
                             <span class="title">
                                 <select #discount class="discount" formControlName="discount" name="discount" (change)="getDiscount($event)">
                                     <option value="">discount code</option>
-                                    <option *ngFor="let disc of discountCodes; let i = index;" [value]="disc.rate">{{disc.code}} - %{{disc.rate.toFixed(2)}}</option>
+                                    <option *ngFor="let disc of discountCodes$; let i = index;" [value]="disc.rate">{{disc.code}} - %{{disc.rate.toFixed(2)}}</option>
                                 </select>
                             </span>
-                            <span class="amount">${{discountValue.toFixed(2)}}</span>
+                            <span class="amount">&minus;${{discountValue.toFixed(2)}}</span>
                         </div>
                         <div class="shipping">
                             <span class="title">
                                 <select class="shipping" formControlName="shipping" name="shipping" (change)="selectShipping($event)">
                                     <option value="">shipping method</option>
-                                    <option *ngFor="let method of shippingMethods; let i = index;" [value]="method.value">{{method.name}} - ${{method.value.toFixed(2)}}</option>
+                                    <option *ngFor="let method of shippingMethods$; let i = index;" [value]="method.value">{{method.name}} - ${{method.value.toFixed(2)}}</option>
                                 </select>
                             </span>
                             <span class="amount">${{shippingValue.toFixed(2)}}</span>
                         </div>
                         <div class="total modal-footer">
-                            <span class="title"><h3>Total</h3></span>
-                            <span class="amount"></span>
+                            <span class="title">Total:</span>
+                            <span class="amount">${{total}}</span>
                         </div>
                         
                         <div class="buttons">
