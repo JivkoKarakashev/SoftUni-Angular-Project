@@ -106,7 +106,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
       // console.log(val)
       if(val === 0) {
         this.discountValue = 0;
-        console.log('invoked subTotal change with 0.00 VALUE');
+        // console.log('invoked subTotal change with 0.00 VALUE');
       } else {
         this.getDiscount(undefined, val);
       }
@@ -227,14 +227,14 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
       // const discountValue = this.subTotal * discountRate / 100;
       const discountValue = this.subTotal$$.value * discountRate / 100;
       this.discountValue = discountValue;
-      console.log('invoked getDiscout method with $EVENT parameter');
+      // console.log('invoked getDiscout method with $EVENT parameter');
       this.getTotal();
     }else if(subTotVal) {
       setTimeout(() => {
         // console.log(Number(this.subTotalEl.nativeElement.textContent?.split('$')[1]) || 0);
       })
       // console.log(subTotVal);
-      console.log('invoked getDiscout method with subTotalVal parameter');
+      // console.log('invoked getDiscout method with subTotalVal parameter');
       // console.log(this.discount.nativeElement.value || 0);
       const discountRate = this.discount.nativeElement.value || 0;
       this.discountValue = subTotVal * discountRate / 100;
@@ -277,9 +277,9 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   }
 
   getTotal(): void {
-    console.log(`subTotal: ${this.subTotal$$.value}`);
-    console.log(`discount: ${this.discountValue}`);
-    console.log(`Shipping:  ${this.shippingValue}`);
+    // console.log(`subTotal: ${this.subTotal$$.value}`);
+    // console.log(`discount: ${this.discountValue}`);
+    // console.log(`Shipping:  ${this.shippingValue}`);
     this.total = this.subTotal$$.value - this.discountValue + this.shippingValue;
     console.log('getTotal invoked!');
   }

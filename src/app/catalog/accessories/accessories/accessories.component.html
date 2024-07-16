@@ -1,35 +1,47 @@
 <ng-container *ngIf="loading">
     <app-loader />
 </ng-container>
-<section class="section-catalog" *ngIf="!loading">
-    <div class="container">
-        <div class="items">
-            <ul class="items">
-                <li class="item" *ngFor="let item of listItems$" [id]="item._id">
-                    <div class="image">
-                        <a href="javascript:void(0)">
-                            <img src="{{item.image}}" alt="image" />
-                        </a>
-                    </div>
-                    <p>Description: <span>{{item.description}}</span></p>
-                    <p>Size: <span><ng-container *ngFor="let sz of item.size">/{{sz}}</ng-container></span></p>
-                    <p>Color: <span><ng-container *ngFor="let col of item.color">/{{col}}</ng-container></span></p>
-                    <p>Brand: <span>{{item.brand}}</span></p>
-                    <p>Remaining: <span>{{item.quantity}}</span></p>
-                    <p>Price: <span><strong>${{item.price}}</strong></span></p>
-                    <ng-container *ngIf="isLoggedIn">
-                        <div class="buttons">
-                            <ul class="buttons">
-                                <li *ngIf="item._ownerId != user$?._id && !item.buyed" class="button buy" (click)="addItemtoCart($event, item)"><a href="javascript:void(0)">Add to basket</a></li>
-                                <li *ngIf="item._ownerId == user$?._id" class="button edit"><a href="javascript:void(0)">Edit</a></li>
-                                <li *ngIf="item._ownerId == user$?._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
-                            </ul>
-                        </div>
-                        <p *ngIf="item.buyed">Already in cart</p>
-                    </ng-container>
-                </li>
 
-            </ul>
+<div class="container" *ngIf="!loading">
+    <div class="left-wrapper">        
+        <section class="section-catalog">
+            <div class="container">
+                <div class="items">
+                    <ul class="items">
+                        <li class="item" *ngFor="let item of listItems$" [id]="item._id">
+                            <div class="image">
+                                <a href="javascript:void(0)">
+                                    <img src="{{item.image}}" alt="image" />
+                                </a>
+                            </div>
+                            <p>Description: <span>{{item.description}}</span></p>
+                            <p>Size: <span><ng-container *ngFor="let sz of item.size">/{{sz}}</ng-container></span></p>
+                            <p>Color: <span><ng-container *ngFor="let col of item.color">/{{col}}</ng-container></span></p>
+                            <p>Brand: <span>{{item.brand}}</span></p>
+                            <p>Remaining: <span>{{item.quantity}}</span></p>
+                            <p>Price: <span><strong>${{item.price}}</strong></span></p>
+                            <ng-container *ngIf="isLoggedIn">
+                                <div class="buttons">
+                                    <ul class="buttons">
+                                        <li *ngIf="item._ownerId != user$?._id && !item.buyed" class="button buy" (click)="addItemtoCart($event, item)"><a href="javascript:void(0)">Add to basket</a></li>
+                                        <li *ngIf="item._ownerId == user$?._id" class="button edit"><a href="javascript:void(0)">Edit</a></li>
+                                        <li *ngIf="item._ownerId == user$?._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
+                                    </ul>
+                                </div>
+                                <p *ngIf="item.buyed">Already in cart</p>
+                            </ng-container>
+                        </li>
+        
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="right-wrapper">
+        <div class="sticky">
+            <a class="cart" routerLink="/cart">
+                <span class="counter">{{buyedItems}}</span><i class="fi fi-rr-shopping-cart-check"></i>
+            </a>
         </div>
     </div>
-</section>
+</div>

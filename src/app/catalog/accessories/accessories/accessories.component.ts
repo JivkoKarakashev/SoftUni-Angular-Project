@@ -21,12 +21,13 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
   public listItems$: (CapHat & Belt & Glove & Sunglasses & Watch)[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
+  public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
 
 
-  constructor( private userService:UserService, private accessoriesService: AccessoriesService, private cartService: ShoppingCartService ) { }
+  constructor(private userService: UserService, private accessoriesService: AccessoriesService, private cartService: ShoppingCartService) { }
 
   get isLoggedIn(): boolean {
     // console.log(this.userService.isLoggedIn);
@@ -40,15 +41,41 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
       let [capsHatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs] = accessoriesObjs;
       // console.log(capsHatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs);      
       let capsHats = Object.entries(capsHatsObjs).map(capHat => capHat[1]);
-      capsHats.forEach(cpHt => cpHt.buyed = this.cartItms$$.value.some(itm => itm._id == cpHt._id));
+      capsHats.forEach(cpHt => {
+        cpHt.buyed = this.cartItms$$.value.some(itm => itm._id == cpHt._id);
+        if (cpHt.buyed) {
+          this.buyedItems++;
+        }
+      });
       let belts = Object.entries(beltsObjs).map(belt => belt[1]);
-      belts.forEach(blt => blt.buyed = this.cartItms$$.value.some(itm => itm._id == blt._id));
+      belts.forEach(blt => {
+        blt.buyed = this.cartItms$$.value.some(itm => itm._id == blt._id);
+        if (blt.buyed) {
+          this.buyedItems++;
+        }
+      });
       let gloves = Object.entries(glovesObjs).map(glves => glves[1]);
-      gloves.forEach(glvs => glvs.buyed = this.cartItms$$.value.some(itm => itm._id == glvs._id));
+      gloves.forEach(glvs => {
+        glvs.buyed = this.cartItms$$.value.some(itm => itm._id == glvs._id);
+        if (glvs.buyed) {
+          this.buyedItems++;
+        }
+      });
       let sunglasses = Object.entries(sunglassesObjs).map(snglsses => snglsses[1]);
-      sunglasses.forEach(snglsses => snglsses.buyed = this.cartItms$$.value.some(itm => itm._id == snglsses._id));
+      sunglasses.forEach(snglsses => {
+        snglsses.buyed = this.cartItms$$.value.some(itm => itm._id == snglsses._id);
+        if (snglsses.buyed) {
+          this.buyedItems++;
+        }
+      });
       let watches = Object.entries(watchesObjs).map(wtch => wtch[1]);
-      watches.forEach(wtch => wtch.buyed = this.cartItms$$.value.some(itm => itm._id == wtch._id));
+      watches.forEach(wtch => {
+        wtch.buyed = this.cartItms$$.value.some(itm => itm._id == wtch._id);
+        if (wtch.buyed) {
+          this.buyedItems++;
+        }
+      });
+
       // console.log(capsHats);
       // console.log(belts);
       // console.log(gloves);
@@ -76,7 +103,7 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 2');      
-    }); 
+    });
   }
 
   addItemtoCart(e: Event, item: CapHat | Belt | Glove | Sunglasses | Watch) {
@@ -86,8 +113,9 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
     const el = e.target as HTMLSelectElement;
     // console.log(item._id);
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item );    
-    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });      
+    this.listItems$.splice(idx, 1, item);
+    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
+    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

@@ -187,7 +187,7 @@ div.discount {
 }
 
 div.buttons {
-    padding: .4em .6em;
+    padding: .2em 0;
     display: flex;
     justify-content: center;
     gap: 2em;
