@@ -11,84 +11,11 @@
             </div>
             <div class="modal-body">
                 <section class="header">
-                    <!-- <label for="selectAll">Select all</label>
-                    <input #checkItAll type="checkbox" id="selectAll" name="selectAll" (change)="toggleSelectAll()"> -->
-                    <!-- <label for="remove-item">Remove selected</label> -->
                     <div class="buttons">
                         <input #checkItAll type="button" id="selectAll" name="selectAll" class="button remove" [value]="selectAllButtonStatement ? 'deselect all' : 'select all'" (click)="toggleSelectAll()">
                         <input #removeItems type="button" id="remove-item" name="remove-item" class="button remove" value="Remove selected" (click)="removeSelected()">
                     </div>
                 </section>
-
-                <!-- <section class="table">
-                    <table #table class="table table-borderless">
-                        <thead>
-                            <tr>
-                                <td><label>Select</label></td>
-                                <td class="media">Image</td>
-                                <td class="item-description">Description</td>
-                                <td class="quantity">Quantity</td>
-                                <td class="size">Size</td>
-                                <td class="price">Price</td>
-                                <td class="prod">Amount</td>
-                            </tr>
-                        </thead>
-                        <tbody> -->
-                            <!-- <ng-container *ngFor="let item of listItems$"> -->
-                                <!-- <tr #rows *ngFor="let item of listItems$" [id]="item._id">
-                                    <td class="select-row">
-                                        <input #inputs name="select-row" type="checkbox">
-                                    </td>
-                                    <td class="media">
-                                        <img src="{{item.image}}" alt="image">
-                                    </td>
-                                    <td class="item-description">
-                                        <p>{{item.description}}</p>
-
-                                        <label>color:</label>
-                                        <select #colorSelector [ngModel]="" name="colors" (change)="changeColor($event)">
-                                            <option *ngFor="let col of item.color" [ngValue]="col">{{col}}</option>
-                                        </select> -->
-                                        <!-- <p>Color: {{item.color}}</p> -->
-                                    <!-- </td>
-                                    <td class="quantity"> -->
-                                        <!-- <form #qtyForm> -->
-                                            <!-- <label>&ge;1 &amp; &le;{{item.quantity}}</label>
-                                            <input #qty [ngModel]=""  type="number" name="quantity" min="1" max="{{item.quantity}}" (change)="changeQuantity($event)"> -->
-                                        <!-- </form> -->
-                                    <!-- </td>
-                                    <td class="size">
-                                        <label>size:</label>
-                                        <select #sizeSelector [ngModel]="" name="size">
-                                            <option *ngFor="let sz of item.size" [ngValue]="sz">{{sz}}</option>
-                                        </select>
-                                    </td>
-                                    <td class="price">${{item.price}}</td>
-                                    <td class="prod" #amounts></td>
-                                </tr> -->
-                            <!-- </ng-container> -->
-                        <!-- </tbody> -->
-
-                        <!-- <tfoot>
-                            <tr class="subtotal">
-                                <th colspan="5">Subtotal</th>
-                                <td #subTotalEl colspan="1" class="amount"></td>
-                            </tr>
-                            <tr class="shipping">
-                                <th colspan="5">Shipping</th>
-                                <td #shipping colspan="1" class="amount">$20.00</td>
-                            </tr>
-                            <tr class="discount">
-                                <th colspan="5">Discount (Code: NEWYEAR)</th>
-                                <td #discount colspan="1" class="amount">$10.00</td>
-                            </tr>
-                            <tr class="total modal-footer">
-                                <th colspan="5"><h3>Total</h3></th>
-                                <td #totalEl colspan="1"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </section> -->
 
                 <ng-container *ngIf="loading">
                     <app-loader />
@@ -109,9 +36,6 @@
                         <ng-container formArrayName="itms">
                             <ng-container #rows *ngFor=" let row of itms.controls; let i = index;">
                                 <div [formGroupName]="i" class="itms">                                    
-                                    <!-- <div>Selected color:{{row.get('selectedColor')?.value}}</div>
-                                    <div>Colors count:{{row.get('colors')?.value.length}}</div>
-                                    <div>Available colors:{{row.get('colors')?.value}}</div> -->
                                     <input formControlName="checked" [checked]="row.get('checked')?.value" class="itm selectRow" type="checkbox" name="selectRow">
                                     <input #imgUrl formControlName="image" [hidden]="true" [value]="row.get('image')?.value" class="media" type="text" name="media">
                                     <img class="itm" src="{{row.get('image')?.value}}" alt="image">

@@ -17,6 +17,7 @@ export class GlovesComponent {
   public listItems$: Glove[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
+  public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
@@ -34,7 +35,12 @@ export class GlovesComponent {
     const glovesSubscription = this.glovesService.getGloves().subscribe(glovesObjs => {
       this.loading = false;
       let gloves = Object.entries(glovesObjs).map(glvs => glvs[1]);
-      gloves.forEach(glvs => glvs.buyed = this.cartItms$$.value.some(itm => itm._id == glvs._id));
+      gloves.forEach(glvs => {
+        glvs.buyed = this.cartItms$$.value.some(itm => itm._id == glvs._id);
+        if (glvs.buyed) {
+          this.buyedItems++;
+        }
+      });
       // console.log(gloves);
       // console.log(gloves instanceof(Array));
       // console.log(gloves[0].buyed);
@@ -70,6 +76,7 @@ export class GlovesComponent {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
+    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

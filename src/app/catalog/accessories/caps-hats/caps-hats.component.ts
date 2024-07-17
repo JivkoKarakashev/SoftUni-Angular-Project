@@ -17,6 +17,7 @@ export class CapsHatsComponent implements OnInit, OnDestroy {
   public listItems$: CapHat[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
+  public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
@@ -34,7 +35,12 @@ export class CapsHatsComponent implements OnInit, OnDestroy {
     const caps_hatsSubscription = this.caps_hatsService.getCapsHats().subscribe(caps_hatsObjs => {
       this.loading = false;
       let caps_hats = Object.entries(caps_hatsObjs).map(cps_hts => cps_hts[1]);
-      caps_hats.forEach(cps_hts => cps_hts.buyed = this.cartItms$$.value.some(itm => itm._id == cps_hts._id));
+      caps_hats.forEach(cps_hts => {
+        cps_hts.buyed = this.cartItms$$.value.some(itm => itm._id == cps_hts._id);
+        if (cps_hts.buyed) {
+          this.buyedItems++;
+        }
+      });
       // console.log(caps_hats);
       // console.log(caps_hats instanceof(Array));
       // console.log(caps_hats[0].buyed);
@@ -70,6 +76,7 @@ export class CapsHatsComponent implements OnInit, OnDestroy {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
+    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

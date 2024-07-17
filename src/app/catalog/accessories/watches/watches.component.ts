@@ -17,6 +17,7 @@ export class WatchesComponent implements OnInit, OnDestroy {
   public listItems$: Watch[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
+  public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
@@ -34,7 +35,12 @@ export class WatchesComponent implements OnInit, OnDestroy {
     const watchesSubscription = this.watchesService.getWatches().subscribe(watchesObjs => {
       this.loading = false;
       let watches = Object.entries(watchesObjs).map(wtches => wtches[1]);
-      watches.forEach(wtches => wtches.buyed = this.cartItms$$.value.some(itm => itm._id == wtches._id));
+      watches.forEach(wtches => {
+        wtches.buyed = this.cartItms$$.value.some(itm => itm._id == wtches._id);
+        if (wtches.buyed) {
+          this.buyedItems++;
+        }
+      });
       // console.log(watches);
       // console.log(watches instanceof(Array));
       // console.log(watches[0].buyed);
@@ -70,6 +76,7 @@ export class WatchesComponent implements OnInit, OnDestroy {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
+    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

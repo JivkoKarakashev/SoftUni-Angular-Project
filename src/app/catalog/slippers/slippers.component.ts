@@ -17,6 +17,7 @@ export class SlippersComponent implements OnInit, OnDestroy {
   public listItems$: Slippers[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
+  public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
@@ -34,7 +35,12 @@ export class SlippersComponent implements OnInit, OnDestroy {
     const slippersSubscription = this.slippersService.getSlippers().subscribe(slprsObjs => {
       this.loading = false;
       let slippers = Object.entries(slprsObjs).map(slprs => slprs[1]);
-      slippers.forEach(slprs => slprs.buyed = this.cartItms$$.value.some(itm => itm._id == slprs._id));
+      slippers.forEach(slprs => {
+        slprs.buyed = this.cartItms$$.value.some(itm => itm._id == slprs._id);
+        if (slprs.buyed) {
+          this.buyedItems++;
+        }
+      });
       // console.log(slippers);
       // console.log(slippers instanceof(Array));
       // console.log(slippers[0].buyed);
@@ -69,7 +75,8 @@ export class SlippersComponent implements OnInit, OnDestroy {
     // console.log(item._id);
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
-    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });      
+    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
+    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

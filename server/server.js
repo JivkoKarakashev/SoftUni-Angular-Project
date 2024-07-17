@@ -2019,6 +2019,64 @@
                 price: 56
             }
         },
+        discounts: {
+            "1f606895-b967-441c-9b11-9a166cc1063e": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "1f606895-b967-441c-9b11-9a166cc1063e",
+                code: "WINTERSALE",
+                rate: 25
+            },
+            "7435b1f6-4567-44e6-a00b-d515185a67ce": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "7435b1f6-4567-44e6-a00b-d515185a67ce",
+                code: "SPRINGSALE",
+                rate: 10
+            },
+            "39097456-348f-40f3-8849-98dc5fcaf06b": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "39097456-348f-40f3-8849-98dc5fcaf06b",
+                code: "EASTERSALE",
+                rate: 50
+            },
+            "7a03796c-e633-4318-9f1c-be93fef697bf": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "7a03796c-e633-4318-9f1c-be93fef697bf",
+                code: "SUMMERSALE",
+                rate: 25
+            },
+            "6c040ccd-3338-4f5c-ab12-9c6b1a25c025": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "6c040ccd-3338-4f5c-ab12-9c6b1a25c025",
+                code: "AUTUMNSALE",
+                rate: 15
+            },
+            "33d1369a-1ca2-4f2c-9b93-64288bfe175e": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "33d1369a-1ca2-4f2c-9b93-64288bfe175e",
+                code: "NEWYEARSALE",
+                rate: 50
+            }
+        },
+        shipping: {
+            "bae9cfd4-0d29-4713-ae8a-dfd4a0aa23db": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "bae9cfd4-0d29-4713-ae8a-dfd4a0aa23db",
+                name: "economic",
+                value: 7
+            },
+            "5558d210-c329-4cc9-aecf-f72594b8caa8": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "5558d210-c329-4cc9-aecf-f72594b8caa8",
+                name: "standard",
+                value: 10
+            },
+            "882e509f-7939-43b5-8765-d39385ed7cca": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "882e509f-7939-43b5-8765-d39385ed7cca",
+                name: "premium",
+                value: 15
+            }
+        },
     	cart: {
             "-MSgyQMjBNfYjW2m6r97": {
                 _id: "-MSgyQMjBNfYjW2m6r97",

@@ -17,6 +17,7 @@ export class TrainersComponent implements OnInit, OnDestroy {
   public listItems$: Trainers[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
+  public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
@@ -34,7 +35,12 @@ export class TrainersComponent implements OnInit, OnDestroy {
     const trainersSubscription = this.trainersService.getTrainers().subscribe(trnrsObjs => {
       this.loading = false;
       let trainers = Object.entries(trnrsObjs).map(trnrs => trnrs[1]);
-      trainers.forEach(trners => trners.buyed = this.cartItms$$.value.some(itm => itm._id == trners._id));
+      trainers.forEach(trners => {
+        trners.buyed = this.cartItms$$.value.some(itm => itm._id == trners._id);
+        if (trners.buyed) {
+          this.buyedItems++;
+        }
+      });
       // console.log(trainers);
       // console.log(trainers instanceof(Array));
       // console.log(trainers[0].buyed);
@@ -69,7 +75,8 @@ export class TrainersComponent implements OnInit, OnDestroy {
     // console.log(item._id);
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
-    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });      
+    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
+    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

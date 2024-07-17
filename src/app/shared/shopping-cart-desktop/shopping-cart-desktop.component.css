@@ -87,6 +87,7 @@ span {
     color: #fff;
     float: right;
     font-weight: bold;
+    font-size: 1.5em;
 }
 
 .close-btn:hover,

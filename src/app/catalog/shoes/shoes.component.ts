@@ -19,6 +19,7 @@ export class ShoesComponent implements OnInit, OnDestroy {
   public listItems$: (Trainers & Boot & Slippers)[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
+  public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
@@ -38,11 +39,26 @@ export class ShoesComponent implements OnInit, OnDestroy {
       let [trainersObjs, bootsObjs, slippersObjs] = shoesObjs;
       // console.log(trainersObjs, bootsObjs, slippersObjs);
       let trainers = Object.entries(trainersObjs).map(trainers => trainers[1]);
-      trainers.forEach(tr => tr.buyed = this.cartItms$$.value.some(itm => itm._id == tr._id));
+      trainers.forEach(tr => {
+        tr.buyed = this.cartItms$$.value.some(itm => itm._id == tr._id);
+        if (tr.buyed) {
+          this.buyedItems++;
+        }
+      });
       let boots = Object.entries(bootsObjs).map(boots => boots[1]);
-      boots.forEach(bts => bts.buyed = this.cartItms$$.value.some(itm => itm._id == bts._id));
+      boots.forEach(bts => {
+        bts.buyed = this.cartItms$$.value.some(itm => itm._id == bts._id);
+        if (bts.buyed) {
+          this.buyedItems++;
+        }
+      });
       let slippers = Object.entries(slippersObjs).map(slippers => slippers[1]);
-      slippers.forEach(slps => slps.buyed = this.cartItms$$.value.some(itm => itm._id == slps._id));
+      slippers.forEach(slps => {
+        slps.buyed = this.cartItms$$.value.some(itm => itm._id == slps._id);
+        if (slps.buyed) {
+          this.buyedItems++;
+        }
+      });
       // console.log(trainers);
       // console.log(boots);
       // console.log(slippers);
@@ -78,7 +94,8 @@ export class ShoesComponent implements OnInit, OnDestroy {
     // console.log(item._id);
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
-    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });      
+    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
+    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

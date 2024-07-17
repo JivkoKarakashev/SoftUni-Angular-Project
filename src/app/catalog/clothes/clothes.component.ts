@@ -18,6 +18,7 @@ export class ClothesComponent implements OnInit, OnDestroy {
   public listItems$: (Jacket & Longwear)[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
+  public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
@@ -37,9 +38,19 @@ export class ClothesComponent implements OnInit, OnDestroy {
       let [jacketsObjs, longwearObjs] = clothesObjs;
       // console.log(jacketsObjs, longwearObjs);      
       let jackets = Object.entries(jacketsObjs).map(jacket => jacket[1]);
-      jackets.forEach(jckt => jckt.buyed = this.cartItms$$.value.some(itm => itm._id == jckt._id));
+      jackets.forEach(jckt => {
+        jckt.buyed = this.cartItms$$.value.some(itm => itm._id == jckt._id);
+        if (jckt.buyed) {
+          this.buyedItems++;
+        }
+      });
       let longwaer = Object.entries(longwearObjs).map(lngwear => lngwear[1]);
-      longwaer.forEach(lngwr => lngwr.buyed = this.cartItms$$.value.some(itm => itm._id == lngwr._id));
+      longwaer.forEach(lngwr => {
+        lngwr.buyed = this.cartItms$$.value.some(itm => itm._id == lngwr._id);
+        if (lngwr.buyed) {
+          this.buyedItems++;
+        }
+      });
       // console.log(jackets);
       // console.log(longwaer);
       // console.log(longwaer instanceof(Array));
@@ -75,7 +86,8 @@ export class ClothesComponent implements OnInit, OnDestroy {
     // console.log(item._id);
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
-    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });      
+    this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
+    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
