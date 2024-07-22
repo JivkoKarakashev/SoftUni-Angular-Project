@@ -1,0 +1,68 @@
+{
+    "82be02f5-41e2-42df-b013-30c66596fa03": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "82be02f5-41e2-42df-b013-30c66596fa03",
+        "image": "https://cdn.pixabay.com/photo/2024/07/19/12/03/12-03-59-470_640.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["S", "M", "L"],
+		"color": ["White", "Black", "Blue", "Red"],
+        "brand": "Fusce vel",
+		"quantity": 15,
+		"price": 47
+    },
+    "ff927916-6d5b-42b4-85af-522070f4cafa": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "ff927916-6d5b-42b4-85af-522070f4cafa",
+        "image": "https://cdn.pixabay.com/photo/2024/07/19/12/03/12-03-59-125__340.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["S", "L"],
+		"color": ["Yellow", "Brown"],
+        "brand": "Fusce vel",
+		"quantity": 10,
+		"price": 40
+    },
+    "6fc9e886-bf92-418d-bfb4-906cb11185e2": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "6fc9e886-bf92-418d-bfb4-906cb11185e2",
+        "image": "https://cdn.pixabay.com/photo/2024/07/19/12/03/12-03-58-894_640.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["XS", "S"],
+		"color": ["Green", "Gray"],
+        "brand": "Fusce vel",
+		"quantity": 20,
+		"price": 50
+    },
+    "930f1cf0-9976-452b-b1b7-3eb5f6fe1297": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "930f1cf0-9976-452b-b1b7-3eb5f6fe1297",
+        "image": "https://cdn.pixabay.com/photo/2024/07/19/12/03/12-03-58-220_640.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["XS", "M", "L", "XL"],
+		"color": ["Pink", "Orange"],
+        "brand": "Fusce vel",
+		"quantity": 25,
+		"price": 33
+    },
+    "ed087cec-a8e2-4393-b687-fc9c8184d34c": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "ed087cec-a8e2-4393-b687-fc9c8184d34c",
+        "image": "https://cdn.pixabay.com/photo/2024/07/19/12/03/12-03-58-196_640.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["M", "L", "XXL"],
+		"color": ["Beige", "Chartreuse"],
+        "brand": "Fusce vel",
+		"quantity": 27,
+		"price": 21
+    },
+    "2f02e9a6-d114-4bfd-bbc7-0f1c13ca5eef": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "2f02e9a6-d114-4bfd-bbc7-0f1c13ca5eef",
+        "image": "https://cdn.pixabay.com/photo/2024/07/19/12/03/12-03-57-746_640.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["S", "M", "L"],
+		"color": ["Crimson", "GreenYellow"],
+        "brand": "Fusce vel",
+		"quantity": 44,
+		"price": 56
+    }
+}

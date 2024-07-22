@@ -38,12 +38,12 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const accessoriesSubscription = this.accessoriesService.getAccessories().subscribe(accessoriesObjs => {
       this.loading = false;
-      let [capsHatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs] = accessoriesObjs;
-      // console.log(capsHatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs);      
-      let capsHats = Object.entries(capsHatsObjs).map(capHat => capHat[1]);
-      capsHats.forEach(cpHt => {
-        cpHt.buyed = this.cartItms$$.value.some(itm => itm._id == cpHt._id);
-        if (cpHt.buyed) {
+      let [caps_hatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs] = accessoriesObjs;
+      // console.log(caps_hatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs);      
+      let caps_hats = Object.entries(caps_hatsObjs).map(cap_hat => cap_hat[1]);
+      caps_hats.forEach(cp_ht => {
+        cp_ht.buyed = this.cartItms$$.value.some(itm => itm._id == cp_ht._id);
+        if (cp_ht.buyed) {
           this.buyedItems++;
         }
       });
@@ -75,8 +75,7 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
           this.buyedItems++;
         }
       });
-
-      // console.log(capsHats);
+      // console.log(caps_hats);
       // console.log(belts);
       // console.log(gloves);
       // console.log(sunglasses);
@@ -85,7 +84,7 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
       // console.log(watches[0].buyed);
       // this.listItems$ = Object.values(watches);
       // console.log(Object.values(watches));
-      this.listItems$ = capsHats.concat(belts, gloves, sunglasses, watches);
+      this.listItems$ = caps_hats.concat(belts, gloves, sunglasses, watches);
     });
 
     const cartSubscription = this.cartService.items$.subscribe(items => {

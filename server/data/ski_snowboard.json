@@ -1,0 +1,68 @@
+{
+    "9db34254-2203-4696-b69d-7997ce745fea": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "9db34254-2203-4696-b69d-7997ce745fea",
+        "image": "https://cdn.pixabay.com/photo/2024/07/18/08/03/ski-8903451_960_720.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["S", "M", "L"],
+		"color": ["White", "Black", "Blue", "Red"],
+        "brand": "Fusce vel",
+		"quantity": 15,
+		"price": 47
+    },
+    "226de618-40e3-42a6-ab3e-fa4190f38cd5": {
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "_id": "226de618-40e3-42a6-ab3e-fa4190f38cd5",
+        "image": "https://cdn.pixabay.com/photo/2024/07/18/08/03/ski-8903450_960_720.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["S", "L"],
+		"color": ["Yellow", "Brown"],
+        "brand": "Fusce vel",
+		"quantity": 10,
+		"price": 40
+    },
+    "a5a5b679-3fd7-481e-927b-8dd4dc311082": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "a5a5b679-3fd7-481e-927b-8dd4dc311082",
+        "image": "https://cdn.pixabay.com/photo/2024/07/18/08/03/ski-8903448_960_720.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["XS", "S"],
+		"color": ["Green", "Gray"],
+        "brand": "Fusce vel",
+		"quantity": 20,
+		"price": 50
+    },
+    "cd9dd1a7-f6ff-4a25-8358-fc849c4bdf0e": {
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "_id": "cd9dd1a7-f6ff-4a25-8358-fc849c4bdf0e",
+        "image": "https://cdn.pixabay.com/photo/2024/07/18/08/03/ski-8903449_960_720.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["XS", "M", "L", "XL"],
+		"color": ["Pink", "Orange"],
+        "brand": "Fusce vel",
+		"quantity": 25,
+		"price": 33
+    },
+    "ed524511-5f80-43da-a423-b582cc01c31a": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "ed524511-5f80-43da-a423-b582cc01c31a",
+        "image": "https://cdn.pixabay.com/photo/2024/07/18/08/03/ski-8903447_960_720.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["M", "L", "XXL"],
+		"color": ["Beige", "Chartreuse"],
+        "brand": "Fusce vel",
+		"quantity": 27,
+		"price": 21
+    },
+    "373a559d-6444-4da0-bbab-a806c988a919": {
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "_id": "373a559d-6444-4da0-bbab-a806c988a919",
+        "image": "https://cdn.pixabay.com/photo/2024/07/18/08/03/ski-8903446_960_720.jpg",
+        "description": "Lorem ipsum dolor sit amet....",
+        "size": ["S", "M", "L"],
+		"color": ["Crimson", "GreenYellow"],
+        "brand": "Fusce vel",
+		"quantity": 44,
+		"price": 56
+    }
+}
