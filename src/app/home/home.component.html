@@ -1,25 +1,29 @@
 <section class-section-home>
-    <div class="container">
+    
+    <span class="title-carousel">Recently added Clothes</span>
+    <ngx-slick-carousel class="carousel" 
+                        #slickModal="slick-carousel" 
+                        [config]="slideConfig">
+        <div ngxSlickItem *ngFor="let slide of clothesSlides" class="slide">
+            <a href="javascript:void(0)">
+                <img src="{{ slide.img }}" alt="image" class="img-carousel">
+            </a>
+        </div>
+    </ngx-slick-carousel>
+    <span class="title-carousel">Recently added Shoes</span>
+    <ngx-slick-carousel class="carousel" 
+                        #slickModal="slick-carousel" 
+                        [config]="slideConfig">
+        <div ngxSlickItem *ngFor="let slide of clothesSlides" class="slide">
+            <a href="javascript:void(0)">
+                <img src="{{ slide.img }}" alt="image" class="img-carousel">
+            </a>
+        </div>
+    </ngx-slick-carousel>
+
+    <!-- <div class="container">
         <div class="left-wrapper">
             <p>home works!</p>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
-            <div class="box">BOX</div>
         </div>
         <div class="right-wrapper">
             <div class="sticky">
@@ -28,5 +32,5 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div> -->
 </section>

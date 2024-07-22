@@ -15,8 +15,8 @@
                                 </a>
                             </div>
                             <p>Description: <span>{{item.description}}</span></p>
-                            <p>Size: <span> <ng-container *ngFor="let sz of item.size">/{{sz}}</ng-container></span></p>
-                            <p>Color: <span><ng-container *ngFor="let col of item.color">/{{col}}</ng-container></span></p>
+                            <p>Size: <span> <ng-container *ngFor="let sz of item.size"> {{sz}}</ng-container></span></p>
+                            <p>Color: <span><ng-container *ngFor="let col of item.color"> {{col}}</ng-container></span></p>
                             <p>Brand: <span>{{item.brand}}</span></p>
                             <p>Remaining: <span>{{item.quantity}}</span></p>
                             <p>Price: <span><strong>${{item.price}}</strong></span></p>
@@ -28,7 +28,7 @@
                                         <li *ngIf="item._ownerId == user$?._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
                                     </ul>
                                 </div>
-                                <p *ngIf="item.buyed">Already in cart</p>
+                                <p *ngIf="item.buyed" [ngClass]="{buyed: item.buyed}">Already in cart</p>
                             </ng-container>
                         </li>
         

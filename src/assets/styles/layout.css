@@ -70,4 +70,36 @@ div.site-container {
     max-width: 1200px;
     margin: 0 auto;
 }
+/* ////////////////////////////// */
+.carousel.slick-initialized.slick-slider {
+    margin: 2em;
+    background-color: #fefefe;
+    border: 1px solid rgba(136, 136, 136, 0.8);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 
+div.slick-list.draggable {
+    padding-top: 0.5em;
+}
+
+div.slick-track {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div.slide.slick-slide:hover,
+div.slide.slick-slide:focus-within {
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 20px 2px rgba(0, 0, 0, 0.25);
+}
+
+button.slick-prev.slick-arrow::before,
+button.slick-next.slick-arrow::before {
+    color: #000;
+}
+
+img.img-carousel {
+    max-height: 25vh;
+    object-fit: scale-down;
+}

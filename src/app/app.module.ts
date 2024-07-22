@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { appHttpInterceptorProvider } from './app-http.interceptor';
 import { AuthenticateComponent } from './authenticate/authenticate.component';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { AuthenticateComponent } from './authenticate/authenticate.component';
     SharedModule,
     HttpClientModule,
     AppRoutingModule,
+    SlickCarouselModule
   ],
   providers: [appHttpInterceptorProvider],
   bootstrap: [AppComponent]

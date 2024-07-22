@@ -28,7 +28,7 @@
                                         <li *ngIf="item._ownerId == user$?._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
                                     </ul>
                                 </div>
-                                <p *ngIf="item.buyed">Already in cart</p>
+                                <p *ngIf="item.buyed" [ngClass]="{buyed: item.buyed}">Already in cart</p>
                             </ng-container>
                         </li>
         
