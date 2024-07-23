@@ -1,6 +1,82 @@
 @import url('https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css');
 
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+div.left-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 0 1 95%;
+    max-width: 95%;
+    
+}
+
+.section-home, 
+.container {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+}
+
+div.right-wrapper {
+    flex: 1 1 1%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: 0 1em 1em 0;
+}
+
+div.sticky {
+    min-width: 4em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    aspect-ratio: 1/1;
+    border: 1px solid rgba(55, 255, 15, 0.001);
+    position: sticky;
+    bottom: 1em;
+    background-color: #22292F;
+    border-radius: 50%;
+}
+
+a.cart {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 100%;
+    align-items: center;
+    /* justify-content: center; */
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    padding: 0.5em;
+}
+
+a.cart span.counter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex:1 1 50%;
+    max-width: 50%;
+    height: 100%;
+    color: #fff;
+}
+
+i.fi.fi-rr-shopping-cart-check {
+    display: flex;
+    flex: 1 1 50%;
+    max-width: 50%;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    font-size: 1em;
+    color: #fff;
+}
+
 .title-carousel {
+    flex: 1 1 100%;
     display: block;
     font-weight: bold;
     text-align: center;
@@ -10,61 +86,22 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     width: 100%;
 }
 
-div.left-wrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    flex: 0 0 50%;
-}
-
-div.right-wrapper {
-    flex: 0 0 50%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding-bottom: 1em;
-}
-
-div.sticky {
-    display: flex;
-    flex-direction: row;
-    position: sticky;
-    bottom: 1em;
-    /* overflow: hidden; */
-}
-
-.box {
-    flex: 1 1 100%;
-    height: 300px;
-    background-color: yellow;
-    margin: 10px;
-}
-
-a.cart {
-    display: flex;
-    flex: 1 1 100%;
-    border: 1px solid rgba(55, 255, 15, 0.001);
-}
-a.cart:hover,
-a.cart:focus {
-    /* background-color: #22292F; */
-    border: 1px solid #5cb85c;
-    border-radius: 0.2em;
+div.sticky:hover,
+div.sticky:focus {
     cursor: pointer;
     outline: none;
+    border-color: #5cb85c;
+    & i.fi.fi-rr-shopping-cart-check,
+    span.counter {
+        color: #5cb85c;
+    }
 }
 
 a.cart:active {
     filter: blur(1px);
-  }
-
-.fi.fi-rr-shopping-cart-check {
-    display: flex;
-    flex: 1 1 100%;
-    font-size: 2em;
-    color: #5270FF;
-    /* overflow: hidden; */
 }

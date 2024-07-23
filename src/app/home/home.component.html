@@ -1,36 +1,43 @@
-<section class-section-home>
-    
-    <span class="title-carousel">Recently added Clothes</span>
-    <ngx-slick-carousel class="carousel" 
-                        #slickModal="slick-carousel" 
-                        [config]="slideConfig">
-        <div ngxSlickItem *ngFor="let slide of clothesSlides" class="slide">
-            <a href="javascript:void(0)">
-                <img src="{{ slide.img }}" alt="image" class="img-carousel">
-            </a>
-        </div>
-    </ngx-slick-carousel>
-    <span class="title-carousel">Recently added Shoes</span>
-    <ngx-slick-carousel class="carousel" 
-                        #slickModal="slick-carousel" 
-                        [config]="slideConfig">
-        <div ngxSlickItem *ngFor="let slide of clothesSlides" class="slide">
-            <a href="javascript:void(0)">
-                <img src="{{ slide.img }}" alt="image" class="img-carousel">
-            </a>
-        </div>
-    </ngx-slick-carousel>
+<ng-container *ngIf="loading">
+    <app-loader />
+</ng-container>
 
-    <!-- <div class="container">
-        <div class="left-wrapper">
-            <p>home works!</p>
-        </div>
-        <div class="right-wrapper">
-            <div class="sticky">
-                <a class="cart" routerLink="/cart">
-                    <i class="fi fi-rr-shopping-cart-check"></i>
-                </a>
+<div class="wrapper" *ngIf="!loading">
+    <div class="left-wrapper">
+        <section class="section-home">
+            <div class="container">
+                <span class="title-carousel">Recently added Clothes</span>
+                <ngx-slick-carousel class="carousel" #slickModalClothes="slick-carousel" [config]="slideConfig">
+                    <div ngxSlickItem *ngFor="let slide of clothesSlides; index as i; trackBy: trackById" class="slide">
+                        <a href="javascript:void(0)">
+                            <img src="{{ slide.img }}" alt="image" class="img-carousel">
+                        </a>
+                    </div>
+                </ngx-slick-carousel>
+                <span class="title-carousel">Recently added Shoes</span>
+                <ngx-slick-carousel class="carousel" #slickModalShoes="slick-carousel" [config]="slideConfig">
+                    <div ngxSlickItem *ngFor="let slide of shoesSlides; index as i; trackBy: trackById" class="slide">
+                        <a href="javascript:void(0)">
+                            <img src="{{ slide.img }}" alt="image" class="img-carousel">
+                        </a>
+                    </div>
+                </ngx-slick-carousel>
+                <span class="title-carousel">Recently added Accessories</span>
+                <ngx-slick-carousel class="carousel" #slickModalAccessories="slick-carousel" [config]="slideConfig">
+                    <div ngxSlickItem *ngFor="let slide of accessoriesSlides; index as i; trackBy: trackById" class="slide">
+                        <a href="javascript:void(0)">
+                            <img src="{{ slide.img }}" alt="image" class="img-carousel">
+                        </a>
+                    </div>
+                </ngx-slick-carousel>
             </div>
+        </section>
+    </div>
+    <div class="right-wrapper">
+        <div class="sticky">
+            <a class="cart" routerLink="/cart">
+                <span class="counter">{{buyedItems}}</span><i class="fi fi-rr-shopping-cart-check"></i>
+            </a>
         </div>
-    </div> -->
-</section>
+    </div>
+</div>
