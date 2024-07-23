@@ -19,6 +19,7 @@ import { SwimSurf } from '../types/swimSurf';
 import { Outdoors } from '../types/outdoors';
 import { BottomsLeggings } from '../types/bottomsLeggings';
 import { Sweater } from '../types/sweater';
+import { BlazerJacket } from '../types/blazerJacket';
 
 const RECENT_TWO_JACKETS_URL = 'http://localhost:3030/data/jackets?sortBy=_createdOn%20desc&offset=0&pageSize=2';
 const RECENT_TWO_LONGWEAR_URL = 'http://localhost:3030/data/longwear?sortBy=_createdOn%20desc&offset=0&pageSize=2';
@@ -30,13 +31,15 @@ const RECENT_TWO_BELTS_URL = 'http://localhost:3030/data/belts?sortBy=_createdOn
 const RECENT_TWO_GLOVES_URL = 'http://localhost:3030/data/gloves?sortBy=_createdOn%20desc&offset=0&pageSize=2';
 const RECENT_TWO_SUNGLASSES_URL = 'http://localhost:3030/data/sunglasses?sortBy=_createdOn%20desc&offset=0&pageSize=2';
 const RECENT_TWO_WATCHES_URL = 'http://localhost:3030/data/watches?sortBy=_createdOn%20desc&offset=0&pageSize=2';
-const RECENT_TWO_GYM_URL = 'http://localhost:3030/jsonstore/gym?sortBy=_createdOn%20desc&offset=0&pageSize=2';
-const RECENT_TWO_RUNNING_URL = 'http://localhost:3030/jsonstore/running?sortBy=_createdOn%20desc&offset=0&pageSize=2';
-const RECENT_TWO_SKI_SNOWBOARD_URL = 'http://localhost:3030/jsonstore/ski_snowboard?sortBy=_createdOn%20desc&offset=0&pageSize=2';
-const RECENT_TWO_SWIM_SURF_URL = 'http://localhost:3030/jsonstore/swim_surf?sortBy=_createdOn%20desc&offset=0&pageSize=2';
-const RECENT_TWO_OUTDOORS_URL = 'http://localhost:3030/jsonstore/outdoors?sortBy=_createdOn%20desc&offset=0&pageSize=2';
-const RECENT_TWO_BOTTOMS_LEGGINGS_URL = 'http://localhost:3030/jsonstore/bottoms_leggings?sortBy=_createdOn%20desc&offset=0&pageSize=2';
-const RECENT_TWO_SWEATERS_URL = 'http://localhost:3030/jsonstore/sweaters?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_GYM_URL = 'http://localhost:3030/data/gym?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_RUNNING_URL = 'http://localhost:3030/data/running?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_SKI_SNOWBOARD_URL = 'http://localhost:3030/data/ski_snowboard?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_SWIM_SURF_URL = 'http://localhost:3030/data/swim_surf?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_OUTDOORS_URL = 'http://localhost:3030/data/outdoors?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_BOTTOMS_LEGGINGS_URL = 'http://localhost:3030/data/bottoms_leggings?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_SWEATERS_URL = 'http://localhost:3030/data/sweaters?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_BLAZERS_JACKETS_URL = 'http://localhost:3030/data/blazers_jackets?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+
 
 @Injectable({
   providedIn: 'root'
@@ -63,7 +66,8 @@ export class HomeService {
       this.http.get<SwimSurf[]>(RECENT_TWO_SWIM_SURF_URL),
       this.http.get<Outdoors[]>(RECENT_TWO_OUTDOORS_URL),
       this.http.get<BottomsLeggings[]>(RECENT_TWO_BOTTOMS_LEGGINGS_URL),
-      this.http.get<Sweater[]>(RECENT_TWO_SWEATERS_URL)
+      this.http.get<Sweater[]>(RECENT_TWO_SWEATERS_URL),
+      this.http.get<BlazerJacket[]>(RECENT_TWO_BLAZERS_JACKETS_URL)
     ]);
   }
 }

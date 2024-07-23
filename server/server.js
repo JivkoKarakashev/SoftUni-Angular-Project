@@ -2597,6 +2597,80 @@
                 price: 56
             }
         },
+        blazers_jackets: {
+            "e7d022c5-1adf-4fb7-a66a-b03dac0b578f": {
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
+                _id: "e7d022c5-1adf-4fb7-a66a-b03dac0b578f",
+                _createdOn: 1721752162912,
+                image: "https://cdn.pixabay.com/photo/2024/07/23/16/19/16-19-30-730_640.jpg",
+                description: "Lorem ipsum dolor sit amet....",
+                size: ["S", "M", "L"],
+                color: ["White", "Black", "Blue", "Red"],
+                brand: "Fusce vel",
+                quantity: 15,
+                price: 47
+            },
+            "b484cd2a-34d7-431d-a127-33065192beea": {
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
+                _id: "b484cd2a-34d7-431d-a127-33065192beea",
+                _createdOn: 1721752163912,
+                image: "https://cdn.pixabay.com/photo/2024/07/23/16/19/16-19-30-562_640.jpg",
+                description: "Lorem ipsum dolor sit amet....",
+                size: ["S", "L"],
+                color: ["Yellow", "Brown"],
+                brand: "Fusce vel",
+                quantity: 10,
+                price: 40
+            },
+            "d3a62f1b-c2bf-49c9-8b13-cbc616a6c656": {
+                _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                _id: "d3a62f1b-c2bf-49c9-8b13-cbc616a6c656",
+                _createdOn: 1721752164912,
+                image: "https://cdn.pixabay.com/photo/2024/07/23/16/19/16-19-30-461_640.jpg",
+                description: "Lorem ipsum dolor sit amet....",
+                size: ["XS", "S"],
+                color: ["Green", "Gray"],
+                brand: "Fusce vel",
+                quantity: 20,
+                price: 50
+            },
+            "50c5a399-3e2d-4f5a-9e61-9782c7b9d282": {
+                _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                _id: "50c5a399-3e2d-4f5a-9e61-9782c7b9d282",
+                _createdOn: 1721752165912,
+                image: "https://cdn.pixabay.com/photo/2024/07/23/16/19/16-19-30-305_640.jpg",
+                description: "Lorem ipsum dolor sit amet....",
+                size: ["XS", "M", "L", "XL"],
+                color: ["Pink", "Orange"],
+                brand: "Fusce vel",
+                quantity: 25,
+                price: 33
+            },
+            "dcc233b4-1e4e-4192-9465-ff044b12aaf8": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "dcc233b4-1e4e-4192-9465-ff044b12aaf8",
+                _createdOn: 1721752166912,
+                image: "https://cdn.pixabay.com/photo/2024/07/23/16/19/16-19-29-787_640.jpg",
+                description: "Lorem ipsum dolor sit amet....",
+                size: ["M", "L", "XXL"],
+                color: ["Beige", "Chartreuse"],
+                brand: "Fusce vel",
+                quantity: 27,
+                price: 21
+            },
+            "f0c26045-329c-47b3-92e2-f6bc025d237d": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "f0c26045-329c-47b3-92e2-f6bc025d237d",
+                _createdOn: 1721752167912,
+                image: "https://cdn.pixabay.com/photo/2024/07/23/16/19/16-19-29-643_640.jpg",
+                description: "Lorem ipsum dolor sit amet....",
+                size: ["S", "M", "L"],
+                color: ["Crimson", "GreenYellow"],
+                brand: "Fusce vel",
+                quantity: 44,
+                price: 56
+            }
+        },
         discounts: {
             "1f606895-b967-441c-9b11-9a166cc1063e": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",

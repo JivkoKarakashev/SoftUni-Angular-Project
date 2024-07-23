@@ -23,6 +23,7 @@ import { SwimSurf } from '../types/swimSurf';
 import { Outdoors } from '../types/outdoors';
 import { BottomsLeggings } from '../types/bottomsLeggings';
 import { Sweater } from '../types/sweater';
+import { BlazerJacket } from '../types/blazerJacket';
 
 interface slideImg {
   img: string,
@@ -39,6 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public recentTwoShoes$: (Trainers & Boot & Slippers)[] = [];
   public recentTwoAccessories$: (CapHat & Belt & Glove & Sunglasses & Watch)[] = [];
   public recentTwoSportswear$: (Gym & Running & SkiSnowboard & SwimSurf & Outdoors & BottomsLeggings & Sweater)[] = [];
+  public recentTwoSuits_tailoring$: (BlazerJacket)[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
   public buyedItems: number = 0;
@@ -49,6 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public shoesSlides: slideImg [] = [];
   public accessoriesSlides: slideImg [] = [];
   public sportswearSlides: slideImg [] = [];
+  public suits_tailoringSlides: slideImg [] = [];
   public slideConfig = config;
 
   constructor(private homeService: HomeService, private cartService: ShoppingCartService) {}
@@ -60,7 +63,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         recentTwoJacketsObjs, recentTwoLongwearObjs,
         recentTwoTrainersObjs, recentTwoBootsObjs, recentTwoSlippersObjs,
         recentTwoCaps_hatsObjs, recentTwoBeltsObjs, recentTwoGlovesObjs, recentTwoSunglassesObjs, recentTwoWatchesObjs,
-        recentTwoGymObjs, recentTwoRunningObjs, recentTwoSki_snowboardObjs, recentTwoSwim_surfObjs, recentTwoOutdoorsObjs, recentTwoBottoms_leggingsObjs, recentTwoSweatersObjs
+        recentTwoGymObjs, recentTwoRunningObjs, recentTwoSki_snowboardObjs, recentTwoSwim_surfObjs, recentTwoOutdoorsObjs, recentTwoBottoms_leggingsObjs, recentTwoSweatersObjs,
+        recentTwoBlazers_jacketsObjs
       ] = recentTwoObjs
       const recentTwoJackets = Object.entries(recentTwoJacketsObjs).map(recentTwoJckt => recentTwoJckt[1]);
       recentTwoJackets.forEach(jckt => {
@@ -131,12 +135,17 @@ export class HomeComponent implements OnInit, OnDestroy {
       recentTwoSweaters.forEach(swtr => {
         this.sportswearSlides.push({ img: swtr.image, id: swtr._id });
       });
+      const recentTwoBlazers_jackets = Object.entries(recentTwoBlazers_jacketsObjs).map(recentBlzr_jckt => recentBlzr_jckt[1]);
+      recentTwoBlazers_jackets.forEach(blzr_jckt => {
+        this.suits_tailoringSlides.push({ img: blzr_jckt.image, id: blzr_jckt._id });
+      });
       // console.log(recentTwoJackets);
       // console.log(this.clothesSlides);
       this.recentTwoClothes$ = recentTwoJackets.concat(recentTwoLongwear);
       this.recentTwoShoes$ = recentTwoTrainers.concat(recentTwoBoots, recentTwoSlippers);
       this.recentTwoAccessories$ = recentTwoCaps_hats.concat(recentTwoBelts, recentTwoGloves, recentTwoSunglasses, recentTwoWatches);
       this.recentTwoSportswear$ = recentTwoGym.concat(recentTwoRunnings, recentTwoSki_snowboard, recentTwoSwim_surf, recentTwoOutdoors, recentTwoBottoms_leggings, recentTwoSweaters);
+      this.recentTwoSuits_tailoring$ = recentTwoBlazers_jackets.concat([]);
     });
 
     const cartSubscription = this.cartService.items$.subscribe(items => {

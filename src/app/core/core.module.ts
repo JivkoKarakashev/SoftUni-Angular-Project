@@ -9,6 +9,7 @@ import { CoreRoutingModule } from './core-routing.modules';
 import { CatalogRoutingModule } from '../catalog/catalog-routing.module';
 import { AccessoriesRoutingModule } from '../catalog/accessories/accessories-routing.module';
 import { SportswearRoutingModule } from '../catalog/sportswear/sportswear-routing.module';
+import { SuitsTailoringRoutingModule } from '../catalog/suits-tailoring/suits-tailoring-routing.module';
 
 
 @NgModule({
@@ -18,7 +19,7 @@ import { SportswearRoutingModule } from '../catalog/sportswear/sportswear-routin
     FooterComponent,
   ],
   imports: [
-    CommonModule, SharedModule, CoreRoutingModule, CatalogRoutingModule, AccessoriesRoutingModule, SportswearRoutingModule
+    CommonModule, SharedModule, CoreRoutingModule, CatalogRoutingModule, AccessoriesRoutingModule, SportswearRoutingModule, SuitsTailoringRoutingModule
   ],
   exports: [HeaderDesktopComponent, HeaderMobileComponent, FooterComponent]
 })

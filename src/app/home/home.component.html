@@ -38,6 +38,14 @@
                         </a>
                     </div>
                 </ngx-slick-carousel>
+                <span class="title-carousel">Recently added Suits & Tailoring</span>
+                <ngx-slick-carousel class="carousel" #slickModalSuitsTailoring="slick-carousel" [config]="slideConfig">
+                    <div ngxSlickItem *ngFor="let slide of suits_tailoringSlides; index as i; trackBy: trackById" class="slide">
+                        <a href="javascript:void(0)">
+                            <img src="{{ slide.img }}" alt="image" class="img-carousel">
+                        </a>
+                    </div>
+                </ngx-slick-carousel>
             </div>
         </section>
     </div>
