@@ -30,6 +30,14 @@
                         </a>
                     </div>
                 </ngx-slick-carousel>
+                <span class="title-carousel">Recently added Sportswear</span>
+                <ngx-slick-carousel class="carousel" #slickModalSportswear="slick-carousel" [config]="slideConfig">
+                    <div ngxSlickItem *ngFor="let slide of sportswearSlides; index as i; trackBy: trackById" class="slide">
+                        <a href="javascript:void(0)">
+                            <img src="{{ slide.img }}" alt="image" class="img-carousel">
+                        </a>
+                    </div>
+                </ngx-slick-carousel>
             </div>
         </section>
     </div>

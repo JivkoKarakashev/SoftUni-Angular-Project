@@ -16,6 +16,13 @@ import { Watch } from '../types/watch';
 
 import { ShoppingCartService } from '../shared/shopping-cart.service';
 import { Item } from '../types/item';
+import { Gym } from '../types/gym';
+import { Running } from '../types/running';
+import { SkiSnowboard } from '../types/skiSnowboard';
+import { SwimSurf } from '../types/swimSurf';
+import { Outdoors } from '../types/outdoors';
+import { BottomsLeggings } from '../types/bottomsLeggings';
+import { Sweater } from '../types/sweater';
 
 interface slideImg {
   img: string,
@@ -31,6 +38,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public recentTwoClothes$: (Jacket & Longwear)[] = [];
   public recentTwoShoes$: (Trainers & Boot & Slippers)[] = [];
   public recentTwoAccessories$: (CapHat & Belt & Glove & Sunglasses & Watch)[] = [];
+  public recentTwoSportswear$: (Gym & Running & SkiSnowboard & SwimSurf & Outdoors & BottomsLeggings & Sweater)[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
   public buyedItems: number = 0;
@@ -40,6 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public clothesSlides: slideImg [] = [];
   public shoesSlides: slideImg [] = [];
   public accessoriesSlides: slideImg [] = [];
+  public sportswearSlides: slideImg [] = [];
   public slideConfig = config;
 
   constructor(private homeService: HomeService, private cartService: ShoppingCartService) {}
@@ -50,7 +59,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       let [
         recentTwoJacketsObjs, recentTwoLongwearObjs,
         recentTwoTrainersObjs, recentTwoBootsObjs, recentTwoSlippersObjs,
-        recentTwoCaps_hatsObjs, recentTwoBeltsObjs, recentTwoGlovesObjs, recentTwoSunglassesObjs, recentTwoWatchesObjs
+        recentTwoCaps_hatsObjs, recentTwoBeltsObjs, recentTwoGlovesObjs, recentTwoSunglassesObjs, recentTwoWatchesObjs,
+        recentTwoGymObjs, recentTwoRunningObjs, recentTwoSki_snowboardObjs, recentTwoSwim_surfObjs, recentTwoOutdoorsObjs, recentTwoBottoms_leggingsObjs, recentTwoSweatersObjs
       ] = recentTwoObjs
       const recentTwoJackets = Object.entries(recentTwoJacketsObjs).map(recentTwoJckt => recentTwoJckt[1]);
       recentTwoJackets.forEach(jckt => {
@@ -92,11 +102,41 @@ export class HomeComponent implements OnInit, OnDestroy {
       recentTwoWatches.forEach(wtch => {
         this.accessoriesSlides.push({ img: wtch.image, id: wtch._id });
       });
+
+      const recentTwoGym = Object.entries(recentTwoGymObjs).map(recentGm => recentGm[1]);
+      recentTwoGym.forEach(gm => {
+        this.sportswearSlides.push({ img: gm.image, id: gm._id });
+      });
+      const recentTwoRunnings = Object.entries(recentTwoRunningObjs).map(recentRun => recentRun[1]);
+      recentTwoRunnings.forEach(run => {
+        this.sportswearSlides.push({ img: run.image, id: run._id });
+      });
+      const recentTwoSki_snowboard = Object.entries(recentTwoSki_snowboardObjs).map(recentSk_snwbrd => recentSk_snwbrd[1]);
+      recentTwoSki_snowboard.forEach(ski_snwbrd => {
+        this.sportswearSlides.push({ img: ski_snwbrd.image, id: ski_snwbrd._id });
+      });
+      const recentTwoSwim_surf = Object.entries(recentTwoSwim_surfObjs).map(recentSwm_srf => recentSwm_srf[1]);
+      recentTwoSwim_surf.forEach(swim_srf => {
+        this.sportswearSlides.push({ img: swim_srf.image, id: swim_srf._id });
+      });
+      const recentTwoOutdoors = Object.entries(recentTwoOutdoorsObjs).map(recentOutdr => recentOutdr[1]);
+      recentTwoOutdoors.forEach(outdr => {
+        this.sportswearSlides.push({ img: outdr.image, id: outdr._id });
+      });
+      const recentTwoBottoms_leggings = Object.entries(recentTwoBottoms_leggingsObjs).map(recentBtm_leg => recentBtm_leg[1]);
+      recentTwoBottoms_leggings.forEach(btm_leg => {
+        this.sportswearSlides.push({ img: btm_leg.image, id: btm_leg._id });
+      });
+      const recentTwoSweaters = Object.entries(recentTwoSweatersObjs).map(recentSwtr => recentSwtr[1]);
+      recentTwoSweaters.forEach(swtr => {
+        this.sportswearSlides.push({ img: swtr.image, id: swtr._id });
+      });
       // console.log(recentTwoJackets);
       // console.log(this.clothesSlides);
       this.recentTwoClothes$ = recentTwoJackets.concat(recentTwoLongwear);
       this.recentTwoShoes$ = recentTwoTrainers.concat(recentTwoBoots, recentTwoSlippers);
       this.recentTwoAccessories$ = recentTwoCaps_hats.concat(recentTwoBelts, recentTwoGloves, recentTwoSunglasses, recentTwoWatches);
+      this.recentTwoSportswear$ = recentTwoGym.concat(recentTwoRunnings, recentTwoSki_snowboard, recentTwoSwim_surf, recentTwoOutdoors, recentTwoBottoms_leggings, recentTwoSweaters);
     });
 
     const cartSubscription = this.cartService.items$.subscribe(items => {
