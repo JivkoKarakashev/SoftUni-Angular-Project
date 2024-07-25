@@ -2,19 +2,19 @@ import { Component } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
-import { BlazersJacketsService } from './blazers-jackets.service';
+import { TuxedosPartywearService } from './tuxedos-partywear.service';
 import { Item } from 'src/app/types/item';
-import { BlazerJacket } from 'src/app/types/blazerJacket';
+import { TuxedoPartywear } from 'src/app/types/tuxedoPartywear';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
 
 @Component({
-  selector: 'app-blazers-jackets',
-  templateUrl: './blazers-jackets.component.html',
-  styleUrls: ['./blazers-jackets.component.css']
+  selector: 'app-tuxedos-partywear',
+  templateUrl: './tuxedos-partywear.component.html',
+  styleUrls: ['./tuxedos-partywear.component.css']
 })
-export class BlazersJacketsComponent {
-  public listItems$: BlazerJacket[] = [];
+export class TuxedosPartywearComponent {
+  public listItems$: TuxedoPartywear[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
   public buyedItems: number = 0;
@@ -23,7 +23,7 @@ export class BlazersJacketsComponent {
   public loading: boolean = true;
 
 
-  constructor(private userService: UserService, private blazers_jacketsService: BlazersJacketsService, private cartService: ShoppingCartService) { }
+  constructor(private userService: UserService, private tuxedos_partywearService: TuxedosPartywearService, private cartService: ShoppingCartService) { }
 
   get isLoggedIn(): boolean {
     // console.log(this.userService.isLoggedIn);
@@ -39,21 +39,21 @@ export class BlazersJacketsComponent {
       // console.log(this.cartItms$$.value);
     });
 
-    const blazers_jacketsSubscription = this.blazers_jacketsService.getBlazersJackets().subscribe(blzrs_jcktsObjs => {
+    const tuxedos_partywearSubscription = this.tuxedos_partywearService.getTuxedosPartywear().subscribe(txds_ptywrObjs => {
       this.loading = false;
-      let blazers_jackets = Object.entries(blzrs_jcktsObjs).map(blzr_jckt => blzr_jckt[1]);
-      blazers_jackets.forEach(blzr_jckt => {
-        blzr_jckt.buyed = this.cartItms$$.value.some(itm => itm._id == blzr_jckt._id);
+      let tuxedos_partywear = Object.entries(txds_ptywrObjs).map(txd_ptywr => txd_ptywr[1]);
+      tuxedos_partywear.forEach(txd_ptywr => {
+        txd_ptywr.buyed = this.cartItms$$.value.some(itm => itm._id == txd_ptywr._id);
       });
-      // console.log(blazers_jackets);
-      // console.log(blazers_jackets instanceof(Array));
-      // console.log(blazers_jackets[0].buyed);
-      // this.listItems$ = Object.values(blazers_jackets);
-      // console.log(Object.values(blazers_jackets));
-      this.listItems$ = blazers_jackets;
+      // console.log(tuxedos_partywear);
+      // console.log(tuxedos_partywear instanceof(Array));
+      // console.log(tuxedos_partywear[0].buyed);
+      // this.listItems$ = Object.values(tuxedos_partywear);
+      // console.log(Object.values(tuxedos_partywear));
+      this.listItems$ = tuxedos_partywear;
     });
 
-    this.unsubscriptionArray.push(blazers_jacketsSubscription, cartSubscription);
+    this.unsubscriptionArray.push(tuxedos_partywearSubscription, cartSubscription);
 
     this.user$ = JSON.parse(localStorage?.getItem('userData') as string);
   }
@@ -65,7 +65,7 @@ export class BlazersJacketsComponent {
     });
   }
 
-  public addItemtoCart(e: Event, item: BlazerJacket) {
+  public addItemtoCart(e: Event, item: TuxedoPartywear) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;

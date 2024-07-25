@@ -32,14 +32,18 @@ export class BottomsLeggingsComponent {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const bottoms_leggingsSubscription = this.bottoms_leggingsService.getBottomsLeggings().subscribe(btms_lgingsObjs => {
       this.loading = false;
       let bottoms_leggings = Object.entries(btms_lgingsObjs).map(btm_leg => btm_leg[1]);
       bottoms_leggings.forEach(btm_leg => {
         btm_leg.buyed = this.cartItms$$.value.some(itm => itm._id == btm_leg._id);
-        if (btm_leg.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(bottoms_leggings);
       // console.log(bottoms_leggings instanceof(Array));
@@ -47,12 +51,6 @@ export class BottomsLeggingsComponent {
       // this.listItems$ = Object.values(bottoms_leggings);
       // console.log(Object.values(bottoms_leggings));
       this.listItems$ = bottoms_leggings;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(bottoms_leggingsSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class BottomsLeggingsComponent {
     });
   }
 
-  addItemtoCart(e: Event, item: BottomsLeggings) {
+  public addItemtoCart(e: Event, item: BottomsLeggings) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class BottomsLeggingsComponent {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

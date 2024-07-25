@@ -32,14 +32,18 @@ export class GymComponent {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const gymSubscription = this.gymService.getGym().subscribe(gymObjs => {
       this.loading = false;
       let gym = Object.entries(gymObjs).map(gym => gym[1]);
       gym.forEach(gm => {
         gm.buyed = this.cartItms$$.value.some(itm => itm._id == gm._id);
-        if (gm.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(gym);
       // console.log(gym instanceof(Array));
@@ -47,12 +51,6 @@ export class GymComponent {
       // this.listItems$ = Object.values(gym);
       // console.log(Object.values(gym));
       this.listItems$ = gym;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(gymSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class GymComponent {
     });
   }
 
-  addItemtoCart(e: Event, item: Gym) {
+  public addItemtoCart(e: Event, item: Gym) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class GymComponent {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

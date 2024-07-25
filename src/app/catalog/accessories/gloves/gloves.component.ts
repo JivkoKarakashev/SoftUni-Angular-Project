@@ -32,14 +32,18 @@ export class GlovesComponent {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const glovesSubscription = this.glovesService.getGloves().subscribe(glovesObjs => {
       this.loading = false;
       let gloves = Object.entries(glovesObjs).map(glvs => glvs[1]);
       gloves.forEach(glvs => {
         glvs.buyed = this.cartItms$$.value.some(itm => itm._id == glvs._id);
-        if (glvs.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(gloves);
       // console.log(gloves instanceof(Array));
@@ -47,12 +51,6 @@ export class GlovesComponent {
       // this.listItems$ = Object.values(gloves);
       // console.log(Object.values(gloves));
       this.listItems$ = gloves;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(glovesSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class GlovesComponent {
     });
   }
 
-  addItemtoCart(e: Event, item: Glove) {
+  public addItemtoCart(e: Event, item: Glove) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class GlovesComponent {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

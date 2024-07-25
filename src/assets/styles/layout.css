@@ -106,6 +106,7 @@ button.slick-next.slick-arrow::before {
 }
 
 img.img-carousel {
+    padding: .3em 0;
     max-height: 25vh;
     object-fit: scale-down;
 }

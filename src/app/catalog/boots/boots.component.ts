@@ -32,14 +32,18 @@ export class BootsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const bootsSubscription = this.bootsService.getBoots().subscribe(bootsObjs => {
       this.loading = false;
       let boots = Object.entries(bootsObjs).map(bts => bts[1]);
       boots.forEach(bts => {
         bts.buyed = this.cartItms$$.value.some(itm => itm._id == bts._id);
-        if (bts.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(boots);
       // console.log(boots instanceof(Array));
@@ -47,12 +51,6 @@ export class BootsComponent implements OnInit, OnDestroy {
       // this.listItems$ = Object.values(boots);
       // console.log(Object.values(boots));
       this.listItems$ = boots;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(bootsSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class BootsComponent implements OnInit, OnDestroy {
     }); 
   }
 
-  addItemtoCart(e: Event, item: Boot) {
+  public addItemtoCart(e: Event, item: Boot) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class BootsComponent implements OnInit, OnDestroy {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

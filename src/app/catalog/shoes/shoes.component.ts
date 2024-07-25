@@ -34,6 +34,13 @@ export class ShoesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const shoesSubscription = this.shoesService.getShoes().subscribe(shoesObjs => {
       this.loading = false;
       let [trainersObjs, bootsObjs, slippersObjs] = shoesObjs;
@@ -41,23 +48,14 @@ export class ShoesComponent implements OnInit, OnDestroy {
       let trainers = Object.entries(trainersObjs).map(trainers => trainers[1]);
       trainers.forEach(tr => {
         tr.buyed = this.cartItms$$.value.some(itm => itm._id == tr._id);
-        if (tr.buyed) {
-          this.buyedItems++;
-        }
       });
       let boots = Object.entries(bootsObjs).map(boots => boots[1]);
       boots.forEach(bts => {
         bts.buyed = this.cartItms$$.value.some(itm => itm._id == bts._id);
-        if (bts.buyed) {
-          this.buyedItems++;
-        }
       });
       let slippers = Object.entries(slippersObjs).map(slippers => slippers[1]);
       slippers.forEach(slps => {
         slps.buyed = this.cartItms$$.value.some(itm => itm._id == slps._id);
-        if (slps.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(trainers);
       // console.log(boots);
@@ -67,11 +65,6 @@ export class ShoesComponent implements OnInit, OnDestroy {
       // this.listItems$ = Object.values(slippers);
       // console.log(Object.values(slippers));
       this.listItems$ = trainers.concat(boots, slippers);
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
     });
 
     this.unsubscriptionArray.push(shoesSubscription, cartSubscription);
@@ -86,7 +79,7 @@ export class ShoesComponent implements OnInit, OnDestroy {
     }); 
   }
 
-  addItemtoCart(e: Event, item: Trainers | Boot | Slippers) {
+  public addItemtoCart(e: Event, item: Trainers | Boot | Slippers) {
     // console.log(e.target);
     item.buyed = true;
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
@@ -95,7 +88,6 @@ export class ShoesComponent implements OnInit, OnDestroy {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

@@ -32,14 +32,18 @@ export class SweatersComponent {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const sweatersSubscription = this.sweatersService.getSweaters().subscribe(swtrsObjs => {
       this.loading = false;
       let sweaters = Object.entries(swtrsObjs).map(swtr => swtr[1]);
       sweaters.forEach(swtr => {
         swtr.buyed = this.cartItms$$.value.some(itm => itm._id == swtr._id);
-        if (swtr.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(sweaters);
       // console.log(sweaters instanceof(Array));
@@ -47,12 +51,6 @@ export class SweatersComponent {
       // this.listItems$ = Object.values(sweaters);
       // console.log(Object.values(sweaters));
       this.listItems$ = sweaters;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(sweatersSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class SweatersComponent {
     });
   }
 
-  addItemtoCart(e: Event, item: Sweater) {
+  public addItemtoCart(e: Event, item: Sweater) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class SweatersComponent {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

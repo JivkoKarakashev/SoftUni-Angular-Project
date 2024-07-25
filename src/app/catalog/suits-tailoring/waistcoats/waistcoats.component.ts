@@ -2,19 +2,19 @@ import { Component } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
-import { BlazersJacketsService } from './blazers-jackets.service';
+import { WaistcoatsService } from './waistcoats.service';
 import { Item } from 'src/app/types/item';
-import { BlazerJacket } from 'src/app/types/blazerJacket';
+import { Waistcoat } from 'src/app/types/waistcoat';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
 
 @Component({
-  selector: 'app-blazers-jackets',
-  templateUrl: './blazers-jackets.component.html',
-  styleUrls: ['./blazers-jackets.component.css']
+  selector: 'app-waistcoats',
+  templateUrl: './waistcoats.component.html',
+  styleUrls: ['./waistcoats.component.css']
 })
-export class BlazersJacketsComponent {
-  public listItems$: BlazerJacket[] = [];
+export class WaistcoatsComponent {
+  public listItems$: Waistcoat[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
   public buyedItems: number = 0;
@@ -23,7 +23,7 @@ export class BlazersJacketsComponent {
   public loading: boolean = true;
 
 
-  constructor(private userService: UserService, private blazers_jacketsService: BlazersJacketsService, private cartService: ShoppingCartService) { }
+  constructor(private userService: UserService, private waistcoatsService: WaistcoatsService, private cartService: ShoppingCartService) { }
 
   get isLoggedIn(): boolean {
     // console.log(this.userService.isLoggedIn);
@@ -39,21 +39,21 @@ export class BlazersJacketsComponent {
       // console.log(this.cartItms$$.value);
     });
 
-    const blazers_jacketsSubscription = this.blazers_jacketsService.getBlazersJackets().subscribe(blzrs_jcktsObjs => {
+    const waistcoatsSubscription = this.waistcoatsService.getWaistcoats().subscribe(wstctsObjs => {
       this.loading = false;
-      let blazers_jackets = Object.entries(blzrs_jcktsObjs).map(blzr_jckt => blzr_jckt[1]);
-      blazers_jackets.forEach(blzr_jckt => {
-        blzr_jckt.buyed = this.cartItms$$.value.some(itm => itm._id == blzr_jckt._id);
+      let waistcoats = Object.entries(wstctsObjs).map(wstct => wstct[1]);
+      waistcoats.forEach(wstct => {
+        wstct.buyed = this.cartItms$$.value.some(itm => itm._id == wstct._id);
       });
-      // console.log(blazers_jackets);
-      // console.log(blazers_jackets instanceof(Array));
-      // console.log(blazers_jackets[0].buyed);
-      // this.listItems$ = Object.values(blazers_jackets);
-      // console.log(Object.values(blazers_jackets));
-      this.listItems$ = blazers_jackets;
+      // console.log(waistcoats);
+      // console.log(waistcoats instanceof(Array));
+      // console.log(waistcoats[0].buyed);
+      // this.listItems$ = Object.values(waistcoats);
+      // console.log(Object.values(waistcoats));
+      this.listItems$ = waistcoats;
     });
 
-    this.unsubscriptionArray.push(blazers_jacketsSubscription, cartSubscription);
+    this.unsubscriptionArray.push(waistcoatsSubscription, cartSubscription);
 
     this.user$ = JSON.parse(localStorage?.getItem('userData') as string);
   }
@@ -65,7 +65,7 @@ export class BlazersJacketsComponent {
     });
   }
 
-  public addItemtoCart(e: Event, item: BlazerJacket) {
+  public addItemtoCart(e: Event, item: Waistcoat) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;

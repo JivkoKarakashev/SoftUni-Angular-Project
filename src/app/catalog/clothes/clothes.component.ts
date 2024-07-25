@@ -33,6 +33,13 @@ export class ClothesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items])
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const clothesSubscription = this.clothesService.getClothes().subscribe(clothesObjs => {
       this.loading = false;
       let [jacketsObjs, longwearObjs] = clothesObjs;
@@ -40,16 +47,10 @@ export class ClothesComponent implements OnInit, OnDestroy {
       let jackets = Object.entries(jacketsObjs).map(jacket => jacket[1]);
       jackets.forEach(jckt => {
         jckt.buyed = this.cartItms$$.value.some(itm => itm._id == jckt._id);
-        if (jckt.buyed) {
-          this.buyedItems++;
-        }
       });
       let longwaer = Object.entries(longwearObjs).map(lngwear => lngwear[1]);
       longwaer.forEach(lngwr => {
         lngwr.buyed = this.cartItms$$.value.some(itm => itm._id == lngwr._id);
-        if (lngwr.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(jackets);
       // console.log(longwaer);
@@ -58,12 +59,6 @@ export class ClothesComponent implements OnInit, OnDestroy {
       // this.listItems$ = Object.values(longwaer);
       // console.log(Object.values(longwaer));
       this.listItems$ = jackets.concat(longwaer);
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(clothesSubscription, cartSubscription);
@@ -78,7 +73,7 @@ export class ClothesComponent implements OnInit, OnDestroy {
     }); 
   }
 
-  addItemtoCart(e: Event, item: Jacket | Longwear) {
+  public addItemtoCart(e: Event, item: Jacket | Longwear) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;

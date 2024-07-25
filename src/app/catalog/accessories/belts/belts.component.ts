@@ -32,14 +32,18 @@ export class BeltsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const beltsSubscription = this.beltsService.getBelts().subscribe(beltsObjs => {
       this.loading = false;
       let belts = Object.entries(beltsObjs).map(bts => bts[1]);
       belts.forEach(bts => {
         bts.buyed = this.cartItms$$.value.some(itm => itm._id == bts._id);
-        if (bts.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(belts);
       // console.log(belts instanceof(Array));
@@ -47,12 +51,6 @@ export class BeltsComponent implements OnInit, OnDestroy {
       // this.listItems$ = Object.values(belts);
       // console.log(Object.values(belts));
       this.listItems$ = belts;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(beltsSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class BeltsComponent implements OnInit, OnDestroy {
     });
   }
 
-  addItemtoCart(e: Event, item: Belt) {
+  public addItemtoCart(e: Event, item: Belt) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class BeltsComponent implements OnInit, OnDestroy {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

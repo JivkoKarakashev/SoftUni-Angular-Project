@@ -32,14 +32,18 @@ export class JacketsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const jacketsSubscription = this.jacketsService.getJackets().subscribe(jacketsObjs => {
       this.loading = false;
       let jackets = Object.entries(jacketsObjs).map(jacket => jacket[1]);
       jackets.forEach(jckt => {
         jckt.buyed = this.cartItms$$.value.some(itm => itm._id == jckt._id);
-        if (jckt.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(jackets);
       // console.log(jackets instanceof(Array));
@@ -47,11 +51,6 @@ export class JacketsComponent implements OnInit, OnDestroy {
       // this.listItems$ = Object.values(jackets);
       // console.log(Object.values(jackets));
       this.listItems$ = jackets;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
     });
 
     this.unsubscriptionArray.push(jacketsSubscription, cartSubscription);
@@ -66,7 +65,7 @@ export class JacketsComponent implements OnInit, OnDestroy {
     }); 
   }
 
-  addItemtoCart(e: Event, item: Jacket) {
+  public addItemtoCart(e: Event, item: Jacket) {
     // console.log(e.target);
     item.buyed = true;
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
@@ -75,7 +74,6 @@ export class JacketsComponent implements OnInit, OnDestroy {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

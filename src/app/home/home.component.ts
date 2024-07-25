@@ -24,6 +24,9 @@ import { Outdoors } from '../types/outdoors';
 import { BottomsLeggings } from '../types/bottomsLeggings';
 import { Sweater } from '../types/sweater';
 import { BlazerJacket } from '../types/blazerJacket';
+import { Waistcoat } from '../types/waistcoat';
+import { TuxedoPartywear } from '../types/tuxedoPartywear';
+import { Tie } from '../types/tie';
 
 interface slideImg {
   img: string,
@@ -40,7 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public recentTwoShoes$: (Trainers & Boot & Slippers)[] = [];
   public recentTwoAccessories$: (CapHat & Belt & Glove & Sunglasses & Watch)[] = [];
   public recentTwoSportswear$: (Gym & Running & SkiSnowboard & SwimSurf & Outdoors & BottomsLeggings & Sweater)[] = [];
-  public recentTwoSuits_tailoring$: (BlazerJacket)[] = [];
+  public recentTwoSuits_tailoring$: (BlazerJacket & Waistcoat & TuxedoPartywear & Tie)[] = [];
   private cartItms$$ = new BehaviorSubject<Item[]>([]);
   public cartItms$ = this.cartItms$$.asObservable();
   public buyedItems: number = 0;
@@ -64,8 +67,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         recentTwoTrainersObjs, recentTwoBootsObjs, recentTwoSlippersObjs,
         recentTwoCaps_hatsObjs, recentTwoBeltsObjs, recentTwoGlovesObjs, recentTwoSunglassesObjs, recentTwoWatchesObjs,
         recentTwoGymObjs, recentTwoRunningObjs, recentTwoSki_snowboardObjs, recentTwoSwim_surfObjs, recentTwoOutdoorsObjs, recentTwoBottoms_leggingsObjs, recentTwoSweatersObjs,
-        recentTwoBlazers_jacketsObjs
-      ] = recentTwoObjs
+        recentTwoBlazers_jacketsObjs, recentTwoWaistcoatsObjs, recentTwoTuxedos_partywearObjs, recentTwoTiesObjs
+      ] = recentTwoObjs;
       const recentTwoJackets = Object.entries(recentTwoJacketsObjs).map(recentTwoJckt => recentTwoJckt[1]);
       recentTwoJackets.forEach(jckt => {
         this.clothesSlides.push({ img: jckt.image, id: jckt._id });
@@ -106,7 +109,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       recentTwoWatches.forEach(wtch => {
         this.accessoriesSlides.push({ img: wtch.image, id: wtch._id });
       });
-
       const recentTwoGym = Object.entries(recentTwoGymObjs).map(recentGm => recentGm[1]);
       recentTwoGym.forEach(gm => {
         this.sportswearSlides.push({ img: gm.image, id: gm._id });
@@ -139,13 +141,25 @@ export class HomeComponent implements OnInit, OnDestroy {
       recentTwoBlazers_jackets.forEach(blzr_jckt => {
         this.suits_tailoringSlides.push({ img: blzr_jckt.image, id: blzr_jckt._id });
       });
-      // console.log(recentTwoJackets);
+      const recentTwoWaistcoats = Object.entries(recentTwoWaistcoatsObjs).map(recentWstct => recentWstct[1]);
+      recentTwoWaistcoats.forEach(wstct => {
+        this.suits_tailoringSlides.push({ img: wstct.image, id: wstct._id });
+      });
+      const recentTwoTuxedos_partywear = Object.entries(recentTwoTuxedos_partywearObjs).map(recentTxd_ptywr => recentTxd_ptywr[1]);
+      recentTwoTuxedos_partywear.forEach(txd_ptywr => {
+        this.suits_tailoringSlides.push({ img: txd_ptywr.image, id: txd_ptywr._id });
+      });
+      const recentTwoTies = Object.entries(recentTwoTiesObjs).map(recentTie => recentTie[1]);
+      recentTwoTies.forEach(tie => {
+        this.suits_tailoringSlides.push({ img: tie.image, id: tie._id });
+      });
+      // console.log(this.suits_tailoringSlides);
       // console.log(this.clothesSlides);
       this.recentTwoClothes$ = recentTwoJackets.concat(recentTwoLongwear);
       this.recentTwoShoes$ = recentTwoTrainers.concat(recentTwoBoots, recentTwoSlippers);
       this.recentTwoAccessories$ = recentTwoCaps_hats.concat(recentTwoBelts, recentTwoGloves, recentTwoSunglasses, recentTwoWatches);
       this.recentTwoSportswear$ = recentTwoGym.concat(recentTwoRunnings, recentTwoSki_snowboard, recentTwoSwim_surf, recentTwoOutdoors, recentTwoBottoms_leggings, recentTwoSweaters);
-      this.recentTwoSuits_tailoring$ = recentTwoBlazers_jackets.concat([]);
+      this.recentTwoSuits_tailoring$ = recentTwoBlazers_jackets.concat(recentTwoWaistcoats, recentTwoTuxedos_partywear, recentTwoTies);
     });
 
     const cartSubscription = this.cartService.items$.subscribe(items => {

@@ -32,14 +32,18 @@ export class OutdoorsComponent {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const outdoorsSubscription = this.outdoorsService.getOutdoors().subscribe(outdrsObjs => {
       this.loading = false;
       let outdoors = Object.entries(outdrsObjs).map(outdr => outdr[1]);
       outdoors.forEach(outdr => {
         outdr.buyed = this.cartItms$$.value.some(itm => itm._id == outdr._id);
-        if (outdr.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(outdoors);
       // console.log(outdoors instanceof(Array));
@@ -47,12 +51,6 @@ export class OutdoorsComponent {
       // this.listItems$ = Object.values(outdoors);
       // console.log(Object.values(outdoors));
       this.listItems$ = outdoors;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(outdoorsSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class OutdoorsComponent {
     });
   }
 
-  addItemtoCart(e: Event, item: Outdoors) {
+  public addItemtoCart(e: Event, item: Outdoors) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class OutdoorsComponent {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

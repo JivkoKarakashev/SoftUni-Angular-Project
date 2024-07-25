@@ -20,6 +20,9 @@ import { Outdoors } from '../types/outdoors';
 import { BottomsLeggings } from '../types/bottomsLeggings';
 import { Sweater } from '../types/sweater';
 import { BlazerJacket } from '../types/blazerJacket';
+import { Waistcoat } from '../types/waistcoat';
+import { TuxedoPartywear } from '../types/tuxedoPartywear';
+import { Tie } from '../types/tie';
 
 const RECENT_TWO_JACKETS_URL = 'http://localhost:3030/data/jackets?sortBy=_createdOn%20desc&offset=0&pageSize=2';
 const RECENT_TWO_LONGWEAR_URL = 'http://localhost:3030/data/longwear?sortBy=_createdOn%20desc&offset=0&pageSize=2';
@@ -39,7 +42,9 @@ const RECENT_TWO_OUTDOORS_URL = 'http://localhost:3030/data/outdoors?sortBy=_cre
 const RECENT_TWO_BOTTOMS_LEGGINGS_URL = 'http://localhost:3030/data/bottoms_leggings?sortBy=_createdOn%20desc&offset=0&pageSize=2';
 const RECENT_TWO_SWEATERS_URL = 'http://localhost:3030/data/sweaters?sortBy=_createdOn%20desc&offset=0&pageSize=2';
 const RECENT_TWO_BLAZERS_JACKETS_URL = 'http://localhost:3030/data/blazers_jackets?sortBy=_createdOn%20desc&offset=0&pageSize=2';
-
+const RECENT_TWO_WAISTCOATS_URL = 'http://localhost:3030/data/waistcoats?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_TUXEDOS_PARTYWEAR = 'http://localhost:3030/data/tuxedos_partywear?sortBy=_createdOn%20desc&offset=0&pageSize=2';
+const RECENT_TWO_TIES = 'http://localhost:3030/data/ties?sortBy=_createdOn%20desc&offset=0&pageSize=2';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +72,10 @@ export class HomeService {
       this.http.get<Outdoors[]>(RECENT_TWO_OUTDOORS_URL),
       this.http.get<BottomsLeggings[]>(RECENT_TWO_BOTTOMS_LEGGINGS_URL),
       this.http.get<Sweater[]>(RECENT_TWO_SWEATERS_URL),
-      this.http.get<BlazerJacket[]>(RECENT_TWO_BLAZERS_JACKETS_URL)
+      this.http.get<BlazerJacket[]>(RECENT_TWO_BLAZERS_JACKETS_URL),
+      this.http.get<Waistcoat[]>(RECENT_TWO_WAISTCOATS_URL),
+      this.http.get<TuxedoPartywear[]>(RECENT_TWO_TUXEDOS_PARTYWEAR),
+      this.http.get<Tie[]>(RECENT_TWO_TIES)
     ]);
   }
 }

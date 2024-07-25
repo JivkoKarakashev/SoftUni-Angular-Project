@@ -32,14 +32,18 @@ export class TrainersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const trainersSubscription = this.trainersService.getTrainers().subscribe(trnrsObjs => {
       this.loading = false;
       let trainers = Object.entries(trnrsObjs).map(trnrs => trnrs[1]);
       trainers.forEach(trners => {
         trners.buyed = this.cartItms$$.value.some(itm => itm._id == trners._id);
-        if (trners.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(trainers);
       // console.log(trainers instanceof(Array));
@@ -47,12 +51,6 @@ export class TrainersComponent implements OnInit, OnDestroy {
       // this.listItems$ = Object.values(trainers);
       // console.log(Object.values(trainers));
       this.listItems$ = trainers;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(trainersSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class TrainersComponent implements OnInit, OnDestroy {
     }); 
   }
 
-  addItemtoCart(e: Event, item: Trainers) {
+  public addItemtoCart(e: Event, item: Trainers) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class TrainersComponent implements OnInit, OnDestroy {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

@@ -32,14 +32,18 @@ export class SkiSnowboardComponent {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const ski_snowboardSubscription = this.ski_snowboardService.getSkiSnowboard().subscribe(ski_snowboardObjs => {
       this.loading = false;
       let ski_snowboard = Object.entries(ski_snowboardObjs).map(sk_snwbrd => sk_snwbrd[1]);
       ski_snowboard.forEach(ski_snwbrd => {
         ski_snwbrd.buyed = this.cartItms$$.value.some(itm => itm._id == ski_snwbrd._id);
-        if (ski_snwbrd.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(ski_snowboard);
       // console.log(ski_snowboard instanceof(Array));
@@ -47,12 +51,6 @@ export class SkiSnowboardComponent {
       // this.listItems$ = Object.values(ski_snowboard);
       // console.log(Object.values(ski_snowboard));
       this.listItems$ = ski_snowboard;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(ski_snowboardSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class SkiSnowboardComponent {
     });
   }
 
-  addItemtoCart(e: Event, item: SkiSnowboard) {
+  public addItemtoCart(e: Event, item: SkiSnowboard) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class SkiSnowboardComponent {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

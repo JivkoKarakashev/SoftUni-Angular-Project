@@ -32,14 +32,18 @@ export class SlippersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const slippersSubscription = this.slippersService.getSlippers().subscribe(slprsObjs => {
       this.loading = false;
       let slippers = Object.entries(slprsObjs).map(slprs => slprs[1]);
       slippers.forEach(slprs => {
         slprs.buyed = this.cartItms$$.value.some(itm => itm._id == slprs._id);
-        if (slprs.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(slippers);
       // console.log(slippers instanceof(Array));
@@ -47,12 +51,6 @@ export class SlippersComponent implements OnInit, OnDestroy {
       // this.listItems$ = Object.values(slippers);
       // console.log(Object.values(slippers));
       this.listItems$ = slippers;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(slippersSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class SlippersComponent implements OnInit, OnDestroy {
     }); 
   }
 
-  addItemtoCart(e: Event, item: Slippers) {
+  public addItemtoCart(e: Event, item: Slippers) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class SlippersComponent implements OnInit, OnDestroy {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item );    
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

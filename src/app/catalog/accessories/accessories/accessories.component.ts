@@ -36,6 +36,13 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const accessoriesSubscription = this.accessoriesService.getAccessories().subscribe(accessoriesObjs => {
       this.loading = false;
       let [caps_hatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs] = accessoriesObjs;
@@ -43,37 +50,22 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
       let caps_hats = Object.entries(caps_hatsObjs).map(cap_hat => cap_hat[1]);
       caps_hats.forEach(cp_ht => {
         cp_ht.buyed = this.cartItms$$.value.some(itm => itm._id == cp_ht._id);
-        if (cp_ht.buyed) {
-          this.buyedItems++;
-        }
       });
       let belts = Object.entries(beltsObjs).map(belt => belt[1]);
       belts.forEach(blt => {
         blt.buyed = this.cartItms$$.value.some(itm => itm._id == blt._id);
-        if (blt.buyed) {
-          this.buyedItems++;
-        }
       });
       let gloves = Object.entries(glovesObjs).map(glves => glves[1]);
       gloves.forEach(glvs => {
         glvs.buyed = this.cartItms$$.value.some(itm => itm._id == glvs._id);
-        if (glvs.buyed) {
-          this.buyedItems++;
-        }
       });
       let sunglasses = Object.entries(sunglassesObjs).map(snglsses => snglsses[1]);
       sunglasses.forEach(snglsses => {
         snglsses.buyed = this.cartItms$$.value.some(itm => itm._id == snglsses._id);
-        if (snglsses.buyed) {
-          this.buyedItems++;
-        }
       });
       let watches = Object.entries(watchesObjs).map(wtch => wtch[1]);
       watches.forEach(wtch => {
         wtch.buyed = this.cartItms$$.value.some(itm => itm._id == wtch._id);
-        if (wtch.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(caps_hats);
       // console.log(belts);
@@ -85,12 +77,6 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
       // this.listItems$ = Object.values(watches);
       // console.log(Object.values(watches));
       this.listItems$ = caps_hats.concat(belts, gloves, sunglasses, watches);
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(accessoriesSubscription, cartSubscription);
@@ -105,7 +91,7 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
     });
   }
 
-  addItemtoCart(e: Event, item: CapHat | Belt | Glove | Sunglasses | Watch) {
+  public addItemtoCart(e: Event, item: CapHat | Belt | Glove | Sunglasses | Watch) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -114,7 +100,6 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

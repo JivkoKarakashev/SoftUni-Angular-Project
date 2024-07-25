@@ -32,14 +32,18 @@ export class SwimSurfComponent {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+
     const swim_surfSubscription = this.swim_surfService.getSwimSurf().subscribe(swim_surfObjs => {
       this.loading = false;
       let swim_surf = Object.entries(swim_surfObjs).map(swm_srf => swm_srf[1]);
       swim_surf.forEach(swim_srf => {
         swim_srf.buyed = this.cartItms$$.value.some(itm => itm._id == swim_srf._id);
-        if (swim_srf.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(swim_surf);
       // console.log(swim_surf instanceof(Array));
@@ -47,12 +51,6 @@ export class SwimSurfComponent {
       // this.listItems$ = Object.values(swim_surf);
       // console.log(Object.values(swim_surf));
       this.listItems$ = swim_surf;
-    });
-
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
     });
 
     this.unsubscriptionArray.push(swim_surfSubscription, cartSubscription);
@@ -67,7 +65,7 @@ export class SwimSurfComponent {
     });
   }
 
-  addItemtoCart(e: Event, item: SwimSurf) {
+  public addItemtoCart(e: Event, item: SwimSurf) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -76,7 +74,6 @@ export class SwimSurfComponent {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

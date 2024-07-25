@@ -4,11 +4,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { SportswearService } from './sportswear.service';
 import { Item } from 'src/app/types/item';
-import { CapHat } from 'src/app/types/capHat';
-import { Belt } from 'src/app/types/belt';
-import { Glove } from 'src/app/types/glove';
-import { Sunglasses } from 'src/app/types/sunglasses';
-import { Watch } from 'src/app/types/watch';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
 import { Gym } from 'src/app/types/gym';
@@ -43,6 +38,13 @@ export class SportswearComponent {
   }
 
   ngOnInit(): void {
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.buyedItems = items.length;
+      this.cartItms$$.next([...items]);
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+    
     const sportswearSubscription = this.sportswearService.getSportswear().subscribe(sportswearObjs => {
       this.loading = false;
       let [gymObjs, runningObjs, ski_snowboardObjs, swim_surfObjs, outdoorsObjs, bottoms_leggingsObjs, sweatersObjs] = sportswearObjs;
@@ -50,51 +52,30 @@ export class SportswearComponent {
       let gym = Object.entries(gymObjs).map(gm => gm[1]);
       gym.forEach(gm => {
         gm.buyed = this.cartItms$$.value.some(itm => itm._id == gm._id);
-        if (gm.buyed) {
-          this.buyedItems++;
-        }
       });
       let runnings = Object.entries(runningObjs).map(run => run[1]);
       runnings.forEach(run => {
         run.buyed = this.cartItms$$.value.some(itm => itm._id == run._id);
-        if (run.buyed) {
-          this.buyedItems++;
-        }
       });
       let ski_snowboard = Object.entries(ski_snowboardObjs).map(sk_snwbrd => sk_snwbrd[1]);
       ski_snowboard.forEach(ski_snwbrd => {
         ski_snwbrd.buyed = this.cartItms$$.value.some(itm => itm._id == ski_snwbrd._id);
-        if (ski_snwbrd.buyed) {
-          this.buyedItems++;
-        }
       });
       let swim_surf = Object.entries(swim_surfObjs).map(swm_srf => swm_srf[1]);
       swim_surf.forEach(swim_srf => {
         swim_srf.buyed = this.cartItms$$.value.some(itm => itm._id == swim_srf._id);
-        if (swim_srf.buyed) {
-          this.buyedItems++;
-        }
       });
       let outdoors = Object.entries(outdoorsObjs).map(outdr => outdr[1]);
       outdoors.forEach(outdr => {
         outdr.buyed = this.cartItms$$.value.some(itm => itm._id == outdr._id);
-        if (outdr.buyed) {
-          this.buyedItems++;
-        }
       });
       let bottoms_leggings = Object.entries(bottoms_leggingsObjs).map(btm_leg => btm_leg[1]);
       bottoms_leggings.forEach(btm_leg => {
         btm_leg.buyed = this.cartItms$$.value.some(itm => itm._id == btm_leg._id);
-        if (btm_leg.buyed) {
-          this.buyedItems++;
-        }
       });
       let sweaters = Object.entries(sweatersObjs).map(swtr => swtr[1]);
       sweaters.forEach(swtr => {
         swtr.buyed = this.cartItms$$.value.some(itm => itm._id == swtr._id);
-        if (swtr.buyed) {
-          this.buyedItems++;
-        }
       });
       // console.log(gym);
       // console.log(runnings);
@@ -110,12 +91,6 @@ export class SportswearComponent {
       this.listItems$ = gym.concat(runnings, ski_snowboard, swim_surf, outdoors, bottoms_leggings, sweaters);
     });
 
-    const cartSubscription = this.cartService.items$.subscribe(items => {
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
-    });
-
     this.unsubscriptionArray.push(sportswearSubscription, cartSubscription);
 
     this.user$ = JSON.parse(localStorage?.getItem('userData') as string);
@@ -128,7 +103,7 @@ export class SportswearComponent {
     });
   }
 
-  addItemtoCart(e: Event, item: Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater) {
+  public addItemtoCart(e: Event, item: Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater) {
     // console.log(e.target);
     const { _ownerId, _id, image, description, size, color, quantity, price } = item;
     item.buyed = true;
@@ -137,7 +112,6 @@ export class SportswearComponent {
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
     this.listItems$.splice(idx, 1, item);
     this.cartService.addCartItem({ _ownerId, _id, image, description, size, color, quantity, price });
-    this.buyedItems++;
     // console.log(this.cartItms$);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
