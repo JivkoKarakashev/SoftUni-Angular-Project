@@ -9,6 +9,7 @@ import { SwimSurfComponent } from './swim-surf/swim-surf.component';
 import { OutdoorsComponent } from './outdoors/outdoors.component';
 import { BottomsLeggingsComponent } from './bottoms-leggings/bottoms-leggings.component';
 import { SweatersComponent } from './sweaters/sweaters.component';
+import { ProductDetailsComponent } from 'src/app/shared/product-details/product-details.component';
 
 const routes: Routes = [
   { path: 'catalog/sportswear', loadChildren: () => import('./sportswear.module').then(m => m.SportswearModule) },
@@ -19,7 +20,8 @@ const routes: Routes = [
   { path: 'catalog/sportswear/swim-surf', component: SwimSurfComponent },
   { path: 'catalog/sportswear/outdoors', component: OutdoorsComponent },
   { path: 'catalog/sportswear/bottoms-leggings', component: BottomsLeggingsComponent },
-  { path: 'catalog/sportswear/sweaters', component: SweatersComponent }
+  { path: 'catalog/sportswear/sweaters', component: SweatersComponent },
+  { path: 'catalog/sportswear/details/:id', component: ProductDetailsComponent }
 ];
 
 @NgModule({

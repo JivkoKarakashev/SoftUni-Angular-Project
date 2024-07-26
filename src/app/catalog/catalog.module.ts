@@ -7,11 +7,11 @@ import { CatalogRoutingModule } from './catalog-routing.module';
 import { ClothesComponent } from './clothes/clothes.component';
 import { JacketsComponent } from './jackets/jackets.component';
 import { LongwearComponent } from './longwear/longwear.component';
-import { ShoesComponent } from './shoes/shoes.component';
+// import { ShoesComponent } from './shoes/shoes.component';
 import { SharedModule } from '../shared/shared.module';
-import { TrainersComponent } from './trainers/trainers.component';
-import { BootsComponent } from './boots/boots.component';
-import { SlippersComponent } from './slippers/slippers.component';
+// import { TrainersComponent } from './trainers/trainers.component';
+// import { BootsComponent } from './boots/boots.component';
+// import { SlippersComponent } from './slippers/slippers.component';
 
 
 
@@ -21,10 +21,10 @@ import { SlippersComponent } from './slippers/slippers.component';
     ClothesComponent,
     JacketsComponent,
     LongwearComponent,
-    ShoesComponent,
-    TrainersComponent,
-    BootsComponent,
-    SlippersComponent,
+    // ShoesComponent,
+    // TrainersComponent,
+    // BootsComponent,
+    // SlippersComponent,
   ],
   imports: [
     CommonModule, CatalogRoutingModule, FormsModule, SharedModule
