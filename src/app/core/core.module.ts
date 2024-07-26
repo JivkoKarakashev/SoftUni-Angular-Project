@@ -5,13 +5,9 @@ import { HeaderDesktopComponent } from './header-desktop/header-desktop.componen
 import { HeaderMobileComponent } from './header-mobile/header-mobile.component';
 import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared/shared.module';
+import { CategoryModule } from '../category/category.module';
 import { CoreRoutingModule } from './core-routing.modules';
-import { CatalogRoutingModule } from '../catalog/catalog-routing.module';
-import { ClothesRoutingModule } from '../catalog/clothes/clothes-routing.module';
-import { ShoesRoutingModule } from '../catalog/shoes/shoes-routing.module';
-import { AccessoriesRoutingModule } from '../catalog/accessories/accessories-routing.module';
-import { SportswearRoutingModule } from '../catalog/sportswear/sportswear-routing.module';
-import { SuitsTailoringRoutingModule } from '../catalog/suits-tailoring/suits-tailoring-routing.module';
+
 
 
 @NgModule({
@@ -22,14 +18,9 @@ import { SuitsTailoringRoutingModule } from '../catalog/suits-tailoring/suits-ta
   ],
   imports: [
     CommonModule,
-    SharedModule,
     CoreRoutingModule,
-    CatalogRoutingModule,
-    ClothesRoutingModule,
-    ShoesRoutingModule,
-    AccessoriesRoutingModule,
-    SportswearRoutingModule,
-    SuitsTailoringRoutingModule
+    SharedModule,
+    CategoryModule
   ],
   exports: [HeaderDesktopComponent, HeaderMobileComponent, FooterComponent]
 })

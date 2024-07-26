@@ -10,7 +10,7 @@
                     <ul class="items">
                         <li class="item" *ngFor="let item of listItems$" [id]="item._id">
                             <div class="image">
-                                <a href="javascript:void(0)">
+                                <a [routerLink]="['/catalog/shoes/details/', item._id]">
                                     <img src="{{item.image}}" alt="image" />
                                 </a>
                             </div>
