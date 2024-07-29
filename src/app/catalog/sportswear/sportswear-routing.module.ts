@@ -15,13 +15,19 @@ const routes: Routes = [
   { path: 'catalog/sportswear', loadChildren: () => import('./sportswear.module').then(m => m.SportswearModule) },
   { path: 'catalog/sportswear/sportswear', component: SportswearComponent },
   { path: 'catalog/sportswear/gym', component: GymComponent },
+  { path: 'catalog/sportswear/gym/:id', component: ProductDetailsComponent },
   { path: 'catalog/sportswear/running', component: RunningComponent },
-  { path: 'catalog/sportswear/ski-snowboard', component: SkiSnowboardComponent },
-  { path: 'catalog/sportswear/swim-surf', component: SwimSurfComponent },
+  { path: 'catalog/sportswear/running/:id', component: ProductDetailsComponent },
+  { path: 'catalog/sportswear/ski_snowboard', component: SkiSnowboardComponent },
+  { path: 'catalog/sportswear/ski_snowboard/:id', component: ProductDetailsComponent },
+  { path: 'catalog/sportswear/swim_surf', component: SwimSurfComponent },
+  { path: 'catalog/sportswear/swim_surf/:id', component: ProductDetailsComponent },
   { path: 'catalog/sportswear/outdoors', component: OutdoorsComponent },
-  { path: 'catalog/sportswear/bottoms-leggings', component: BottomsLeggingsComponent },
+  { path: 'catalog/sportswear/outdoors/:id', component: ProductDetailsComponent },
+  { path: 'catalog/sportswear/bottoms_leggings', component: BottomsLeggingsComponent },
+  { path: 'catalog/sportswear/bottoms_leggings/:id', component: ProductDetailsComponent },
   { path: 'catalog/sportswear/sweaters', component: SweatersComponent },
-  { path: 'catalog/sportswear/details/:id', component: ProductDetailsComponent }
+  { path: 'catalog/sportswear/sweaters/:id', component: ProductDetailsComponent }
 ];
 
 @NgModule({

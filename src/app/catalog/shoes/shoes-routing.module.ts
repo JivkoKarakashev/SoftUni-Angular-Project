@@ -9,10 +9,13 @@ import { ProductDetailsComponent } from 'src/app/shared/product-details/product-
 const routes: Routes = [
   { path: 'catalog/shoes', loadChildren: () => import('./shoes.module').then(m => m.ShoesModule) },
   { path: 'catalog/shoes/shoes', component: ShoesComponent },
+  { path: 'catalog/shoes/shoes/:id', component: ProductDetailsComponent },
   { path: 'catalog/shoes/trainers', component: TrainersComponent },
+  { path: 'catalog/shoes/trainers/:id', component: ProductDetailsComponent },
   { path: 'catalog/shoes/boots', component: BootsComponent },
-  { path: 'catalog/shoes/slippers', component: SlippersComponent },  
-  { path: 'catalog/shoes/details/:id', component: ProductDetailsComponent }
+  { path: 'catalog/shoes/boots/:id', component: ProductDetailsComponent },
+  { path: 'catalog/shoes/slippers', component: SlippersComponent },
+  { path: 'catalog/shoes/slippers/:id', component: ProductDetailsComponent },
 ];
 
 @NgModule({

@@ -77,18 +77,23 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     this.cartItemsSubscription = this.cartService.items$.subscribe(items => {
       items.forEach((itm, index) => {
         const rowItm = this.fb.group({
-          _id: [itm._id, [Validators.required,]],
-          _ownerId: [itm._ownerId, [Validators.required,]],
-          image: [itm.image, [Validators.required,]],
-          description: [itm.description, [Validators.required,]],
-          sizes: [itm.size, [Validators.required,]],
+          _id: [itm._id],
+          _ownerId: [itm._ownerId],
+          // _createdOn: [itm._createdOn],
+          image: [itm.image],
+          // altImages:[itm.altImages],
+          // cat:[itm.cat],
+          // subCat:[itm.subCat],
+          description: [itm.description],
+          // brand: [itm.brand],
+          sizes: [itm.size],
           selectedSize: ['', [Validators.required,]],
-          colors: [itm.color, [Validators.required,]],
+          colors: [itm.color],
           selectedColor: ['', [Validators.required,]],
-          quantity: [itm.quantity, [Validators.required,]],
+          quantity: [itm.quantity],
           selectedQuantity: ['', [Validators.required,]],
-          price: [itm.price, [Validators.required,]],
-          buyed: [itm?.buyed,],
+          price: [itm.price],
+          buyed: [itm?.buyed],
           product: [0],
           checked: [false]
         });
@@ -282,5 +287,10 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     // console.log(`Shipping:  ${this.shippingValue}`);
     this.total = this.subTotal$$.value - this.discountValue + this.shippingValue;
     console.log('getTotal invoked!');
+  }
+
+  public trackById(index: number, item: AbstractControl): string {
+    // console.log(item.get('_id')?.value);
+    return item.get('_id')?.value;
   }
 }

@@ -34,7 +34,7 @@
                             <div class="label-header">Remove</div>
                         </div>
                         <ng-container formArrayName="itms">
-                            <ng-container #rows *ngFor=" let row of itms.controls; let i = index;">
+                            <ng-container #rows *ngFor=" let row of itms.controls; let i = index; trackBy: trackById">
                                 <div [formGroupName]="i" class="itms">                                    
                                     <input formControlName="checked" [checked]="row.get('checked')?.value" class="itm selectRow" type="checkbox" name="selectRow">
                                     <input #imgUrl formControlName="image" [hidden]="true" [value]="row.get('image')?.value" class="media" type="text" name="media">

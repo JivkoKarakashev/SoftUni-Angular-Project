@@ -9,7 +9,7 @@
                 <span class="title-carousel">Recently added Clothes</span>
                 <ngx-slick-carousel class="carousel" #slickModalClothes="slick-carousel" [config]="slideConfig">
                     <div ngxSlickItem *ngFor="let slide of clothesSlides; index as i; trackBy: trackById" class="slide">
-                        <a [routerLink]="['/catalog/clothes/details/', slide.id]">
+                        <a [routerLink]="['/catalog/', slide.cat, slide.subCat, slide.id]">
                             <img src="{{ slide.img }}" alt="image" class="img-carousel">
                         </a>
                     </div>
@@ -17,7 +17,7 @@
                 <span class="title-carousel">Recently added Shoes</span>
                 <ngx-slick-carousel class="carousel" #slickModalShoes="slick-carousel" [config]="slideConfig">
                     <div ngxSlickItem *ngFor="let slide of shoesSlides; index as i; trackBy: trackById" class="slide">
-                        <a [routerLink]="['/catalog/shoes/details/', slide.id]">
+                        <a [routerLink]="['/catalog/',slide.cat, slide.subCat, slide.id]">
                             <img src="{{ slide.img }}" alt="image" class="img-carousel">
                         </a>
                     </div>
@@ -25,7 +25,7 @@
                 <span class="title-carousel">Recently added Accessories</span>
                 <ngx-slick-carousel class="carousel" #slickModalAccessories="slick-carousel" [config]="slideConfig">
                     <div ngxSlickItem *ngFor="let slide of accessoriesSlides; index as i; trackBy: trackById" class="slide">
-                        <a [routerLink]="['/catalog/accessories/details/', slide.id]">
+                        <a [routerLink]="['/catalog/', slide.cat, slide.subCat, slide.id]">
                             <img src="{{ slide.img }}" alt="image" class="img-carousel">
                         </a>
                     </div>
@@ -33,7 +33,7 @@
                 <span class="title-carousel">Recently added Sportswear</span>
                 <ngx-slick-carousel class="carousel" #slickModalSportswear="slick-carousel" [config]="slideConfig">
                     <div ngxSlickItem *ngFor="let slide of sportswearSlides; index as i; trackBy: trackById" class="slide">
-                        <a [routerLink]="['/catalog/sportswear/details/', slide.id]">
+                        <a [routerLink]="['catalog/', slide.cat, slide.subCat, slide.id]">
                             <img src="{{ slide.img }}" alt="image" class="img-carousel">
                         </a>
                     </div>
@@ -41,7 +41,7 @@
                 <span class="title-carousel">Recently added Suits & Tailoring</span>
                 <ngx-slick-carousel class="carousel" #slickModalSuitsTailoring="slick-carousel" [config]="slideConfig">
                     <div ngxSlickItem *ngFor="let slide of suits_tailoringSlides; index as i; trackBy: trackById" class="slide">
-                        <a [routerLink]="['/catalog/suits-tailoring/details/', slide.id]">
+                        <a [routerLink]="['catalog/', slide.cat, slide.subCat, slide.id]">
                             <img src="{{ slide.img }}" alt="image" class="img-carousel">
                         </a>
                     </div>

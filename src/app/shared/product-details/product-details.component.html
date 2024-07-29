@@ -1,5 +1,65 @@
+Product details WORK!
+<!-- <img [src]="item$?.image" alt=""> -->
 <section class="section-product-details">
     <div class="container">
-        <p>Product details WORKS!</p>
+        <!-- Left Column / Headphones Image -->
+        <div class="left-column">
+            <!-- <div class="image"> -->
+                <img #stockImg [style.opacity]="defImgOpacity" class="def" alt="default image" [src]="itemCtrlsGr.get('image')?.value">
+            <!-- </div> -->
+            <ng-container *ngFor=" let imgUrl of itemCtrlsGr.get('altImages')?.value; let i = index; trackBy: trackByUrl">
+                <img #imgElements [attr.data-image]="itemCtrlsGr.get('color')?.value[i]" [src]="imgUrl" alt="color item" [id]="imgUrl">
+            </ng-container>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+
+            <!-- Product Description -->
+            <div class="product-description">
+                <span>Headphones</span>
+                <h1>Beats EP</h1>
+                <p>The preferred choice of a vast range of acclaimed DJs. Punchy, bass-focused sound and high isolation.
+                    Sturdy headband and on-ear cushions suitable for live performance</p>
+            </div>
+
+            <!-- Product Configuration -->
+            <div class="product-configuration">
+                <form [formGroup]="form" (ngSubmit)="purchase()">
+                    <fieldset>
+                        <!-- Product Color -->
+                        <div class="product-color">
+                            <span>Color</span>
+                            <div class="color-choose">
+                                <div *ngFor="let col of itemCtrlsGr.get('color')?.value; let i = index" [id]="col+i">
+                                    <input formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectedColor.valueChanges && selectColor()">
+                                    <label [for]="col"><span #spanColorElements></span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Size Configuration -->
+                        <div class="size-config">
+                            <span>Size configuration</span>
+
+                            <div class="size-choose">
+                                <select class="itm" formControlName="selectedSize" name="selectedSize"
+                                    (change)="selectSize($event)">
+                                    <option value="">select size</option>
+                                    <option *ngFor="let sz of item$?.size; let i = index;" [value]="sz">{{sz}}</option>
+                                </select>
+                            </div>
+
+                            <a href="#">How to configurate your headphones</a>
+                        </div>
+                        <!-- Product Pricing -->
+                        <div class="product-price">
+                            <span>148$</span>
+                            <input type="submit" class="cart-btn" value="Add to cart">
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
     </div>
 </section>

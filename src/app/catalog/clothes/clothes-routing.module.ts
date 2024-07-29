@@ -9,9 +9,11 @@ import { ProductDetailsComponent } from 'src/app/shared/product-details/product-
 const routes: Routes = [
   { path: 'catalog/clothes', loadChildren: () => import('./clothes.module').then(m => m.ClothesModule) },
   { path: 'catalog/clothes/clothes', component: ClothesComponent },
+  { path: 'catalog/clothes/clothes/:id', component: ProductDetailsComponent },
   { path: 'catalog/clothes/jackets', component: JacketsComponent },
-  { path: 'catalog/clothes/longwear', component: LongwearComponent },    
-  { path: 'catalog/clothes/details/:id', component: ProductDetailsComponent }
+  { path: 'catalog/clothes/jackets/:id', component: ProductDetailsComponent },
+  { path: 'catalog/clothes/longwear', component: LongwearComponent },
+  { path: 'catalog/clothes/longwear/:id', component: ProductDetailsComponent },
 ];
 
 @NgModule({

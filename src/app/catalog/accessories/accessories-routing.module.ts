@@ -11,12 +11,16 @@ import { ProductDetailsComponent } from 'src/app/shared/product-details/product-
 const routes: Routes = [
   { path: 'catalog/accessories', loadChildren: () => import('./accessories.module').then(m => m.AccessoriesModule) },
   { path: 'catalog/accessories/accessories', component: AccessoriesComponent },
-  { path: 'catalog/accessories/caps-hats', component: CapsHatsComponent },
+  { path: 'catalog/accessories/caps_hats', component: CapsHatsComponent },
+  { path: 'catalog/accessories/caps_hats/:id', component: ProductDetailsComponent },
   { path: 'catalog/accessories/belts', component: BeltsComponent },
+  { path: 'catalog/accessories/belts/:id', component: ProductDetailsComponent },
   { path: 'catalog/accessories/gloves', component: GlovesComponent },
+  { path: 'catalog/accessories/gloves/:id', component: ProductDetailsComponent },
   { path: 'catalog/accessories/sunglasses', component: SunglassesComponent },
+  { path: 'catalog/accessories/sunglasses/:id', component: ProductDetailsComponent },
   { path: 'catalog/accessories/watches', component: WatchesComponent },
-  { path: 'catalog/accessories/details/:id', component: ProductDetailsComponent }
+  { path: 'catalog/accessories/watches/:id', component: ProductDetailsComponent },
 ];
 
 @NgModule({
