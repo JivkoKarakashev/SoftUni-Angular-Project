@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
@@ -7,6 +7,7 @@ import { Item } from 'src/app/types/item';
 import { ShoppingCartService } from '../shopping-cart.service';
 import { Shipping } from 'src/app/types/shipping';
 import { Discount } from 'src/app/types/discount';
+import { InvertColor } from '../utils/invertColor';
 
 type MyVoid = () => void;
 
@@ -20,7 +21,8 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   public listItems$: Item[] = [];
   public selectAllButtonStatement: boolean = false;
   private unsubscriptionArray: Subscription[] = [];
-  private cartItemsSubscription: Subscription = new Subscription; 
+  private cartItemsSubscription: Subscription = new Subscription;
+  private optionElementsSubscription: Subscription = new Subscription;
   private unsubscriptionEventsArray: MyVoid[] = [];
   public subTotal$$ = new BehaviorSubject<number>(0);
   private subTotalSubscription: Subscription = new Subscription;
@@ -42,11 +44,13 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     discount: ['', [Validators.required]],
   });
 
-  constructor(private render: Renderer2, private location: Location, private cartService: ShoppingCartService, private fb: FormBuilder) { }
+  constructor(private render: Renderer2, private location: Location, private cartService: ShoppingCartService, private fb: FormBuilder, private invertColor: InvertColor) { }
 
   @ViewChild('modal') private modal!: ElementRef;
   @ViewChild('closeBtn') private closeBtn!: ElementRef;
   
+  @ViewChildren('optionElements') private  optionElements!: QueryList<ElementRef>;
+
   @ViewChild('discount') private discount!: ElementRef;
   @ViewChild('totalEl') private totalEl!: ElementRef;
 
@@ -137,6 +141,21 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     const closeModalBtnEvent = this.render.listen(this.closeBtn.nativeElement, 'click', this.closeModal.bind(this));
     const closeModalEvent = this.render.listen(this.modal.nativeElement, 'click', this.closeModal.bind(this));
     this.unsubscriptionEventsArray.push(closeModalBtnEvent, closeModalEvent);
+
+    this.optionElementsSubscription = this.optionElements.changes.subscribe((els: QueryList<ElementRef>) => {
+      // console.log(els);
+      els.forEach((el, i) => {
+        const nativeEL = el.nativeElement;
+        const color = nativeEL.dataset['color'];
+        // console.log(el, i);
+        // console.log(el.nativeElement.dataset['color']);
+        this.render.setStyle(nativeEL, 'background-color', color);
+        const rgbObj = this.invertColor.standardize_color(color);
+        const hexColor = this.invertColor.invertColor(rgbObj);
+        this.render.setStyle(nativeEL, 'color', hexColor);
+      });
+    });
+    this.unsubscriptionArray.push(this.optionElementsSubscription);
   };
 
   ngOnDestroy(): void {
@@ -190,21 +209,28 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     const el = e.target as HTMLSelectElement;
     // const color = el.options[el.selectedIndex].text;
     const color = el.value;
-    // this.itms.controls[i].get('selectedColor')?.patchValue(color);
-    // this.itms.controls[i].patchValue({ selectedColor: color });
-    // console.log(this.itms.value);
-    // console.log(this.itms.controls[i]);
-    // console.log(i);
-    // console.log(this.selectedColor);
-    // console.log(this.itms.controls[i].get('selectedColor')?.value);
-    // console.log(this.itms.controls[i].get('color')?.value);
-    this.render.setStyle(el, 'background-color', color);
-    if (color == 'Black' || color == 'Gray' || color == 'Brown' || color == 'Red' || color == 'Green' || color == 'Blue') {
-      this.render.setStyle(el, 'color', 'white');
-    } else {
-      this.render.removeStyle(el, 'color');
+    // console.log(el.value);
+    // console.log(el);
+    if (color) {
+      this.itms.controls[i].get('selectedColor')?.patchValue(color);
+      this.itms.controls[i].patchValue({ selectedColor: color });
+      const rgbObj = this.invertColor.standardize_color(color);
+      const hexColor = this.invertColor.invertColor(rgbObj);
+      // console.log(this.itms.value);
+      // console.log(this.itms.controls[i]);
+      // console.log(i);
+      // console.log(this.selectedColor);
+      // console.log(this.itms.controls[i].get('selectedColor')?.value);
+      // console.log(this.itms.controls[i].get('color')?.value);
+      this.render.setStyle(el, 'background-color',  color);
+      this.render.setStyle(el, 'color', hexColor);      
+    }
+    else {
+      this.render.removeStyle(el, 'background-color');
+      this.render.removeStyle(el, 'color'); 
     }
   }
+
   selectSize(e: Event, i: number): void {
     const el = e.target as HTMLSelectElement;
     // const size = el.options[el.selectedIndex].text;
@@ -247,6 +273,9 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   }
 
   purchase() {
+    if (this.form.invalid) {    
+      return;
+    }
     console.log(this.form.value);
     console.log(this.form.get('itms'));
     console.log(this.form.get('shipping')?.value);

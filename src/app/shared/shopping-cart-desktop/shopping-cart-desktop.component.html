@@ -23,14 +23,14 @@
                 <form [formGroup]="form" (ngSubmit)="purchase()"  *ngIf="!loading">
                     <fieldset>
                         <div class="label">
-                            <label class="label-header" for="select-row">Select</label>
-                            <label class="label-header" for="media">Image</label>
-                            <label class="label-header" for="description">Description</label>
-                            <label class="label-header" for="selectedColor">Color</label>
-                            <label class="label-header" for="selectedSize">Size</label>
-                            <label class="label-header" for="selectedQuantity">Quantity</label>
-                            <label class="label-header" for="price">Price</label>
-                            <label class="label-header" for="product">Amount</label>
+                            <label class="label-header">Select</label>
+                            <label class="label-header">Image</label>
+                            <label class="label-header">Description</label>
+                            <label class="label-header">Color</label>
+                            <label class="label-header">Size</label>
+                            <label class="label-header">Quantity</label>
+                            <label class="label-header">Price</label>
+                            <label class="label-header">Amount</label>
                             <div class="label-header">Remove</div>
                         </div>
                         <ng-container formArrayName="itms">
@@ -41,11 +41,11 @@
                                     <img class="itm" src="{{row.get('image')?.value}}" alt="image">
                                     <input #descrp formControlName="description" [hidden]="true" [value]="row.get('description')?.value" class="description" type="text" name="description">
                                     <span class="itm description">{{row.get('description')?.value}}</span>
-                                    <select class="itm" formControlName="selectedColor" name="selectedColor" (change)="selectColor($event, i)">
+                                    <select class="itm decorate" formControlName="selectedColor" name="selectedColor" (change)="selectColor($event, i)" required>
                                         <option value="">select color</option>
-                                        <option *ngFor="let col of row.get('colors')?.value; let i = index;" [value]="col">{{col}}</option>
+                                        <option  class="decorate" #optionElements *ngFor="let col of row.get('colors')?.value; let i = index;" [value]="col" [attr.data-color]="col">{{col}}</option>
                                     </select>
-                                    <select class="itm" formControlName="selectedSize" name="selectedSize" (change)="selectSize($event, i)">
+                                    <select class="itm" formControlName="selectedSize" name="selectedSize" (change)="selectSize($event, i)" required>
                                         <option value="">select size</option>
                                         <option *ngFor="let sz of row.get('sizes')?.value; let i = index;" [value]="sz">{{sz}}</option>
                                     </select>
@@ -67,7 +67,7 @@
                         </div>
                         <div class="discount">
                             <span class="title">
-                                <select #discount class="discount" formControlName="discount" name="discount" (change)="getDiscount($event)">
+                                <select #discount class="discount" formControlName="discount" name="discount" (change)="getDiscount($event)" required>
                                     <option value="">discount code</option>
                                     <option *ngFor="let disc of discountCodes$; let i = index;" [value]="disc.rate">{{disc.code}} - %{{disc.rate.toFixed(2)}}</option>
                                 </select>
@@ -76,7 +76,7 @@
                         </div>
                         <div class="shipping">
                             <span class="title">
-                                <select class="shipping" formControlName="shipping" name="shipping" (change)="selectShipping($event)">
+                                <select class="shipping" formControlName="shipping" name="shipping" (change)="selectShipping($event)" required>
                                     <option value="">shipping method</option>
                                     <option *ngFor="let method of shippingMethods$; let i = index;" [value]="method.value">{{method.name}} - ${{method.value.toFixed(2)}}</option>
                                 </select>
@@ -89,7 +89,7 @@
                         </div>
                         
                         <div class="buttons">
-                            <input class="button finish" type="submit" value="Finish">
+                            <input [disabled]="form.invalid" class="button finish" type="submit" value="Finish">
                             <a class="button cancel" href="javascript:void(0)">Continue shopping</a>
                         </div>
                     </fieldset>

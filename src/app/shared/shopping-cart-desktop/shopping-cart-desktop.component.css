@@ -113,6 +113,7 @@ section.header {
     display: flex;
     flex-direction: row;
     flex: 1 1 0;
+
     & div.buttons {
         display: flex;
         flex-direction: row;
@@ -173,12 +174,14 @@ div.discount {
     display: flex;
     flex: 1 1 0;
     gap: 2em;
+
     & .title {
-        display: flex;        
+        display: flex;
         flex: 0 0 77.78%;
         align-items: center;
         justify-content: flex-end;
     }
+
     & .amount {
         display: flex;
         flex: 0 0 22.22%;
@@ -203,8 +206,9 @@ div.buttons {
     }
 
     & {
-        .button.finish:hover,
-        .button.finish:focus,
+
+        .button.finish:hover:enabled,
+        .button.finish:focus:enabled,
         .button.cancel:hover,
         .button.cancel:focus,
         .button.remove:hover,
@@ -212,9 +216,9 @@ div.buttons {
             background-color: #000;
             color: #fff;
         }
-    }
-}
 
-table {
-    border-spacing: 1em 1em;
+        & .finish:hover:enabled {
+            cursor: pointer;
+        }
+    }
 }

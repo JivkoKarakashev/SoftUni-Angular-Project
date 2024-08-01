@@ -17,10 +17,9 @@ Product details WORK!
 
             <!-- Product Description -->
             <div class="product-description">
-                <span>Headphones</span>
-                <h1>Beats EP</h1>
-                <p>The preferred choice of a vast range of acclaimed DJs. Punchy, bass-focused sound and high isolation.
-                    Sturdy headband and on-ear cushions suitable for live performance</p>
+                <span>{{item$?.subCat}}</span>
+                <h1>{{item$?.brand}}</h1>
+                <p>{{item$?.description}}</p>
             </div>
 
             <!-- Product Configuration -->
@@ -50,11 +49,11 @@ Product details WORK!
                                 </select>
                             </div>
 
-                            <a href="#">How to configurate your headphones</a>
+                            <!-- <a href="#">How to configurate your headphones</a> -->
                         </div>
                         <!-- Product Pricing -->
                         <div class="product-price">
-                            <span>148$</span>
+                            <span>${{item$?.price}}</span>
                             <input type="submit" class="cart-btn" value="Add to cart">
                         </div>
                     </fieldset>

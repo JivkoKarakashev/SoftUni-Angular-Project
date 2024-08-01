@@ -84,20 +84,9 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
 }
 
-.color-choose input[type="radio"]#red+label span {
-    /* background-color: #fe0000; */
-}
-
-.color-choose input[type="radio"]#green+label span {
-    /* background-color: #00fe1f; */
-}
-
-.color-choose input[type="radio"]#blue+label span {
-    /* background-color: #0026ff; */
-}
-
 .color-choose input[type="radio"]:checked+label span {
     background-image: url(../../../assets/public/static/icons/check.png);
+    background-blend-mode: difference;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
