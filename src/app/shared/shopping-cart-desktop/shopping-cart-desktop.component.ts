@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Item } from 'src/app/types/item';
 import { ShoppingCartService } from '../shopping-cart.service';
 import { Shipping } from 'src/app/types/shipping';
 import { Discount } from 'src/app/types/discount';
 import { InvertColor } from '../utils/invertColor';
+import { CartItem } from 'src/app/types/cartItem';
 
 type MyVoid = () => void;
 
@@ -18,24 +19,22 @@ type MyVoid = () => void;
 })
 export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  public listItems$: Item[] = [];
+  public listItems$: CartItem[] = [];
   public selectAllButtonStatement: boolean = false;
   private unsubscriptionArray: Subscription[] = [];
   private cartItemsSubscription: Subscription = new Subscription;
-  private optionElementsSubscription: Subscription = new Subscription;
   private unsubscriptionEventsArray: MyVoid[] = [];
-  public subTotal$$ = new BehaviorSubject<number>(0);
-  private subTotalSubscription: Subscription = new Subscription;
+  public subTotal$ = new BehaviorSubject<number>(0);
+
   public loading: boolean = true;
-  
+
   public shippingMethods$: Shipping[] = [];
   public shippingValue: number = 0;
   public discountCodes$: Discount[] = [];
   public discountValue: number = 0;
   public availablePurchaseServices: (Discount & Shipping)[] = [];
-  private availablePurchaseServicesSubscription: Subscription = new Subscription;
-  
-  public total: Number = 0;
+
+  public total$: number = 0;
 
   public itmsArr: FormArray = this.fb.array([]);
   public form: FormGroup = this.fb.group({
@@ -48,11 +47,10 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
 
   @ViewChild('modal') private modal!: ElementRef;
   @ViewChild('closeBtn') private closeBtn!: ElementRef;
-  
-  @ViewChildren('optionElements') private  optionElements!: QueryList<ElementRef>;
+
+  @ViewChildren('optionElements') private optionElements!: QueryList<ElementRef>;
 
   @ViewChild('discount') private discount!: ElementRef;
-  @ViewChild('totalEl') private totalEl!: ElementRef;
 
   get itms() {
     return this.form.controls["itms"] as FormArray;
@@ -60,9 +58,13 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   get shipping() {
     return this.form.controls["shipping"] as FormArray;
   }
+  get shippingVal() {
+    return Number(this.form.controls["shipping"].value) as number;
+  }
 
   ngOnInit(): void {
-    this.availablePurchaseServicesSubscription = this.cartService.getAvailablePurchaseServices().subscribe(availServsObjs => {
+    console.log('INITIALISED!')
+    const availablePurchaseServicesSubscription = this.cartService.getAvailablePurchaseServices().subscribe(availServsObjs => {
       this.loading = false;
       let [discountsObjs, shippingMthdsObjs] = availServsObjs;
       // console.log(jacketsObjs, longwearObjs);      
@@ -76,33 +78,36 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
       this.discountCodes$ = discounts;
       this.shippingMethods$ = shippMthds;
     });
-    this.unsubscriptionArray.push(this.availablePurchaseServicesSubscription);
-    
+    this.unsubscriptionArray.push(availablePurchaseServicesSubscription);
+
     this.cartItemsSubscription = this.cartService.items$.subscribe(items => {
       items.forEach((itm, index) => {
+        const { _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, color, quantity, price } = itm;
         const rowItm = this.fb.group({
-          _id: [itm._id],
-          _ownerId: [itm._ownerId],
-          // _createdOn: [itm._createdOn],
-          image: [itm.image],
-          // altImages:[itm.altImages],
-          // cat:[itm.cat],
-          // subCat:[itm.subCat],
-          description: [itm.description],
-          // brand: [itm.brand],
-          sizes: [itm.size],
+          _id,
+          _ownerId,
+          _createdOn,
+          image,
+          altImages: [altImages],
+          cat,
+          subCat,
+          description,
+          brand,
+          size: [size],
           selectedSize: ['', [Validators.required,]],
-          colors: [itm.color],
+          color: [color],
           selectedColor: ['', [Validators.required,]],
-          quantity: [itm.quantity],
+          quantity,
           selectedQuantity: ['', [Validators.required,]],
-          price: [itm.price],
-          buyed: [itm?.buyed],
-          product: [0],
-          checked: [false]
+          price,
+          buyed: itm?.buyed,
+          product: 0,
+          checked: false
         });
+        this.listItems$.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false });
         this.itms.push(rowItm);
       });
+      // console.log(this.listItems$)
       // console.log(this.itms.value);
       // this.listItems$ = items;
       // console.log(this.listItems$);
@@ -111,26 +116,20 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     this.unsubscriptionArray.push(this.cartItemsSubscription);
     // console.log(this.unsubscriptionArray);
 
-    this.subTotalSubscription = this.subTotal$$.subscribe((val) => {
-      // console.log(val)
-      if(val === 0) {
-        this.discountValue = 0;
-        // console.log('invoked subTotal change with 0.00 VALUE');
-      } else {
-        this.getDiscount(undefined, val);
-      }
+    const subTotalSubscription = this.subTotal$.subscribe((val) => {
+      this.getDiscount(undefined, val | 0);
     });
-    this.unsubscriptionArray.push(this.subTotalSubscription);
+    this.unsubscriptionArray.push(subTotalSubscription);
 
-    this.itms.controls.forEach((itm, i) => {      
+    this.itms.controls.forEach((itm, i) => {
       const valueChangeSub = itm.get('product')?.valueChanges.subscribe(val => {
         // console.log(`${val} at index:${i}`);
         if (val) {
           // this.subTotal = this.getSubtotal();          
           // console.log(this.subTotal);
-          this.subTotal$$.next(this.getSubtotal());
+          this.subTotal$.next(this.getSubtotal());
           // console.log(this.subTotal$$);
-          this.getTotal();
+          this.total$ = this.getTotal();
         }
       }) as Subscription;
       this.unsubscriptionArray.push(valueChangeSub);
@@ -142,7 +141,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     const closeModalEvent = this.render.listen(this.modal.nativeElement, 'click', this.closeModal.bind(this));
     this.unsubscriptionEventsArray.push(closeModalBtnEvent, closeModalEvent);
 
-    this.optionElementsSubscription = this.optionElements.changes.subscribe((els: QueryList<ElementRef>) => {
+    const optionElementsSubscription = this.optionElements.changes.subscribe((els: QueryList<ElementRef>) => {
       // console.log(els);
       els.forEach((el, i) => {
         const nativeEL = el.nativeElement;
@@ -155,7 +154,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
         this.render.setStyle(nativeEL, 'color', hexColor);
       });
     });
-    this.unsubscriptionArray.push(this.optionElementsSubscription);
+    this.unsubscriptionArray.push(optionElementsSubscription);
   };
 
   ngOnDestroy(): void {
@@ -177,32 +176,51 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
+  toggleSelect(e: Event, i: number): void {
+    // const el = e.target as HTMLSelectElement;
+    this.listItems$[i] = { ...this.listItems$[i], checked: this.itms.controls[i].get('checked')?.value };
+    // this.listItems$[i].checked = this.itms.controls[i].get('checked')?.value;
+    // console.log(i);
+    // console.log(this.listItems$[i]);
+  }
+
   toggleSelectAll(): void {
-    if (!this.itmsArr.length) {
+    
+    if (!this.listItems$.length) {
       return;
     }
-    this.itms.controls.forEach(itm => {
-      itm.patchValue({ checked: !this.selectAllButtonStatement });
-      // console.log(itm);
+    this.listItems$.forEach((itm, i) => {
+      this.listItems$[i] = { ...itm, checked: !this.selectAllButtonStatement };
     });
+    // console.log(this.listItems$);
     this.selectAllButtonStatement = !this.selectAllButtonStatement;
+    // console.log(this.listItems$);
   }
 
   removeSelected(): void {
-    const idxArr: number[] = [];
-    const slectedItms: AbstractControl[] = this.itms.controls.filter((itm, index)=> {
-      if (itm.get('checked')?.value == true) {
-        idxArr.push(index);
-      }
-      return itm.get('checked')?.value == true;
-    });
-    // console.log(slectedItms);
-    // console.log(idxArr);
-    for (let i = idxArr.length - 1; i >= 0; i--) {
-      this.removeItm(idxArr[i]);
+    // console.log(this.listItems$);
+    if (!this.listItems$.length) {
+      return;
     }
-    // this.subTotal = this.getSubtotal();
-    // this.subTotal$$.next(this.getSubtotal());
+    const ids = this.listItems$.filter(itm => itm.checked).map(itm => itm._id);
+    const notSelected = this.listItems$.filter((itm) => !itm.checked);
+    const idxArr: number[] = [];
+    this.listItems$.forEach((itm, idx) => {
+      if (itm.checked) {
+        idxArr.push(idx);
+        // this.itms.removeAt(idx);
+      }
+    });
+    for (let i = idxArr.length - 1; i >= 0; i--) {
+      this.itms.removeAt(idxArr[i]);
+    }
+    this.listItems$ = notSelected;
+    this.subTotal$.next(this.getSubtotal());
+    this.total$ = (this.getTotal());
+    // console.log(idxArr);
+    // console.log(this.itms.value);
+    this.cartItemsSubscription.unsubscribe();
+    this.cartService.removeCartItems(ids);
   }
 
   selectColor(e: Event, i: number): void {
@@ -222,104 +240,98 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
       // console.log(this.selectedColor);
       // console.log(this.itms.controls[i].get('selectedColor')?.value);
       // console.log(this.itms.controls[i].get('color')?.value);
-      this.render.setStyle(el, 'background-color',  color);
-      this.render.setStyle(el, 'color', hexColor);      
+      this.render.setStyle(el, 'background-color', color);
+      this.render.setStyle(el, 'color', hexColor);
     }
     else {
       this.render.removeStyle(el, 'background-color');
-      this.render.removeStyle(el, 'color'); 
+      this.render.removeStyle(el, 'color');
     }
+    // console.log(this.listItems$[i].selectedColor);
+    this.listItems$[i] = { ...this.listItems$[i], selectedColor: this.itms.controls[i].get('selectedColor')?.value };
+    // this.listItems$[i].selectedColor = this.itms.controls[i].get('selectedColor')?.value;
+    // console.log(this.listItems$[i].selectedColor);
+    // console.log(this.listItems$);
   }
 
-  selectSize(e: Event, i: number): void {
-    const el = e.target as HTMLSelectElement;
-    // const size = el.options[el.selectedIndex].text;
-    const size = el.value;
-    // this.itms.controls[i].get('selectedSize')?.patchValue(size);
-    // this.itms.controls[i].patchValue({ selectedSize: size });
-    // console.log(this.itms.value);
-    // console.log(this.itms.controls[i]);
-    // console.log(i);
-    // console.log(this.selectedSize);
-    // console.log(this.itms.controls[i].get('selectedSize')?.value);
-    // console.log(this.itms.controls[i].get('size')?.value);
+  selectSize(i: number): void {
+    this.listItems$[i] = { ...this.listItems$[i], selectedSize: this.itms.controls[i].get('selectedSize')?.value};
   }
-  selectShipping(e: Event): void {
-    const el = e.target as HTMLSelectElement;
-    // const shipping = el.options[el.selectedIndex].text;
-    this.shippingValue = Number(el.value);
-    this.getTotal();
+  selectShipping(): void {
+    this.shippingValue = this.shippingVal;
+    // console.log(this.shippingVal);
+    this.total$ = this.getTotal();
   }
   getDiscount(e?: Event, subTotVal?: number): void {
+    console.log('Event Invoked!: ', e?.target as HTMLSelectElement);
+    console.log('SubTotalVal Invoked!', subTotVal);
     if (e) {
       const el = e.target as HTMLSelectElement;
-      // const shipping = el.options[el.selectedIndex].text;
       const discountRate = Number(el.value);
-      // const discountValue = this.subTotal * discountRate / 100;
-      const discountValue = this.subTotal$$.value * discountRate / 100;
+      const discountValue = this.subTotal$.value * discountRate / 100;
       this.discountValue = discountValue;
-      // console.log('invoked getDiscout method with $EVENT parameter');
-      this.getTotal();
-    }else if(subTotVal) {
-      setTimeout(() => {
-        // console.log(Number(this.subTotalEl.nativeElement.textContent?.split('$')[1]) || 0);
-      })
-      // console.log(subTotVal);
-      // console.log('invoked getDiscout method with subTotalVal parameter');
-      // console.log(this.discount.nativeElement.value || 0);
+      this.total$ = this.getTotal();
+    } else if (subTotVal) {
       const discountRate = this.discount.nativeElement.value || 0;
       this.discountValue = subTotVal * discountRate / 100;
     }
   }
 
   purchase() {
-    if (this.form.invalid) {    
+    console.log(!this.listItems$.length);
+    if (this.form.invalid || !this.listItems$.length) {
       return;
     }
     console.log(this.form.value);
-    console.log(this.form.get('itms'));
+    console.log(this.listItems$);
+    console.log(this.form.get('itms')?.value);
+    console.log(this.subTotal$.value);
+    console.log(this.discountValue);
     console.log(this.form.get('shipping')?.value);
+    console.log(this.total$);
   }
 
   removeItm(ItmIdx: number) {
+    // console.log(this.listItems$);
+    const newListItems = this.listItems$.filter((itm, idx) => idx != ItmIdx ? itm : null);
+    this.listItems$ = newListItems;
+    // console.log(this.listItems$);
     this.itms.removeAt(ItmIdx);
-    // this.subTotal = this.getSubtotal();
-    this.subTotal$$.next(this.getSubtotal());
-    this.getTotal();
-    // this.unsubscriptionArray.forEach((subscription) => {
-    // subscription.unsubscribe()});
+    this.subTotal$.next(this.getSubtotal());
+    // console.log(this.subTotal$);
+    this.total$ = this.getTotal();
+    // console.log(this.total$);
     this.cartItemsSubscription.unsubscribe();
     this.cartService.removeCartItm(ItmIdx);
   }
 
-  getProduct(itm: AbstractControl): number {
-      // console.log(itm);
-      // console.log(typeof(itm));
-      const qty = itm.get('selectedQuantity')?.value;
-      const price = itm.get('price')?.value;
-      const product = Number(qty) * Number(price);
-      itm.patchValue({product: product});
-      // console.log('here');
-      // console.log(itm.get('selectedQuantity')?.value);
-      // console.log(itm.get('price')?.value);
-      // console.log(itm.get('product')?.value);
-      return product;
+  getProduct(i: number): number {
+    // console.log(i);
+    this.listItems$[i] = {...this.listItems$[i], selectedQuantity: this.itms.controls[i].get('selectedQuantity')?.value };
+    const product = this.listItems$[i].product = this.listItems$[i].selectedQuantity * this.listItems$[i].price;
+    this.itms.controls[i].patchValue({ product: product });
+    return product;
   }
 
   getSubtotal(): number {
-    return this.itms.controls.map(itm => itm.get('product')?.value).reduce((acc, currVal) => acc += currVal, 0);
+    console.log('Subtotal Invokde!');
+    const subTotal = this.listItems$.map(itm => itm.product).reduce((acc, currVal) => acc += currVal, 0);
+    // console.log(subTotal);
+    return subTotal;
   }
 
-  getTotal(): void {
-    // console.log(`subTotal: ${this.subTotal$$.value}`);
+  getTotal(): number {
+    // console.log(`subTotal: ${this.subTotal$.value}`);
     // console.log(`discount: ${this.discountValue}`);
     // console.log(`Shipping:  ${this.shippingValue}`);
-    this.total = this.subTotal$$.value - this.discountValue + this.shippingValue;
     console.log('getTotal invoked!');
+    const total = this.total$ = this.subTotal$.value - this.discountValue + this.shippingValue;
+    return total;
   }
 
-  public trackById(index: number, item: AbstractControl): string {
-    // console.log(item.get('_id')?.value);
-    return item.get('_id')?.value;
+  public trackById(index: number, item: CartItem): string {
+    // console.log(index);
+    // console.log(item._id);
+    return item._id;
   }
 }

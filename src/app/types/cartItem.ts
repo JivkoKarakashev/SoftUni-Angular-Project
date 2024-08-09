@@ -1,4 +1,4 @@
-export interface Item {
+export interface CartItem {
     _ownerId: string,
     _id: string,
     _createdOn: number,
@@ -9,8 +9,13 @@ export interface Item {
     description: string,
     brand: string,
     size: (string | number)[],
+    selectedSize: string | number,
     color: string[],
+    selectedColor: string,
     quantity: number,
+    selectedQuantity: number,
     price: number,
-    buyed?: boolean
+    buyed?: boolean,
+    product: number,
+    checked: boolean
 }

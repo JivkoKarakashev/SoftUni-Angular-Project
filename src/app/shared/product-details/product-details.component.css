@@ -157,15 +157,28 @@
 
 .cart-btn {
     display: inline-block;
-    background-color: #7DC855;
-    border-radius: 6px;
-    font-size: 16px;
-    color: #FFFFFF;
+    border-radius: 0.4em;
+    font-size: 1em;
     text-decoration: none;
     padding: 12px 30px;
     transition: all .5s;
 }
 
-.cart-btn:hover {
+.cart-btn:enabled,
+.cart-btn:enabled {
+    cursor: pointer;
+    background-color: #7DC855;
+    color: #FFFFFF;
+    transition: all .5s;
+}
+
+.cart-btn:hover:enabled,
+.cart-btn:focus:enabled{
     background-color: #64af3d;
+}
+
+p.buyed {
+    background-color: #890000;
+    color: #fff;
+    text-align: center;
 }

@@ -34,26 +34,26 @@
                             <div class="label-header">Remove</div>
                         </div>
                         <ng-container formArrayName="itms">
-                            <ng-container #rows *ngFor=" let row of itms.controls; let i = index; trackBy: trackById">
+                            <ng-container #rows *ngFor=" let itm of listItems$; let i = index; trackBy: trackById">
                                 <div [formGroupName]="i" class="itms">                                    
-                                    <input formControlName="checked" [checked]="row.get('checked')?.value" class="itm selectRow" type="checkbox" name="selectRow">
-                                    <input #imgUrl formControlName="image" [hidden]="true" [value]="row.get('image')?.value" class="media" type="text" name="media">
-                                    <img class="itm" src="{{row.get('image')?.value}}" alt="image">
-                                    <input #descrp formControlName="description" [hidden]="true" [value]="row.get('description')?.value" class="description" type="text" name="description">
-                                    <span class="itm description">{{row.get('description')?.value}}</span>
+                                    <input formControlName="checked" [checked]="itm.checked" class="itm selectRow" type="checkbox" name="selectRow" (change)="toggleSelect($event, i)">
+                                    <input #imgUrl formControlName="image" [hidden]="true" [value]="itm.image" class="media" type="text" name="media">
+                                    <img class="itm" src="{{itm.image}}" alt="image">
+                                    <input #descrp formControlName="description" [hidden]="true" [value]="itm.description" class="description" type="text" name="description">
+                                    <span class="itm description">{{itm.description}}</span>
                                     <select class="itm decorate" formControlName="selectedColor" name="selectedColor" (change)="selectColor($event, i)" required>
                                         <option value="">select color</option>
-                                        <option  class="decorate" #optionElements *ngFor="let col of row.get('colors')?.value; let i = index;" [value]="col" [attr.data-color]="col">{{col}}</option>
+                                        <option  class="decorate" #optionElements *ngFor="let col of itm.color; let i = index;" [value]="col" [attr.data-color]="col">{{col}}</option>
                                     </select>
-                                    <select class="itm" formControlName="selectedSize" name="selectedSize" (change)="selectSize($event, i)" required>
+                                    <select class="itm" formControlName="selectedSize" name="selectedSize" (change)="selectSize(i)" required>
                                         <option value="">select size</option>
-                                        <option *ngFor="let sz of row.get('sizes')?.value; let i = index;" [value]="sz">{{sz}}</option>
+                                        <option *ngFor="let sz of itm.size; let i = index;" [value]="sz">{{sz}}</option>
                                     </select>
-                                    <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="row.get('quantity')?.value" (change)="getProduct(row)">
-                                    <input formControlName="price" [hidden]="true" [value]="row.get('price')?.value" class="price" type="number" name="price">
-                                    <p class="itm price">${{row.get('price')?.value}}</p>
+                                    <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="itm.quantity" (change)="getProduct(i)">
+                                    <input formControlName="price" [hidden]="true" [value]="itm.price" class="price" type="number" name="price">
+                                    <p class="itm price">${{itm.price}}</p>
                                     <input formControlName="product" [hidden]="true" [value]="" class="prod" type="number" name="product">
-                                    <span class="itm prod">${{row.get('product')?.value}}</span>
+                                    <span class="itm prod">${{itm.product}}</span>
                                     <div class="itm buttons">
                                         <button class="button remove" type="button" (click)="removeItm(i)">Remove item</button>
                                     </div>
@@ -63,7 +63,7 @@
 
                         <div class="subtotal">
                             <span class="title">Subtotal:</span>
-                            <span #subTotalEl class="amount">${{subTotal$$.value.toFixed(2)}}</span>
+                            <span #subTotalEl class="amount">${{subTotal$.value}}</span>
                         </div>
                         <div class="discount">
                             <span class="title">
@@ -76,7 +76,7 @@
                         </div>
                         <div class="shipping">
                             <span class="title">
-                                <select class="shipping" formControlName="shipping" name="shipping" (change)="selectShipping($event)" required>
+                                <select class="shipping" formControlName="shipping" name="shipping" (change)="selectShipping()" required>
                                     <option value="">shipping method</option>
                                     <option *ngFor="let method of shippingMethods$; let i = index;" [value]="method.value">{{method.name}} - ${{method.value.toFixed(2)}}</option>
                                 </select>
@@ -85,11 +85,11 @@
                         </div>
                         <div class="total modal-footer">
                             <span class="title">Total:</span>
-                            <span class="amount">${{total.toFixed(2)}}</span>
+                            <span class="amount">${{total$.toFixed(2)}}</span>
                         </div>
                         
                         <div class="buttons">
-                            <input [disabled]="form.invalid" class="button finish" type="submit" value="Finish">
+                            <input [disabled]="form.invalid || !listItems$.length" class="button finish" type="submit" value="Finish">
                             <a class="button cancel" href="javascript:void(0)">Continue shopping</a>
                         </div>
                     </fieldset>

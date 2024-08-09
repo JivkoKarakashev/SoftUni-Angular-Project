@@ -4,6 +4,7 @@ import { Item } from '../types/item';
 import { BehaviorSubject, map, filter, forkJoin } from 'rxjs';
 import { Shipping } from '../types/shipping';
 import { Discount } from '../types/discount';
+import { CartItem } from '../types/cartItem';
 
 const URL = 'http://localhost:3030/data/cart';
 const SHIPPINGMETHODS_URL = 'http://localhost:3030/jsonstore/shipping';
@@ -36,19 +37,18 @@ export class ShoppingCartService {
   //   return this.http.get
   // }
 
-  addCartItem(item: Item) {
+  addCartItem(item: Item | CartItem) {
     this.items$$.next([...this.items$$.value, item]);
     // console.log(this.items$$.value);
   }
 
   removeCartItems(ids: string[]) {
     // console.log(ids);
-    this.items$$.pipe(map((items) => items.filter(itm => !ids.includes(itm._id))))
-      .subscribe((res) => {
-        // console.log(res);
-        this.items$$.next([...res]);        
-      });      
-      // console.log(this.items$$.value);
+    const currItemsArr = [...this.items$$.value];
+    const newItemsArr = currItemsArr.filter(itm => !ids.includes(itm._id));
+    // console.log(newItemsArr);
+    this.items$$.next(newItemsArr);
+    // console.log(this.items$$.value);
   }
 
   removeCartItm(idx: number) {

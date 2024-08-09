@@ -5,10 +5,10 @@ Product details WORK!
         <!-- Left Column / Headphones Image -->
         <div class="left-column">
             <!-- <div class="image"> -->
-                <img #stockImg [style.opacity]="defImgOpacity" class="def" alt="default image" [src]="itemCtrlsGr.get('image')?.value">
+                <img #stockImg [style.opacity]="defImgOpacity" class="def" alt="default image" [src]="item$.image">
             <!-- </div> -->
-            <ng-container *ngFor=" let imgUrl of itemCtrlsGr.get('altImages')?.value; let i = index; trackBy: trackByUrl">
-                <img #imgElements [attr.data-image]="itemCtrlsGr.get('color')?.value[i]" [src]="imgUrl" alt="color item" [id]="imgUrl">
+            <ng-container *ngFor=" let imgUrl of item$.altImages; let i = index; trackBy: trackByUrl">
+                <img #imgElements [attr.data-image]="item$.color[i]" [src]="imgUrl" alt="color item" [id]="imgUrl">
             </ng-container>
         </div>
 
@@ -17,21 +17,21 @@ Product details WORK!
 
             <!-- Product Description -->
             <div class="product-description">
-                <span>{{item$?.subCat}}</span>
-                <h1>{{item$?.brand}}</h1>
-                <p>{{item$?.description}}</p>
+                <span>{{item$.subCat}}</span>
+                <h1>{{item$.brand}}</h1>
+                <p>{{item$.description}}</p>
             </div>
 
             <!-- Product Configuration -->
             <div class="product-configuration">
-                <form [formGroup]="form" (ngSubmit)="purchase()">
-                    <fieldset>
+                <form [formGroup]="form" (ngSubmit)="addItemtoCart()">
+                    <fieldset formGroupName="fgItem">
                         <!-- Product Color -->
                         <div class="product-color">
                             <span>Color</span>
                             <div class="color-choose">
-                                <div *ngFor="let col of itemCtrlsGr.get('color')?.value; let i = index" [id]="col+i">
-                                    <input formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectedColor.valueChanges && selectColor()">
+                                <div *ngFor="let col of item$.color; let i = index" [id]="col+i">
+                                    <input formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectColor()" required>
                                     <label [for]="col"><span #spanColorElements></span></label>
                                 </div>
                             </div>
@@ -42,19 +42,24 @@ Product details WORK!
                             <span>Size configuration</span>
 
                             <div class="size-choose">
-                                <select class="itm" formControlName="selectedSize" name="selectedSize"
-                                    (change)="selectSize($event)">
+                                <select class="itm" formControlName="selectedSize" name="selectedSize" required>
                                     <option value="">select size</option>
-                                    <option *ngFor="let sz of item$?.size; let i = index;" [value]="sz">{{sz}}</option>
+                                    <option *ngFor="let sz of item$.size; let i = index;" [value]="sz">{{sz}}</option>
                                 </select>
                             </div>
-
-                            <!-- <a href="#">How to configurate your headphones</a> -->
                         </div>
+
+                        <!-- Quantity Configuration -->
+                        <div class="quantity-config">
+                            <span>Quantity configuration</span>
+                            <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="item$.quantity" required>
+                        </div>
+
                         <!-- Product Pricing -->
                         <div class="product-price">
-                            <span>${{item$?.price}}</span>
-                            <input type="submit" class="cart-btn" value="Add to cart">
+                            <span>${{item$.price}}</span>
+                            <input *ngIf="!item$?.buyed" [disabled]="form.invalid" type="submit" class="cart-btn" value="Add to cart">
+                            <p *ngIf="item$?.buyed" [ngClass]="{buyed: item$.buyed}">Already in cart</p>
                         </div>
                     </fieldset>
                 </form>

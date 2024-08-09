@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormControlName, FormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { Gym } from 'src/app/types/gym';
 import { Running } from 'src/app/types/running';
@@ -25,6 +25,8 @@ import { Boot } from 'src/app/types/boot';
 import { Slippers } from 'src/app/types/slippers';
 import { Jacket } from 'src/app/types/jacket';
 import { Longwear } from 'src/app/types/longwear';
+import { Item } from 'src/app/types/item';
+import { ShoppingCartService } from '../shopping-cart.service';
 
 @Component({
   selector: 'app-product-details',
@@ -32,25 +34,54 @@ import { Longwear } from 'src/app/types/longwear';
   styleUrls: ['./product-details.component.css']
 })
 export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+  private initailItem: Item = {
+    _ownerId: '',
+    _id: '',
+    _createdOn: NaN,
+    image: '',
+    altImages: [''],
+    cat: '',
+    subCat: '',
+    description: '',
+    size: [''],
+    color: [''],
+    brand: '',
+    quantity: NaN,
+    price: NaN,
+  }
   public item$: Jacket | Longwear |
-  Trainers | Boot | Slippers |
-  CapHat | Belt | Glove | Sunglasses | Watch |
-  Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
-  BlazerJacket | Waistcoat | TuxedoPartywear | Tie | undefined;
+    Trainers | Boot | Slippers |
+    CapHat | Belt | Glove | Sunglasses | Watch |
+    Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
+    BlazerJacket | Waistcoat | TuxedoPartywear | Tie = this.initailItem;
+  private cartItms$$ = new BehaviorSubject<Item[]>([]);
+  public cartItms$ = this.cartItms$$.asObservable();
   private unsubscriptionArray: Subscription[] = [];
-  private itemSubscription: Subscription = new Subscription;
-  private spanElementsSubscription: Subscription = new Subscription;
   public defImgOpacity = 1;
 
   public form: FormGroup = this.fb.group({
-    fgItem: this.fb.group({}),
-    selectedColor: ['', /*[Validators.required]*/],
-    selectedSize: ['', /*[Validators.required]*/],
-    shipping: ['', /*[Validators.required]*/],
-    discount: ['', /*[Validators.required]*/],
+    fgItem: this.fb.group({
+      _ownerId: [''],
+      _id: [''],
+      _createdOn: [''],
+      image: [''],
+      altImages: [''],
+      cat: [''],
+      subCat: [''],
+      description: [''],
+      brand: [''],
+      size: [''],
+      selectedSize: ['', [Validators.required,]],
+      color: [''],
+      selectedColor: ['', [Validators.required,]],
+      quantity: [''],
+      selectedQuantity: ['', [Validators.required,]],
+      price: ['']
+    }),
   });
+  private formInitalValue: FormGroup = this.fb.group({ fgItem: this.fb.group({...this.itemCtrlsGr.value}) });
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder, private http: HttpClient, private router: Router, private render: Renderer2) { }
+  constructor(private route: ActivatedRoute, private fb: FormBuilder, private http: HttpClient, private router: Router, private render: Renderer2, private cartService: ShoppingCartService) { }
 
   @ViewChildren('imgElements') private imgElements!: QueryList<ElementRef>;
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;
@@ -58,25 +89,14 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   get itemCtrlsGr() {
     return this.form.get("fgItem") as FormGroup;
   }
-  get itemCtrlsArr() {
-    return this.form.get("fgItem") as FormArray;
-  }
   get selectedColor() {
-    return this.form.controls["selectedColor"];
+    return this.itemCtrlsGr.get("selectedColor");
   }
   get selectedSize() {
-    return this.form.controls["selectedSize"];
+    return this.itemCtrlsGr.get("selectedSize");
   }
-  // get altImgsArr() :string[]{
-  //   console.log(this.form.controls["fgItem"].get('altImages')?.value);
-  //   return this.form.controls["fgItem"].get('altImages')?.value;
-  // }
-  // get colsArr() :string[]{
-  //   console.log(this.form.controls["fgItem"].get('color')?.value);
-  //   return this.form.controls["fgItem"].get('color')?.value;
-  // }
-  get shipping() {
-    return this.form.controls["shipping"] as AbstractControl;
+  get selectedQuantity() {
+    return this.itemCtrlsGr.get("selectedQuantity");
   }
 
   ngOnInit(): void {
@@ -91,34 +111,61 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
     const { id } = this.route.snapshot.params;
     // console.log(id);
-    this.itemSubscription = this.getItem(url, id).subscribe(itm => {
-      this.item$ = itm;
+    const cartSubscription = this.cartService.items$.subscribe(items => {
+      this.cartItms$$.next([...items])
+      // this.cartItms$ = items;
+      // console.log(this.cartItms$$.value);
+    });
+    const itemSubscription = this.getItem(url, id).subscribe(itm => {
+      // this.item$ = itm;
+      const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = itm;
+      const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
+      this.item$ = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, buyed }
       // console.log(itm);
       // console.log(this.item$);
-      const propsArr = Object.entries(itm);
+      // console.log(this.cartItms$$.value);
+      // const propsArr = Object.entries(itm);
       // console.log(propsArr);
-      propsArr.forEach(([k, v]) => {
-        (this.form.get('fgItem') as FormGroup).addControl(k, new FormControl(v, Validators.required));
+      // propsArr.forEach(([k, v]) => {
+      //   (this.form.get('fgItem') as FormGroup).addControl(k, new FormControl(v, Validators.required));
+      // });
+      this.itemCtrlsGr.patchValue({
+        _ownerId,
+        _id,
+        _createdOn,
+        image,
+        altImages,
+        cat,
+        subCat,
+        description,
+        size,
+        color,
+        brand,
+        quantity,
+        price,
       });
+      (this.formInitalValue.get('fgItem') as FormGroup).patchValue({...this.itemCtrlsGr.value});
+      console.log({...this.itemCtrlsGr.value});
+      console.log(this.formInitalValue.get('fgItem')?.value);
     });
-    this.unsubscriptionArray.push(this.itemSubscription);
+    this.unsubscriptionArray.push(itemSubscription, cartSubscription);
   }
 
   ngAfterViewInit(): void {
     // console.log(this.spanCol);
     // console.log(this.img);
-    this.spanElementsSubscription = this.spanColorElements.changes.subscribe((els: QueryList<ElementRef>) => {
+    const spanElementsSubscription = this.spanColorElements.changes.subscribe((els: QueryList<ElementRef>) => {
       // console.log(els.length);
       // els.forEach(el => {
       //   console.log(el.nativeElement);
       // });
       els.forEach((el, i) => {
         // console.log(el.nativeElement);
-        // console.log(this.itemCtrlsArr.get('color')?.value[i]);
-        this.render.setStyle(el.nativeElement, 'background-color', this.itemCtrlsArr.get('color')?.value[i]);
+        // console.log(this.itemCtrlsGr.get('color')?.value[i]);
+        this.render.setStyle(el.nativeElement, 'background-color', this.itemCtrlsGr.get('color')?.value[i]);
       });
     });
-    this.unsubscriptionArray.push(this.spanElementsSubscription);
+    this.unsubscriptionArray.push(spanElementsSubscription);
   }
 
   ngOnDestroy(): void {
@@ -132,41 +179,25 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
   private getItem(url: string, id: string) {
     return this.http.get<
-    Jacket | Longwear |
-    Trainers | Boot | Slippers |
-    CapHat | Belt | Glove | Sunglasses | Watch |
-    Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
+      Jacket | Longwear |
+      Trainers | Boot | Slippers |
+      CapHat | Belt | Glove | Sunglasses | Watch |
+      Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
       BlazerJacket | Waistcoat | TuxedoPartywear | Tie
     >(`http://localhost:3030/jsonstore/${url}/${id}`);
   }
 
-  public selectSize(e: Event): void {
-    this.form.get('selectedSize')?.value;
-    // this.itm.patchValue({selectedSize: this.selectedSize.value});
-    const el = e.target as HTMLSelectElement;
-    // const size = el.options[el.selectedIndex].text;
-    const size = el.value;
-    // this.fgItem.controls[i].get('selectedSize')?.patchValue(size);
-    // this.fgItem.controls[i].patchValue({ selectedSize: size });
-    // console.log(this.fgItem.value);
-    // console.log(this.fgItem.controls[i]);
-    // console.log(i);
-    // console.log(this.selectedSize);
-    // console.log(this.fgItem.controls[i].get('selectedSize')?.value);
-    // console.log(this.fgItem.controls[i].get('size')?.value);
-  }
+  // public selectSize(e: Event): void {
+  //   const el = e.target as HTMLSelectElement;
+  //   // const size = el.options[el.selectedIndex].text;
+  //   const size = el.value;
+  // }
 
   public selectColor(): void {
-    // console.log(this.selectedColor.value);
-    if (this.itemCtrlsGr.get('selectedColor')?.value == undefined) {
-      this.itemCtrlsGr.addControl('selectedColor', new FormControl(this.selectedColor, Validators.required));
-    }
-    this.itemCtrlsGr.get('selectedColor')?.patchValue(this.selectedColor.value);
-
     this.imgElements.forEach(el => {
       // console.log(el.nativeElement.dataset['image']);
-      // console.log(this.selectedColor.value);
-      if(el.nativeElement.dataset['image'] == this.selectedColor.value) {
+      // console.log(this.selectedColor?.value);
+      if (el.nativeElement.dataset['image'] == this.selectedColor?.value) {
         this.defImgOpacity = 0;
         el.nativeElement.classList.contains('active') ? null : this.render.addClass(el.nativeElement, 'active');
       } else {
@@ -180,11 +211,18 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     return url;
   }
 
-  public purchase(): void {
-    // console.log(this.itms);
-    console.log(this.form.value);
-    console.log(this.selectedColor?.value);
-    console.log(this.selectedSize?.value);
+  public addItemtoCart(): void {
+    if (this.form.invalid) {
+      console.log('Invalid FORM!');
+      return;
+    }
+    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price } = this.itemCtrlsGr.value;
+    const buyed = true;
+    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, buyed });
+    this.item$.buyed = buyed;
+
+    this.itemCtrlsGr.reset({...this.formInitalValue.get('fgItem')});
+    console.log(this.cartItms$$.value);
   }
 
 }
