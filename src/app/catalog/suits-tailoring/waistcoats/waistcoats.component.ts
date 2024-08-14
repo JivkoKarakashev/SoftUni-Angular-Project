@@ -1,22 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { WaistcoatsService } from './waistcoats.service';
-import { Item } from 'src/app/types/item';
 import { Waistcoat } from 'src/app/types/waistcoat';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-waistcoats',
   templateUrl: './waistcoats.component.html',
   styleUrls: ['./waistcoats.component.css']
 })
-export class WaistcoatsComponent {
+export class WaistcoatsComponent implements OnInit, OnDestroy {
   public listItems$: Waistcoat[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
@@ -32,25 +31,21 @@ export class WaistcoatsComponent {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
-      // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
 
     const waistcoatsSubscription = this.waistcoatsService.getWaistcoats().subscribe(wstctsObjs => {
       this.loading = false;
       let waistcoats = Object.entries(wstctsObjs).map(wstct => wstct[1]);
-      waistcoats.forEach(wstct => {
-        wstct.buyed = this.cartItms$$.value.some(itm => itm._id == wstct._id);
+      waistcoats.forEach((wstct, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == wstct._id)) {
+          waistcoats[idx] = { ...waistcoats[idx], buyed: true };
+        }
       });
-      // console.log(waistcoats);
-      // console.log(waistcoats instanceof(Array));
-      // console.log(waistcoats[0].buyed);
-      // this.listItems$ = Object.values(waistcoats);
-      // console.log(Object.values(waistcoats));
-      this.listItems$ = waistcoats;
+      this.listItems$ = [...this.listItems$, ...waistcoats];
     });
 
     this.unsubscriptionArray.push(waistcoatsSubscription, cartSubscription);
@@ -65,16 +60,12 @@ export class WaistcoatsComponent {
     });
   }
 
-  public addItemtoCart(e: Event, item: Waistcoat) {
-    // console.log(e.target);
+  public addItemtoCart(item: Waistcoat) {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    item.buyed = true;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item);
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }

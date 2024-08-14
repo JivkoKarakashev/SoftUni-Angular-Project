@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Item } from '../types/item';
-import { BehaviorSubject, map, filter, forkJoin } from 'rxjs';
+import { BehaviorSubject, map, filter, forkJoin, Observable } from 'rxjs';
 import { Shipping } from '../types/shipping';
 import { Discount } from '../types/discount';
 import { CartItem } from '../types/cartItem';
+import { CheckForItemType } from './utils/checkForItemType';
 
-const URL = 'http://localhost:3030/data/cart';
 const SHIPPINGMETHODS_URL = 'http://localhost:3030/jsonstore/shipping';
 const DISCOUNTS_URL = 'http://localhost:3030/jsonstore/discounts';
 
@@ -15,14 +14,15 @@ const DISCOUNTS_URL = 'http://localhost:3030/jsonstore/discounts';
 })
 export class ShoppingCartService {
 
-  private items$$ = new BehaviorSubject<Item[]>([]);
-  public items$ = this.items$$.asObservable();
+  private cartItems$$ = new BehaviorSubject<CartItem[]>([]);
+  private cartItems$ = this.cartItems$$.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private checkForItemType: CheckForItemType) { }
 
-  getCartItems() {
+  getCartItems(): Observable<CartItem[]> {
     // return this.http.get<Item[]>(URL);
     // return this.items$;
+    return this.cartItems$;
   }
 
   getAvailablePurchaseServices() {
@@ -37,28 +37,31 @@ export class ShoppingCartService {
   //   return this.http.get
   // }
 
-  addCartItem(item: Item | CartItem) {
-    this.items$$.next([...this.items$$.value, item]);
-    // console.log(this.items$$.value);
+  addCartItem(item: CartItem) {
+    if (this.checkForItemType.isItem(item)) {
+      throw new Error('Wrong cartItem type!');
+    }
+    this.cartItems$$.next([...this.cartItems$$.value, item]);
+    // console.log(this.cartItems$$.value);
   }
 
   removeCartItems(ids: string[]) {
     // console.log(ids);
-    const currItemsArr = [...this.items$$.value];
+    const currItemsArr = [...this.cartItems$$.value];
     const newItemsArr = currItemsArr.filter(itm => !ids.includes(itm._id));
     // console.log(newItemsArr);
-    this.items$$.next(newItemsArr);
+    this.cartItems$$.next(newItemsArr);
     // console.log(this.items$$.value);
   }
 
   removeCartItm(idx: number) {
-    const newItemsArr = [...this.items$$.value];
+    const newItemsArr = [...this.cartItems$$.value];
     newItemsArr.splice(idx, 1);
-    this.items$$.next(newItemsArr);
+    this.cartItems$$.next((newItemsArr));
     // console.log(this.items$$.value);
   }
 
-  emptyCart(): void {    
-    this.items$$.next([]);
+  emptyCart(): void {
+    this.cartItems$$.next([]);
   }
 }

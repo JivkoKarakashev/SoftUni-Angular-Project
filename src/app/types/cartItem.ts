@@ -15,7 +15,7 @@ export interface CartItem {
     quantity: number,
     selectedQuantity: number,
     price: number,
-    buyed?: boolean,
+    buyed: boolean,
     product: number,
     checked: boolean
 }

@@ -58,8 +58,11 @@ Product details WORK!
                         <!-- Product Pricing -->
                         <div class="product-price">
                             <span>${{item$.price}}</span>
-                            <input *ngIf="!item$?.buyed" [disabled]="form.invalid" type="submit" class="cart-btn" value="Add to cart">
-                            <p *ngIf="item$?.buyed" [ngClass]="{buyed: item$.buyed}">Already in cart</p>
+                            <ng-container *ngIf="isLoggedIn">
+                                <input *ngIf="item$._ownerId != user$?._id" [disabled]="form.invalid" type="submit" class="cart-btn" value="Add to cart">
+                                <li *ngIf="item$._ownerId == user$?._id" class="button edit"><a href="javascript:void(0)">Edit</a></li>
+                                <li *ngIf="item$._ownerId == user$?._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
+                            </ng-container>
                         </div>
                     </fieldset>
                 </form>

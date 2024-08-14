@@ -9,14 +9,14 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Item } from './types/item';
+import { CartItem } from './types/cartItem';
 import { ShoppingCartService } from './shared/shopping-cart.service';
 import { UserService } from './user/user.service';
 import { UserForAuth } from './types/user';
 
 @Injectable()
 export class AppHttpInterceptor implements HttpInterceptor {
-  public cartItms$: Item[] = [];
+  public cartItms$: CartItem[] = [];
 
   constructor(private userService: UserService, private cartService: ShoppingCartService) { }
 
@@ -36,9 +36,9 @@ export class AppHttpInterceptor implements HttpInterceptor {
       }
     }
     return next.handle(req).pipe(
-      map((res: HttpEvent<any>) => {
+      /*map((res: HttpEvent<any>) => {
         if (req.url == 'http://localhost:3030/jsonstore/shoes' && res instanceof HttpResponse) {
-          this.cartService.items$.subscribe(items => this.cartItms$ = items);
+          this.cartService.getCartItems().subscribe(items => this.cartItms$ = [...this.cartItms$, ...items]);
           const cartItmsIds = this.cartItms$.map((itm) => itm._id);
           // console.log(cartItmsIds);        
           // console.log(Object.values(res.body));
@@ -53,7 +53,7 @@ export class AppHttpInterceptor implements HttpInterceptor {
           // console.log(newRes);
           return newRes;
         } else if (req.url == 'http://localhost:3030/jsonstore/jackets' && res instanceof HttpResponse) {
-          this.cartService.items$.subscribe(items => this.cartItms$ = items);
+          this.cartService.getCartItems().subscribe(items => this.cartItms$ = [...this.cartItms$, ...items]);
           const cartItmsIds = this.cartItms$.map((itm) => itm._id);
           // console.log(cartItmsIds);        
           // console.log(Object.values(res.body));
@@ -69,7 +69,7 @@ export class AppHttpInterceptor implements HttpInterceptor {
           return newRes;
         }
         return res;
-      }),
+      }),*/
       catchError((err) => {
         // console.log(err);
         throw err;

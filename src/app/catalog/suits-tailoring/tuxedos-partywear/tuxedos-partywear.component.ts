@@ -1,22 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { TuxedosPartywearService } from './tuxedos-partywear.service';
-import { Item } from 'src/app/types/item';
 import { TuxedoPartywear } from 'src/app/types/tuxedoPartywear';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-tuxedos-partywear',
   templateUrl: './tuxedos-partywear.component.html',
   styleUrls: ['./tuxedos-partywear.component.css']
 })
-export class TuxedosPartywearComponent {
+export class TuxedosPartywearComponent implements OnInit, OnDestroy {
   public listItems$: TuxedoPartywear[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
@@ -32,25 +31,21 @@ export class TuxedosPartywearComponent {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
-      // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
 
     const tuxedos_partywearSubscription = this.tuxedos_partywearService.getTuxedosPartywear().subscribe(txds_ptywrObjs => {
       this.loading = false;
       let tuxedos_partywear = Object.entries(txds_ptywrObjs).map(txd_ptywr => txd_ptywr[1]);
-      tuxedos_partywear.forEach(txd_ptywr => {
-        txd_ptywr.buyed = this.cartItms$$.value.some(itm => itm._id == txd_ptywr._id);
+      tuxedos_partywear.forEach((txd_ptywr, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == txd_ptywr._id)) {
+          tuxedos_partywear[idx] = { ...tuxedos_partywear[idx], buyed: true };
+        }
       });
-      // console.log(tuxedos_partywear);
-      // console.log(tuxedos_partywear instanceof(Array));
-      // console.log(tuxedos_partywear[0].buyed);
-      // this.listItems$ = Object.values(tuxedos_partywear);
-      // console.log(Object.values(tuxedos_partywear));
-      this.listItems$ = tuxedos_partywear;
+      this.listItems$ = [...this.listItems$, ...tuxedos_partywear];
     });
 
     this.unsubscriptionArray.push(tuxedos_partywearSubscription, cartSubscription);
@@ -65,16 +60,12 @@ export class TuxedosPartywearComponent {
     });
   }
 
-  public addItemtoCart(e: Event, item: TuxedoPartywear) {
-    // console.log(e.target);
+  public addItemtoCart(item: TuxedoPartywear) {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    item.buyed = true;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item);
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }

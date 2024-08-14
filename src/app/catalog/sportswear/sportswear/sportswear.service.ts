@@ -29,7 +29,7 @@ export class SportswearService {
   outdoors: Outdoors[] = [];
   bottomsLeggings: BottomsLeggings[] = [];
   sweaters: Sweater[] = [];
-  sportswear: (Gym & Running & SkiSnowboard & SwimSurf & Outdoors & BottomsLeggings & Sweater)[] = [];
+  sportswear: (Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater)[] = [];
 
   constructor(private http: HttpClient) { }
 

@@ -41,15 +41,15 @@
                                     <img class="itm" src="{{itm.image}}" alt="image">
                                     <input #descrp formControlName="description" [hidden]="true" [value]="itm.description" class="description" type="text" name="description">
                                     <span class="itm description">{{itm.description}}</span>
-                                    <select class="itm decorate" formControlName="selectedColor" name="selectedColor" (change)="selectColor($event, i)" required>
+                                    <select #selectElements class="itm decorate" formControlName="selectedColor" name="selectedColor" [value]="itm.selectedColor" (change)="selectColor($event, i)" required>
                                         <option value="">select color</option>
                                         <option  class="decorate" #optionElements *ngFor="let col of itm.color; let i = index;" [value]="col" [attr.data-color]="col">{{col}}</option>
                                     </select>
-                                    <select class="itm" formControlName="selectedSize" name="selectedSize" (change)="selectSize(i)" required>
+                                    <select class="itm" formControlName="selectedSize" name="selectedSize" [value]="itm.selectedSize" (change)="selectSize(i)" required>
                                         <option value="">select size</option>
                                         <option *ngFor="let sz of itm.size; let i = index;" [value]="sz">{{sz}}</option>
                                     </select>
-                                    <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="itm.quantity" (change)="getProduct(i)">
+                                    <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="itm.quantity" [value]="itm.selectedQuantity" (change)="getProduct(i)" required>
                                     <input formControlName="price" [hidden]="true" [value]="itm.price" class="price" type="number" name="price">
                                     <p class="itm price">${{itm.price}}</p>
                                     <input formControlName="product" [hidden]="true" [value]="" class="prod" type="number" name="product">
@@ -63,7 +63,7 @@
 
                         <div class="subtotal">
                             <span class="title">Subtotal:</span>
-                            <span #subTotalEl class="amount">${{subTotal$.value}}</span>
+                            <span #subTotalEl class="amount">${{subTotal$.value.toFixed(2)}}</span>
                         </div>
                         <div class="discount">
                             <span class="title">

@@ -3,7 +3,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { AccessoriesService } from './accessories.service';
-import { Item } from 'src/app/types/item';
 import { CapHat } from 'src/app/types/capHat';
 import { Belt } from 'src/app/types/belt';
 import { Glove } from 'src/app/types/glove';
@@ -11,6 +10,7 @@ import { Sunglasses } from 'src/app/types/sunglasses';
 import { Watch } from 'src/app/types/watch';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-accessories',
@@ -18,9 +18,8 @@ import { UserService } from 'src/app/user/user.service';
   styleUrls: ['./accessories.component.css']
 })
 export class AccessoriesComponent implements OnInit, OnDestroy {
-  public listItems$: (CapHat & Belt & Glove & Sunglasses & Watch)[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  public listItems$: (CapHat | Belt | Glove | Sunglasses | Watch)[] = [];
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
@@ -36,10 +35,9 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
-      // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
 
@@ -48,35 +46,36 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
       let [caps_hatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs] = accessoriesObjs;
       // console.log(caps_hatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs);      
       let caps_hats = Object.entries(caps_hatsObjs).map(cap_hat => cap_hat[1]);
-      caps_hats.forEach(cp_ht => {
-        cp_ht.buyed = this.cartItms$$.value.some(itm => itm._id == cp_ht._id);
+      caps_hats.forEach((cp_ht, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == cp_ht._id)) {
+          caps_hats[idx] = {...caps_hats[idx], buyed: true};
+        }
       });
       let belts = Object.entries(beltsObjs).map(belt => belt[1]);
-      belts.forEach(blt => {
-        blt.buyed = this.cartItms$$.value.some(itm => itm._id == blt._id);
+      belts.forEach((blt, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == blt._id)) {
+          belts[idx] = {...belts[idx], buyed: true};
+        }
       });
       let gloves = Object.entries(glovesObjs).map(glves => glves[1]);
-      gloves.forEach(glvs => {
-        glvs.buyed = this.cartItms$$.value.some(itm => itm._id == glvs._id);
+      gloves.forEach((glv, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == glv._id)) {
+          gloves[idx] = { ...gloves[idx], buyed: true };
+        }
       });
       let sunglasses = Object.entries(sunglassesObjs).map(snglsses => snglsses[1]);
       sunglasses.forEach(snglsses => {
-        snglsses.buyed = this.cartItms$$.value.some(itm => itm._id == snglsses._id);
+        if (this.cartItms$$.value.some(itm => itm._id == snglsses._id)) {
+          snglsses = { ...snglsses, buyed: true };
+        }
       });
       let watches = Object.entries(watchesObjs).map(wtch => wtch[1]);
-      watches.forEach(wtch => {
-        wtch.buyed = this.cartItms$$.value.some(itm => itm._id == wtch._id);
+      watches.forEach((wtch, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == wtch._id)) {
+          watches[idx] = { ...watches[idx], buyed: true };
+        }
       });
-      // console.log(caps_hats);
-      // console.log(belts);
-      // console.log(gloves);
-      // console.log(sunglasses);
-      // console.log(watches);
-      // console.log(watches instanceof(Array));
-      // console.log(watches[0].buyed);
-      // this.listItems$ = Object.values(watches);
-      // console.log(Object.values(watches));
-      this.listItems$ = caps_hats.concat(belts, gloves, sunglasses, watches);
+      this.listItems$ = [ ...this.listItems$, ...caps_hats, ...belts, ...gloves, ...sunglasses, ...watches];
     });
 
     this.unsubscriptionArray.push(accessoriesSubscription, cartSubscription);
@@ -91,16 +90,12 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
     });
   }
 
-  public addItemtoCart(e: Event, item: CapHat | Belt | Glove | Sunglasses | Watch) {
-    // console.log(e.target);
-    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    item.buyed = true;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+  public addItemtoCart(item: CapHat | Belt | Glove | Sunglasses | Watch) {
+    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, color, quantity, price } = item;
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item);
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }

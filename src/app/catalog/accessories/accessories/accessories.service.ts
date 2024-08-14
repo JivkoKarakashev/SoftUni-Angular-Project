@@ -23,7 +23,7 @@ export class AccessoriesService {
   gloves: Glove[] = [];
   sunglasses: Sunglasses[] = [];
   watches: Watch[] = [];
-  accessories: (CapHat & Belt & Glove & Sunglasses & Watch)[] = [];
+  accessories: (CapHat | Belt | Glove | Sunglasses | Watch)[] = [];
 
   constructor(private http: HttpClient) { }
 

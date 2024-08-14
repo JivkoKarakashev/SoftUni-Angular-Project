@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Item } from 'src/app/types/item';
 import { ShoppingCartService } from '../shopping-cart.service';
 import { Shipping } from 'src/app/types/shipping';
 import { Discount } from 'src/app/types/discount';
@@ -32,7 +31,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   public shippingValue: number = 0;
   public discountCodes$: Discount[] = [];
   public discountValue: number = 0;
-  public availablePurchaseServices: (Discount & Shipping)[] = [];
+  public availablePurchaseServices: (Discount | Shipping)[] = [];
 
   public total$: number = 0;
 
@@ -49,6 +48,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   @ViewChild('closeBtn') private closeBtn!: ElementRef;
 
   @ViewChildren('optionElements') private optionElements!: QueryList<ElementRef>;
+  @ViewChildren('selectElements') private selectElements!: QueryList<ElementRef>;
 
   @ViewChild('discount') private discount!: ElementRef;
 
@@ -63,7 +63,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   }
 
   ngOnInit(): void {
-    console.log('INITIALISED!')
+    console.log('Shopping Cart Page INITIALIZED!');
     const availablePurchaseServicesSubscription = this.cartService.getAvailablePurchaseServices().subscribe(availServsObjs => {
       this.loading = false;
       let [discountsObjs, shippingMthdsObjs] = availServsObjs;
@@ -80,9 +80,9 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     });
     this.unsubscriptionArray.push(availablePurchaseServicesSubscription);
 
-    this.cartItemsSubscription = this.cartService.items$.subscribe(items => {
-      items.forEach((itm, index) => {
-        const { _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, color, quantity, price } = itm;
+    this.cartItemsSubscription = this.cartService.getCartItems().subscribe(cartItms => {
+      cartItms.forEach((itm) => {
+        const { _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, buyed, product, checked } = itm;
         const rowItm = this.fb.group({
           _id,
           _ownerId,
@@ -94,17 +94,17 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
           description,
           brand,
           size: [size],
-          selectedSize: ['', [Validators.required,]],
+          selectedSize: [selectedSize || '', [Validators.required,]],
           color: [color],
-          selectedColor: ['', [Validators.required,]],
+          selectedColor: [selectedColor || '', [Validators.required,]],
           quantity,
-          selectedQuantity: ['', [Validators.required,]],
+          selectedQuantity: [selectedQuantity || '', [Validators.required,]],
           price,
-          buyed: itm?.buyed,
-          product: 0,
-          checked: false
+          buyed,
+          product,
+          checked
         });
-        this.listItems$.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false });
+        this.listItems$.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize : selectedSize || '', color, selectedColor: selectedColor || '', quantity, selectedQuantity: selectedQuantity || 0, price, buyed, product, checked });
         this.itms.push(rowItm);
       });
       // console.log(this.listItems$)
@@ -113,11 +113,13 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
       // console.log(this.listItems$);
       // console.log(this.itms);
     });
+    this.subTotal$.next(this.getSubtotal());
+    this.total$ = this.getTotal();
     this.unsubscriptionArray.push(this.cartItemsSubscription);
     // console.log(this.unsubscriptionArray);
 
     const subTotalSubscription = this.subTotal$.subscribe((val) => {
-      this.getDiscount(undefined, val | 0);
+      this.getDiscount(undefined, val || 0);
     });
     this.unsubscriptionArray.push(subTotalSubscription);
 
@@ -155,6 +157,24 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
       });
     });
     this.unsubscriptionArray.push(optionElementsSubscription);
+
+    const selectElementsSubscription = this.selectElements.changes.subscribe((el) => {
+      this.selectElements.forEach((el, idx) => {
+        const nativeEl = el.nativeElement;
+        // console.log(this.listItems$[idx]);
+        if (this.listItems$[idx].selectedColor != '') {
+          // console.log(this.listItems$[idx]);
+          const color = nativeEl.value;
+          // console.log(nativeEl.value);
+          // console.log(el, idx);
+          this.render.setStyle(nativeEl, 'background-color', color);
+          const rgbObj = this.invertColor.standardize_color(color);
+          const hexColor = this.invertColor.invertColor(rgbObj);
+          this.render.setStyle(nativeEl, 'color', hexColor);
+        }
+      });
+    });
+    this.unsubscriptionArray.push(selectElementsSubscription);
   };
 
   ngOnDestroy(): void {
@@ -185,7 +205,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   }
 
   toggleSelectAll(): void {
-    
+
     if (!this.listItems$.length) {
       return;
     }
@@ -255,7 +275,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   }
 
   selectSize(i: number): void {
-    this.listItems$[i] = { ...this.listItems$[i], selectedSize: this.itms.controls[i].get('selectedSize')?.value};
+    this.listItems$[i] = { ...this.listItems$[i], selectedSize: this.itms.controls[i].get('selectedSize')?.value };
   }
   selectShipping(): void {
     this.shippingValue = this.shippingVal;
@@ -272,7 +292,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
       this.discountValue = discountValue;
       this.total$ = this.getTotal();
     } else if (subTotVal) {
-      const discountRate = this.discount.nativeElement.value || 0;
+      const discountRate = this.discount?.nativeElement.value || 0;
       this.discountValue = subTotVal * discountRate / 100;
     }
   }
@@ -307,14 +327,14 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
 
   getProduct(i: number): number {
     // console.log(i);
-    this.listItems$[i] = {...this.listItems$[i], selectedQuantity: this.itms.controls[i].get('selectedQuantity')?.value };
+    this.listItems$[i] = { ...this.listItems$[i], selectedQuantity: this.itms.controls[i].get('selectedQuantity')?.value };
     const product = this.listItems$[i].product = this.listItems$[i].selectedQuantity * this.listItems$[i].price;
     this.itms.controls[i].patchValue({ product: product });
     return product;
   }
 
   getSubtotal(): number {
-    console.log('Subtotal Invokde!');
+    console.log('getSubtotal Invoked!');
     const subTotal = this.listItems$.map(itm => itm.product).reduce((acc, currVal) => acc += currVal, 0);
     // console.log(subTotal);
     return subTotal;

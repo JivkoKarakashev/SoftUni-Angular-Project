@@ -14,7 +14,7 @@ const LONGWEAR_URL = 'http://localhost:3030/jsonstore/longwear';
 export class ClothesService {
   jackets: Jacket[] = [];
   longwear: Longwear[] = [];
-  clothes: (Jacket & Longwear)[] = [];
+  clothes: (Jacket | Longwear)[] = [];
 
   constructor(private http: HttpClient) { }
 

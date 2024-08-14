@@ -27,6 +27,9 @@ import { Jacket } from 'src/app/types/jacket';
 import { Longwear } from 'src/app/types/longwear';
 import { Item } from 'src/app/types/item';
 import { ShoppingCartService } from '../shopping-cart.service';
+import { CartItem } from 'src/app/types/cartItem';
+import { UserForAuth } from 'src/app/types/user';
+import { UserService } from 'src/app/user/user.service';
 
 @Component({
   selector: 'app-product-details',
@@ -54,9 +57,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     CapHat | Belt | Glove | Sunglasses | Watch |
     Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
     BlazerJacket | Waistcoat | TuxedoPartywear | Tie = this.initailItem;
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   private unsubscriptionArray: Subscription[] = [];
+  public user$: UserForAuth | undefined;
   public defImgOpacity = 1;
 
   public form: FormGroup = this.fb.group({
@@ -79,12 +82,18 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       price: ['']
     }),
   });
-  private formInitalValue: FormGroup = this.fb.group({ fgItem: this.fb.group({...this.itemCtrlsGr.value}) });
+  private formInitalValue: FormGroup = this.fb.group({ fgItem: this.fb.group({ ...this.itemCtrlsGr.value }) });
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder, private http: HttpClient, private router: Router, private render: Renderer2, private cartService: ShoppingCartService) { }
+  constructor(private userService: UserService, private route: ActivatedRoute, private fb: FormBuilder, private http: HttpClient, private router: Router, private render: Renderer2, private cartService: ShoppingCartService) { }
 
   @ViewChildren('imgElements') private imgElements!: QueryList<ElementRef>;
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;
+
+  get isLoggedIn(): boolean {
+    // console.log(this.userService.isLoggedIn);
+    // console.log(this.userService.user$);    
+    return this.userService.isLoggedIn;
+  }
 
   get itemCtrlsGr() {
     return this.form.get("fgItem") as FormGroup;
@@ -100,6 +109,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnInit(): void {
+    console.log('Details Page INITIALIZED!');
     const regExp = /^\/catalog\/[a-z]+_?[a-z]+\/[a-z]+_?[a-z]+/g;
     let match: string[] | null = this.router.url.match(regExp);
     // console.log(this.router.url);
@@ -111,7 +121,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
     const { id } = this.route.snapshot.params;
     // console.log(id);
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.cartItms$$.next([...items])
       // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
@@ -144,11 +154,12 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         quantity,
         price,
       });
-      (this.formInitalValue.get('fgItem') as FormGroup).patchValue({...this.itemCtrlsGr.value});
-      console.log({...this.itemCtrlsGr.value});
-      console.log(this.formInitalValue.get('fgItem')?.value);
+      (this.formInitalValue.get('fgItem') as FormGroup).patchValue({ ...this.itemCtrlsGr.value });
+      // console.log({ ...this.itemCtrlsGr.value });
+      // console.log(this.formInitalValue.get('fgItem')?.value);
     });
     this.unsubscriptionArray.push(itemSubscription, cartSubscription);
+    this.user$ = JSON.parse(localStorage?.getItem('userData') as string);
   }
 
   ngAfterViewInit(): void {
@@ -218,11 +229,13 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price } = this.itemCtrlsGr.value;
     const buyed = true;
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, buyed });
-    this.item$.buyed = buyed;
-
-    this.itemCtrlsGr.reset({...this.formInitalValue.get('fgItem')});
-    console.log(this.cartItms$$.value);
+    const product = selectedQuantity * price;
+    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, buyed, product, checked: false });
+    this.item$ = { ...this.item$, buyed: true };
+    this.itemCtrlsGr.reset({ ...this.formInitalValue.get('fgItem')?.value });
+    this.imgElements.forEach(el => el.nativeElement.classList.contains('active') ? this.render.removeClass(el.nativeElement, 'active') : null);
+    this.defImgOpacity = 1;
+    // console.log(this.cartItms$$.value);
   }
 
 }

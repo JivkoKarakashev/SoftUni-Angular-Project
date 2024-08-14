@@ -1,22 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { BlazersJacketsService } from './blazers-jackets.service';
-import { Item } from 'src/app/types/item';
 import { BlazerJacket } from 'src/app/types/blazerJacket';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-blazers-jackets',
   templateUrl: './blazers-jackets.component.html',
   styleUrls: ['./blazers-jackets.component.css']
 })
-export class BlazersJacketsComponent {
+export class BlazersJacketsComponent implements OnInit, OnDestroy {
   public listItems$: BlazerJacket[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
@@ -32,25 +31,21 @@ export class BlazersJacketsComponent {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
-      // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
 
     const blazers_jacketsSubscription = this.blazers_jacketsService.getBlazersJackets().subscribe(blzrs_jcktsObjs => {
       this.loading = false;
       let blazers_jackets = Object.entries(blzrs_jcktsObjs).map(blzr_jckt => blzr_jckt[1]);
-      blazers_jackets.forEach(blzr_jckt => {
-        blzr_jckt.buyed = this.cartItms$$.value.some(itm => itm._id == blzr_jckt._id);
+      blazers_jackets.forEach((blzr_jckt, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == blzr_jckt._id)) {
+          blazers_jackets[idx] = { ...blazers_jackets[idx], buyed: true };
+        }
       });
-      // console.log(blazers_jackets);
-      // console.log(blazers_jackets instanceof(Array));
-      // console.log(blazers_jackets[0].buyed);
-      // this.listItems$ = Object.values(blazers_jackets);
-      // console.log(Object.values(blazers_jackets));
-      this.listItems$ = blazers_jackets;
+      this.listItems$ = [...this.listItems$, ...blazers_jackets];
     });
 
     this.unsubscriptionArray.push(blazers_jacketsSubscription, cartSubscription);
@@ -65,16 +60,12 @@ export class BlazersJacketsComponent {
     });
   }
 
-  public addItemtoCart(e: Event, item: BlazerJacket) {
-    // console.log(e.target);
+  public addItemtoCart(item: BlazerJacket) {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    item.buyed = true;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item);
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }

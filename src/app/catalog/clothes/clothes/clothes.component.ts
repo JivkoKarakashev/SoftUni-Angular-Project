@@ -3,11 +3,11 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { ClothesService } from './clothes.service';
-import { Item } from 'src/app/types/item';
 import { Jacket } from 'src/app/types/jacket';
 import { Longwear } from 'src/app/types/longwear';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-clothes',
@@ -15,16 +15,15 @@ import { UserService } from 'src/app/user/user.service';
   styleUrls: ['./clothes.component.css']
 })
 export class ClothesComponent implements OnInit, OnDestroy {
-  public listItems$: (Jacket & Longwear)[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  public listItems$: (Jacket | Longwear)[] = [];
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
 
 
-  constructor( private userService:UserService, private clothesService: ClothesService, private cartService: ShoppingCartService ) { }
+  constructor(private userService: UserService, private clothesService: ClothesService, private cartService: ShoppingCartService) { }
 
   get isLoggedIn(): boolean {
     // console.log(this.userService.isLoggedIn);
@@ -33,10 +32,9 @@ export class ClothesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
+      this.cartItms$$.next([...items]);
       // console.log(this.cartItms$$.value);
     });
 
@@ -45,20 +43,18 @@ export class ClothesComponent implements OnInit, OnDestroy {
       let [jacketsObjs, longwearObjs] = clothesObjs;
       // console.log(jacketsObjs, longwearObjs);      
       let jackets = Object.entries(jacketsObjs).map(jacket => jacket[1]);
-      jackets.forEach(jckt => {
-        jckt.buyed = this.cartItms$$.value.some(itm => itm._id == jckt._id);
+      jackets.forEach((jckt, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == jckt._id)) {
+          jackets[idx] = {...jackets[idx], buyed: true};
+        }
       });
       let longwaer = Object.entries(longwearObjs).map(lngwear => lngwear[1]);
-      longwaer.forEach(lngwr => {
-        lngwr.buyed = this.cartItms$$.value.some(itm => itm._id == lngwr._id);
+      longwaer.forEach((lngwr, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == lngwr._id)) {
+          longwaer[idx] = {...longwaer[idx], buyed: true};
+        }
       });
-      // console.log(jackets);
-      // console.log(longwaer);
-      // console.log(longwaer instanceof(Array));
-      // console.log(longwaer[0].buyed);
-      // this.listItems$ = Object.values(longwaer);
-      // console.log(Object.values(longwaer));
-      this.listItems$ = jackets.concat(longwaer);
+      this.listItems$ = [...this.listItems$, ...jackets, ...longwaer];
     });
 
     this.unsubscriptionArray.push(clothesSubscription, cartSubscription);
@@ -70,19 +66,15 @@ export class ClothesComponent implements OnInit, OnDestroy {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 2');      
-    }); 
+    });
   }
 
-  public addItemtoCart(e: Event, item: Jacket | Longwear) {
-    // console.log(e.target);
+  public addItemtoCart(item: Jacket | Longwear) {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    item.buyed = true;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item );    
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }

@@ -3,12 +3,12 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { ShoesService } from './shoes.service';
-import { Item } from 'src/app/types/item';
 import { Trainers } from 'src/app/types/trainers';
 import { Boot } from 'src/app/types/boot';
 import { Slippers } from 'src/app/types/slippers';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-shoes',
@@ -16,16 +16,15 @@ import { UserService } from 'src/app/user/user.service';
   styleUrls: ['./shoes.component.css']
 })
 export class ShoesComponent implements OnInit, OnDestroy {
-  public listItems$: (Trainers & Boot & Slippers)[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  public listItems$: (Trainers | Boot | Slippers)[] = [];
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
   public loading: boolean = true;
-  
 
-  constructor( private userService:UserService, private shoesService: ShoesService, private cartService: ShoppingCartService ) { }
+
+  constructor(private userService: UserService, private shoesService: ShoesService, private cartService: ShoppingCartService) { }
 
   get isLoggedIn(): boolean {
     // console.log(this.userService.isLoggedIn);
@@ -34,10 +33,9 @@ export class ShoesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
-      // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
 
@@ -46,25 +44,24 @@ export class ShoesComponent implements OnInit, OnDestroy {
       let [trainersObjs, bootsObjs, slippersObjs] = shoesObjs;
       // console.log(trainersObjs, bootsObjs, slippersObjs);
       let trainers = Object.entries(trainersObjs).map(trainers => trainers[1]);
-      trainers.forEach(tr => {
-        tr.buyed = this.cartItms$$.value.some(itm => itm._id == tr._id);
+      trainers.forEach((tr, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == tr._id)) {
+          trainers[idx] = { ...trainers[idx], buyed: true };
+        }
       });
       let boots = Object.entries(bootsObjs).map(boots => boots[1]);
-      boots.forEach(bts => {
-        bts.buyed = this.cartItms$$.value.some(itm => itm._id == bts._id);
+      boots.forEach((bts, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == bts._id)) {
+          boots[idx] = { ...boots[idx], buyed: true };
+        }
       });
       let slippers = Object.entries(slippersObjs).map(slippers => slippers[1]);
-      slippers.forEach(slps => {
-        slps.buyed = this.cartItms$$.value.some(itm => itm._id == slps._id);
+      slippers.forEach((slps,idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == slps._id)) {
+          slippers[idx] = { ...slippers[idx], buyed: true };
+        }
       });
-      // console.log(trainers);
-      // console.log(boots);
-      // console.log(slippers);
-      // console.log(slippers instanceof(Array));
-      // console.log(slippers[0].buyed);
-      // this.listItems$ = Object.values(slippers);
-      // console.log(Object.values(slippers));
-      this.listItems$ = trainers.concat(boots, slippers);
+      this.listItems$ = [...this.listItems$, ...trainers, ...boots, ...slippers];
     });
 
     this.unsubscriptionArray.push(shoesSubscription, cartSubscription);
@@ -76,19 +73,15 @@ export class ShoesComponent implements OnInit, OnDestroy {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 2');      
-    }); 
+    });
   }
 
-  public addItemtoCart(e: Event, item: Trainers | Boot | Slippers) {
-    // console.log(e.target);
-    item.buyed = true;
+  public addItemtoCart(item: Trainers | Boot | Slippers) {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item );    
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }

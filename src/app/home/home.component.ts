@@ -4,7 +4,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import config from '../config/carouselSlideConfig';
 import { HomeService } from './home.service';
 import { ShoppingCartService } from '../shared/shopping-cart.service';
-import { Item } from '../types/item';
+import { CartItem } from '../types/cartItem';
 
 import { Jacket } from '../types/jacket';
 import { Longwear } from '../types/longwear';
@@ -41,25 +41,24 @@ interface slideImg {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  public recentTwoClothes$: (Jacket & Longwear)[] = [];
-  public recentTwoShoes$: (Trainers & Boot & Slippers)[] = [];
-  public recentTwoAccessories$: (CapHat & Belt & Glove & Sunglasses & Watch)[] = [];
-  public recentTwoSportswear$: (Gym & Running & SkiSnowboard & SwimSurf & Outdoors & BottomsLeggings & Sweater)[] = [];
-  public recentTwoSuits_tailoring$: (BlazerJacket & Waistcoat & TuxedoPartywear & Tie)[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  public recentTwoClothes$: (Jacket | Longwear)[] = [];
+  public recentTwoShoes$: (Trainers | Boot | Slippers)[] = [];
+  public recentTwoAccessories$: (CapHat | Belt | Glove | Sunglasses | Watch)[] = [];
+  public recentTwoSportswear$: (Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater)[] = [];
+  public recentTwoSuits_tailoring$: (BlazerJacket | Waistcoat | TuxedoPartywear | Tie)[] = [];
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public loading: boolean = true;
-  
-  public clothesSlides: slideImg [] = [];
-  public shoesSlides: slideImg [] = [];
-  public accessoriesSlides: slideImg [] = [];
-  public sportswearSlides: slideImg [] = [];
-  public suits_tailoringSlides: slideImg [] = [];
+
+  public clothesSlides: slideImg[] = [];
+  public shoesSlides: slideImg[] = [];
+  public accessoriesSlides: slideImg[] = [];
+  public sportswearSlides: slideImg[] = [];
+  public suits_tailoringSlides: slideImg[] = [];
   public slideConfig = config;
 
-  constructor(private homeService: HomeService, private cartService: ShoppingCartService) {}
+  constructor(private homeService: HomeService, private cartService: ShoppingCartService) { }
 
   ngOnInit(): void {
     const recentTwoItemsSubscription = this.homeService.getRecentTwoItems().subscribe(recentTwoObjs => {
@@ -157,29 +156,30 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
       // console.log(this.suits_tailoringSlides);
       // console.log(this.clothesSlides);
-      this.recentTwoClothes$ = recentTwoJackets.concat(recentTwoLongwear);
-      this.recentTwoShoes$ = recentTwoTrainers.concat(recentTwoBoots, recentTwoSlippers);
-      this.recentTwoAccessories$ = recentTwoCaps_hats.concat(recentTwoBelts, recentTwoGloves, recentTwoSunglasses, recentTwoWatches);
-      this.recentTwoSportswear$ = recentTwoGym.concat(recentTwoRunnings, recentTwoSki_snowboard, recentTwoSwim_surf, recentTwoOutdoors, recentTwoBottoms_leggings, recentTwoSweaters);
-      this.recentTwoSuits_tailoring$ = recentTwoBlazers_jackets.concat(recentTwoWaistcoats, recentTwoTuxedos_partywear, recentTwoTies);
+      this.recentTwoClothes$ = [...this.recentTwoClothes$, ...recentTwoJackets, ...recentTwoLongwear];
+      this.recentTwoShoes$ = [...this.recentTwoShoes$, ...recentTwoTrainers, ...recentTwoBoots, ...recentTwoSlippers];
+      this.recentTwoAccessories$ = [...this.recentTwoAccessories$, ...recentTwoCaps_hats, ...recentTwoBelts, ...recentTwoGloves, ...recentTwoSunglasses, ...recentTwoWatches];
+      this.recentTwoSportswear$ = [...this.recentTwoSportswear$, ...recentTwoGym, ...recentTwoRunnings, ...recentTwoSki_snowboard, ...recentTwoSwim_surf, ...recentTwoOutdoors, ...recentTwoBottoms_leggings, ...recentTwoSweaters];
+      this.recentTwoSuits_tailoring$ = [...this.recentTwoSuits_tailoring$ ,...recentTwoBlazers_jackets, ...recentTwoWaistcoats, ...recentTwoTuxedos_partywear, ...recentTwoTies];
+      // console.log(this.recentTwoShoes$);
       // console.log(recentTwoGymObjs);
     });
     // console.log(this.suits_tailoringSlides);
 
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
     });
     this.unsubscriptionArray.push(recentTwoItemsSubscription, cartSubscription);
   }
-  
+
   ngOnDestroy(): void {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');      
-    }); 
+    });
   }
-  
+
   public trackById(index: number, item: any): string {
     // console.log(item.id);
     return item.id;

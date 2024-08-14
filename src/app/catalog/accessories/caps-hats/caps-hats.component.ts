@@ -3,10 +3,10 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { CapsHatsService } from './caps-hats.service';
-import { Item } from 'src/app/types/item';
 import { CapHat } from 'src/app/types/capHat';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-caps-hats',
@@ -15,8 +15,7 @@ import { UserService } from 'src/app/user/user.service';
 })
 export class CapsHatsComponent implements OnInit, OnDestroy {
   public listItems$: CapHat[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
@@ -32,25 +31,21 @@ export class CapsHatsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
-      // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
 
     const caps_hatsSubscription = this.caps_hatsService.getCapsHats().subscribe(caps_hatsObjs => {
       this.loading = false;
       let caps_hats = Object.entries(caps_hatsObjs).map(cps_hts => cps_hts[1]);
-      caps_hats.forEach(cps_hts => {
-        cps_hts.buyed = this.cartItms$$.value.some(itm => itm._id == cps_hts._id);
+      caps_hats.forEach((cp_ht, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == cp_ht._id)) {
+          caps_hats[idx] = { ...caps_hats[idx], buyed: true };
+        }
       });
-      // console.log(caps_hats);
-      // console.log(caps_hats instanceof(Array));
-      // console.log(caps_hats[0].buyed);
-      // this.listItems$ = Object.values(caps_hats);
-      // console.log(Object.values(caps_hats));
-      this.listItems$ = caps_hats;
+      this.listItems$ = [...this.listItems$, ...caps_hats];
     });
 
     this.unsubscriptionArray.push(caps_hatsSubscription, cartSubscription);
@@ -65,16 +60,12 @@ export class CapsHatsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public addItemtoCart(e: Event, item: CapHat) {
-    // console.log(e.target);
+  public addItemtoCart(item: CapHat) {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    item.buyed = true;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item);
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }

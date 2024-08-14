@@ -3,10 +3,10 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { BeltsService } from './belts.service';
-import { Item } from 'src/app/types/item';
 import { Belt } from 'src/app/types/belt';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-belts',
@@ -15,8 +15,7 @@ import { UserService } from 'src/app/user/user.service';
 })
 export class BeltsComponent implements OnInit, OnDestroy {
   public listItems$: Belt[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
@@ -32,25 +31,21 @@ export class BeltsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
-      // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
 
     const beltsSubscription = this.beltsService.getBelts().subscribe(beltsObjs => {
       this.loading = false;
       let belts = Object.entries(beltsObjs).map(bts => bts[1]);
-      belts.forEach(bts => {
-        bts.buyed = this.cartItms$$.value.some(itm => itm._id == bts._id);
+      belts.forEach((bt, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == bt._id)) {
+          belts[idx] = { ...belts[idx], buyed: true };
+        }
       });
-      // console.log(belts);
-      // console.log(belts instanceof(Array));
-      // console.log(belts[0].buyed);
-      // this.listItems$ = Object.values(belts);
-      // console.log(Object.values(belts));
-      this.listItems$ = belts;
+      this.listItems$ = [...this.listItems$, ...belts];
     });
 
     this.unsubscriptionArray.push(beltsSubscription, cartSubscription);
@@ -65,16 +60,12 @@ export class BeltsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public addItemtoCart(e: Event, item: Belt) {
-    // console.log(e.target);
+  public addItemtoCart(item: Belt) {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    item.buyed = true;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item);
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }

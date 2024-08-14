@@ -1,22 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { GymService } from './gym.service';
-import { Item } from 'src/app/types/item';
 import { Gym } from 'src/app/types/gym';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-gym',
   templateUrl: './gym.component.html',
   styleUrls: ['./gym.component.css']
 })
-export class GymComponent {
+export class GymComponent implements OnInit, OnDestroy {
   public listItems$: Gym[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
@@ -32,25 +31,21 @@ export class GymComponent {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
-      // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
 
     const gymSubscription = this.gymService.getGym().subscribe(gymObjs => {
       this.loading = false;
       let gym = Object.entries(gymObjs).map(gym => gym[1]);
-      gym.forEach(gm => {
-        gm.buyed = this.cartItms$$.value.some(itm => itm._id == gm._id);
+      gym.forEach((gm, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == gm._id)) {
+          gym[idx] = { ...gym[idx], buyed: true };
+        }
       });
-      // console.log(gym);
-      // console.log(gym instanceof(Array));
-      // console.log(gym[0].buyed);
-      // this.listItems$ = Object.values(gym);
-      // console.log(Object.values(gym));
-      this.listItems$ = gym;
+      this.listItems$ = [...this.listItems$, ...gym];
     });
 
     this.unsubscriptionArray.push(gymSubscription, cartSubscription);
@@ -65,16 +60,12 @@ export class GymComponent {
     });
   }
 
-  public addItemtoCart(e: Event, item: Gym) {
-    // console.log(e.target);
+  public addItemtoCart(item: Gym) {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    item.buyed = true;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item);
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }

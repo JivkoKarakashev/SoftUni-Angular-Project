@@ -1,22 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
 import { GlovesService } from './gloves.service';
-import { Item } from 'src/app/types/item';
 import { Glove } from 'src/app/types/glove';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { CartItem } from 'src/app/types/cartItem';
 
 @Component({
   selector: 'app-gloves',
   templateUrl: './gloves.component.html',
   styleUrls: ['./gloves.component.css']
 })
-export class GlovesComponent {
+export class GlovesComponent implements OnInit, OnDestroy {
   public listItems$: Glove[] = [];
-  private cartItms$$ = new BehaviorSubject<Item[]>([]);
-  public cartItms$ = this.cartItms$$.asObservable();
+  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
@@ -32,25 +31,21 @@ export class GlovesComponent {
   }
 
   ngOnInit(): void {
-    const cartSubscription = this.cartService.items$.subscribe(items => {
+    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
-      // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
 
     const glovesSubscription = this.glovesService.getGloves().subscribe(glovesObjs => {
       this.loading = false;
       let gloves = Object.entries(glovesObjs).map(glvs => glvs[1]);
-      gloves.forEach(glvs => {
-        glvs.buyed = this.cartItms$$.value.some(itm => itm._id == glvs._id);
+      gloves.forEach((glv, idx) => {
+        if (this.cartItms$$.value.some(itm => itm._id == glv._id)) {
+          gloves[idx] = { ...gloves[idx], buyed: true };
+        }
       });
-      // console.log(gloves);
-      // console.log(gloves instanceof(Array));
-      // console.log(gloves[0].buyed);
-      // this.listItems$ = Object.values(gloves);
-      // console.log(Object.values(gloves));
-      this.listItems$ = gloves;
+      this.listItems$ = [...this.listItems$, ...gloves];
     });
 
     this.unsubscriptionArray.push(glovesSubscription, cartSubscription);
@@ -65,16 +60,12 @@ export class GlovesComponent {
     });
   }
 
-  public addItemtoCart(e: Event, item: Glove) {
-    // console.log(e.target);
+  public addItemtoCart(item: Glove) {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
-    item.buyed = true;
-    const el = e.target as HTMLSelectElement;
-    // console.log(item._id);
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$.splice(idx, 1, item);
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
-    // console.log(this.cartItms$);
+    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);
   }
