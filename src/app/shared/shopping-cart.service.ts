@@ -45,10 +45,12 @@ export class ShoppingCartService {
     // console.log(this.cartItems$$.value);
   }
 
-  removeCartItems(ids: string[]) {
-    // console.log(ids);
-    const currItemsArr = [...this.cartItems$$.value];
-    const newItemsArr = currItemsArr.filter(itm => !ids.includes(itm._id));
+  removeCartItems(idxArr: number[]) {
+    // console.log(idxArr);
+    const newItemsArr = [...this.cartItems$$.value];
+    for (let i = idxArr.length - 1; i >= 0; i--) {
+      newItemsArr.splice(idxArr[i], 1);
+    }
     // console.log(newItemsArr);
     this.cartItems$$.next(newItemsArr);
     // console.log(this.items$$.value);

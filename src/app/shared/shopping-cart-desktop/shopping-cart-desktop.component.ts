@@ -222,13 +222,11 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     if (!this.listItems$.length) {
       return;
     }
-    const ids = this.listItems$.filter(itm => itm.checked).map(itm => itm._id);
     const notSelected = this.listItems$.filter((itm) => !itm.checked);
     const idxArr: number[] = [];
     this.listItems$.forEach((itm, idx) => {
       if (itm.checked) {
         idxArr.push(idx);
-        // this.itms.removeAt(idx);
       }
     });
     for (let i = idxArr.length - 1; i >= 0; i--) {
@@ -240,7 +238,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     // console.log(idxArr);
     // console.log(this.itms.value);
     this.cartItemsSubscription.unsubscribe();
-    this.cartService.removeCartItems(ids);
+    this.cartService.removeCartItems(idxArr);
   }
 
   selectColor(e: Event, i: number): void {
