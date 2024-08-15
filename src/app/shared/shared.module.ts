@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ShoppingCartDesktopComponent } from './shopping-cart-desktop/shopping-cart-desktop.component';
 import { LoaderComponent } from './loader/loader.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { RouterLink } from '@angular/router';
 
 
 
@@ -15,7 +16,7 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
     ProductDetailsComponent
   ],
   imports: [
-    CommonModule, FormsModule, ReactiveFormsModule
+    CommonModule, FormsModule, ReactiveFormsModule, RouterLink
   ],
   exports: [ShoppingCartDesktopComponent, LoaderComponent, ProductDetailsComponent]
 })

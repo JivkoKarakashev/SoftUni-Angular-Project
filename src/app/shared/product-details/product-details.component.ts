@@ -58,8 +58,10 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
     BlazerJacket | Waistcoat | TuxedoPartywear | Tie = this.initailItem;
   private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
+  public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user$: UserForAuth | undefined;
+  public loading: boolean = true;
   public defImgOpacity = 1;
 
   public form: FormGroup = this.fb.group({
@@ -122,12 +124,14 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const { id } = this.route.snapshot.params;
     // console.log(id);
     const cartSubscription = this.cartService.getCartItems().subscribe(items => {
+      this.buyedItems = items.length;
       this.cartItms$$.next([...items])
       // this.cartItms$ = items;
       // console.log(this.cartItms$$.value);
     });
     const itemSubscription = this.getItem(url, id).subscribe(itm => {
       // this.item$ = itm;
+      this.loading = false;
       const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = itm;
       const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
       this.item$ = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, buyed }

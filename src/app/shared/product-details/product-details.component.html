@@ -1,72 +1,82 @@
-Product details WORK!
-<!-- <img [src]="item$?.image" alt=""> -->
-<section class="section-product-details">
-    <div class="container">
-        <!-- Left Column / Headphones Image -->
-        <div class="left-column">
-            <!-- <div class="image"> -->
-                <img #stockImg [style.opacity]="defImgOpacity" class="def" alt="default image" [src]="item$.image">
-            <!-- </div> -->
-            <ng-container *ngFor=" let imgUrl of item$.altImages; let i = index; trackBy: trackByUrl">
-                <img #imgElements [attr.data-image]="item$.color[i]" [src]="imgUrl" alt="color item" [id]="imgUrl">
-            </ng-container>
-        </div>
+<ng-container *ngIf="loading">
+    <app-loader />
+</ng-container>
 
-        <!-- Right Column -->
-        <div class="right-column">
-
-            <!-- Product Description -->
-            <div class="product-description">
-                <span>{{item$.subCat}}</span>
-                <h1>{{item$.brand}}</h1>
-                <p>{{item$.description}}</p>
-            </div>
-
-            <!-- Product Configuration -->
-            <div class="product-configuration">
-                <form [formGroup]="form" (ngSubmit)="addItemtoCart()">
-                    <fieldset formGroupName="fgItem">
-                        <!-- Product Color -->
-                        <div class="product-color">
-                            <span>Color</span>
-                            <div class="color-choose">
-                                <div *ngFor="let col of item$.color; let i = index" [id]="col+i">
-                                    <input formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectColor()" required>
-                                    <label [for]="col"><span #spanColorElements></span></label>
+<div class="wrapper" *ngIf="!loading">
+    <div class="left-wrapper">
+        <section class="section-product-details">
+            <div class="container">
+                <!-- Left Column / Product Image -->
+                <div class="left-column">
+                    <img #stockImg [style.opacity]="defImgOpacity" class="def" alt="default image" [src]="item$.image">
+                    <ng-container *ngFor=" let imgUrl of item$.altImages; let i = index; trackBy: trackByUrl">
+                        <img #imgElements [attr.data-image]="item$.color[i]" [src]="imgUrl" alt="color item" [id]="imgUrl">
+                    </ng-container>
+                </div>
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- Product Description -->
+                    <div class="product-description">
+                        <span>{{item$.subCat}}</span>
+                        <h1>{{item$.brand}}</h1>
+                        <p>{{item$.description}}</p>
+                    </div>
+                    <!-- Product Configuration -->
+                    <div class="product-configuration">
+                        <form [formGroup]="form" (ngSubmit)="addItemtoCart()">
+                            <fieldset formGroupName="fgItem">
+                                <!-- Product Color -->
+                                <div class="product-color">
+                                    <span>Color</span>
+                                    <div class="color-choose">
+                                        <div *ngFor="let col of item$.color; let i = index" [id]="col+i">
+                                            <input formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectColor()" required>
+                                            <label [for]="col"><span #spanColorElements></span></label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                                <!-- Size Configuration -->
+                                <div class="size-config">
+                                    <span>Size configuration</span>
 
-                        <!-- Size Configuration -->
-                        <div class="size-config">
-                            <span>Size configuration</span>
-
-                            <div class="size-choose">
-                                <select class="itm" formControlName="selectedSize" name="selectedSize" required>
-                                    <option value="">select size</option>
-                                    <option *ngFor="let sz of item$.size; let i = index;" [value]="sz">{{sz}}</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Quantity Configuration -->
-                        <div class="quantity-config">
-                            <span>Quantity configuration</span>
-                            <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="item$.quantity" required>
-                        </div>
-
-                        <!-- Product Pricing -->
-                        <div class="product-price">
-                            <span>${{item$.price}}</span>
-                            <ng-container *ngIf="isLoggedIn">
-                                <input *ngIf="item$._ownerId != user$?._id" [disabled]="form.invalid" type="submit" class="cart-btn" value="Add to cart">
-                                <li *ngIf="item$._ownerId == user$?._id" class="button edit"><a href="javascript:void(0)">Edit</a></li>
-                                <li *ngIf="item$._ownerId == user$?._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
-                            </ng-container>
-                        </div>
-                    </fieldset>
-                </form>
+                                    <div class="size-choose">
+                                        <select class="itm" formControlName="selectedSize" name="selectedSize" required>
+                                            <option value="">select size</option>
+                                            <option *ngFor="let sz of item$.size; let i = index;" [value]="sz">{{sz}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Quantity Configuration -->
+                                <div class="quantity-config">
+                                    <span>Quantity configuration</span>
+                                    <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="item$.quantity" required>
+                                </div>
+                                <!-- Product Pricing -->
+                                <div class="product-price">
+                                    <span>${{item$.price}}</span>
+                                    <ng-container *ngIf="isLoggedIn">
+                                        <input *ngIf="item$._ownerId != user$?._id" [disabled]="form.invalid" type="submit" class="cart-btn" value="Add to cart">
+                                        <div class="buttons">
+                                            <ul class="buttons">
+                                                <li *ngIf="item$._ownerId == user$?._id" class="button edit"><a href="javascript:void(0)">Edit</a></li>
+                                                <li *ngIf="item$._ownerId == user$?._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
+                                            </ul>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
             </div>
+        </section>
+    </div>
+    <div class="right-wrapper">
+        <div class="sticky">
+            <a class="cart" routerLink="/cart">
+                <span class="counter">{{buyedItems}}</span><i class="fi fi-rr-shopping-cart-check"></i>
+            </a>
         </div>
     </div>
-</section>
+</div>
