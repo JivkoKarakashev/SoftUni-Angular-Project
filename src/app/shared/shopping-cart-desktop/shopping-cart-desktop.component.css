@@ -222,3 +222,11 @@ div.buttons {
         }
     }
 }
+
+.modal-body div.alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f44336;
+    color: white;
+}

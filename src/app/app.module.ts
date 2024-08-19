@@ -9,6 +9,7 @@ import { MainComponent } from './main/main.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { appHttpInterceptorProvider } from './app-http.interceptor';
+import { httpRESTInterceptorProvider } from './interceptors/http-rest.interceptor';
 import { AuthenticateComponent } from './authenticate/authenticate.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 
@@ -27,7 +28,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     AppRoutingModule,
     SlickCarouselModule
   ],
-  providers: [appHttpInterceptorProvider],
+  providers: [appHttpInterceptorProvider, httpRESTInterceptorProvider],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

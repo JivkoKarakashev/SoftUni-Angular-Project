@@ -29,8 +29,8 @@
                                 <div class="product-color">
                                     <span>Color</span>
                                     <div class="color-choose">
-                                        <div *ngFor="let col of item$.color; let i = index" [id]="col+i">
-                                            <input formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectColor()" required>
+                                        <div [ngClass]="{disabled: item$._ownerId == user$?._id}" *ngFor="let col of item$.color; let i = index" [id]="col+i">
+                                            <input [readonly]="item$._ownerId == user$?._id" formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectColor()" required>
                                             <label [for]="col"><span #spanColorElements></span></label>
                                         </div>
                                     </div>
@@ -40,7 +40,7 @@
                                     <span>Size configuration</span>
 
                                     <div class="size-choose">
-                                        <select class="itm" formControlName="selectedSize" name="selectedSize" required>
+                                        <select [ngClass]="{disabled: item$._ownerId == user$?._id}" class="itm" formControlName="selectedSize" name="selectedSize" required>
                                             <option value="">select size</option>
                                             <option *ngFor="let sz of item$.size; let i = index;" [value]="sz">{{sz}}
                                             </option>
@@ -50,7 +50,7 @@
                                 <!-- Quantity Configuration -->
                                 <div class="quantity-config">
                                     <span>Quantity configuration</span>
-                                    <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="item$.quantity" required>
+                                    <input [readonly]="item$._ownerId == user$?._id" class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="item$.quantity" required>
                                 </div>
                                 <!-- Product Pricing -->
                                 <div class="product-price">
@@ -65,6 +65,7 @@
                                         </div>
                                     </ng-container>
                                 </div>
+                                <p *ngIf="item$._ownerId == user$?._id" class="owner">You are owner! You can't purchase this Item!</p>
                             </fieldset>
                         </form>
                     </div>

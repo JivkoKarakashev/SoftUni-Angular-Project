@@ -5,9 +5,11 @@ import { Shipping } from '../types/shipping';
 import { Discount } from '../types/discount';
 import { CartItem } from '../types/cartItem';
 import { CheckForItemType } from './utils/checkForItemType';
+import { Order } from '../types/order';
 
 const SHIPPINGMETHODS_URL = 'http://localhost:3030/jsonstore/shipping';
 const DISCOUNTS_URL = 'http://localhost:3030/jsonstore/discounts';
+const ORDER_URL = 'http://localhost:3030/data/order';
 
 @Injectable({
   providedIn: 'root'
@@ -65,5 +67,18 @@ export class ShoppingCartService {
 
   emptyCart(): void {
     this.cartItems$$.next([]);
+  }
+
+  placeOrder(
+    purchasedItems: CartItem[],
+    subtotal: number,
+    discount: Discount,
+    discountValue: number,
+    shippingMethod: Shipping,
+    shippingValue: number,
+    total: number): Observable<Order> {
+    const body = JSON.stringify({ purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total });
+    // console.log(purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total);
+    return this.http.post<Order>(ORDER_URL, body);
   }
 }

@@ -1,13 +1,16 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, catchError, of } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { ShoppingCartService } from '../shopping-cart.service';
 import { Shipping } from 'src/app/types/shipping';
 import { Discount } from 'src/app/types/discount';
 import { InvertColor } from '../utils/invertColor';
 import { CartItem } from 'src/app/types/cartItem';
+import { HttpError } from 'src/app/types/httpError';
+import { UserService } from 'src/app/user/user.service';
 
 type MyVoid = () => void;
 
@@ -28,8 +31,16 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   public loading: boolean = true;
 
   public shippingMethods$: Shipping[] = [];
+  private selectedShippingMethod$: Shipping = {
+    name: '',
+    value: NaN
+  }
   public shippingValue: number = 0;
   public discountCodes$: Discount[] = [];
+  private selectedDiscountOption$: Discount = {
+    code: '',
+    rate: NaN
+  };
   public discountValue: number = 0;
   public availablePurchaseServices: (Discount | Shipping)[] = [];
 
@@ -41,8 +52,9 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     shipping: ['', [Validators.required]],
     discount: ['', [Validators.required]],
   });
+  public httpError: HttpError = {};
 
-  constructor(private render: Renderer2, private location: Location, private cartService: ShoppingCartService, private fb: FormBuilder, private invertColor: InvertColor) { }
+  constructor(private render: Renderer2, private location: Location, private cartService: ShoppingCartService, private fb: FormBuilder, private invertColor: InvertColor, private router: Router, private userService: UserService) { }
 
   @ViewChild('modal') private modal!: ElementRef;
   @ViewChild('closeBtn') private closeBtn!: ElementRef;
@@ -104,7 +116,7 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
           product,
           checked
         });
-        this.listItems$.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize : selectedSize || '', color, selectedColor: selectedColor || '', quantity, selectedQuantity: selectedQuantity || 0, price, buyed, product, checked });
+        this.listItems$.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: selectedSize || '', color, selectedColor: selectedColor || '', quantity, selectedQuantity: selectedQuantity || 0, price, buyed, product, checked });
         this.itms.push(rowItm);
       });
       // console.log(this.listItems$)
@@ -275,8 +287,12 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   selectSize(i: number): void {
     this.listItems$[i] = { ...this.listItems$[i], selectedSize: this.itms.controls[i].get('selectedSize')?.value };
   }
-  selectShipping(): void {
+  selectShipping(e: Event): void {
     this.shippingValue = this.shippingVal;
+    const el = e.target as HTMLSelectElement;
+    const idx = el.selectedIndex - 1;
+    const { name, value } = this.shippingMethods$[idx];
+    this.selectedShippingMethod$ = { ...this.selectedShippingMethod$, name: name, value: value };
     // console.log(this.shippingVal);
     this.total$ = this.getTotal();
   }
@@ -285,6 +301,10 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     console.log('SubTotalVal Invoked!', subTotVal);
     if (e) {
       const el = e.target as HTMLSelectElement;
+      const idx = el.selectedIndex - 1;
+      const { code, rate } = this.discountCodes$[idx]
+      this.selectedDiscountOption$ = { ...this.selectedDiscountOption$, code: code, rate: rate };
+      ////
       const discountRate = Number(el.value);
       const discountValue = this.subTotal$.value * discountRate / 100;
       this.discountValue = discountValue;
@@ -296,17 +316,34 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
   }
 
   purchase() {
-    console.log(!this.listItems$.length);
+    // console.log(!this.listItems$.length);
     if (this.form.invalid || !this.listItems$.length) {
       return;
     }
-    console.log(this.form.value);
-    console.log(this.listItems$);
-    console.log(this.form.get('itms')?.value);
-    console.log(this.subTotal$.value);
-    console.log(this.discountValue);
-    console.log(this.form.get('shipping')?.value);
-    console.log(this.total$);
+    const purchasedItems: CartItem[] = this.form.get('itms')?.value;
+    const subtotal: number = this.subTotal$.value;
+    const discount: Discount = this.selectedDiscountOption$;
+    const discountValue: number = this.discountValue;
+    const shippingMethod: Shipping = this.selectedShippingMethod$;
+    const shippingValue: number = this.shippingValue;
+    const total: number = this.total$;
+    this.cartService.placeOrder(purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total).pipe(
+      catchError((err) => {
+        // console.log(err);
+        this.httpError = err;
+        console.log(err);
+        return of(err);
+      })
+    ).subscribe(order => {
+      console.log(order);
+    });
+    // console.log(this.form.value);
+    // console.log(this.listItems$);
+    // console.log(this.form.get('itms')?.value);
+    // console.log(this.subTotal$.value);
+    // console.log(this.discountValue);
+    // console.log(this.form.get('shipping')?.value);
+    // console.log(this.total$);
   }
 
   removeItm(ItmIdx: number) {
@@ -345,6 +382,12 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     console.log('getTotal invoked!');
     const total = this.total$ = this.subTotal$.value - this.discountValue + this.shippingValue;
     return total;
+  }
+
+  logout() {
+    this.cartService.emptyCart();
+    this.userService.logout();
+    this.router.navigate(['/auth/login']);
   }
 
   public trackById(index: number, item: CartItem): string {

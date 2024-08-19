@@ -20,6 +20,9 @@
                 <ng-container *ngIf="loading">
                     <app-loader />
                 </ng-container>
+                <ng-container *ngIf="httpError?.error">
+                    <div class="alert">{{httpError.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div>
+                </ng-container>
                 <form [formGroup]="form" (ngSubmit)="purchase()"  *ngIf="!loading">
                     <fieldset>
                         <div class="label">
@@ -76,7 +79,7 @@
                         </div>
                         <div class="shipping">
                             <span class="title">
-                                <select class="shipping" formControlName="shipping" name="shipping" (change)="selectShipping()" required>
+                                <select class="shipping" formControlName="shipping" name="shipping" (change)="selectShipping($event)" required>
                                     <option value="">shipping method</option>
                                     <option *ngFor="let method of shippingMethods$; let i = index;" [value]="method.value">{{method.name}} - ${{method.value.toFixed(2)}}</option>
                                 </select>

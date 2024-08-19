@@ -10,7 +10,7 @@ export class UserService implements OnDestroy {
   private user$$ = new BehaviorSubject<UserForAuth | undefined>(undefined);
   public user$ = this.user$$.asObservable();
 
-  private user: UserForAuth | undefined;
+  private user: UserForAuth | undefined = undefined;
   private userSubscription: Subscription
 
   public get isLoggedIn(): boolean {
@@ -22,7 +22,9 @@ export class UserService implements OnDestroy {
   }
 
   public set setUser(userData: UserForAuth) {
-    this.user = userData
+    const { _id, accessToken, email, username } = userData;
+    this.user = { ...this.user, _id, accessToken, email, username };
+    this.user$$.next({ ...this.user$$, _id, accessToken, email, username });
   }
 
   constructor(private http: HttpClient) {
@@ -42,10 +44,10 @@ export class UserService implements OnDestroy {
         // console.log(user);        
         // console.log(this.user$$.value);
       }),
-      catchError((err) => {
-        // console.log(err);
-        throw err;
-      })
+        catchError((err) => {
+          // console.log(err);
+          throw err;
+        })
       );
   }
 
@@ -65,9 +67,9 @@ export class UserService implements OnDestroy {
   }
 
   logout() {
-    this.http.get('http://localhost:3030/users/logout', {});    
-    this.user$$.next(undefined);     
-    localStorage.removeItem('userData');    
+    this.http.get('http://localhost:3030/users/logout', {});
+    this.user$$.next(undefined);
+    localStorage.removeItem('userData');
   }
 
   ngOnDestroy(): void {

@@ -285,11 +285,25 @@ input[type='submit']:disabled {
     cursor: not-allowed;
 }
 
-/* p.buyed {
+p.owner {
     background-color: #890000;
     color: #fff;
     text-align: center;
-} */
+}
+
+input[type='number']:read-only,
+input[type='number']:read-only:focus,
+input[type='radio']:read-only,
+input[type='radio']:read-only:focus,
+select.disabled,
+div.disabled {
+    outline: none;
+    outline-width: 0;
+    border: .2em solid #890000;
+    background-color: #696969;
+    cursor: not-allowed;
+    pointer-events: none;
+}
 
 div.buttons {
     display: flex;
@@ -305,11 +319,11 @@ div.buttons {
 
         & li.button {
             padding: .3em .5em;
-            background-color: #252525;
+            background-color: #000;
             border-radius: 0.4em;
 
             & a {
-                color: #cc5656;
+                color: #fff;
             }
         }
 

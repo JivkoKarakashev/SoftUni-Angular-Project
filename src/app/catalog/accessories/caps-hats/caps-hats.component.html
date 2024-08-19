@@ -29,6 +29,7 @@
                                     </ul>
                                 </div>
                                 <p *ngIf="item.buyed" [ngClass]="{buyed: item.buyed}">Already in cart</p>
+                                <p *ngIf="item._ownerId == user$?._id" [ngClass]="{owner: item._ownerId == user$?._id}">You are owner! You can't purchase this Item!</p>
                             </ng-container>
                         </li>
         
@@ -36,7 +37,6 @@
                 </div>
             </div>
         </section>
-
     </div>
     <div class="right-wrapper">
         <div class="sticky">
