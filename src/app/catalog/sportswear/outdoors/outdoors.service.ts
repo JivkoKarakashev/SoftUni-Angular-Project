@@ -1,8 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Outdoors } from 'src/app/types/outdoors';
 
-const URL = 'http://localhost:3030/jsonstore/outdoors';
+import { Outdoors } from 'src/app/types/outdoors';
+import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+
+const URL = 'http://localhost:3030/data/outdoors';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,7 @@ export class OutdoorsService {
   constructor(private http: HttpClient) { }
 
   getOutdoors() {
-    return this.http.get<Outdoors[]>(URL);
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<Outdoors[]>(URL, { headers });
   }
 }

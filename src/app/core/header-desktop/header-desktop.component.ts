@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { catchError, of } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
+import { HttpError } from 'src/app/types/httpError';
 import { UserService } from 'src/app/user/user.service';
 
 @Component({
@@ -10,6 +12,7 @@ import { UserService } from 'src/app/user/user.service';
   styleUrls: ['./header-desktop.component.css']
 })
 export class HeaderDesktopComponent implements OnInit {
+  public httpError: HttpError = {};
 
   constructor(private userService: UserService, private router: Router, private cartService: ShoppingCartService) {}
 
@@ -30,8 +33,18 @@ export class HeaderDesktopComponent implements OnInit {
   }
 
   logout() {
-    this.cartService.emptyCart();
-    this.userService.logout();
-    this.router.navigate(['/auth/login']);
+    this.userService.logout().pipe(
+      catchError((err) => {
+        console.log(err);
+        this.httpError = err;        
+        return of(err);
+      })
+      ).subscribe((res) => {
+        if (res == this.httpError) {
+          return;
+        }
+        this.cartService.emptyCart();
+        this.router.navigate(['/auth/login']);        
+      });
   }
 }

@@ -1,8 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TuxedoPartywear } from 'src/app/types/tuxedoPartywear';
 
-const URL = 'http://localhost:3030/jsonstore/tuxedos_partywear';
+import { TuxedoPartywear } from 'src/app/types/tuxedoPartywear';
+import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+
+const URL = 'http://localhost:3030/data/tuxedos_partywear';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,7 @@ export class TuxedosPartywearService {
   constructor(private http: HttpClient) { }
 
   getTuxedosPartywear() {
-    return this.http.get<TuxedoPartywear[]>(URL);
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<TuxedoPartywear[]>(URL, { headers });
   }
 }

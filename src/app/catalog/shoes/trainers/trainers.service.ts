@@ -1,8 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Trainers } from 'src/app/types/trainers';
 
-const URL = 'http://localhost:3030/jsonstore/trainers';
+import { Trainers } from 'src/app/types/trainers';
+import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+
+const URL = 'http://localhost:3030/data/trainers';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +15,8 @@ export class TrainersService {
 
   constructor(private http: HttpClient) { }
 
-  getTrainers() {    
-    return this.http.get<Trainers[]>(URL);
+  getTrainers() {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<Trainers[]>(URL, { headers });
   }
 }

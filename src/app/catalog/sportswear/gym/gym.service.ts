@@ -1,8 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Gym } from 'src/app/types/gym';
 
-const URL = 'http://localhost:3030/jsonstore/gym';
+import { Gym } from 'src/app/types/gym';
+import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+
+const URL = 'http://localhost:3030/data/gym';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,7 @@ export class GymService {
   constructor(private http: HttpClient) { }
 
   getGym() {
-    return this.http.get<Gym[]>(URL);
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<Gym[]>(URL, { headers });
   }
 }

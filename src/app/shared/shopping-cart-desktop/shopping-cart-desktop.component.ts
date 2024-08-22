@@ -291,8 +291,11 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     this.shippingValue = this.shippingVal;
     const el = e.target as HTMLSelectElement;
     const idx = el.selectedIndex - 1;
-    const { name, value } = this.shippingMethods$[idx];
-    this.selectedShippingMethod$ = { ...this.selectedShippingMethod$, name: name, value: value };
+    // console.log(idx);
+      if (idx >= 0 && idx < this.shippingMethods$.length) {
+        const { name, value } = this.shippingMethods$[idx];
+        this.selectedShippingMethod$ = { ...this.selectedShippingMethod$, name: name, value: value };
+      }
     // console.log(this.shippingVal);
     this.total$ = this.getTotal();
   }
@@ -302,8 +305,11 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
     if (e) {
       const el = e.target as HTMLSelectElement;
       const idx = el.selectedIndex - 1;
-      const { code, rate } = this.discountCodes$[idx]
-      this.selectedDiscountOption$ = { ...this.selectedDiscountOption$, code: code, rate: rate };
+      // console.log(idx);
+      if (idx >= 0 && idx < this.discountCodes$.length) {
+        const { code, rate } = this.discountCodes$[idx]
+        this.selectedDiscountOption$ = { ...this.selectedDiscountOption$, code: code, rate: rate };        
+      }
       ////
       const discountRate = Number(el.value);
       const discountValue = this.subTotal$.value * discountRate / 100;
@@ -331,10 +337,13 @@ export class ShoppingCartDesktopComponent implements OnInit, AfterViewInit, OnDe
       catchError((err) => {
         // console.log(err);
         this.httpError = err;
-        console.log(err);
+        // console.log(err);
         return of(err);
       })
     ).subscribe(order => {
+      if (order == this.httpError) {
+        return;
+      }
       console.log(order);
     });
     // console.log(this.form.value);

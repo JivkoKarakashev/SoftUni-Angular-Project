@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, map, filter, forkJoin, Observable } from 'rxjs';
+
 import { Shipping } from '../types/shipping';
 import { Discount } from '../types/discount';
 import { CartItem } from '../types/cartItem';
 import { CheckForItemType } from './utils/checkForItemType';
 import { Order } from '../types/order';
+import { HttpLogoutInterceptorSkipHeader } from '../interceptors/http-logout.interceptor';
+import { HttpAJAXInterceptorSkipHeader } from '../interceptors/http-ajax.interceptor';
 
-const SHIPPINGMETHODS_URL = 'http://localhost:3030/jsonstore/shipping';
-const DISCOUNTS_URL = 'http://localhost:3030/jsonstore/discounts';
+const SHIPPINGMETHODS_URL = 'http://localhost:3030/data/shipping';
+const DISCOUNTS_URL = 'http://localhost:3030/data/discounts';
 const ORDER_URL = 'http://localhost:3030/data/order';
 
 @Injectable({
@@ -22,22 +25,16 @@ export class ShoppingCartService {
   constructor(private http: HttpClient, private checkForItemType: CheckForItemType) { }
 
   getCartItems(): Observable<CartItem[]> {
-    // return this.http.get<Item[]>(URL);
-    // return this.items$;
     return this.cartItems$;
   }
 
   getAvailablePurchaseServices() {
-    return forkJoin([this.http.get<Discount[]>(DISCOUNTS_URL), this.http.get<Shipping[]>(SHIPPINGMETHODS_URL)]);
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return forkJoin([
+      this.http.get<Discount[]>(DISCOUNTS_URL, { headers }),
+      this.http.get<Shipping[]>(SHIPPINGMETHODS_URL, { headers })
+    ]);
   }
-
-  // getShippingMethods() {
-  //   return this.http.get<Shipping[]>(SHIPPINGMETHODS_URL);
-  // }
-
-  // getDiscountCodes() {
-  //   return this.http.get
-  // }
 
   addCartItem(item: CartItem) {
     if (this.checkForItemType.isItem(item)) {
@@ -77,8 +74,9 @@ export class ShoppingCartService {
     shippingMethod: Shipping,
     shippingValue: number,
     total: number): Observable<Order> {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     const body = JSON.stringify({ purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total });
     // console.log(purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total);
-    return this.http.post<Order>(ORDER_URL, body);
+    return this.http.post<Order>(ORDER_URL, body, { headers });
   }
 }

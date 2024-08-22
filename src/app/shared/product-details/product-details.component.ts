@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,6 +30,8 @@ import { ShoppingCartService } from '../shopping-cart.service';
 import { CartItem } from 'src/app/types/cartItem';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 
 @Component({
   selector: 'app-product-details',
@@ -60,7 +62,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
-  public user$: UserForAuth | undefined;
+  public user$: UserForAuth | null = null;
   public loading: boolean = true;
   public defImgOpacity = 1;
 
@@ -193,13 +195,14 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   private getItem(url: string, id: string) {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     return this.http.get<
       Jacket | Longwear |
       Trainers | Boot | Slippers |
       CapHat | Belt | Glove | Sunglasses | Watch |
       Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
       BlazerJacket | Waistcoat | TuxedoPartywear | Tie
-    >(`http://localhost:3030/jsonstore/${url}/${id}`);
+    >(`http://localhost:3030/data/${url}/${id}`, { headers });
   }
 
   // public selectSize(e: Event): void {

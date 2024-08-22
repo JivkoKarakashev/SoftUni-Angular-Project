@@ -1,8 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Tie } from 'src/app/types/tie';
 
-const URL = 'http://localhost:3030/jsonstore/ties';
+import { Tie } from 'src/app/types/tie';
+import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+
+const URL = 'http://localhost:3030/data/ties';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,7 @@ export class TiesService {
   constructor(private http: HttpClient) { }
 
   getTies() {
-    return this.http.get<Tie[]>(URL);
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<Tie[]>(URL, { headers });
   }
 }

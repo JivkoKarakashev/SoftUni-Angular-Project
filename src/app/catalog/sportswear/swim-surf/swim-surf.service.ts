@@ -1,8 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SwimSurf } from 'src/app/types/swimSurf';
 
-const URL = 'http://localhost:3030/jsonstore/swim_surf';
+import { SwimSurf } from 'src/app/types/swimSurf';
+import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+
+const URL = 'http://localhost:3030/data/swim_surf';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,7 @@ export class SwimSurfService {
   constructor(private http: HttpClient) { }
 
   getSwimSurf() {
-    return this.http.get<SwimSurf[]>(URL);
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<SwimSurf[]>(URL, { headers });
   }
 }

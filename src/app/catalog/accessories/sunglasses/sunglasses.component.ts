@@ -18,7 +18,7 @@ export class SunglassesComponent implements OnInit, OnDestroy {
   private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
   public buyedItems: number = 0;
   private unsubscriptionArray: Subscription[] = [];
-  public user$: UserForAuth | undefined;
+  public user$: UserForAuth | null = null;
   public loading: boolean = true;
 
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
 
 import { Jacket } from '../types/jacket';
@@ -23,6 +23,7 @@ import { BlazerJacket } from '../types/blazerJacket';
 import { Waistcoat } from '../types/waistcoat';
 import { TuxedoPartywear } from '../types/tuxedoPartywear';
 import { Tie } from '../types/tie';
+import { HttpLogoutInterceptorSkipHeader } from '../interceptors/http-logout.interceptor';
 
 const RECENT_TWO_JACKETS_URL = 'http://localhost:3030/data/jackets?sortBy=_createdOn%20desc&offset=0&pageSize=2';
 const RECENT_TWO_LONGWEAR_URL = 'http://localhost:3030/data/longwear?sortBy=_createdOn%20desc&offset=0&pageSize=2';
@@ -54,28 +55,29 @@ export class HomeService {
   constructor(private http: HttpClient) { }
 
   getRecentTwoItems() {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     return forkJoin([
-      this.http.get<Jacket[]>(RECENT_TWO_JACKETS_URL),
-      this.http.get<Longwear>(RECENT_TWO_LONGWEAR_URL),
-      this.http.get<Trainers[]>(RECENT_TWO_TRAINERS_URL),
-      this.http.get<Boot[]>(RECENT_TWO_BOOTS_URL),
-      this.http.get<Slippers[]>(RECENT_TWO_SLIPPERS_URL),
-      this.http.get<CapHat[]>(RECENT_TWO_CAPS_HATS_URL),
-      this.http.get<Belt[]>(RECENT_TWO_BELTS_URL),
-      this.http.get<Glove[]>(RECENT_TWO_GLOVES_URL),
-      this.http.get<Sunglasses[]>(RECENT_TWO_SUNGLASSES_URL),
-      this.http.get<Watch[]>(RECENT_TWO_WATCHES_URL),
-      this.http.get<Gym[]>(RECENT_TWO_GYM_URL),
-      this.http.get<Running[]>(RECENT_TWO_RUNNING_URL),
-      this.http.get<SkiSnowboard[]>(RECENT_TWO_SKI_SNOWBOARD_URL),
-      this.http.get<SwimSurf[]>(RECENT_TWO_SWIM_SURF_URL),
-      this.http.get<Outdoors[]>(RECENT_TWO_OUTDOORS_URL),
-      this.http.get<BottomsLeggings[]>(RECENT_TWO_BOTTOMS_LEGGINGS_URL),
-      this.http.get<Sweater[]>(RECENT_TWO_SWEATERS_URL),
-      this.http.get<BlazerJacket[]>(RECENT_TWO_BLAZERS_JACKETS_URL),
-      this.http.get<Waistcoat[]>(RECENT_TWO_WAISTCOATS_URL),
-      this.http.get<TuxedoPartywear[]>(RECENT_TWO_TUXEDOS_PARTYWEAR),
-      this.http.get<Tie[]>(RECENT_TWO_TIES)
-    ]);
+      this.http.get<Jacket[]>(RECENT_TWO_JACKETS_URL, { headers }),
+      this.http.get<Longwear>(RECENT_TWO_LONGWEAR_URL, { headers }),
+      this.http.get<Trainers[]>(RECENT_TWO_TRAINERS_URL, { headers }),
+      this.http.get<Boot[]>(RECENT_TWO_BOOTS_URL, { headers }),
+      this.http.get<Slippers[]>(RECENT_TWO_SLIPPERS_URL, { headers }),
+      this.http.get<CapHat[]>(RECENT_TWO_CAPS_HATS_URL, { headers }),
+      this.http.get<Belt[]>(RECENT_TWO_BELTS_URL, { headers }),
+      this.http.get<Glove[]>(RECENT_TWO_GLOVES_URL, { headers }),
+      this.http.get<Sunglasses[]>(RECENT_TWO_SUNGLASSES_URL, { headers }),
+      this.http.get<Watch[]>(RECENT_TWO_WATCHES_URL, { headers }),
+      this.http.get<Gym[]>(RECENT_TWO_GYM_URL, { headers }),
+      this.http.get<Running[]>(RECENT_TWO_RUNNING_URL, { headers }),
+      this.http.get<SkiSnowboard[]>(RECENT_TWO_SKI_SNOWBOARD_URL, { headers }),
+      this.http.get<SwimSurf[]>(RECENT_TWO_SWIM_SURF_URL, { headers }),
+      this.http.get<Outdoors[]>(RECENT_TWO_OUTDOORS_URL, { headers }),
+      this.http.get<BottomsLeggings[]>(RECENT_TWO_BOTTOMS_LEGGINGS_URL, { headers }),
+      this.http.get<Sweater[]>(RECENT_TWO_SWEATERS_URL, { headers }),
+      this.http.get<BlazerJacket[]>(RECENT_TWO_BLAZERS_JACKETS_URL, { headers }),
+      this.http.get<Waistcoat[]>(RECENT_TWO_WAISTCOATS_URL, { headers }),
+      this.http.get<TuxedoPartywear[]>(RECENT_TWO_TUXEDOS_PARTYWEAR, { headers }),
+      this.http.get<Tie[]>(RECENT_TWO_TIES, { headers })
+    ],);
   }
 }

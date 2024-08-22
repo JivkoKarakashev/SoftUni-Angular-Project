@@ -1,8 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Belt } from 'src/app/types/belt';
 
-const URL = 'http://localhost:3030/jsonstore/belts';
+import { Belt } from 'src/app/types/belt';
+import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+
+const URL = 'http://localhost:3030/data/belts';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,7 @@ export class BeltsService {
   constructor(private http: HttpClient) { }
 
   getBelts() {
-    return this.http.get<Belt[]>(URL);
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<Belt[]>(URL, { headers });
   }
 }

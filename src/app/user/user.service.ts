@@ -1,16 +1,19 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription, catchError, map, tap } from 'rxjs';
+
 import { UserForAuth, UserForLogin, UserForRegister } from '../types/user';
+import { HttpAJAXInterceptorSkipHeader } from '../interceptors/http-ajax.interceptor';
+import { HttpLogoutInterceptorSkipHeader } from '../interceptors/http-logout.interceptor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService implements OnDestroy {
-  private user$$ = new BehaviorSubject<UserForAuth | undefined>(undefined);
+  private user$$ = new BehaviorSubject<UserForAuth | null>(null);
   public user$ = this.user$$.asObservable();
 
-  private user: UserForAuth | undefined = undefined;
+  private user: UserForAuth | null = null;
   private userSubscription: Subscription
 
   public get isLoggedIn(): boolean {
@@ -34,9 +37,10 @@ export class UserService implements OnDestroy {
   }
 
   login(email: string, password: string) {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     const body = JSON.stringify({ email, password });
     // console.log(body);    
-    return this.http.post<UserForLogin>('http://localhost:3030/users/login', body)
+    return this.http.post<UserForLogin>('http://localhost:3030/users/login', body, { headers })
       .pipe(map((user) => {
         const { _id, accessToken, email, username } = user as unknown as UserForAuth;
         localStorage.setItem('userData', JSON.stringify({ _id, accessToken, email, username }));
@@ -53,10 +57,11 @@ export class UserService implements OnDestroy {
 
   register(email: string, username: string, password: string,
   ) {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     const body = JSON.stringify({ email, username, password });
     // console.log(body);
 
-    return this.http.post<UserForRegister>('http://localhost:3030/users/register', body)
+    return this.http.post<UserForRegister>('http://localhost:3030/users/register', body, { headers })
       .pipe(tap((user) => {
         const { _id, accessToken, email, username } = user as unknown as UserForAuth;
         localStorage.setItem('userData', JSON.stringify({ _id, accessToken, email, username }));
@@ -67,9 +72,15 @@ export class UserService implements OnDestroy {
   }
 
   logout() {
-    this.http.get('http://localhost:3030/users/logout', {});
-    this.user$$.next(undefined);
-    localStorage.removeItem('userData');
+    const headers = new HttpHeaders().set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get('http://localhost:3030/users/logout', { headers })
+    .pipe(tap((emptyRes) => {
+      console.log(emptyRes);
+      if (emptyRes == null) {
+        this.user$$.next(emptyRes);
+        localStorage.removeItem('userData');        
+      }      
+    }));
   }
 
   ngOnDestroy(): void {
