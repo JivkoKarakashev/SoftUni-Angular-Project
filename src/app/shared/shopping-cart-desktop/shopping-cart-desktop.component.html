@@ -13,7 +13,7 @@
                 <section class="header">
                     <div class="buttons">
                         <input #checkItAll type="button" id="selectAll" name="selectAll" class="button remove" [value]="selectAllButtonStatement ? 'deselect all' : 'select all'" (click)="toggleSelectAll()">
-                        <input #removeItems type="button" id="remove-item" name="remove-item" class="button remove" value="Remove selected" (click)="removeSelected()">
+                        <input #removeItems type="button" id="remove-item" name="remove-item" class="button remove" value="Remove selected" (click)="onRemoveSelected()">
                     </div>
                 </section>
 
@@ -23,7 +23,7 @@
                 <ng-container *ngIf="httpError?.error">
                     <div class="alert">{{httpError.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div>
                 </ng-container>
-                <form [formGroup]="form" (ngSubmit)="purchase()"  *ngIf="!loading">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()"  *ngIf="!loading">
                     <fieldset>
                         <div class="label">
                             <label class="label-header">Select</label>
@@ -44,21 +44,21 @@
                                     <img class="itm" src="{{itm.image}}" alt="image">
                                     <input #descrp formControlName="description" [hidden]="true" [value]="itm.description" class="description" type="text" name="description">
                                     <span class="itm description">{{itm.description}}</span>
-                                    <select #selectElements class="itm decorate" formControlName="selectedColor" name="selectedColor" [value]="itm.selectedColor" (change)="selectColor($event, i)" required>
+                                    <select #selectElements class="itm decorate" formControlName="selectedColor" name="selectedColor" [value]="itm.selectedColor" (change)="onColorChange($event, i)" required>
                                         <option value="">select color</option>
                                         <option  class="decorate" #optionElements *ngFor="let col of itm.color; let i = index;" [value]="col" [attr.data-color]="col">{{col}}</option>
                                     </select>
-                                    <select class="itm" formControlName="selectedSize" name="selectedSize" [value]="itm.selectedSize" (change)="selectSize(i)" required>
+                                    <select class="itm" formControlName="selectedSize" name="selectedSize" [value]="itm.selectedSize" (change)="onSizeChange(i)" required>
                                         <option value="">select size</option>
                                         <option *ngFor="let sz of itm.size; let i = index;" [value]="sz">{{sz}}</option>
                                     </select>
-                                    <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="itm.quantity" [value]="itm.selectedQuantity" (change)="getProduct(i)" required>
+                                    <input class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="itm.quantity" [value]="itm.selectedQuantity" (change)="onQuantityChange(i)" required>
                                     <input formControlName="price" [hidden]="true" [value]="itm.price" class="price" type="number" name="price">
                                     <p class="itm price">${{itm.price}}</p>
                                     <input formControlName="product" [hidden]="true" [value]="" class="prod" type="number" name="product">
                                     <span class="itm prod">${{itm.product}}</span>
                                     <div class="itm buttons">
-                                        <button class="button remove" type="button" (click)="removeItm(i)">Remove item</button>
+                                        <button class="button remove" type="button" (click)="onRemoveItem(i)">Remove item</button>
                                     </div>
                                 </div>
                             </ng-container>
@@ -66,20 +66,20 @@
 
                         <div class="subtotal">
                             <span class="title">Subtotal:</span>
-                            <span #subTotalEl class="amount">${{subTotal$.value.toFixed(2)}}</span>
+                            <span #subTotalEl class="amount">${{subTotal$.toFixed(2)}}</span>
                         </div>
                         <div class="discount">
                             <span class="title">
-                                <select #discount class="discount" formControlName="discount" name="discount" (change)="getDiscount($event)" required>
+                                <select class="discount" formControlName="discount" name="discount" (change)="onDiscountChange($event)" required>
                                     <option value="">discount code</option>
-                                    <option *ngFor="let disc of discountCodes$; let i = index;" [value]="disc.rate">{{disc.code}} - %{{disc.rate.toFixed(2)}}</option>
+                                    <option *ngFor="let disc of discountCodes$; let i = index;" [selected]="disc.code == discountState$.code">{{ disc.code}} - %{{disc.rate.toFixed(2)}}</option>
                                 </select>
                             </span>
                             <span class="amount">&minus;${{discountValue.toFixed(2)}}</span>
                         </div>
                         <div class="shipping">
                             <span class="title">
-                                <select class="shipping" formControlName="shipping" name="shipping" (change)="selectShipping($event)" required>
+                                <select class="shipping" formControlName="shipping" name="shipping" (change)="onShippingChange($event)" required>
                                     <option value="">shipping method</option>
                                     <option *ngFor="let method of shippingMethods$; let i = index;" [value]="method.value">{{method.name}} - ${{method.value.toFixed(2)}}</option>
                                 </select>

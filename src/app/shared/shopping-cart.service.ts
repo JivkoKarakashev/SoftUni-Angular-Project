@@ -21,11 +21,24 @@ export class ShoppingCartService {
 
   private cartItems$$ = new BehaviorSubject<CartItem[]>([]);
   private cartItems$ = this.cartItems$$.asObservable();
+  private discountState$$ = new BehaviorSubject<Discount>({code: '', rate: NaN});
+  private discountState$ = this.discountState$$.asObservable();
 
   constructor(private http: HttpClient, private checkForItemType: CheckForItemType) { }
 
   getCartItems(): Observable<CartItem[]> {
     return this.cartItems$;
+  }
+
+  getDiscountState(): Observable<Discount> {
+    return this.discountState$;
+  }
+
+  setDiscountState(code: string, rate: number): void {
+    console.log('Code:', code);
+    console.log('Rate:', rate);
+    this.discountState$$.next({...this.discountState$$.value, code: code, rate: rate});
+    console.log(this.discountState$$.value);
   }
 
   getAvailablePurchaseServices() {
@@ -51,15 +64,32 @@ export class ShoppingCartService {
       newItemsArr.splice(idxArr[i], 1);
     }
     // console.log(newItemsArr);
-    this.cartItems$$.next(newItemsArr);
+    this.cartItems$$.next([...newItemsArr]);
     // console.log(this.items$$.value);
   }
 
   removeCartItm(idx: number) {
     const newItemsArr = [...this.cartItems$$.value];
     newItemsArr.splice(idx, 1);
-    this.cartItems$$.next((newItemsArr));
+    this.cartItems$$.next([...newItemsArr]);
     // console.log(this.items$$.value);
+  }
+
+  updateCartItm(idx: number, color?: string, size?: string | number, qty?: number, prod?: number) {
+    // console.log(this.cartItems$$.value.at(idx));
+    const newItemsArr = [...this.cartItems$$.value];
+    let updatedItm = {...this.cartItems$$.value[idx]};
+    if (color || color == '') {
+      updatedItm = {...updatedItm, selectedColor: color};      
+    } else if (size || size == '') {
+      updatedItm = {...updatedItm, selectedSize: size};
+    } else if (qty || qty == null || qty == 0) {
+      qty = qty || NaN;
+      prod = prod || 0;
+      updatedItm = {...updatedItm, selectedQuantity: qty, product: prod};
+    }
+    newItemsArr.splice(idx, 1, updatedItm);
+    this.cartItems$$.next([...newItemsArr]);
   }
 
   emptyCart(): void {
