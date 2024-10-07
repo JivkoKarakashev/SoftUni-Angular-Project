@@ -58,7 +58,7 @@ export class HomeService {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     return forkJoin([
       this.http.get<Jacket[]>(RECENT_TWO_JACKETS_URL, { headers }),
-      this.http.get<Longwear>(RECENT_TWO_LONGWEAR_URL, { headers }),
+      this.http.get<Longwear[]>(RECENT_TWO_LONGWEAR_URL, { headers }),
       this.http.get<Trainers[]>(RECENT_TWO_TRAINERS_URL, { headers }),
       this.http.get<Boot[]>(RECENT_TWO_BOOTS_URL, { headers }),
       this.http.get<Slippers[]>(RECENT_TWO_SLIPPERS_URL, { headers }),

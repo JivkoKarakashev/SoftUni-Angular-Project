@@ -7,11 +7,21 @@ export interface UserForAuth {
 
 export interface UserForLogin {
     email: string
-    pass: string,
+    password: string,
 }
 
 export interface UserForRegister {
     email: string
     username: string,
-    pass: string,
+    password: string,
+}
+
+export interface LoggedInOrLoggedOut {
+    isLoggedIn: boolean,
+    isLoggedOut: boolean
+}
+
+export const loggedInOrLoggedOutInitState = {
+    isLoggedIn: false,
+    isLoggedOut: true
 }

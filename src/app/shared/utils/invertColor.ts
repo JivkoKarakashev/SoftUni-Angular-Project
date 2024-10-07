@@ -15,11 +15,14 @@ export class InvertColor {
         this.render = this.renderFactory.createRenderer(null, null);
     }
 
-    standardize_color(color: string): rgbObj {
-        const canvas = <HTMLCanvasElement>(this.render.createElement('canvas'));
+    standardize_color(color: string): rgbObj | undefined {
+        const canvas: HTMLCanvasElement = this.render.createElement('canvas');
         canvas.width = 1;
         canvas.height = 1;
-        const ctx = canvas.getContext('2d')!;
+        const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+        if (!ctx) {
+            return;
+        }
         ctx.fillStyle = color;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
@@ -29,7 +32,7 @@ export class InvertColor {
         return rgb
     }
 
-    invertColor(rgbObj: rgbObj): string {
+    invertColor(rgbObj?: rgbObj): string | undefined {
         // if (hex.indexOf('#') === 0) {
         //     hex = hex.slice(1);
         // }
@@ -44,6 +47,9 @@ export class InvertColor {
         // let g: number = parseInt(hex.slice(2, 4), 16);
         // let b: number = parseInt(hex.slice(4, 6), 16);
         // https://stackoverflow.com/a/3943023/112731
+        if (!rgbObj) {
+            return;
+        }
         const { r, g, b } = rgbObj;
         const hex = (r * 0.299 + g * 0.587 + b * 0.114) > 186
             ? '#000000'

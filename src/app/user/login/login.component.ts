@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { UserService } from '../user.service';
-import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
-import { emailValidator } from 'src/app/shared/utils/email-validator';
+import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
+
+import { UserService } from '../user.service';
+import { emailValidator } from 'src/app/shared/utils/email-validator';
 import { HttpError } from 'src/app/types/httpError';
 
 @Component({
@@ -13,34 +14,36 @@ import { HttpError } from 'src/app/types/httpError';
 })
 export class LoginComponent {
   public httpError: HttpError = {};
-  public loading: boolean = false;
+  public loading = false;
 
   loginForm = this.fb.group({
-    email: ['', [Validators.required, emailValidator()]],    
-    pass: ['', [Validators.required,]],
+    email: ['', [Validators.required, emailValidator()]],
+    password: ['', [Validators.required,]],
   });
 
-  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {}
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) { }
 
   login(): void {
     this.loading = true;
-    if (this.loginForm.invalid) {    
+    if (this.loginForm.invalid) {
       return;
     }
-    const { email, pass } = this.loginForm.value;
-    this.userService.login(email!, pass!).pipe(
-      catchError((err) => {
-        // console.log(err);
-        this.httpError = err;        
-        return of(err);
-      })
-    ).subscribe((res) => {
-      // console.log(res);
-      this.loading = false;
-      if (res == this.httpError) {
-        return;
-      }
-      this.router.navigate(['/']);
-    });
+    const { email, password } = this.loginForm.value;
+    if (email && password) {
+      this.userService.login({email, password}).pipe(
+        catchError((err) => {
+          // console.log(err);
+          this.httpError = err;
+          return of(err);
+        })
+      ).subscribe((res) => {
+        // console.log(res);
+        this.loading = false;
+        if (res == this.httpError) {
+          return;
+        }
+        this.router.navigate(['/']);
+      });
+    }
   }
 }

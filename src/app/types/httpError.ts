@@ -1,6 +1,6 @@
 export interface HttpError {
     headers?: {
-        normalizedNames: {},
+        // normalizedNames: {},
         lazyUpdate: null
     },
     status?: number,

@@ -2,11 +2,12 @@
     <nav class="desktop">
         <ul class="navbar">
             <li><a class="nav-icon home" routerLink="/">Home</a></li>
-            <ng-container *ngIf="isLoggedOut">
+            <li><a class="nav-icon home" routerLink="/checkout">Checkout</a></li>
+            <ng-container *ngIf="loggedInOrLoggedOut.isLoggedOut">
                 <li><a class="nav-icon guest" routerLink="/auth/login">Login</a></li>
                 <li><a class="nav-icon user" routerLink="/auth/register">Register</a></li>
             </ng-container>
-            <li *ngIf="isLoggedIn"><a class="nav-icon logout" (click)="logout()">Logout</a></li>
+            <li *ngIf="loggedInOrLoggedOut.isLoggedIn"><a class="nav-icon logout" (click)="logout()">Logout</a></li>
             <li><a class="nav-icon list" routerLink="/category">Category</a></li>
             <li>
                 <!-- Trigger/Open The Modal -->

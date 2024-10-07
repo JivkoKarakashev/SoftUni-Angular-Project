@@ -4,7 +4,7 @@ export function passwordsValidator(): ValidatorFn {
     return (passControl: AbstractControl): ValidationErrors | null => {
       const passFormCtrl: string = passControl?.value['pass'];
       const rePassFormCtrl: string = passControl?.value['rePass'];
-      let areValid: boolean = passFormCtrl != '' && rePassFormCtrl != '' && passFormCtrl == rePassFormCtrl;
+      const areValid: boolean = passFormCtrl != '' && rePassFormCtrl != '' && passFormCtrl == rePassFormCtrl;
       return areValid ? null : { matchPasswordsValidator: true };
     };
   }

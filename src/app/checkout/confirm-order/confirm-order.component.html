@@ -1,0 +1,11 @@
+<p>confirm-order works!</p>
+<ng-container *ngIf="loading">
+    <app-loader />
+</ng-container>
+<section id="success" class="section-confirm-order hidden" *ngIf="!loading">
+    <p *ngIf="session_status$==='complete'">
+        We appreciate your business! A confirmation email will be sent to <span
+            id="customer-email">{{customer_email$}}</span>.
+        If you have any questions, please email <a href="mailto:yourEmailHere@example.com">yourEmailHere&commat;yourDomainHere.com</a>.
+    </p>
+</section>

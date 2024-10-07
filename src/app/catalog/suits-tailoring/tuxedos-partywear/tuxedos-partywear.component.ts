@@ -14,23 +14,23 @@ import { CartItem } from 'src/app/types/cartItem';
   styleUrls: ['./tuxedos-partywear.component.css']
 })
 export class TuxedosPartywearComponent implements OnInit, OnDestroy {
-  public listItems$: TuxedoPartywear[] = [];
+  public listItems: TuxedoPartywear[] = [];
   private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
-  public buyedItems: number = 0;
+  public buyedItems = 0;
   private unsubscriptionArray: Subscription[] = [];
-  public user$: UserForAuth | null = null;
-  public loading: boolean = true;
+  public user: UserForAuth | null = null;
+  public loading = true;
 
 
   constructor(private userService: UserService, private tuxedos_partywearService: TuxedosPartywearService, private cartService: ShoppingCartService) { }
 
-  get isLoggedIn(): boolean {
-    // console.log(this.userService.isLoggedIn);
-    // console.log(this.userService.user$);    
-    return this.userService.isLoggedIn;
-  }
-
   ngOnInit(): void {
+    const userSubscription = this.userService.user$.subscribe(userData => {
+      if (userData) {
+        this.user = { ...userData };
+      }
+    });
+
     const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items]);
@@ -39,32 +39,30 @@ export class TuxedosPartywearComponent implements OnInit, OnDestroy {
 
     const tuxedos_partywearSubscription = this.tuxedos_partywearService.getTuxedosPartywear().subscribe(txds_ptywrObjs => {
       this.loading = false;
-      let tuxedos_partywear = Object.entries(txds_ptywrObjs).map(txd_ptywr => txd_ptywr[1]);
+      const tuxedos_partywear = Object.entries(txds_ptywrObjs).map(txd_ptywr => txd_ptywr[1]);
       tuxedos_partywear.forEach((txd_ptywr, idx) => {
         if (this.cartItms$$.value.some(itm => itm._id == txd_ptywr._id)) {
           tuxedos_partywear[idx] = { ...tuxedos_partywear[idx], buyed: true };
         }
       });
-      this.listItems$ = [...this.listItems$, ...tuxedos_partywear];
+      this.listItems = [...this.listItems, ...tuxedos_partywear];
     });
 
-    this.unsubscriptionArray.push(tuxedos_partywearSubscription, cartSubscription);
-
-    this.user$ = JSON.parse(localStorage?.getItem('userData') as string);
+    this.unsubscriptionArray.push(userSubscription, tuxedos_partywearSubscription, cartSubscription);
   }
 
   ngOnDestroy(): void {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
-      // console.log('UnsubArray = 2');      
+      // console.log('UnsubArray = 3');      
     });
   }
 
-  public addItemtoCart(item: TuxedoPartywear) {
+  public addItemtoCart(item: TuxedoPartywear): void {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
     const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
-    const idx = this.listItems$.findIndex(itm => itm._id == _id);
-    this.listItems$[idx] = {...this.listItems$[idx], buyed: true};
+    const idx = this.listItems.findIndex(itm => itm._id == _id);
+    this.listItems[idx] = {...this.listItems[idx], buyed: true};
     this.cartService.addCartItem(newItem);
     // console.log(this.listItems$);
     // console.log(this.cartItms$$.value);

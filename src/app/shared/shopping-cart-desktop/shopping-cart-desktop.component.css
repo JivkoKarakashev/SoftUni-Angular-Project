@@ -228,5 +228,20 @@ div.buttons {
     align-items: center;
     justify-content: center;
     background-color: #f44336;
-    color: white;
+    color: #fff;
+
+    & a.nav-icon.logout {
+        padding: .2em .3em;
+        border: 1px solid #000;
+        border-radius: .4em;
+        color: #000;
+        background-color: #e9e9ed;
+        outline: none;
+    }
+
+    & a.nav-icon.logout:hover,
+    & a.nav-icon.logout:focus {
+        color: #fff;
+        background-color: #000;
+    }
 }

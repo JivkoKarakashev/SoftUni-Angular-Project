@@ -13,13 +13,17 @@ import { httpLogoutInterceptorProvider } from './interceptors/http-logout.interc
 import { httpAJAXInterceptorProvider } from './interceptors/http-ajax.interceptor';
 import { AuthenticateComponent } from './authenticate/authenticate.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { ExtractCartStateComponent } from './extract-cart-state/extract-cart-state.component';
+// import { NgxStripeModule } from 'ngx-stripe';
+// import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
     HomeComponent,
-    AuthenticateComponent
+    AuthenticateComponent,
+    ExtractCartStateComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +32,8 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     SharedModule,
     HttpClientModule,
     AppRoutingModule,
-    SlickCarouselModule
+    SlickCarouselModule,
+    // NgxStripeModule.forRoot(environment.stripe.publicKey)
   ],
   providers: [httpLogoutInterceptorProvider, httpAJAXInterceptorProvider],
   bootstrap: [AppComponent]

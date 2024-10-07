@@ -3272,60 +3272,72 @@
             }
         },
         discounts: {
+            "e8ca1e74-fa75-4445-b67c-a23800a5ab1c": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "e8ca1e74-fa75-4445-b67c-a23800a5ab1c",
+                code: "discount code",
+                rate: 0
+            },
             "1f606895-b967-441c-9b11-9a166cc1063e": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                 _id: "1f606895-b967-441c-9b11-9a166cc1063e",
-                code: "WINTERSALE",
+                code: "WINTERSALE -25%",
                 rate: 25
             },
             "7435b1f6-4567-44e6-a00b-d515185a67ce": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                 _id: "7435b1f6-4567-44e6-a00b-d515185a67ce",
-                code: "SPRINGSALE",
+                code: "SPRINGSALE -10%",
                 rate: 10
             },
             "39097456-348f-40f3-8849-98dc5fcaf06b": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                 _id: "39097456-348f-40f3-8849-98dc5fcaf06b",
-                code: "EASTERSALE",
+                code: "EASTERSALE -50%",
                 rate: 50
             },
             "7a03796c-e633-4318-9f1c-be93fef697bf": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                 _id: "7a03796c-e633-4318-9f1c-be93fef697bf",
-                code: "SUMMERSALE",
+                code: "SUMMERSALE -25%",
                 rate: 25
             },
             "6c040ccd-3338-4f5c-ab12-9c6b1a25c025": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                 _id: "6c040ccd-3338-4f5c-ab12-9c6b1a25c025",
-                code: "AUTUMNSALE",
+                code: "AUTUMNSALE -15%",
                 rate: 15
             },
             "33d1369a-1ca2-4f2c-9b93-64288bfe175e": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                 _id: "33d1369a-1ca2-4f2c-9b93-64288bfe175e",
-                code: "NEWYEARSALE",
+                code: "NEWYEARSALE -50%",
                 rate: 50
             }
         },
         shipping: {
+            "3317dcb4-b951-4ff6-a422-b027a6ff4cd2": {
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                _id: "3317dcb4-b951-4ff6-a422-b027a6ff4cd2",
+                name: "shipping method",
+                value: 0
+            },
             "bae9cfd4-0d29-4713-ae8a-dfd4a0aa23db": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                 _id: "bae9cfd4-0d29-4713-ae8a-dfd4a0aa23db",
-                name: "economic",
+                name: "economic 7$",
                 value: 7
             },
             "5558d210-c329-4cc9-aecf-f72594b8caa8": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                 _id: "5558d210-c329-4cc9-aecf-f72594b8caa8",
-                name: "standard",
+                name: "standard 10$",
                 value: 10
             },
             "882e509f-7939-43b5-8765-d39385ed7cca": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                 _id: "882e509f-7939-43b5-8765-d39385ed7cca",
-                name: "premium",
+                name: "premium 15$",
                 value: 15
             }
         },

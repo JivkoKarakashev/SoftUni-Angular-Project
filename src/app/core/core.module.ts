@@ -20,7 +20,7 @@ import { CoreRoutingModule } from './core-routing.modules';
     CommonModule,
     CoreRoutingModule,
     SharedModule,
-    CategoryModule
+    CategoryModule,
   ],
   exports: [HeaderDesktopComponent, HeaderMobileComponent, FooterComponent]
 })

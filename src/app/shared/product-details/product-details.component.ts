@@ -25,7 +25,7 @@ import { Boot } from 'src/app/types/boot';
 import { Slippers } from 'src/app/types/slippers';
 import { Jacket } from 'src/app/types/jacket';
 import { Longwear } from 'src/app/types/longwear';
-import { Item } from 'src/app/types/item';
+import { initialItem } from 'src/app/types/item';
 import { ShoppingCartService } from '../shopping-cart.service';
 import { CartItem } from 'src/app/types/cartItem';
 import { UserForAuth } from 'src/app/types/user';
@@ -39,31 +39,16 @@ import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.in
   styleUrls: ['./product-details.component.css']
 })
 export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-  private initailItem: Item = {
-    _ownerId: '',
-    _id: '',
-    _createdOn: NaN,
-    image: '',
-    altImages: [''],
-    cat: '',
-    subCat: '',
-    description: '',
-    size: [''],
-    color: [''],
-    brand: '',
-    quantity: NaN,
-    price: NaN,
-  }
-  public item$: Jacket | Longwear |
+  public item: Jacket | Longwear |
     Trainers | Boot | Slippers |
     CapHat | Belt | Glove | Sunglasses | Watch |
     Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
-    BlazerJacket | Waistcoat | TuxedoPartywear | Tie = this.initailItem;
+    BlazerJacket | Waistcoat | TuxedoPartywear | Tie = initialItem;
   private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
-  public buyedItems: number = 0;
+  public buyedItems = 0;
   private unsubscriptionArray: Subscription[] = [];
-  public user$: UserForAuth | null = null;
-  public loading: boolean = true;
+  public user: UserForAuth | null = null;
+  public loading = true;
   public defImgOpacity = 1;
 
   public form: FormGroup = this.fb.group({
@@ -93,12 +78,6 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChildren('imgElements') private imgElements!: QueryList<ElementRef>;
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;
 
-  get isLoggedIn(): boolean {
-    // console.log(this.userService.isLoggedIn);
-    // console.log(this.userService.user$);    
-    return this.userService.isLoggedIn;
-  }
-
   get itemCtrlsGr() {
     return this.form.get("fgItem") as FormGroup;
   }
@@ -115,16 +94,21 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   ngOnInit(): void {
     console.log('Details Page INITIALIZED!');
     const regExp = /^\/catalog\/[a-z]+_?[a-z]+\/[a-z]+_?[a-z]+/g;
-    let match: string[] | null = this.router.url.match(regExp);
+    const match: string[] | null = this.router.url.match(regExp);
     // console.log(this.router.url);
     // console.log(match);
-    let url: string = '';
+    let url = '';
     if (match) {
       url = match[0].split('/')[3];
       // console.log(url);
     }
     const { id } = this.route.snapshot.params;
     // console.log(id);
+    const userSubscription = this.userService.user$.subscribe(userData => {
+      if (userData) {
+        this.user = { ...userData };
+      }
+    });
     const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
       this.cartItms$$.next([...items])
@@ -136,9 +120,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       this.loading = false;
       const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = itm;
       const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
-      this.item$ = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, buyed }
+      this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, buyed }
       // console.log(itm);
-      // console.log(this.item$);
+      // console.log(this.item);
       // console.log(this.cartItms$$.value);
       // const propsArr = Object.entries(itm);
       // console.log(propsArr);
@@ -164,8 +148,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       // console.log({ ...this.itemCtrlsGr.value });
       // console.log(this.formInitalValue.get('fgItem')?.value);
     });
-    this.unsubscriptionArray.push(itemSubscription, cartSubscription);
-    this.user$ = JSON.parse(localStorage?.getItem('userData') as string);
+    this.unsubscriptionArray.push(userSubscription, itemSubscription, cartSubscription);
   }
 
   ngAfterViewInit(): void {
@@ -191,7 +174,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');      
     });
-    // console.log('UnsubArray = 2');
+    // console.log('UnsubArray = 4');
   }
 
   private getItem(url: string, id: string) {
@@ -224,7 +207,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  public trackByUrl(index: number, url: any): string {
+  public trackByUrl(index: number, url: string): string {
     // console.log(url);
     return url;
   }
@@ -238,7 +221,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const buyed = true;
     const product = selectedQuantity * price;
     this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, buyed, product, checked: false });
-    this.item$ = { ...this.item$, buyed: true };
+    this.item = { ...this.item, buyed: true };
     this.itemCtrlsGr.reset({ ...this.formInitalValue.get('fgItem')?.value });
     this.imgElements.forEach(el => el.nativeElement.classList.contains('active') ? this.render.removeClass(el.nativeElement, 'active') : null);
     this.defImgOpacity = 1;

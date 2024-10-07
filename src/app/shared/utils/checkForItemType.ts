@@ -29,13 +29,11 @@ const cartItemSchema = {
 })
 export class CheckForItemType {
 
-    constructor() { };
-
     //  return Object.keys(cartItemSchema).every((prop) => Object.keys(itm).includes(prop));
     //  return Object.keys(cartItemSchema).some((prop) => prop == undefined);
 
     isItem(itm: Item | CartItem): itm is Item {
-        const itmPropsArr = Object.keys(itm);
+        // const itmPropsArr = Object.keys(itm);
         const cartItemPropsArr = Object.keys(cartItemSchema);
         if (cartItemPropsArr.some((prop) => prop == undefined)) {
             return true;

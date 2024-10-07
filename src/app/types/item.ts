@@ -14,3 +14,19 @@ export interface Item {
     price: number,
     buyed?: boolean
 }
+
+export const initialItem = {
+    _ownerId: '',
+    _id: '',
+    _createdOn: NaN,
+    image: '',
+    altImages: [''],
+    cat: '',
+    subCat: '',
+    description: '',
+    size: [''],
+    color: [''],
+    brand: '',
+    quantity: NaN,
+    price: NaN,
+}

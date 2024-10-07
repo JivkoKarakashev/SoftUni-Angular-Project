@@ -41,15 +41,15 @@ interface slideImg {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  public recentTwoClothes$: (Jacket | Longwear)[] = [];
-  public recentTwoShoes$: (Trainers | Boot | Slippers)[] = [];
-  public recentTwoAccessories$: (CapHat | Belt | Glove | Sunglasses | Watch)[] = [];
-  public recentTwoSportswear$: (Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater)[] = [];
-  public recentTwoSuits_tailoring$: (BlazerJacket | Waistcoat | TuxedoPartywear | Tie)[] = [];
+  public recentTwoClothes: (Jacket | Longwear)[] = [];
+  public recentTwoShoes: (Trainers | Boot | Slippers)[] = [];
+  public recentTwoAccessories: (CapHat | Belt | Glove | Sunglasses | Watch)[] = [];
+  public recentTwoSportswear: (Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater)[] = [];
+  public recentTwoSuits_tailoring: (BlazerJacket | Waistcoat | TuxedoPartywear | Tie)[] = [];
   private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
-  public buyedItems: number = 0;
+  public buyedItems = 0;
   private unsubscriptionArray: Subscription[] = [];
-  public loading: boolean = true;
+  public loading = true;
 
   public clothesSlides: slideImg[] = [];
   public shoesSlides: slideImg[] = [];
@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const recentTwoItemsSubscription = this.homeService.getRecentTwoItems().subscribe(recentTwoObjs => {
       this.loading = false;
-      let [
+      const [
         recentTwoJacketsObjs, recentTwoLongwearObjs,
         recentTwoTrainersObjs, recentTwoBootsObjs, recentTwoSlippersObjs,
         recentTwoCaps_hatsObjs, recentTwoBeltsObjs, recentTwoGlovesObjs, recentTwoSunglassesObjs, recentTwoWatchesObjs,
@@ -156,12 +156,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
       // console.log(this.suits_tailoringSlides);
       // console.log(this.clothesSlides);
-      this.recentTwoClothes$ = [...this.recentTwoClothes$, ...recentTwoJackets, ...recentTwoLongwear];
-      this.recentTwoShoes$ = [...this.recentTwoShoes$, ...recentTwoTrainers, ...recentTwoBoots, ...recentTwoSlippers];
-      this.recentTwoAccessories$ = [...this.recentTwoAccessories$, ...recentTwoCaps_hats, ...recentTwoBelts, ...recentTwoGloves, ...recentTwoSunglasses, ...recentTwoWatches];
-      this.recentTwoSportswear$ = [...this.recentTwoSportswear$, ...recentTwoGym, ...recentTwoRunnings, ...recentTwoSki_snowboard, ...recentTwoSwim_surf, ...recentTwoOutdoors, ...recentTwoBottoms_leggings, ...recentTwoSweaters];
-      this.recentTwoSuits_tailoring$ = [...this.recentTwoSuits_tailoring$ ,...recentTwoBlazers_jackets, ...recentTwoWaistcoats, ...recentTwoTuxedos_partywear, ...recentTwoTies];
-      // console.log(this.recentTwoShoes$);
+      this.recentTwoClothes = [...this.recentTwoClothes, ...recentTwoJackets, ...recentTwoLongwear];
+      this.recentTwoShoes = [...this.recentTwoShoes, ...recentTwoTrainers, ...recentTwoBoots, ...recentTwoSlippers];
+      this.recentTwoAccessories = [...this.recentTwoAccessories, ...recentTwoCaps_hats, ...recentTwoBelts, ...recentTwoGloves, ...recentTwoSunglasses, ...recentTwoWatches];
+      this.recentTwoSportswear = [...this.recentTwoSportswear, ...recentTwoGym, ...recentTwoRunnings, ...recentTwoSki_snowboard, ...recentTwoSwim_surf, ...recentTwoOutdoors, ...recentTwoBottoms_leggings, ...recentTwoSweaters];
+      this.recentTwoSuits_tailoring = [...this.recentTwoSuits_tailoring ,...recentTwoBlazers_jackets, ...recentTwoWaistcoats, ...recentTwoTuxedos_partywear, ...recentTwoTies];
+      // console.log(this.recentTwoShoes);
       // console.log(recentTwoGymObjs);
     });
     // console.log(this.suits_tailoringSlides);
@@ -176,12 +176,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
-      // console.log('UnsubArray = 1');      
+      // console.log('UnsubArray = 2');      
     });
   }
 
-  public trackById(index: number, item: any): string {
-    // console.log(item.id);
-    return item.id;
+  public trackById(index: number, slide: slideImg): string {
+    // console.log(slide.id);
+    return slide.id;
   }
 }
