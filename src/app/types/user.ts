@@ -3,6 +3,14 @@ export interface UserForAuth {
     accessToken: string,
     email: string,
     username: string,
+    address: {
+        phone: string,
+        street_building: string,
+        city: string,
+        region: string,
+        postalCode: string,
+        country: string
+    }
 }
 
 export interface UserForLogin {
@@ -13,6 +21,14 @@ export interface UserForLogin {
 export interface UserForRegister {
     email: string
     username: string,
+    address: {
+        phone: string,
+        street_building: string,
+        city: string,
+        region: string,
+        postalCode: string,
+        country: string
+    },
     password: string,
 }
 

@@ -13,7 +13,7 @@ import { httpLogoutInterceptorProvider } from './interceptors/http-logout.interc
 import { httpAJAXInterceptorProvider } from './interceptors/http-ajax.interceptor';
 import { AuthenticateComponent } from './authenticate/authenticate.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
-import { ExtractCartStateComponent } from './extract-cart-state/extract-cart-state.component';
+import { ExtractStatesComponent } from './extract-states/extract-states.component';
 // import { NgxStripeModule } from 'ngx-stripe';
 // import { environment } from 'src/environments/environment';
 
@@ -23,7 +23,7 @@ import { ExtractCartStateComponent } from './extract-cart-state/extract-cart-sta
     MainComponent,
     HomeComponent,
     AuthenticateComponent,
-    ExtractCartStateComponent
+    ExtractStatesComponent
   ],
   imports: [
     CommonModule,

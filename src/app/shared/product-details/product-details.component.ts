@@ -26,7 +26,7 @@ import { Slippers } from 'src/app/types/slippers';
 import { Jacket } from 'src/app/types/jacket';
 import { Longwear } from 'src/app/types/longwear';
 import { initialItem } from 'src/app/types/item';
-import { ShoppingCartService } from '../shopping-cart.service';
+import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
 import { CartItem } from 'src/app/types/cartItem';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';

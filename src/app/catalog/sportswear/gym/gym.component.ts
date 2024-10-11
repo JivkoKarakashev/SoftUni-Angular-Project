@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
-import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
+import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { GymService } from './gym.service';
 import { Gym } from 'src/app/types/gym';
 import { UserForAuth } from 'src/app/types/user';

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
-import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
+import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { WaistcoatsService } from './waistcoats.service';
 import { Waistcoat } from 'src/app/types/waistcoat';
 import { UserForAuth } from 'src/app/types/user';

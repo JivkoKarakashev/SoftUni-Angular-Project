@@ -5,7 +5,7 @@ import { LoginComponent } from '../user/login/login.component';
 import { RegisterComponent } from '../user/register/register.component';
 import { ProfileComponent } from '../user/profile/profile.component';
 import { CategoryComponent } from '../category/category.component';
-import { ShoppingCartDesktopComponent } from '../shared/shopping-cart-desktop/shopping-cart-desktop.component';
+import { ShoppingCartComponent } from '../shared/shopping-cart/shopping-cart.component';
 
 const routes: Routes = [
     { path: 'auth', loadChildren:() => import('../user/user.module').then(m => m.UserModule) },
@@ -13,7 +13,7 @@ const routes: Routes = [
     { path: 'auth/register', component: RegisterComponent },
     { path: 'auth/profile', component: ProfileComponent },
     { path: 'category', component: CategoryComponent },
-    { path: 'cart', component: ShoppingCartDesktopComponent },
+    { path: 'cart', component: ShoppingCartComponent },
 ];
 
 @NgModule({

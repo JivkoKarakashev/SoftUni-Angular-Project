@@ -27,16 +27,61 @@
                     <div *ngIf="registerForm.get('username')?.errors?.['required']" class="err-msg">Username is required.</div>
                     <div *ngIf="!registerForm.get('username')?.errors?.['required'] && registerForm.get('username')?.errors?.['minlength']" class="err-msg">Username must be at least 5 characters long!</div>
                 </ng-container>
+                <ng-container formGroupName="addressGroup">
+                    <div class="row" [ngClass]="{'error': (registerForm.get('addressGroup')?.get('phone')?.touched || registerForm.get('addressGroup')?.get('phone')?.dirty) && registerForm.get('addressGroup')?.get('phone')?.invalid}">
+                        <i class="fa-solid fa-phone"></i>
+                        <input formControlName="phone" class="fieldCtr" type="tel" id="phone" name="phone" placeholder="Phone e.g. +123-123-4567890" required>
+                    </div>
+                    <ng-container *ngIf="registerForm.get('addressGroup')?.get('phone')?.touched || registerForm.get('addressGroup')?.get('phone')?.dirty">
+                        <div *ngIf="registerForm.get('addressGroup')?.get('phone')?.errors?.['required']" class="err-msg">Phone is required!</div>
+                        <div *ngIf="registerForm.get('addressGroup')?.get('phone')?.errors?.['pattern']" class="err-msg">Valid phone is required!</div>
+                    </ng-container>
+                    <div class="row" [ngClass]="{'error': (registerForm.get('addressGroup')?.get('street_building')?.touched || registerForm.get('addressGroup')?.get('street_building')?.dirty) && registerForm.get('addressGroup')?.get('street_building')?.invalid}">
+                        <i class="fa-solid fa-building"></i>
+                        <input formControlName="street_building" class="fieldCtr" type="text" id="street_building" name="street_building" placeholder="Street Address and Building Number" required>
+                    </div>
+                    <ng-container *ngIf="registerForm.get('addressGroup')?.get('street_building')?.touched || registerForm.get('addressGroup')?.get('street_building')?.dirty">
+                        <div *ngIf="registerForm.get('addressGroup')?.get('street_building')?.errors?.['required']" class="err-msg">Street address and Building number are required!</div>
+                    </ng-container>
+                    <div class="row" [ngClass]="{'error': (registerForm.get('addressGroup')?.get('city')?.touched || registerForm.get('addressGroup')?.get('city')?.dirty) && registerForm.get('addressGroup')?.get('city')?.invalid}">
+                        <i class="fa-solid fa-city"></i>
+                        <input formControlName="city" class="fieldCtr" type="text" id="city" name="city" placeholder="City" required>
+                    </div>
+                    <ng-container *ngIf="registerForm.get('addressGroup')?.get('city')?.touched || registerForm.get('addressGroup')?.get('city')?.dirty">
+                        <div *ngIf="registerForm.get('addressGroup')?.get('city')?.errors?.['required']" class="err-msg">City is required!</div>
+                    </ng-container>
+                    <div class="row" [ngClass]="{'error': (registerForm.get('addressGroup')?.get('region')?.touched || registerForm.get('addressGroup')?.get('region')?.dirty) && registerForm.get('addressGroup')?.get('region')?.invalid}">
+                        <i class="fa-regular fa-map"></i>
+                        <input formControlName="region" class="fieldCtr" type="text" id="region" name="region" placeholder="Region" required>
+                    </div>
+                    <ng-container *ngIf="registerForm.get('addressGroup')?.get('region')?.touched || registerForm.get('addressGroup')?.get('region')?.dirty">
+                        <div *ngIf="registerForm.get('addressGroup')?.get('region')?.errors?.['required']" class="err-msg">Region is required!</div>
+                    </ng-container>
+                    <div class="row" [ngClass]="{'error': (registerForm.get('addressGroup')?.get('postalCode')?.touched || registerForm.get('addressGroup')?.get('postalCode')?.dirty) && registerForm.get('addressGroup')?.get('postalCode')?.invalid}">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input formControlName="postalCode" class="fieldCtr" type="text" id="postalCode" name="postalCode" placeholder="Postal code" required>
+                    </div>
+                    <ng-container *ngIf="registerForm.get('addressGroup')?.get('postalCode')?.touched || registerForm.get('addressGroup')?.get('postalCode')?.dirty">
+                        <div *ngIf="registerForm.get('addressGroup')?.get('postalCode')?.errors?.['required']" class="err-msg">Postal code is required!</div>
+                    </ng-container>
+                    <div class="row" [ngClass]="{'error': (registerForm.get('addressGroup')?.get('country')?.touched || registerForm.get('addressGroup')?.get('country')?.dirty) && registerForm.get('addressGroup')?.get('country')?.invalid}">
+                        <i class="fa-solid fa-globe"></i>
+                        <input formControlName="country" class="fieldCtr" type="text" id="country" name="country" placeholder="Country" required>
+                    </div>
+                    <ng-container *ngIf="registerForm.get('addressGroup')?.get('country')?.touched || registerForm.get('addressGroup')?.get('country')?.dirty">
+                        <div *ngIf="registerForm.get('addressGroup')?.get('country')?.errors?.['required']" class="err-msg">Country is required!</div>
+                    </ng-container>
+                </ng-container>
                 <ng-container formGroupName="passGroup">
                     <div class="row" [ngClass]="{'error': (registerForm.get('passGroup')?.get('password')?.touched || registerForm.get('passGroup')?.get('password')?.dirty) && registerForm.get('passGroup')?.get('password')?.invalid}">
                         <i class="fas fa-lock"></i>
                         <input formControlName="password" class="fieldCtr" type="password" id="password" name="password" placeholder="Password" required>
                     </div>
-                    <ng-container *ngIf="registerForm.get('passGroup')?.get('pass')?.touched || registerForm.get('passGroup')?.get('pass')?.dirty">
-                        <div *ngIf="registerForm.get('passGroup')?.get('pass')?.errors?.['required']" class="err-msg">Password is required!</div>
-                        <div *ngIf="registerForm.get('passGroup')?.get('pass')?.errors?.['minlength']" class="err-msg">Password must be at least 6 characters long!</div>
+                    <ng-container *ngIf="registerForm.get('passGroup')?.get('password')?.touched || registerForm.get('passGroup')?.get('password')?.dirty">
+                        <div *ngIf="registerForm.get('passGroup')?.get('password')?.errors?.['required']" class="err-msg">Password is required!</div>
+                        <div *ngIf="registerForm.get('passGroup')?.get('password')?.errors?.['minlength']" class="err-msg">Password must be at least 6 characters long!</div>
                     </ng-container>
-                    <div class="row" [ngClass]="{'error': (registerForm.get('passGroup')?.get('rePassword')?.touched || registerForm.get('passGroup')?.get('rePassword')?.dirty) && registerForm.get('passGroup')?.invalid}">
+                    <div class="row" [ngClass]="{'error': (registerForm.get('passGroup')?.get('rePassword')?.touched || registerForm.get('passGroup')?.get('rePassword')?.dirty) && registerForm.get('passGroup')?.get('rePassword')?.invalid}">
                         <i class="fas fa-lock"></i>
                         <input formControlName="rePassword" class="fieldCtr" type="password" id="rePassword" name="rePassword" placeholder="Confirm Password" required>
                     </div>

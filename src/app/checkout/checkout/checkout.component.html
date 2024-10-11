@@ -4,6 +4,10 @@
 </ng-container>
 <section class="section-checkout">
     <div class="container">
+        <ng-container *ngIf="httpError?.error">
+            <!-- <div class="alert">{{httpError.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div> -->
+            <div class="alert">{{httpError.error?.message}}</div>
+        </ng-container>
         <!-- Display a payment form -->
         <div id="checkout">
             <!-- Checkout will insert the payment form here -->

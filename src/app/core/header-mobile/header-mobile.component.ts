@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, catchError, of } from 'rxjs';
 
-import { ShoppingCartService } from 'src/app/shared/shopping-cart.service';
+import { ConfirmOrderService } from 'src/app/checkout/confirm-order/confirm-order.service';
+import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { HttpError } from 'src/app/types/httpError';
 import { LoggedInOrLoggedOut, loggedInOrLoggedOutInitState } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
@@ -17,7 +18,7 @@ export class HeaderMobileComponent implements OnInit, OnDestroy {
   public loggedInOrLoggedOut: LoggedInOrLoggedOut = loggedInOrLoggedOutInitState;
   private unsubscriptionArray: Subscription[] = [];
 
-  constructor(private userService: UserService, private router: Router, private cartService: ShoppingCartService) { }
+  constructor(private userService: UserService, private router: Router, private cartService: ShoppingCartService, private confirmOrderService: ConfirmOrderService) { }
 
   ngOnInit(): void {
     // mobileModal();
@@ -46,6 +47,7 @@ export class HeaderMobileComponent implements OnInit, OnDestroy {
         return;
       }
       this.cartService.emptyCart();
+      this.confirmOrderService.resetDBOrderState();
       this.router.navigate(['/auth/login']);
     });
   }

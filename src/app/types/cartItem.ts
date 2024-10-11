@@ -19,3 +19,25 @@ export interface CartItem {
     product: number,
     checked: boolean
 }
+
+export const cartItemInitailState = {
+    _ownerId: '',
+    _id: '',
+    _createdOn: NaN,
+    image: '',
+    altImages: [],
+    cat: '',
+    subCat: '',
+    description: '',
+    brand: '',
+    size: [],
+    selectedSize: '',
+    color: [],
+    selectedColor: '',
+    quantity: NaN,
+    selectedQuantity: NaN,
+    price: NaN,
+    buyed: true,
+    product: NaN,
+    checked: false
+}

@@ -2,10 +2,72 @@
 <ng-container *ngIf="loading">
     <app-loader />
 </ng-container>
-<section id="success" class="section-confirm-order hidden" *ngIf="!loading">
-    <p *ngIf="session_status$==='complete'">
-        We appreciate your business! A confirmation email will be sent to <span
-            id="customer-email">{{customer_email$}}</span>.
-        If you have any questions, please email <a href="mailto:yourEmailHere@example.com">yourEmailHere&commat;yourDomainHere.com</a>.
-    </p>
+<section id="success" class="section-confirm-order" *ngIf="!loading">
+    <ng-container *ngIf="httpError?.error">
+        <!-- <div class="alert">{{httpError.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div> -->
+        <div class="alert">{{httpError.error?.message}}</div>
+    </ng-container>
+    <div class="container">
+        <p *ngIf="session_status$==='complete'">We appreciate your business! A confirmation email will be sent to <span id="customer-email">{{customer_email$}}</span>.</p>
+        <p>If you have any questions, please email <a href="mailto:yourEmailHere@example.com">yourEmailHere&commat;yourDomainHere.com</a>.</p>
+        <!-- Title -->
+        <h2><a href="javascript:void(0)">Order #{{'order.length'}}/{{dbOrder?._createdOn}}</a></h2>
+        <!-- Details -->
+        <div class="order">
+            <ng-container *ngFor="let itm of dbOrder?.purchasedItems">
+                <div class="itm">
+                    <div class="media">
+                        <img class="img" src="{{itm.image}}" alt="item image">
+                    </div>
+                    <div class="itm description">
+                        <h6>{{itm.subCat}}</h6>
+                        <span>Description: {{itm.description}}</span>
+                        <span>Brand: {{itm.brand}}</span>
+                        <span>Size: {{itm.selectedSize}}</span>
+                        <span>Color: {{itm.selectedColor}}</span>
+                        <span>Quantity: {{itm.selectedQuantity}}</span>
+                        <span>Price: ${{itm.price}}</span>
+                        <span>Amount: ${{itm.product}}</span>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="subtotal">
+                <span class="title">Subtotal:</span>
+                <span class="amount">${{dbOrder?.subtotal?.toFixed(2)}}</span>
+            </div>
+            <div class="discount">
+                <span class="title">Discount</span>
+                <span class="code">{{dbOrder?.discount?.code}}</span>
+                <span class="amount">&minus;${{dbOrder?.discountValue?.toFixed(2)}}</span>
+            </div>
+            <div class="shipping">
+                <span class="title">Shipping</span>
+                <span class="method-name">{{dbOrder?.shippingMethod?.name}}</span>
+                <span class="amount">${{dbOrder?.shippingValue?.toFixed(2)}}</span>
+            </div>
+            <div class="total">
+                <span class="title">Total:</span>
+                <span class="amount">${{dbOrder?.total?.toFixed(2)}}</span>
+            </div>
+            <!-- Payment -->
+            <div class="payment">
+                <div class="col-lg-6">
+                    <h3>{{'Payment Method'}}</h3>
+                    <p>{{'Visa -1234'}}</p>
+                    <p>${{dbOrder?.total?.toFixed(2)}}<span>{{dbOrder?.paymentState?.toUpperCase()}}</span></p>
+                </div>
+                <div class="address">
+                    <h3>Billing address</h3>
+                    <address>
+                        <em>{{dbOrder?.username}}</em>
+                        <em>{{dbOrder?.address?.phone}}</em>
+                        <em>{{dbOrder?.address?.street_building}}</em>
+                        <em>{{dbOrder?.address?.city}}, {{dbOrder?.address?.postalCode}}</em>
+                        <em>{{dbOrder?.address?.region}}</em>
+                        <em>{{dbOrder?.address?.country}}</em>
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

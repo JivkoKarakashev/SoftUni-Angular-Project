@@ -3,7 +3,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 import config from '../config/carouselSlideConfig';
 import { HomeService } from './home.service';
-import { ShoppingCartService } from '../shared/shopping-cart.service';
+import { ShoppingCartService } from '../shared/shopping-cart/shopping-cart.service';
 import { CartItem } from '../types/cartItem';
 
 import { Jacket } from '../types/jacket';

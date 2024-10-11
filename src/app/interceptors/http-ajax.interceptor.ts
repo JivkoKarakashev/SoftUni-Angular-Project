@@ -2,13 +2,11 @@ import { Injectable, Provider } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
 
-import { UserForAuth } from '../types/user';
 import { UserService } from '../user/user.service';
 export const HttpAJAXInterceptorSkipHeader = 'X-Skip-HttpAJAXInterceptor';
 
 @Injectable()
 export class HttpAJAXInterceptor implements HttpInterceptor {
-  private user$: UserForAuth | null = null;
 
   constructor(private userService: UserService) { }
 
@@ -20,17 +18,20 @@ export class HttpAJAXInterceptor implements HttpInterceptor {
     ////////////////////////////////
     console.log('AJAXInterceptor invoked!');
     let newReq: HttpRequest<any> = req.clone({ ...req });
+    // console.log(req.body);
     if (req.url.startsWith('http://localhost:3030/data/') && req.body) {
-      this.userService.user$.subscribe(usr => this.user$ = usr);
-      // console.log(this.user$);
-      if (this.user$) {
-        // console.log('AJAX Iterceptor');
-        const { accessToken } = this.user$;
-        const addHeaders = { 'Content-Type': 'application/json', 'X-Authorization': accessToken };
-        const serializedBody = req.serializeBody();
-        newReq = req.clone({ setHeaders: addHeaders, body: serializedBody });
-        // console.log(newReq.headers);
-      }
+      const userSubscription = this.userService.user$.subscribe(usr => {
+        if (usr) {
+          // console.log(usr);
+          const { accessToken } = usr;
+          // console.log(accessToken);
+          const addHeaders = { 'Content-Type': 'application/json', 'X-Authorization': accessToken };
+          const serializedBody = req.serializeBody();
+          newReq = req.clone({ setHeaders: addHeaders, body: serializedBody });
+          // console.log(newReq.headers);
+        }
+      });
+      userSubscription.unsubscribe();
     }
     return next.handle(newReq).pipe(catchError((err) => {
       console.log(err);

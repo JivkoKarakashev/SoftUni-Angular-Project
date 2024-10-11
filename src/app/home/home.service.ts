@@ -24,6 +24,7 @@ import { Waistcoat } from '../types/waistcoat';
 import { TuxedoPartywear } from '../types/tuxedoPartywear';
 import { Tie } from '../types/tie';
 import { HttpLogoutInterceptorSkipHeader } from '../interceptors/http-logout.interceptor';
+import { HttpAJAXInterceptorSkipHeader } from '../interceptors/http-ajax.interceptor';
 
 const RECENT_TWO_JACKETS_URL = 'http://localhost:3030/data/jackets?sortBy=_createdOn%20desc&offset=0&pageSize=2';
 const RECENT_TWO_LONGWEAR_URL = 'http://localhost:3030/data/longwear?sortBy=_createdOn%20desc&offset=0&pageSize=2';
@@ -55,7 +56,7 @@ export class HomeService {
   constructor(private http: HttpClient) { }
 
   getRecentTwoItems() {
-    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     return forkJoin([
       this.http.get<Jacket[]>(RECENT_TWO_JACKETS_URL, { headers }),
       this.http.get<Longwear[]>(RECENT_TWO_LONGWEAR_URL, { headers }),

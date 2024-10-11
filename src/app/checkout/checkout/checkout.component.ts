@@ -8,7 +8,7 @@ import { UserForAuth } from 'src/app/types/user';
 import { EmbeddedCheckout } from 'src/app/types/embeddedCheckout';
 import { HttpError } from 'src/app/types/httpError';
 import { CheckoutService } from './checkout.service';
-import { Order } from 'src/app/types/order';
+import { DBOrder } from 'src/app/types/order';
 
 @Component({
   selector: 'app-checkout',
@@ -18,7 +18,7 @@ import { Order } from 'src/app/types/order';
 export class CheckoutComponent implements OnInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = [];
   public user: UserForAuth | null = null;
-  private order$: Order | null = null;
+  private dbOrder: DBOrder | null = null;
   private embeddedCheckout$: EmbeddedCheckout | null = null;
   public httpError: HttpError = {};
 
@@ -38,17 +38,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return;
     }
     // Create a Checkout Session
-    const embeddedCheckoutSubscription = this.checkoutService.getOrder()
+    const embeddedCheckoutSubscription = this.checkoutService.getDBOrder()
       .pipe(
-        switchMap(orderArr => {
-          const order = orderArr[0];
-          console.log(order);
-          this.order$ = { ...order };
-          return this.checkoutService.createCheckoutSession(this.order$);
+        switchMap(dbOrder => {
+          // console.log(dbOrder);
+          this.dbOrder = { ...dbOrder };
+          return this.checkoutService.createCheckoutSession(this.dbOrder);
         }),
         switchMap(secret => {
           const { clientSecret } = secret;
-          console.log(clientSecret);
+          // console.log(clientSecret);
           return this.stripe.initEmbeddedCheckout({ clientSecret });
         }),
         catchError((err) => {
@@ -73,7 +72,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
-      // console.log('UnsubArray = 2');      
+      // console.log('UnsubArray = 1');      
     });
+    // console.log('UnsubArray = 2');      
   }
 }

@@ -67,12 +67,12 @@
 
                         <div class="subtotal">
                             <span class="title">Subtotal:</span>
-                            <span #subTotalEl class="amount">${{subTotal.toFixed(2)}}</span>
+                            <span #subTotalEl class="amount">${{subtotalValue.toFixed(2)}}</span>
                         </div>
                         <div class="discount">
                             <span class="title">
                                 <select class="discount" formControlName="discount" name="discount" (change)="onDiscountChange($event)" required>
-                                    <option *ngFor="let disc of discountCodes; let i = index;" [selected]="disc.code === discountState.code">{{disc.code}}</option>
+                                    <option *ngFor="let disc of discountCodes; let i = index;" [selected]="disc.code === discount.value.code">{{disc.code}}</option>
                                 </select>
                             </span>
                             <span class="amount">&minus;${{discountValue.toFixed(2)}}</span>
@@ -80,32 +80,24 @@
                         <div class="shipping">
                             <span class="title">
                                 <select class="shipping" formControlName="shipping" name="shipping" (change)="onShippingChange($event)" required>
-                                    <option *ngFor="let method of shippingMethods; let i = index;" [selected]="method.name === shippingState.name">{{method.name}}</option>
+                                    <option *ngFor="let method of shippingMethods; let i = index;" [selected]="method.name === shipping.value.name">{{method.name}}</option>
                                 </select>
                             </span>
                             <span class="amount">${{shippingValue.toFixed(2)}}</span>
                         </div>
                         <div class="total modal-footer">
                             <span class="title">Total:</span>
-                            <span class="amount">${{total.toFixed(2)}}</span>
+                            <span class="amount">${{totalValue.toFixed(2)}}</span>
                         </div>
                         
                         <div class="buttons">
-                            <input [disabled]="form.invalid || !listItems.length || shippingName === 'shipping method' || discountCode === 'discount code'" class="button finish" type="submit" value="Checkout">
+                            <input [disabled]="form.invalid || !listItems.length || shipping.value.name === 'shipping method' || discount.value.code === 'discount code'" class="button finish" type="submit" value="Checkout">
                             <a class="button cancel" href="javascript:void(0)">Continue shopping</a>
                         </div>
                     </fieldset>
                 </form>
 
             </div>
-            <!-- <div class="modal-footer">
-                <h3>Total</h3>
-                <p #totalEl></p>
-            </div> -->
-            <!-- <div class="buttons">
-                <a class="button finish" href="javascript:void(0)">Finish</a>
-                <a class="button cancel" href="javascript:void(0)">Continue shopping</a>
-            </div> -->
         </div>
     </div>
 </li>

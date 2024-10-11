@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 
-import { Shipping, shippingInitialState } from '../types/shipping';
-import { Discount, discountInitialState } from '../types/discount';
-import { CartItem } from '../types/cartItem';
-import { CheckForItemType } from './utils/checkForItemType';
-import { Order } from '../types/order';
-import { HttpLogoutInterceptorSkipHeader } from '../interceptors/http-logout.interceptor';
-import { HttpAJAXInterceptorSkipHeader } from '../interceptors/http-ajax.interceptor';
+import { Shipping, shippingInitialState } from '../../types/shipping';
+import { Discount, discountInitialState } from '../../types/discount';
+import { CartItem } from '../../types/cartItem';
+import { CheckForItemType } from '../utils/checkForItemType';
+import { DBOrder, Order } from '../../types/order';
+import { HttpLogoutInterceptorSkipHeader } from '../../interceptors/http-logout.interceptor';
+import { HttpAJAXInterceptorSkipHeader } from '../../interceptors/http-ajax.interceptor';
 
 const SHIPPINGMETHODS_URL = 'http://localhost:3030/data/shipping';
 const DISCOUNTS_URL = 'http://localhost:3030/data/discounts';
@@ -36,7 +36,7 @@ export class ShoppingCartService {
     this.cartItems$$.next([...cartState]);
   }
 
-  public preserveCartState = {
+  preserveCartState = {
     preserveCartItemsState: (): void => localStorage.setItem('cartItemsState', JSON.stringify([...this.cartItems$$.value])),
     preserveDiscountState: (): void => localStorage.setItem('discountState', JSON.stringify({ ...this.discountState$$.value })),
     preserveShippingState: (): void => localStorage.setItem('shippingState', JSON.stringify({ ...this.shippingState$$.value }))
@@ -135,22 +135,10 @@ export class ShoppingCartService {
     this.clearCartState();
   }
 
-  placeOrder(
-    email: string,
-    purchasedItems: CartItem[],
-    subtotal: number,
-    discount: Discount,
-    discountValue: number,
-    shippingMethod: Shipping,
-    shippingValue: number,
-    total: number,
-    paymentState: string): Observable<Order> {
+  placeOrder(order: Order): Observable<DBOrder> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
-    const body = JSON.stringify({ email, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState });
-    // console.log(purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total);
-    this.preserveCartState.preserveCartItemsState();
-    this.preserveCartState.preserveDiscountState();
-    this.preserveCartState.preserveShippingState();
-    return this.http.post<Order>(ORDER_URL, body, { headers });
+    const { email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState } = order;
+    const body = JSON.stringify({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState });
+    return this.http.post<DBOrder>(ORDER_URL, body, { headers });
   }
 }

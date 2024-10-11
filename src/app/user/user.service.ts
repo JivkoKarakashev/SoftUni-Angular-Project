@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, tap } from 'rxjs';
 
 import { LoggedInOrLoggedOut, UserForAuth, UserForLogin, UserForRegister, loggedInOrLoggedOutInitState } from '../types/user';
 import { HttpAJAXInterceptorSkipHeader } from '../interceptors/http-ajax.interceptor';
@@ -19,9 +19,9 @@ export class UserService {
   public setUser(userData?: UserForAuth | null): void {
     // console.log(userData);
     if (userData) {
-      const { _id, accessToken, email, username } = userData;
-      this.user$$.next({ ...this.user$$, _id, accessToken, email, username });
-      localStorage.setItem('userData', JSON.stringify({ _id, accessToken, email, username }));
+      const { _id, accessToken, email, username, address } = userData;
+      this.user$$.next({ ...this.user$$, _id, accessToken, email, username, address });
+      localStorage.setItem('userData', JSON.stringify({ _id, accessToken, email, username, address }));
     } else {
       this.user$$.next(null);
       localStorage.removeItem('userData');
@@ -31,16 +31,16 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  login(userData: UserForLogin) {
+  login(userData: UserForLogin): Observable<UserForAuth> {
     const { email, password } = userData;
     console.log(email, password);
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     const body = JSON.stringify({ email, password });
     // console.log(body);    
     return this.http.post<UserForAuth>('http://localhost:3030/users/login', body, { headers })
-      .pipe(map((user) => {
-        const { _id, accessToken, email, username } = user;
-        this.setUser({ _id, accessToken, email, username });
+      .pipe(tap((user) => {
+        const { _id, accessToken, email, username, address } = user;
+        this.setUser({ _id, accessToken, email, username, address });
       }),
         catchError((err) => {
           // console.log(err);
@@ -49,15 +49,15 @@ export class UserService {
       );
   }
 
-  register(userData: UserForRegister) {
-    const { email, username, password } = userData;
+  register(userData: UserForRegister): Observable<UserForAuth> {
+    const { email, username, password, address } = userData;
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-    const body = JSON.stringify({ email, username, password });
+    const body = JSON.stringify({ email, username, password, address });
     // console.log(body);
     return this.http.post<UserForAuth>('http://localhost:3030/users/register', body, { headers })
       .pipe(tap((user) => {
         const { _id, accessToken, email, username } = user;
-        this.setUser({ _id, accessToken, email, username });
+        this.setUser({ _id, accessToken, email, username, address });
       }));
   }
 
