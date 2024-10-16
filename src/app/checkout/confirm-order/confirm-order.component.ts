@@ -57,6 +57,7 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
           }
           const dbOrder = { ...res };
           this.confirmOrderService.setDBOrderState(dbOrder);
+          this.cartService.emptyCart();
           this.confirmOrderService.removeDBOrderStateFromLStor();
         });
       this.unsubscriptionArray.push(sessionStatusSubscription);
@@ -76,7 +77,6 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
     complete: () => {
       console.log('SESSION STATUS: COMPLETE!!');
       if (this.dbOrder) {
-        this.cartService.emptyCart();
         return this.confirmOrderService.updateDBOrderById({ ...this.dbOrder, paymentState: 'paid' }, this.dbOrder._id);
       } else {
         return EMPTY;
