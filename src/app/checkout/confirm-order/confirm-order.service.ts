@@ -54,6 +54,11 @@ export class ConfirmOrderService {
     return this.http.get<SessionStatus>(`${CHECKOUT_SESSSION_STATUS_URL}?session_id=${sessionId}`, { headers });
   }
 
+  getOrederCollectionSize(): Observable<number> {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<number>(`${BASE_URL}?count`, { headers });
+  }
+
   updateDBOrderById(dbOrder: DBOrder, orderId: string): Observable<DBOrder> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     const body = JSON.stringify({ ...dbOrder });

@@ -19,6 +19,7 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
   public session_status$: string | null = null;
   public customer_email$: string | null = null;
   public dbOrder: DBOrder | null = null;
+  public dbOrderDate: string | null = null;
   public httpError: HttpError = {};
 
   constructor(private activeRoute: ActivatedRoute, private confirmOrderService: ConfirmOrderService, private cartService: ShoppingCartService) { }
@@ -43,6 +44,17 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
             // console.log(status);
             return iif(() => status === 'complete', this.switchByStatus.complete(), this.switchByStatus.open());
           }),
+          switchMap(orderCollSize => {
+            if (this.dbOrder) {
+              console.log(orderCollSize);
+              const paymentState = 'paid';
+              const sequenceNumber = orderCollSize;
+              this.dbOrder = { ... this.dbOrder, sequenceNumber: orderCollSize };
+              return this.confirmOrderService.updateDBOrderById({ ...this.dbOrder, paymentState, sequenceNumber }, this.dbOrder._id);
+            } else {
+              return EMPTY;
+            }
+          }),
           catchError((err) => {
             console.log(err);
             this.httpError = err;
@@ -55,7 +67,14 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
           if (res == this.httpError) {
             return;
           }
-          const dbOrder = { ...res };
+          const dbOrder: DBOrder = { ...res };
+          this.dbOrderDate = new Date(dbOrder._createdOn).toLocaleDateString('en-US', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
+          console.log(this.dbOrderDate);
           this.confirmOrderService.setDBOrderState(dbOrder);
           this.cartService.emptyCart();
           this.confirmOrderService.removeDBOrderStateFromLStor();
@@ -77,7 +96,8 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
     complete: () => {
       console.log('SESSION STATUS: COMPLETE!!');
       if (this.dbOrder) {
-        return this.confirmOrderService.updateDBOrderById({ ...this.dbOrder, paymentState: 'paid' }, this.dbOrder._id);
+        // return this.confirmOrderService.updateDBOrderById({ ...this.dbOrder, paymentState: 'paid' }, this.dbOrder._id);
+        return this.confirmOrderService.getOrederCollectionSize();
       } else {
         return EMPTY;
       }

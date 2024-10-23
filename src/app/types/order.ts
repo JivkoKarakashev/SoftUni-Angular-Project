@@ -30,7 +30,8 @@ export interface DBOrder {
     shippingMethod: Shipping,
     shippingValue: number,
     total: number,
-    paymentState: string
+    paymentState: string,
+    sequenceNumber?: number
 }
 
 export interface Address {

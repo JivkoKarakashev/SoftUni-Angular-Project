@@ -1,8 +1,186 @@
-.section-confirm-order, 
-.container {
+section.component-section.component-header {
     display: flex;
     flex-direction: column;
-    max-width: 100%;
+    max-width: 70%;
+    margin: auto;
+    padding: 1.9em;
+    gap: 1em;
+    background-color: #1a110c;
+
+    & h2 {
+        font-weight: 500;
+        color: #ffffff;
+        text-align: center;
+    }
+
+    & p {
+        font-size: 1.4em;
+        font-weight: 400;
+        font-variant-ligatures: normal;
+        color: #ffffffcc;
+        text-align: center;
+    }
+}
+
+section.summary-address {
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    padding: 1.4em;
+    gap: 1em;
+    width: 90%;
+    background-color: #ffffff0d;
+    border-radius: .6em;
+
+    & div.summary,
+    div.address {
+        display: flex;
+        flex: 1 1 50%;
+        gap: .5em;
+        flex-direction: column;
+    }
+
+    & div.summary h3,
+    div.address h3 {
+        font-size: 1.4em;
+        font-weight: 500;
+        color: #ffcb65;
+    }
+
+    & div.summary span:nth-child(2),
+    div.address span:nth-child(2) {
+        font-size: 1.1em;
+        font-weight: 500;
+        color: #ff9065;
+    }
+
+    & div.summary span:nth-child(3),
+    div.address span:nth-child(3) {
+        font-weight: normal;
+        color: #ffffffcc;
+    }
+
+    & div.summary span:nth-child(4),
+    div.address span:nth-child(1n + 4) {
+        font-weight: 600;
+        color: #ffffff;
+    }
+}
+
+/* /////////////////////////////////////// */
+section.component-section.component-body {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%;
+    margin: auto;
+    gap: 1em;
+    background-color: #e3dad5;
+
+    & h4 {
+        font-weight: 500;
+        color: #1b110c;
+        text-align: center;
+    }
+
+    & h4+span {
+        font-size: 1.1em;
+        font-weight: 400;
+        color: #2a1e19cc;
+        text-align: center;
+    }
+
+    & div.item {
+        display: flex;
+        width: 90%;
+        padding: .5em;
+        gap: .8em;
+        align-self: center;
+        flex-direction: row;
+    }
+}
+
+section.component-section.component-body div.item div.media {
+    align-self: flex-end;
+    flex: 1 1 20%;
+
+    & img {
+        border-radius: 0.6em;
+        border: 1px solid #000000;
+    }
+}
+
+section.component-section.component-body div.item div.item-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 80%;
+
+    & h5 {
+        font-weight: 600;
+        color: #1b110c;
+    }
+
+    & span {
+        font-size: 1.1em;
+        font-weight: 400;
+        color: #2a1e19cc;
+    }
+
+    & span:nth-last-of-type(1) {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #039133;
+    }
+}
+
+/* /////////////////////////////////////// */
+section.component-section.component-footer {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%;
+    margin: auto;
+    gap: 1em;
+    background-color: #1a110c;
+
+    & div.wrapper {
+        display: flex;
+        width: 90%;
+        padding: .5em;
+        gap: .8em;
+        align-self: center;
+        flex-direction: column;
+    }
+
+    & div.wrapper>div {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    & div.wrapper span.title {
+        font-size: 1.4em;
+        font-weight: 400;
+        color: #ffffffcc;
+    }
+
+    & div.wrapper span.amount {
+        font-weight: 600;
+        font-size: 1.4em;
+        color: #ffffff;
+    }
+
+    & div.discount span.amount {
+        color: #039133;
+    }
+
+    & div.shipping {
+        padding: .6em 0;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    & div.total span.title,
+    div.total span.amount {
+        font-size: 1.5em;
+        font-weight: 600;
+    }
 }
 
 .section-confirm-order div.alert {

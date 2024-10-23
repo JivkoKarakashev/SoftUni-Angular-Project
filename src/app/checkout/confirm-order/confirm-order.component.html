@@ -7,67 +7,69 @@
         <!-- <div class="alert">{{httpError.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div> -->
         <div class="alert">{{httpError.error?.message}}</div>
     </ng-container>
-    <div class="container">
-        <p *ngIf="session_status$==='complete'">We appreciate your business! A confirmation email will be sent to <span id="customer-email">{{customer_email$}}</span>.</p>
-        <p>If you have any questions, please email <a href="mailto:yourEmailHere@example.com">yourEmailHere&commat;yourDomainHere.com</a>.</p>
-        <!-- Title -->
-        <h2><a href="javascript:void(0)">Order #{{'order.length'}}/{{dbOrder?._createdOn}}</a></h2>
-        <!-- Details -->
-        <div class="order">
+    <div class="container" *ngIf="session_status$==='complete'">
+        <section class="component-section component-header">
+            <h2>Thank You for Order</h2>
+            <p>A confirmation email will be sent to <span id="customer-email">{{customer_email$}}</span>.</p>
+            <p>If you have any questions&comma; please email <a href="mailto:yourEmailHere@example.com">yourEmailHere&comma; yourDomainHere&dot;com</a>.</p>
+            <section class="summary-address">
+                <div class="summary">
+                    <h3>Summary</h3>
+                    <span>Ready to Ship</span>
+                    <span>&num;{{dbOrder?.sequenceNumber}} &bull; {{dbOrderDate}}</span>
+                    <span>&dollar;{{dbOrder?.total?.toFixed(2)}}</span>
+                </div>
+                <div class="address">
+                    <h3>Shipping Address</h3>
+                    <span>{{dbOrder?.username}}</span>
+                    <span>{{dbOrder?.address?.phone}}</span>
+                    <span>{{dbOrder?.address?.street_building}}&comma; {{dbOrder?.address?.postalCode}}</span>
+                    <span>{{dbOrder?.address?.city}}&comma; {{dbOrder?.address?.postalCode}}</span>
+                    <span>{{dbOrder?.address?.region}}&comma; {{dbOrder?.address?.country}}</span>
+                </div>
+            </section>
+        </section>
+
+        <section class="component-section component-body">
+            <h4>Your item in this order</h4>
+            <span>Order number&colon; &num;{{dbOrder?.sequenceNumber}}</span>
             <ng-container *ngFor="let itm of dbOrder?.purchasedItems">
-                <div class="itm">
+                <div class="item">
                     <div class="media">
-                        <img class="img" src="{{itm.image}}" alt="item image">
+                        <img class="img" src="{{itm.image}}" alt="Product picture">
                     </div>
-                    <div class="itm description">
-                        <h6>{{itm.subCat}}</h6>
-                        <span>Description: {{itm.description}}</span>
-                        <span>Brand: {{itm.brand}}</span>
-                        <span>Size: {{itm.selectedSize}}</span>
-                        <span>Color: {{itm.selectedColor}}</span>
-                        <span>Quantity: {{itm.selectedQuantity}}</span>
-                        <span>Price: ${{itm.price}}</span>
-                        <span>Amount: ${{itm.product}}</span>
+                    <div class="item-details">
+                        <h5>{{itm.subCat}}</h5>
+                        <span>{{itm.description}}</span>
+                        <span>Brand&colon; {{itm.brand}}</span>
+                        <span>Color&colon; {{itm.selectedColor}}</span>
+                        <span>Size&colon; {{itm.selectedSize}}</span>
+                        <span>Quantity&colon; {{itm.selectedQuantity}}</span>
+                        <span>Amount&colon; &dollar;{{itm.product.toFixed(2)}}</span>
                     </div>
                 </div>
             </ng-container>
-            <div class="subtotal">
-                <span class="title">Subtotal:</span>
-                <span class="amount">${{dbOrder?.subtotal?.toFixed(2)}}</span>
-            </div>
-            <div class="discount">
-                <span class="title">Discount</span>
-                <span class="code">{{dbOrder?.discount?.code}}</span>
-                <span class="amount">&minus;${{dbOrder?.discountValue?.toFixed(2)}}</span>
-            </div>
-            <div class="shipping">
-                <span class="title">Shipping</span>
-                <span class="method-name">{{dbOrder?.shippingMethod?.name}}</span>
-                <span class="amount">${{dbOrder?.shippingValue?.toFixed(2)}}</span>
-            </div>
-            <div class="total">
-                <span class="title">Total:</span>
-                <span class="amount">${{dbOrder?.total?.toFixed(2)}}</span>
-            </div>
-            <!-- Payment -->
-            <div class="payment">
-                <div class="col-lg-6">
-                    <h3>{{'Payment Method'}}</h3>
-                    <p>{{'Visa -1234'}}</p>
-                    <p>${{dbOrder?.total?.toFixed(2)}}<span>{{dbOrder?.paymentState?.toUpperCase()}}</span></p>
+        </section>
+
+        <section class="component-section component-footer">
+            <div class="wrapper">
+                <div class="subtotal">
+                    <span class="title">Subtotal&colon;</span>
+                    <span class="amount">&dollar;{{dbOrder?.subtotal?.toFixed(2)}}</span>
                 </div>
-                <div class="address">
-                    <h3>Billing address</h3>
-                    <address>
-                        <em>{{dbOrder?.username}}</em>
-                        <em>{{dbOrder?.address?.phone}}</em>
-                        <em>{{dbOrder?.address?.street_building}}</em>
-                        <em>{{dbOrder?.address?.city}}, {{dbOrder?.address?.postalCode}}</em>
-                        <em>{{dbOrder?.address?.region}}</em>
-                        <em>{{dbOrder?.address?.country}}</em>
-                    </address>
+                <div class="discount">
+                    <span class="title">{{dbOrder?.discount?.code}}</span>
+                    <span class="amount">&minus;&dollar;{{dbOrder?.discountValue?.toFixed(2)}}</span>
+                </div>
+                <div class="shipping">
+                    <span class="title">{{dbOrder?.shippingMethod?.name}}</span>
+                    <span class="amount">&dollar;{{dbOrder?.shippingValue?.toFixed(2)}}</span>
+                </div>
+                <div class="total">
+                    <span class="title">Total&colon;</span>
+                    <span class="amount">&dollar;{{dbOrder?.total?.toFixed(2)}}</span>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 </section>
