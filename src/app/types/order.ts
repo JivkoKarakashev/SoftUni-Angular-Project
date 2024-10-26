@@ -13,7 +13,8 @@ export interface Order {
     shippingMethod: Shipping,
     shippingValue: number,
     total: number,
-    paymentState: string
+    paymentState: 'unpaid',
+    status: 'pending'
 }
 
 export interface DBOrder {
@@ -30,8 +31,10 @@ export interface DBOrder {
     shippingMethod: Shipping,
     shippingValue: number,
     total: number,
-    paymentState: string,
-    sequenceNumber?: number
+    paymentState: 'unpaid' | 'paid',
+    referenceNumber?: string,
+    sequenceNumber?: number,
+    status: 'pending' | 'confirmed' | 'shipped' | 'delivered'
 }
 
 export interface Address {
@@ -43,7 +46,7 @@ export interface Address {
     country: string
 }
 
-export const addressInitialState = {
+export const addressInitialState: Address = {
     phone: '',
     street_building: '',
     city: '',
@@ -52,7 +55,7 @@ export const addressInitialState = {
     country: ''
 }
 
-export const orderInitialState = {
+export const orderInitialState: Order = {
     email: '',
     username: '',
     address: addressInitialState,
@@ -63,10 +66,11 @@ export const orderInitialState = {
     shippingMethod: shippingInitialState,
     shippingValue: NaN,
     total: NaN,
-    paymentState: ''
+    paymentState: 'unpaid',
+    status: 'pending'
 }
 
-export const dbOrderInitialState = {
+export const dbOrderInitialState: DBOrder = {
     _createdOn: NaN,
     _id: '',
     _ownerId: '',
@@ -80,5 +84,6 @@ export const dbOrderInitialState = {
     shippingMethod: shippingInitialState,
     shippingValue: NaN,
     total: NaN,
-    paymentState: ''
+    paymentState: 'unpaid',
+    status: 'pending'
 }

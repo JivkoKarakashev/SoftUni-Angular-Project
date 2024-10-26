@@ -137,8 +137,8 @@ export class ShoppingCartService {
 
   placeOrder(order: Order): Observable<DBOrder> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
-    const { email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState } = order;
-    const body = JSON.stringify({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState });
+    const { email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status } = order;
+    const body = JSON.stringify({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status });
     return this.http.post<DBOrder>(ORDER_URL, body, { headers });
   }
 }

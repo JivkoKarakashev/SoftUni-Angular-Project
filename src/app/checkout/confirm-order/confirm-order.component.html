@@ -10,13 +10,13 @@
     <div class="container" *ngIf="session_status$==='complete'">
         <section class="component-section component-header">
             <h2>Thank You for Order</h2>
-            <p>A confirmation email will be sent to <span id="customer-email">{{customer_email$}}</span>.</p>
-            <p>If you have any questions&comma; please email <a href="mailto:yourEmailHere@example.com">yourEmailHere&comma; yourDomainHere&dot;com</a>.</p>
+            <p>A confirmation email will be sent to <span id="customer-email">{{customer_email$}}</span>&#8228;</p>
+            <p>If you have any questions&comma; please email <a href="mailto:yourEmailHere@example.com">yourEmailHere&#8228;yourDomainHere&#8228;com</a>&#8228;</p>
             <section class="summary-address">
                 <div class="summary">
                     <h3>Summary</h3>
                     <span>Ready to Ship</span>
-                    <span>&num;{{dbOrder?.sequenceNumber}} &bull; {{dbOrderDate}}</span>
+                    <span>&num;{{dbOrder?.referenceNumber}} &bull; {{dbOrderDate}}</span>
                     <span>&dollar;{{dbOrder?.total?.toFixed(2)}}</span>
                 </div>
                 <div class="address">
@@ -32,7 +32,7 @@
 
         <section class="component-section component-body">
             <h4>Your item in this order</h4>
-            <span>Order number&colon; &num;{{dbOrder?.sequenceNumber}}</span>
+            <span>Order number&colon; &num;{{dbOrder?.referenceNumber}}</span>
             <ng-container *ngFor="let itm of dbOrder?.purchasedItems">
                 <div class="item">
                     <div class="media">

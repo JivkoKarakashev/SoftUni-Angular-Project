@@ -39,7 +39,8 @@ const DBOrderSchema = {
     shippingMethod: 'Shipping',
     shippingValue: 'number',
     total: 'number',
-    paymentState: 'string'
+    paymentState: 'string',
+    status: 'string'
 };
 
 @Injectable({

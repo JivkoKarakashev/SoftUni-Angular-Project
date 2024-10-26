@@ -48,9 +48,10 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
             if (this.dbOrder) {
               console.log(orderCollSize);
               const paymentState = 'paid';
+              const referenceNumber = this.dbOrder._createdOn.toString(16);
               const sequenceNumber = orderCollSize;
               this.dbOrder = { ... this.dbOrder, sequenceNumber: orderCollSize };
-              return this.confirmOrderService.updateDBOrderById({ ...this.dbOrder, paymentState, sequenceNumber }, this.dbOrder._id);
+              return this.confirmOrderService.updateDBOrderById({ ...this.dbOrder, paymentState, referenceNumber, sequenceNumber }, this.dbOrder._id);
             } else {
               return EMPTY;
             }
@@ -75,9 +76,12 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
             day: 'numeric',
           });
           console.log(this.dbOrderDate);
-          this.confirmOrderService.setDBOrderState(dbOrder);
+          // this.confirmOrderService.setDBOrderState(dbOrder);
+          this.dbOrder = { ...dbOrder };
           this.cartService.emptyCart();
-          this.confirmOrderService.removeDBOrderStateFromLStor();
+          orderSubscription.unsubscribe();
+          this.confirmOrderService.resetDBOrderState();
+          // this.confirmOrderService.removeDBOrderStateFromLStor();
         });
       this.unsubscriptionArray.push(sessionStatusSubscription);
     }
@@ -89,7 +93,7 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');      
     });
-    // console.log('UnsubArray = 2');
+    // console.log('UnsubArray = 3');
   }
 
   private switchByStatus = {

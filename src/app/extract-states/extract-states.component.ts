@@ -35,8 +35,8 @@ export class ExtractStatesComponent {
       this.cartService.setShippingState(name, value);
     }
     if (this.dbOrderState) {
-      const { _createdOn, _id, _ownerId, email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState } = this.dbOrderState;
-      this.confirmOrderService.setDBOrderState({ _createdOn, _id, _ownerId, email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState });
+      const { _createdOn, _id, _ownerId, email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status } = this.dbOrderState;
+      this.confirmOrderService.setDBOrderState({ _createdOn, _id, _ownerId, email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status });
     }
   }
 }

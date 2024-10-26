@@ -16,17 +16,17 @@ export class UserService {
   private loggedInOrLoggedOut$$ = new BehaviorSubject<LoggedInOrLoggedOut>(loggedInOrLoggedOutInitState);
   public loggedInOrLoggedOut$ = this.loggedInOrLoggedOut$$.asObservable();
 
-  public setUser(userData?: UserForAuth | null): void {
+  setUser(userData?: UserForAuth | null): void {
     // console.log(userData);
     if (userData) {
       const { _id, accessToken, email, username, address } = userData;
-      this.user$$.next({ ...this.user$$, _id, accessToken, email, username, address });
+      this.user$$.next({ ...this.user$$.value, _id, accessToken, email, username, address });
       localStorage.setItem('userData', JSON.stringify({ _id, accessToken, email, username, address }));
     } else {
       this.user$$.next(null);
       localStorage.removeItem('userData');
     }
-    this.loggedInOrLoggedOut$$.next({ ...this.loggedInOrLoggedOut$$, isLoggedIn: !!userData, isLoggedOut: !userData });
+    this.loggedInOrLoggedOut$$.next({ ...this.loggedInOrLoggedOut$$.value, isLoggedIn: !!userData, isLoggedOut: !userData });
   }
 
   constructor(private http: HttpClient) { }

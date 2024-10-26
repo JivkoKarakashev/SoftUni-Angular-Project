@@ -1,0 +1,773 @@
+{
+    "c9370d81-bbc9-4fe9-b6c4-cb9313dfa677": {
+        "_createdOn": 1729856211104,
+        "_id": "c9370d81-bbc9-4fe9-b6c4-cb9313dfa677",
+        "_ownerId": "2beadf04-1d5d-4b6b-91a5-56e4f72a2b8c",
+        "email": "peter@abv.bg",
+        "username": "Peter",
+        "address": {
+            "phone": "+1-415-123456",
+            "street_building": "1355 Market St, Suite 900",
+            "city": "San Francisco",
+            "region": "California",
+            "postalCode": "CA 94103",
+            "country": "USA"
+        },
+        "purchasedItems": [
+            {
+                "_id": "572883fb-4f2e-443e-8bd9-280fc1072fa6",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721715474524,
+                "image": "https://cdn.pixabay.com/photo/2018/06/26/13/29/belt-buckle-3499410_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/accessories/belts/colors/belts-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/accessories/belts/colors/belts-5-chartreuse.webp"
+                ],
+                "cat": "accessories",
+                "subCat": "belts",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    30,
+                    32,
+                    34,
+                    36
+                ],
+                "selectedSize": "30",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "beige",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            },
+            {
+                "_id": "cc73d130-210a-4e79-8d7a-7b200ed4170d",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721715480524,
+                "image": "https://cdn.pixabay.com/photo/2016/02/11/20/21/mens-leather-gloves-1194450_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/accessories/gloves/colors/gloves-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/accessories/gloves/colors/gloves-5-chartreuse.webp"
+                ],
+                "cat": "accessories",
+                "subCat": "gloves",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    8,
+                    8.5,
+                    9.5,
+                    10
+                ],
+                "selectedSize": "8",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "chartreuse",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            },
+            {
+                "_id": "af7a58f3-bb9d-4a09-9395-bfc124d6de37",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721715486524,
+                "image": "https://cdn.pixabay.com/photo/2015/07/22/21/24/oakley-856122_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/accessories/sunglasses/colors/sunglasses-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/accessories/sunglasses/colors/sunglasses-5-chartreuse.webp"
+                ],
+                "cat": "accessories",
+                "subCat": "sunglasses",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "M",
+                    "L",
+                    "XXL"
+                ],
+                "selectedSize": "M",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "beige",
+                "quantity": 14,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            }
+        ],
+        "subtotal": 63,
+        "discount": {
+            "code": "NEWYEARSALE -50%",
+            "rate": 50
+        },
+        "discountValue": 31.5,
+        "shippingMethod": {
+            "name": "economic 7$",
+            "value": 7
+        },
+        "shippingValue": 7,
+        "total": 38.5,
+        "paymentState": "paid",
+        "status": "pending",
+        "sequenceNumber": 1,
+        "referenceNumber": "192c37708a0",
+        "_updatedOn": 1729856323562
+    },
+    "cc2055f3-57b0-4deb-879a-1351bc920f98": {
+        "_createdOn": 1729860342360,
+        "_id": "cc2055f3-57b0-4deb-879a-1351bc920f98",
+        "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
+        "email": "peter@abv.bg",
+        "username": "Peter",
+        "address": {
+            "phone": "+1-415-123456",
+            "street_building": "1355 Market St, Suite 900",
+            "city": "San Francisco",
+            "region": "California",
+            "postalCode": "CA 94103",
+            "country": "USA"
+        },
+        "purchasedItems": [
+            {
+                "_id": "220e7c6e-14c4-47ec-90bd-3fcea4386156",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721747891094,
+                "image": "https://cdn.pixabay.com/photo/2024/07/19/08/36/sport-8905741_640.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/sportswear/bottoms_leggings/colors/bottoms_leggings-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/sportswear/bottoms_leggings/colors/bottoms_leggings-5-chartreuse.webp"
+                ],
+                "cat": "sportswear",
+                "subCat": "bottoms_leggings",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "M",
+                    "L",
+                    "XXL"
+                ],
+                "selectedSize": "M",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "chartreuse",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            },
+            {
+                "_id": "c7c585fe-3529-4bda-a332-94408828c33a",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721747885094,
+                "image": "https://cdn.pixabay.com/photo/2024/07/18/11/37/outdoors-8903982_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/sportswear/outdoors/colors/outdoors-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/sportswear/outdoors/colors/outdoors-5-chartreuse.webp"
+                ],
+                "cat": "sportswear",
+                "subCat": "outdoors",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "M",
+                    "L",
+                    "XXL"
+                ],
+                "selectedSize": "M",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "beige",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            },
+            {
+                "_id": "ebde504e-796e-4a62-948a-d0421a113000",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721747867094,
+                "image": "https://cdn.pixabay.com/photo/2024/07/17/20/40/fitness-8902499_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/sportswear/running/colors/running-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/sportswear/running/colors/running-5-chartreuse.webp"
+                ],
+                "cat": "sportswear",
+                "subCat": "running",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "M",
+                    "L",
+                    "XXL"
+                ],
+                "selectedSize": "M",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "chartreuse",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            }
+        ],
+        "subtotal": 63,
+        "discount": {
+            "code": "EASTERSALE -50%",
+            "rate": 50
+        },
+        "discountValue": 31.5,
+        "shippingMethod": {
+            "name": "standard 10$",
+            "value": 10
+        },
+        "shippingValue": 10,
+        "total": 41.5,
+        "paymentState": "paid",
+        "status": "pending",
+        "sequenceNumber": 2,
+        "referenceNumber": "192c3b61258",
+        "_updatedOn": 1729860438657
+    },
+    "89ae512e-abc8-42d1-b371-58ad63e3c8b6": {
+        "_createdOn": 1729862173771,
+        "_id": "89ae512e-abc8-42d1-b371-58ad63e3c8b6",
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "email": "george@abv.bg",
+        "username": "George",
+        "address": {
+            "phone": "+1-415-123456",
+            "street_building": "1355 Market St, Suite 900",
+            "city": "San Francisco",
+            "region": "California",
+            "postalCode": "CA 94103",
+            "country": "USA"
+        },
+        "purchasedItems": [
+            {
+                "_id": "63b9d741-25f6-4437-8dcb-4311dc8b08ca",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721903387193,
+                "image": "https://cdn.pixabay.com/photo/2024/07/25/10/14/neckties-8920676_640.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/suits_tailoring/ties/colors/ties-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/suits_tailoring/ties/colors/ties-5-chartreuse.webp"
+                ],
+                "cat": "suits_tailoring",
+                "subCat": "ties",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "M",
+                    "L",
+                    "XXL"
+                ],
+                "selectedSize": "M",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "beige",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            },
+            {
+                "_id": "18f99028-862d-4f0d-8fa5-eabcdac35c4d",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721895762193,
+                "image": "https://cdn.pixabay.com/photo/2024/07/25/07/46/dress-8920413_640.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/suits_tailoring/tuxedos_partywear/colors/tuxedos_partywear-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/suits_tailoring/tuxedos_partywear/colors/tuxedos_partywear-5-chartreuse.webp"
+                ],
+                "cat": "suits_tailoring",
+                "subCat": "tuxedos_partywear",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "M",
+                    "L",
+                    "XXL"
+                ],
+                "selectedSize": "M",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "chartreuse",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            },
+            {
+                "_id": "ed087cec-a8e2-4393-b687-fc9c8184d34c",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721747897094,
+                "image": "https://cdn.pixabay.com/photo/2024/07/19/12/03/clothes-8906159_640.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/sportswear/sweaters/colors/sweaters-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/sportswear/sweaters/colors/sweaters-5-chartreuse.webp"
+                ],
+                "cat": "sportswear",
+                "subCat": "sweaters",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "M",
+                    "L",
+                    "XXL"
+                ],
+                "selectedSize": "XXL",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "beige",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            }
+        ],
+        "subtotal": 63,
+        "discount": {
+            "code": "WINTERSALE -25%",
+            "rate": 25
+        },
+        "discountValue": 15.75,
+        "shippingMethod": {
+            "name": "premium 15$",
+            "value": 15
+        },
+        "shippingValue": 15,
+        "total": 62.25,
+        "paymentState": "paid",
+        "status": "pending",
+        "sequenceNumber": 3,
+        "referenceNumber": "192c3d2044b",
+        "_updatedOn": 1729862283569
+    },
+    "7a7790fa-bb37-4450-80d0-679ad90f3e5c": {
+        "_createdOn": 1729863132438,
+        "_id": "7a7790fa-bb37-4450-80d0-679ad90f3e5c",
+        "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+        "email": "george@abv.bg",
+        "username": "George",
+        "address": {
+            "phone": "+1-415-123456",
+            "street_building": "1355 Market St, Suite 900",
+            "city": "San Francisco",
+            "region": "California",
+            "postalCode": "CA 94103",
+            "country": "USA"
+        },
+        "purchasedItems": [
+            {
+                "_id": "6d23eba6-cae8-488e-9395-4a8a763fbcda",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721713467429,
+                "image": "https://cdn.pixabay.com/photo/2020/06/29/04/33/shoes-5351339_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/shoes/trainers/colors/trainers-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/shoes/trainers/colors/trainers-5-chartreuse.webp"
+                ],
+                "cat": "shoes",
+                "subCat": "trainers",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    8,
+                    8.5,
+                    9.5,
+                    10
+                ],
+                "selectedSize": "8",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "chartreuse",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            },
+            {
+                "_id": "082fdb17-114d-414e-af85-7ce902fed3f8",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721713473429,
+                "image": "https://cdn.pixabay.com/photo/2018/12/10/21/34/winter-boots-3867776_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/shoes/boots/colors/boots-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/shoes/boots/colors/boots-5-chartreuse.webp"
+                ],
+                "cat": "shoes",
+                "subCat": "boots",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    8,
+                    8.5,
+                    9.5,
+                    10
+                ],
+                "selectedSize": "10",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "beige",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            },
+            {
+                "_id": "140b3d37-e2e6-4c7a-8567-da67d82b7c74",
+                "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                "_createdOn": 1721713479429,
+                "image": "https://cdn.pixabay.com/photo/2015/01/21/01/27/slippers-606277_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/shoes/slippers/colors/slippers-5-beige.webp",
+                    "../../../assets/public/static/images/catalog/shoes/slippers/colors/slippers-5-chartreuse.webp"
+                ],
+                "cat": "shoes",
+                "subCat": "slippers",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    8,
+                    8.5,
+                    9.5,
+                    10
+                ],
+                "selectedSize": "9.5",
+                "color": [
+                    "beige",
+                    "chartreuse"
+                ],
+                "selectedColor": "chartreuse",
+                "quantity": 27,
+                "selectedQuantity": 1,
+                "price": 21,
+                "buyed": true,
+                "product": 21,
+                "checked": false
+            }
+        ],
+        "subtotal": 63,
+        "discount": {
+            "code": "SUMMERSALE -25%",
+            "rate": 25
+        },
+        "discountValue": 15.75,
+        "shippingMethod": {
+            "name": "economic 7$",
+            "value": 7
+        },
+        "shippingValue": 7,
+        "total": 54.25,
+        "paymentState": "paid",
+        "status": "pending",
+        "sequenceNumber": 4,
+        "referenceNumber": "192c3e0a516",
+        "_updatedOn": 1729863234784
+    },
+    "b6a57bc0-751b-45aa-8598-aa4e7f6b9079": {
+        "_createdOn": 1729932916273,
+        "_id": "b6a57bc0-751b-45aa-8598-aa4e7f6b9079",
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "email": "admin@abv.bg",
+        "username": "Admin",
+        "address": {
+            "phone": "+1-415-123456",
+            "street_building": "1355 Market St, Suite 900",
+            "city": "San Francisco",
+            "region": "California",
+            "postalCode": "CA 94103",
+            "country": "USA"
+        },
+        "purchasedItems": [
+            {
+                "_id": "1f89964e-de86-4a3d-b55e-e8a0030d4530",
+                "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+                "_createdOn": 1721797923893,
+                "image": "https://cdn.pixabay.com/photo/2024/07/24/04/57/waistcoat-8916938_640.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/suits_tailoring/waistcoats/colors/waistcoats-4-pink.webp",
+                    "../../../assets/public/static/images/catalog/suits_tailoring/waistcoats/colors/waistcoats-4-orange.webp"
+                ],
+                "cat": "suits_tailoring",
+                "subCat": "waistcoats",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "XS",
+                    "M",
+                    "L",
+                    "XL"
+                ],
+                "selectedSize": "XS",
+                "color": [
+                    "pink",
+                    "orange"
+                ],
+                "selectedColor": "orange",
+                "quantity": 25,
+                "selectedQuantity": 1,
+                "price": 33,
+                "buyed": true,
+                "product": 33,
+                "checked": false
+            },
+            {
+                "_id": "50c5a399-3e2d-4f5a-9e61-9782c7b9d282",
+                "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+                "_createdOn": 1721752165912,
+                "image": "https://cdn.pixabay.com/photo/2024/07/23/16/19/jacket-8915748_640.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/suits_tailoring/blazers_jackets/colors/blazers_jackets-4-pink.webp",
+                    "../../../assets/public/static/images/catalog/suits_tailoring/blazers_jackets/colors/blazers_jackets-4-orange.webp"
+                ],
+                "cat": "suits_tailoring",
+                "subCat": "blazers_jackets",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "XS",
+                    "M",
+                    "L",
+                    "XL"
+                ],
+                "selectedSize": "M",
+                "color": [
+                    "pink",
+                    "orange"
+                ],
+                "selectedColor": "pink",
+                "quantity": 25,
+                "selectedQuantity": 1,
+                "price": 33,
+                "buyed": true,
+                "product": 33,
+                "checked": false
+            },
+            {
+                "_id": "2c02cf71-206b-40a3-a099-92ab9a51d018",
+                "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+                "_createdOn": 1721715491524,
+                "image": "https://cdn.pixabay.com/photo/2018/01/18/19/06/time-3091031_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/accessories/watches/colors/watches-4-pink.webp",
+                    "../../../assets/public/static/images/catalog/accessories/watches/colors/watches-4-orange.webp"
+                ],
+                "cat": "accessories",
+                "subCat": "watches",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    22,
+                    24,
+                    26,
+                    28
+                ],
+                "selectedSize": "26",
+                "color": [
+                    "pink",
+                    "orange"
+                ],
+                "selectedColor": "orange",
+                "quantity": 25,
+                "selectedQuantity": 1,
+                "price": 33,
+                "buyed": true,
+                "product": 33,
+                "checked": false
+            }
+        ],
+        "subtotal": 99,
+        "discount": {
+            "code": "EASTERSALE -50%",
+            "rate": 50
+        },
+        "discountValue": 49.5,
+        "shippingMethod": {
+            "name": "economic 7$",
+            "value": 7
+        },
+        "shippingValue": 7,
+        "total": 56.5,
+        "paymentState": "paid",
+        "status": "pending",
+        "sequenceNumber": 2,
+        "referenceNumber": "192c8097631",
+        "_updatedOn": 1729933762290
+    },
+    "440cc882-0694-4ad7-8529-1a25cf6b3465": {
+        "_createdOn": 1729935169866,
+        "_id": "440cc882-0694-4ad7-8529-1a25cf6b3465",
+        "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+        "email": "admin@abv.bg",
+        "username": "Admin",
+        "address": {
+            "phone": "+1-415-123456",
+            "street_building": "1355 Market St, Suite 900",
+            "city": "San Francisco",
+            "region": "California",
+            "postalCode": "CA 94103",
+            "country": "USA"
+        },
+        "purchasedItems": [
+            {
+                "_id": "cc515c51-25e2-4f9f-b552-dc315b1652d7",
+                "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+                "_createdOn": 1721715466524,
+                "image": "https://cdn.pixabay.com/photo/2021/06/18/10/30/cap-6345767_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/accessories/caps_hats/colors/caps_hats-3-green.webp",
+                    "../../../assets/public/static/images/catalog/accessories/caps_hats/colors/caps_hats-3-gray.webp"
+                ],
+                "cat": "accessories",
+                "subCat": "caps_hats",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    "XS",
+                    "S"
+                ],
+                "selectedSize": "XS",
+                "color": [
+                    "green",
+                    "gray"
+                ],
+                "selectedColor": "green",
+                "quantity": 7,
+                "selectedQuantity": 1,
+                "price": 38,
+                "buyed": true,
+                "product": 38,
+                "checked": false
+            },
+            {
+                "_id": "8e7979ce-50f7-41e7-9bc6-12af5e692516",
+                "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+                "_createdOn": 1721715473524,
+                "image": "https://cdn.pixabay.com/photo/2021/02/02/08/48/belt-5973152_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/accessories/belts/colors/belts-4-pink.webp",
+                    "../../../assets/public/static/images/catalog/accessories/belts/colors/belts-4-orange.webp"
+                ],
+                "cat": "accessories",
+                "subCat": "belts",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    27,
+                    28,
+                    29,
+                    30
+                ],
+                "selectedSize": "28",
+                "color": [
+                    "pink",
+                    "orange"
+                ],
+                "selectedColor": "pink",
+                "quantity": 25,
+                "selectedQuantity": 1,
+                "price": 33,
+                "buyed": true,
+                "product": 33,
+                "checked": false
+            },
+            {
+                "_id": "299d18f0-6bf2-4605-8a00-82b9da04d2e6",
+                "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
+                "_createdOn": 1721715479524,
+                "image": "https://cdn.pixabay.com/photo/2021/04/26/13/34/gloves-6208920_960_720.jpg",
+                "altImages": [
+                    "../../../assets/public/static/images/catalog/accessories/gloves/colors/gloves-4-pink.webp",
+                    "../../../assets/public/static/images/catalog/accessories/gloves/colors/gloves-4-orange.webp"
+                ],
+                "cat": "accessories",
+                "subCat": "gloves",
+                "description": "Lorem ipsum dolor sit amet....",
+                "brand": "Fusce vel",
+                "size": [
+                    7,
+                    7.5,
+                    8.5,
+                    10
+                ],
+                "selectedSize": "7.5",
+                "color": [
+                    "pink",
+                    "orange"
+                ],
+                "selectedColor": "orange",
+                "quantity": 25,
+                "selectedQuantity": 1,
+                "price": 33,
+                "buyed": true,
+                "product": 33,
+                "checked": false
+            }
+        ],
+        "subtotal": 104,
+        "discount": {
+            "code": "EASTERSALE -50%",
+            "rate": 50
+        },
+        "discountValue": 52,
+        "shippingMethod": {
+            "name": "economic 7$",
+            "value": 7
+        },
+        "shippingValue": 7,
+        "total": 59,
+        "paymentState": "paid",
+        "status": "pending",
+        "sequenceNumber": 1,
+        "referenceNumber": "192c82bd94a",
+        "_updatedOn": 1729935362703
+    }
+}

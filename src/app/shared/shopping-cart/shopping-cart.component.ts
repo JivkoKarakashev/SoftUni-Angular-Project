@@ -9,6 +9,7 @@ import { Shipping, shippingInitialState } from 'src/app/types/shipping';
 import { Discount, discountInitialState } from 'src/app/types/discount';
 import { InvertColor } from '../utils/invertColor';
 import { CartItem } from 'src/app/types/cartItem';
+import { DBOrder } from 'src/app/types/order';
 import { HttpError } from 'src/app/types/httpError';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
@@ -341,7 +342,8 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     const shippingValue: number = this.shippingValue;
     const total: number = this.totalValue;
     const paymentState = 'unpaid';
-    this.cartService.placeOrder({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState }).pipe(
+    const status = 'pending';
+    this.cartService.placeOrder({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status }).pipe(
       catchError((err) => {
         // console.log(err);
         this.httpError = err;
@@ -354,7 +356,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
       console.log(res);
-      const dbOrder = { ...res };
+      const dbOrder: DBOrder = { ...res };
       this.confirmOrderService.setDBOrderState({ ...dbOrder });
       this.router.navigate(['/checkout']);
     });
