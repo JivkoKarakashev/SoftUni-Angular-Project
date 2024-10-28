@@ -12,5 +12,5 @@ export interface SwimSurf {
     brand: string,
     quantity: number,
     price: number,
-    buyed?: boolean
+    buyed: boolean
 }

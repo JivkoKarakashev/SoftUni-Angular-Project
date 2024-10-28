@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { CheckForItemType } from 'src/app/shared/utils/checkForItemType';
+import { CheckForItemTypeService } from 'src/app/shared/utils/check-for-item-type.service';
 import { DBOrder, dbOrderInitialState } from 'src/app/types/order';
 import { SessionStatus } from 'src/app/types/sessionStatus';
 
@@ -20,7 +20,7 @@ export class ConfirmOrderService {
   private dbOrderState$$ = new BehaviorSubject<DBOrder>({ ...dbOrderInitialState });
   private dbOrderState$ = this.dbOrderState$$.asObservable();
 
-  constructor(private http: HttpClient, private checkType: CheckForItemType) { }
+  constructor(private http: HttpClient, private checkType: CheckForItemTypeService) { }
 
   getDBOrderState(): Observable<DBOrder> {
     return this.dbOrderState$;
@@ -28,7 +28,7 @@ export class ConfirmOrderService {
 
   setDBOrderState(dbOrderState: DBOrder): void {
     if (this.checkType.isDBOrder(dbOrderState)) {
-      this.dbOrderState$$.next({ ...dbOrderState });
+      this.dbOrderState$$.next({ ...this.dbOrderState$$.value, ...dbOrderState });
       this.preserveDBOrderState();
     } else if (this.checkType.isOrder(dbOrderState)) {
       throw new Error('Wrong Order type!');
@@ -45,7 +45,7 @@ export class ConfirmOrderService {
   }
 
   resetDBOrderState(): void {
-    this.dbOrderState$$.next({ ...dbOrderInitialState });
+    this.dbOrderState$$.next({ ...this.dbOrderState$$.value, ...dbOrderInitialState });
     this.removeDBOrderStateFromLStor();
   }
 

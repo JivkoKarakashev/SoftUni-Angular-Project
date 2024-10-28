@@ -12,7 +12,8 @@
 		"color": ["white", "black", "blue", "red"],
         "brand": "Fusce vel",
 		"quantity": 3,
-		"price": 67
+		"price": 67,
+        "buyed": false
     },
     "9886ebc1-bbb3-474d-b924-a7354f7cc8a7": {
         "_ownerId": "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -27,7 +28,8 @@
 		"color": ["yellow", "brown"],
         "brand": "Fusce vel",
 		"quantity": 2,
-		"price": 55
+		"price": 55,
+        "buyed": false
     },
     "9be8a412-59b6-40ab-ac23-c11c93336c2f": {
         "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -42,7 +44,8 @@
 		"color": ["green", "gray"],
         "brand": "Fusce vel",
 		"quantity": 7,
-		"price": 38
+		"price": 38,
+        "buyed": false
     },
     "f385d860-80c5-4333-a521-7f20d9fbc103": {
         "_ownerId": "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -57,7 +60,8 @@
 		"color": ["pink", "orange"],
         "brand": "Fusce vel",
 		"quantity": 25,
-		"price": 49
+		"price": 49,
+        "buyed": false
     },
     "f9a3aeab-254f-448b-bd09-13a94a1ca6b8": {
         "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -72,7 +76,8 @@
 		"color": ["beige", "chartreuse"],
         "brand": "Fusce vel",
 		"quantity": 14,
-		"price": 55
+		"price": 55,
+        "buyed": false
     },
     "82318714-2204-4908-9ef5-98e6b4c51a55": {
         "_ownerId": "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -87,6 +92,7 @@
 		"color": ["crimson", "greenYellow"],
         "brand": "Fusce vel",
 		"quantity": 22,
-		"price": 56
+		"price": 56,
+        "buyed": false
     }
 }

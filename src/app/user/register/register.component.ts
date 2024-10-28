@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 
 import { UserService } from '../user.service';
-import { emailValidator } from 'src/app/shared/utils/email-validator';
-import { passwordsValidator } from 'src/app/shared/utils/passwords-validator';
+import { EmailValidaorService } from 'src/app/shared/utils/email-validator.service';
+import { PasswordValidatorService } from 'src/app/shared/utils/passwords-validator.service';
 import { HttpError } from 'src/app/types/httpError';
 
 
@@ -19,7 +19,7 @@ export class RegisterComponent {
   public loading = false;
 
   registerForm = this.fb.group({
-    email: ['', [Validators.required, emailValidator()]],
+    email: ['', [Validators.required, this.emailValidator.validate()]],
     username: ['', [Validators.required, Validators.minLength(5)]],
     addressGroup: this.fb.group(
       {
@@ -37,7 +37,7 @@ export class RegisterComponent {
         rePassword: ['', [Validators.required, Validators.minLength(6)]],
       },
       {
-        validators: [passwordsValidator()],
+        validators: [this.passwordValidator.validate()],
       }
     ),
   });
@@ -50,7 +50,7 @@ export class RegisterComponent {
     return this.registerForm.get('passGroup');
   }
 
-  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) { }
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router, private emailValidator: EmailValidaorService, private passwordValidator: PasswordValidatorService) { }
 
   register(): void {
     // console.log(this.passGroup?.value.rePass);

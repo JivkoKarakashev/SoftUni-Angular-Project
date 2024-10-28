@@ -1,6 +1,12 @@
+import { Injectable } from "@angular/core";
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 
-export function passwordsValidator(): ValidatorFn {
+@Injectable({
+  providedIn: "root"
+})
+export class PasswordValidatorService {
+
+  validate(): ValidatorFn {
     return (passControl: AbstractControl): ValidationErrors | null => {
       const passFormCtrl: string = passControl?.value['pass'];
       const rePassFormCtrl: string = passControl?.value['rePass'];
@@ -8,3 +14,4 @@ export function passwordsValidator(): ValidatorFn {
       return areValid ? null : { matchPasswordsValidator: true };
     };
   }
+}

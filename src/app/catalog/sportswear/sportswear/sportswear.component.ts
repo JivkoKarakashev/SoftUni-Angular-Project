@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { SportswearService } from './sportswear.service';
@@ -13,6 +13,7 @@ import { Outdoors } from 'src/app/types/outdoors';
 import { BottomsLeggings } from 'src/app/types/bottomsLeggings';
 import { Sweater } from 'src/app/types/sweater';
 import { CartItem } from 'src/app/types/cartItem';
+import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for-item-in-cart-already.service';
 
 @Component({
   selector: 'app-sportswear',
@@ -21,75 +22,34 @@ import { CartItem } from 'src/app/types/cartItem';
 })
 export class SportswearComponent implements OnInit, OnDestroy {
   public listItems: (Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater)[] = [];
-  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
+  private cartItms: CartItem[] = [];
   public buyedItems = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user: UserForAuth | null = null;
   public loading = true;
 
 
-  constructor(private userService: UserService, private sportswearService: SportswearService, private cartService: ShoppingCartService) { }
+  constructor(private userService: UserService, private sportswearService: SportswearService, private cartService: ShoppingCartService, private checkForInCartAlready: CheckForItemInCartAlreadyService) { }
 
   ngOnInit(): void {
     const userSubscription = this.userService.user$.subscribe(userData => {
       if (userData) {
-        this.user = { ...userData };
+        this.user = { ...this.user, ...userData };
       }
     });
 
     const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
-      this.cartItms$$.next([...items]);
-      // console.log(this.cartItms$$.value);
+      this.cartItms = [...this.cartItms, ...items];
+      // console.log(this.cartItms);
     });
-    
+
     const sportswearSubscription = this.sportswearService.getSportswear().subscribe(sportswearObjs => {
       this.loading = false;
-      const [gymObjs, runningObjs, ski_snowboardObjs, swim_surfObjs, outdoorsObjs, bottoms_leggingsObjs, sweatersObjs] = sportswearObjs;
-      // console.log(gymObjs, runningObjs, ski_snowboardObjs, swim_surfObjs, outdoorsObjs, bottoms_leggingsObjs, sweatersObjs);      
-      const gym = Object.entries(gymObjs).map(gm => gm[1]);
-      gym.forEach((gm, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == gm._id)) {
-          gym[idx] = { ...gym[idx], buyed: true };
-        }
-      });
-      const runnings = Object.entries(runningObjs).map(runs => runs[1]);
-      runnings.forEach((run, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == run._id)) {
-          runnings[idx] = { ...runnings[idx], buyed: true };
-        }
-      });
-      const ski_snowboard = Object.entries(ski_snowboardObjs).map(sk_snwbrd => sk_snwbrd[1]);
-      ski_snowboard.forEach((ski_snwbrd, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == ski_snwbrd._id)) {
-          ski_snowboard[idx] = { ...ski_snowboard[idx], buyed: true };
-        }
-      });
-      const swim_surf = Object.entries(swim_surfObjs).map(swm_srf => swm_srf[1]);
-      swim_surf.forEach((swim_srf, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == swim_srf._id)) {
-          swim_surf[idx] = { ...swim_surf[idx], buyed: true };
-        }
-      });
-      const outdoors = Object.entries(outdoorsObjs).map(outdr => outdr[1]);
-      outdoors.forEach((outdr, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == outdr._id)) {
-          outdoors[idx] = { ...outdoors[idx], buyed: true };
-        }
-      });
-      const bottoms_leggings = Object.entries(bottoms_leggingsObjs).map(btm_leg => btm_leg[1]);
-      bottoms_leggings.forEach((btm_leg, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == btm_leg._id)) {
-          bottoms_leggings[idx] = { ...bottoms_leggings[idx], buyed: true };
-        }
-      });
-      const sweaters = Object.entries(sweatersObjs).map(swtr => swtr[1]);
-      sweaters.forEach((swtr, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == swtr._id)) {
-          sweaters[idx] = { ...sweaters[idx], buyed: true };
-        }
-      });
-      this.listItems = [...this.listItems, ...gym, ...runnings, ...ski_snowboard, ...swim_surf, ...outdoors, ...bottoms_leggings, ...sweaters];
+      // console.log(this.cartItms);
+      // console.log(this.listItems);
+      this.listItems = [...this.listItems, ...this.checkForInCartAlready.check(sportswearObjs, this.cartItms)];
+      // console.log(this.listItems);
     });
 
     this.unsubscriptionArray.push(userSubscription, sportswearSubscription, cartSubscription);
@@ -98,17 +58,18 @@ export class SportswearComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
-      // console.log('UnsubArray = 3');      
+      // console.log('UnsubArray = 1');
     });
+    // console.log('UnsubArray = 3');
   }
 
   public addItemtoCart(item: Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater): void {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
     const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
     const idx = this.listItems.findIndex(itm => itm._id == _id);
-    this.listItems[idx] = {...this.listItems[idx], buyed: true};
+    this.listItems[idx] = { ...this.listItems[idx], buyed: true };
     this.cartService.addCartItem(newItem);
-    // console.log(this.listItems$);
-    // console.log(this.cartItms$$.value);
+    // console.log(this.listItems);
+    // console.log(this.cartItms);
   }
 }

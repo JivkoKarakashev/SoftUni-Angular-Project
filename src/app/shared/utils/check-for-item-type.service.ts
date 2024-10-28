@@ -46,7 +46,7 @@ const DBOrderSchema = {
 @Injectable({
     providedIn: 'root'
 })
-export class CheckForItemType {
+export class CheckForItemTypeService {
 
     //  return Object.keys(cartItemSchema).every((prop) => Object.keys(itm).includes(prop));
     //  return Object.keys(cartItemSchema).some((prop) => prop == undefined);

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 
 import { UserService } from '../user.service';
-import { emailValidator } from 'src/app/shared/utils/email-validator';
+import { EmailValidaorService } from 'src/app/shared/utils/email-validator.service';
 import { HttpError } from 'src/app/types/httpError';
 
 @Component({
@@ -17,11 +17,11 @@ export class LoginComponent {
   public loading = false;
 
   loginForm = this.fb.group({
-    email: ['', [Validators.required, emailValidator()]],
+    email: ['', [Validators.required, this.emailValidator.validate()]],
     password: ['', [Validators.required,]],
   });
 
-  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) { }
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router, private emailValidator: EmailValidaorService) { }
 
   login(): void {
     this.loading = true;

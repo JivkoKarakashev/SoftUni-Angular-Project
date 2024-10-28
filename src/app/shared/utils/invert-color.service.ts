@@ -9,7 +9,7 @@ interface rgbObj {
 @Injectable({
     providedIn: 'root'
 })
-export class InvertColor {
+export class InvertColorService {
     private render: Renderer2
     constructor(private renderFactory: RendererFactory2) {
         this.render = this.renderFactory.createRenderer(null, null);

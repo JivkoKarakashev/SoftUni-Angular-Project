@@ -12,5 +12,5 @@ export interface Sweater {
     brand: string,
     quantity: number,
     price: number,
-    buyed?: boolean
+    buyed: boolean
 }

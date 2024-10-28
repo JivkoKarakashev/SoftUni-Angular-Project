@@ -5,7 +5,7 @@ import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { Shipping, shippingInitialState } from '../../types/shipping';
 import { Discount, discountInitialState } from '../../types/discount';
 import { CartItem } from '../../types/cartItem';
-import { CheckForItemType } from '../utils/checkForItemType';
+import { CheckForItemTypeService } from '../utils/check-for-item-type.service';
 import { DBOrder, Order } from '../../types/order';
 import { HttpLogoutInterceptorSkipHeader } from '../../interceptors/http-logout.interceptor';
 import { HttpAJAXInterceptorSkipHeader } from '../../interceptors/http-ajax.interceptor';
@@ -26,7 +26,7 @@ export class ShoppingCartService {
   private shippingState$$ = new BehaviorSubject<Shipping>({ ...shippingInitialState });
   private shippingState$ = this.shippingState$$.asObservable();
 
-  constructor(private http: HttpClient, private checkForItemType: CheckForItemType) { }
+  constructor(private http: HttpClient, private checkForItemType: CheckForItemTypeService) { }
 
   getCartItems(): Observable<CartItem[]> {
     return this.cartItems$;

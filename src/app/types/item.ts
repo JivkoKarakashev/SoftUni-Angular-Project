@@ -7,15 +7,15 @@ export interface Item {
     cat: string,
     subCat: string,
     description: string,
-    brand: string,
     size: (string | number)[],
     color: string[],
+    brand: string,
     quantity: number,
     price: number,
-    buyed?: boolean
+    buyed: boolean
 }
 
-export const initialItem = {
+export const initialItem: Item = {
     _ownerId: '',
     _id: '',
     _createdOn: NaN,
@@ -29,4 +29,5 @@ export const initialItem = {
     brand: '',
     quantity: NaN,
     price: NaN,
+    buyed: false
 }

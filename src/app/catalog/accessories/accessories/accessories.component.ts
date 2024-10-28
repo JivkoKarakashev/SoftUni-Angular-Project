@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { AccessoriesService } from './accessories.service';
@@ -11,6 +11,7 @@ import { Watch } from 'src/app/types/watch';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
 import { CartItem } from 'src/app/types/cartItem';
+import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for-item-in-cart-already.service';
 
 @Component({
   selector: 'app-accessories',
@@ -19,63 +20,34 @@ import { CartItem } from 'src/app/types/cartItem';
 })
 export class AccessoriesComponent implements OnInit, OnDestroy {
   public listItems: (CapHat | Belt | Glove | Sunglasses | Watch)[] = [];
-  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
+  private cartItms: CartItem[] = [];
   public buyedItems = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user: UserForAuth | null = null;
   public loading = true;
 
 
-  constructor(private userService: UserService, private accessoriesService: AccessoriesService, private cartService: ShoppingCartService) { }
+  constructor(private userService: UserService, private accessoriesService: AccessoriesService, private cartService: ShoppingCartService, private checkForInCartAlready: CheckForItemInCartAlreadyService) { }
 
   ngOnInit(): void {
     const userSubscription = this.userService.user$.subscribe(userData => {
       if (userData) {
-        this.user = { ...userData };
+        this.user = { ...this.user, ...userData };
       }
     });
 
     const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
-      this.cartItms$$.next([...items]);
-      // console.log(this.cartItms$$.value);
+      this.cartItms = [...this.cartItms, ...items];
+      // console.log(this.cartItms);
     });
 
-    const accessoriesSubscription = this.accessoriesService.getAccessories().subscribe(accessoriesObjs => {
+    const accessoriesSubscription = this.accessoriesService.getAccessories().subscribe(accessoriesObjsArr => {
       this.loading = false;
-      const [caps_hatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs] = accessoriesObjs;
-      // console.log(caps_hatsObjs, beltsObjs, glovesObjs, sunglassesObjs, watchesObjs);      
-      const caps_hats = Object.entries(caps_hatsObjs).map(cap_hat => cap_hat[1]);
-      caps_hats.forEach((cp_ht, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == cp_ht._id)) {
-          caps_hats[idx] = { ...caps_hats[idx], buyed: true };
-        }
-      });
-      const belts = Object.entries(beltsObjs).map(belt => belt[1]);
-      belts.forEach((blt, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == blt._id)) {
-          belts[idx] = { ...belts[idx], buyed: true };
-        }
-      });
-      const gloves = Object.entries(glovesObjs).map(glves => glves[1]);
-      gloves.forEach((glv, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == glv._id)) {
-          gloves[idx] = { ...gloves[idx], buyed: true };
-        }
-      });
-      const sunglasses = Object.entries(sunglassesObjs).map(snglsses => snglsses[1]);
-      sunglasses.forEach(snglsses => {
-        if (this.cartItms$$.value.some(itm => itm._id == snglsses._id)) {
-          snglsses = { ...snglsses, buyed: true };
-        }
-      });
-      const watches = Object.entries(watchesObjs).map(wtch => wtch[1]);
-      watches.forEach((wtch, idx) => {
-        if (this.cartItms$$.value.some(itm => itm._id == wtch._id)) {
-          watches[idx] = { ...watches[idx], buyed: true };
-        }
-      });
-      this.listItems = [...this.listItems, ...caps_hats, ...belts, ...gloves, ...sunglasses, ...watches];
+      // console.log(this.cartItms);
+      // console.log(this.listItems);
+      this.listItems = [...this.listItems, ...this.checkForInCartAlready.check(accessoriesObjsArr, this.cartItms)];
+      // console.log(this.listItems);
     });
 
     this.unsubscriptionArray.push(userSubscription, accessoriesSubscription, cartSubscription);
@@ -84,8 +56,9 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
-      // console.log('UnsubArray = 3');      
+      // console.log('UnsubArray = 1');
     });
+    // console.log('UnsubArray = 3');
   }
 
   public addItemtoCart(item: CapHat | Belt | Glove | Sunglasses | Watch): void {
@@ -94,7 +67,7 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
     const idx = this.listItems.findIndex(itm => itm._id == _id);
     this.listItems[idx] = { ...this.listItems[idx], buyed: true };
     this.cartService.addCartItem(newItem);
-    // console.log(this.listItems$);
-    // console.log(this.cartItms$$.value);
+    // console.log(this.listItems);
+    // console.log(this.cartItms);
   }
 }

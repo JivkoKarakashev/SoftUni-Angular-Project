@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { ShoppingCartService } from './shopping-cart.service';
 import { Shipping, shippingInitialState } from 'src/app/types/shipping';
 import { Discount, discountInitialState } from 'src/app/types/discount';
-import { InvertColor } from '../utils/invertColor';
+import { InvertColorService } from '../utils/invert-color.service';
 import { CartItem } from 'src/app/types/cartItem';
 import { DBOrder } from 'src/app/types/order';
 import { HttpError } from 'src/app/types/httpError';
@@ -49,7 +49,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     total: [0, [Validators.required]],
   });
 
-  constructor(private render: Renderer2, private location: Location, private cartService: ShoppingCartService, private fb: FormBuilder, private invertColor: InvertColor, private router: Router, private userService: UserService, private confirmOrderService: ConfirmOrderService) { }
+  constructor(private render: Renderer2, private location: Location, private cartService: ShoppingCartService, private fb: FormBuilder, private invertColor: InvertColorService, private router: Router, private userService: UserService, private confirmOrderService: ConfirmOrderService) { }
 
   @ViewChild('modal') private modal!: ElementRef;
   @ViewChild('closeBtn') private closeBtn!: ElementRef;

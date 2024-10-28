@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { Gym } from 'src/app/types/gym';
 import { Running } from 'src/app/types/running';
@@ -44,7 +44,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     CapHat | Belt | Glove | Sunglasses | Watch |
     Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
     BlazerJacket | Waistcoat | TuxedoPartywear | Tie = initialItem;
-  private cartItms$$ = new BehaviorSubject<CartItem[]>([]);
+  private cartItms: CartItem[] = [];
   public buyedItems = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user: UserForAuth | null = null;
@@ -111,15 +111,15 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     });
     const cartSubscription = this.cartService.getCartItems().subscribe(items => {
       this.buyedItems = items.length;
-      this.cartItms$$.next([...items])
-      // this.cartItms$ = items;
-      // console.log(this.cartItms$$.value);
+      this.cartItms = ([...this.cartItms, ...items]);
+      // console.log(this.cartItms);
     });
     const itemSubscription = this.getItem(url, id).subscribe(itm => {
       // this.item$ = itm;
       this.loading = false;
       const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = itm;
-      const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
+      // const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
+      const buyed = this.cartItms.some(itm => itm._id == _id);
       this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, buyed }
       // console.log(itm);
       // console.log(this.item);
