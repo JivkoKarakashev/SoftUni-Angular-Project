@@ -9,10 +9,13 @@ import { CheckForItemTypeService } from '../utils/check-for-item-type.service';
 import { DBOrder, Order } from '../../types/order';
 import { HttpLogoutInterceptorSkipHeader } from '../../interceptors/http-logout.interceptor';
 import { HttpAJAXInterceptorSkipHeader } from '../../interceptors/http-ajax.interceptor';
+import { Item } from 'src/app/types/item';
+import { BuildUpdateRequestsArrayService } from '../utils/build-update-requests-array.service';
 
 const SHIPPINGMETHODS_URL = 'http://localhost:3030/data/shipping';
 const DISCOUNTS_URL = 'http://localhost:3030/data/discounts';
 const ORDER_URL = 'http://localhost:3030/data/order';
+const BASE_URL = 'http://localhost:3030/data';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +29,7 @@ export class ShoppingCartService {
   private shippingState$$ = new BehaviorSubject<Shipping>({ ...shippingInitialState });
   private shippingState$ = this.shippingState$$.asObservable();
 
-  constructor(private http: HttpClient, private checkForItemType: CheckForItemTypeService) { }
+  constructor(private http: HttpClient, private checkForItemType: CheckForItemTypeService, private buildUpdReqsArr: BuildUpdateRequestsArrayService) { }
 
   getCartItems(): Observable<CartItem[]> {
     return this.cartItems$;
@@ -140,5 +143,10 @@ export class ShoppingCartService {
     const { email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status } = order;
     const body = JSON.stringify({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status });
     return this.http.post<DBOrder>(ORDER_URL, body, { headers });
+  }
+
+  updateItmsRemainQty(purchasedItems: CartItem[]): Observable<Item[]> {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
+    return forkJoin([...this.buildUpdReqsArr.build(purchasedItems, headers)]);
   }
 }

@@ -25,9 +25,18 @@ export class HttpAJAXInterceptor implements HttpInterceptor {
           // console.log(usr);
           const { accessToken } = usr;
           // console.log(accessToken);
-          const addHeaders = { 'Content-Type': 'application/json', 'X-Authorization': accessToken };
+          const xAuthorizationHeaders = {
+            'Content-Type': 'application/json',
+            'X-Authorization': accessToken,
+          };
+          const xAdminHeaders = {
+            'Content-Type': 'application/json',
+            'X-Authorization': accessToken,
+            'X-Admin': ''
+          };
           const serializedBody = req.serializeBody();
-          newReq = req.clone({ setHeaders: addHeaders, body: serializedBody });
+          // console.log(newReq.method === 'PUT');
+          newReq.method === 'PUT' ? newReq = req.clone({ setHeaders: xAdminHeaders, body: serializedBody }) : newReq = req.clone({ setHeaders: xAuthorizationHeaders, body: serializedBody });
           // console.log(newReq.headers);
         }
       });

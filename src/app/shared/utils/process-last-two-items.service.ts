@@ -22,7 +22,8 @@ export class ProcessLastTwoItemsService {
     let catIdxCounter = 0;
     // console.log(length);
     for (let i = 0; i < length; i++) {
-      const currLastTwoCollection = Object.entries(lastTwoitmsObjArray[i]).map(lastTwoItms => lastTwoItms[1]);
+      const currLastTwoCollection = lastTwoitmsObjArray[i];
+      // console.log(currLastTwoCollection);
       if (i === 0) {
         currLastTwoCollection.forEach(itm => {
           const { _id, cat, image, subCat } = itm;
@@ -55,7 +56,6 @@ export class ProcessLastTwoItemsService {
     arr.forEach((wrd) => {
       wrd = wrd.charAt(0).toLocaleUpperCase().concat(wrd.slice(1));
       capitalizedCat += (`${wrd} `);
-      capitalizedCat.concat(`${wrd} `);
     });
     // console.log(capitalizedCat);
     return capitalizedCat;

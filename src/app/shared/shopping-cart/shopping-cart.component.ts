@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
-import { Subscription, catchError, of } from 'rxjs';
+import { Subscription, catchError, forkJoin, of } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -14,6 +14,8 @@ import { HttpError } from 'src/app/types/httpError';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
 import { ConfirmOrderService } from 'src/app/checkout/confirm-order/confirm-order.service';
+import { Order } from '@stripe/stripe-js';
+import { Item } from 'src/app/types/item';
 
 type MyVoid = () => void;
 
@@ -343,23 +345,34 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     const total: number = this.totalValue;
     const paymentState = 'unpaid';
     const status = 'pending';
-    this.cartService.placeOrder({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status }).pipe(
-      catchError((err) => {
-        // console.log(err);
-        this.httpError = err;
-        console.log(err);
-        return of(err);
-      })
-    ).subscribe(res => {
-      console.log(res == this.httpError);
-      if (res == this.httpError) {
-        return;
-      }
-      console.log(res);
-      const dbOrder: DBOrder = { ...res };
-      this.confirmOrderService.setDBOrderState({ ...dbOrder });
-      this.router.navigate(['/checkout']);
-    });
+    forkJoin([
+      this.cartService.placeOrder({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status }).pipe(
+        catchError((err) => {
+          this.httpError = err;
+          console.log(err);
+          return of(err);
+        })
+      ),
+      this.cartService.updateItmsRemainQty(purchasedItems).pipe(
+        catchError((err) => {
+          this.httpError = err;
+          console.log(err);
+          return of(err);
+        })
+      )
+    ])
+      .subscribe(res => {
+        console.log(res == this.httpError);
+        if (res == this.httpError) {
+          return;
+        }
+        // console.log(res);
+        const dbOrder: DBOrder = { ...res[0] };
+        // console.log(dbOrder);
+        // return;
+        this.confirmOrderService.setDBOrderState({ ...dbOrder });
+        this.router.navigate(['/checkout']);
+      });
     // console.log(this.form.value);
     // console.log(this.listItems);
     // console.log(this.form.get('itms')?.value);
