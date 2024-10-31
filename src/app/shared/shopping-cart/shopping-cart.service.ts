@@ -12,10 +12,10 @@ import { HttpAJAXInterceptorSkipHeader } from '../../interceptors/http-ajax.inte
 import { Item } from 'src/app/types/item';
 import { BuildUpdateRequestsArrayService } from '../utils/build-update-requests-array.service';
 
-const SHIPPINGMETHODS_URL = 'http://localhost:3030/data/shipping';
-const DISCOUNTS_URL = 'http://localhost:3030/data/discounts';
-const ORDER_URL = 'http://localhost:3030/data/order';
 const BASE_URL = 'http://localhost:3030/data';
+const SHIPPINGMETHODS_URL = `${BASE_URL}/shipping`;
+const DISCOUNTS_URL = `${BASE_URL}/discounts`;
+const ORDER_URL = `${BASE_URL}/order`;
 
 @Injectable({
   providedIn: 'root'

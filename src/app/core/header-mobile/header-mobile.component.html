@@ -7,7 +7,10 @@
                 <li><a class="nav-icon guest" routerLink="/auth/login">Login</a></li>
                 <li><a class="nav-icon user" routerLink="/auth/register">Register</a></li>
             </ng-container>
-            <li *ngIf="loggedInOrLoggedOut.isLoggedIn"><a class="nav-icon logout" (click)="logout()">Logout</a></li>
+            <ng-container *ngIf="loggedInOrLoggedOut.isLoggedIn">
+                <li><a class="nav-icon profile" routerLink="/auth/profile">Profile</a></li>
+                <li><a class="nav-icon logout" (click)="logout()">Logout</a></li>
+            </ng-container>
             <li><a class="nav-icon list" routerLink="/category">Category</a></li>
             <li>
                 <!-- Trigger/Open The Modal -->

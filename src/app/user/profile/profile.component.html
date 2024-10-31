@@ -1,1 +1,29 @@
-<p>profile works!</p>
+<ng-container *ngIf="loading">
+    <app-loader />
+</ng-container>
+<section id="profile" class="section-profile" *ngIf="!loading">
+    <div class="container">
+        <nav class="tabs">
+            <ul>
+                <li #tabLiElements><a #tabAnchorElements href="/auth/profile#overview" data-title="overview">Overview</a></li>
+                <li #tabLiElements><a #tabAnchorElements href="/auth/profile#purchases" data-title="purchases">Purchases</a></li>
+                <li #tabLiElements><a #tabAnchorElements href="/auth/profile#sales" data-title="sales">Sales</a></li>
+            </ul>
+        </nav>
+
+        <section #tabSectionElements class="content overview">
+            <h2>Overview</h2>
+            <!-- Add profile overview content here -->
+        </section>
+
+        <section #tabSectionElements class="content purchases">
+            <h2>Purchases</h2>
+            <!-- Add purchases content here -->
+        </section>
+
+        <section #tabSectionElements class="content sales">
+            <h2>Sales</h2>
+            <!-- Add sales content here -->
+        </section>
+    </div>
+</section>

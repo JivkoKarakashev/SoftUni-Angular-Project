@@ -14,8 +14,6 @@ import { HttpError } from 'src/app/types/httpError';
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
 import { ConfirmOrderService } from 'src/app/checkout/confirm-order/confirm-order.service';
-import { Order } from '@stripe/stripe-js';
-import { Item } from 'src/app/types/item';
 
 type MyVoid = () => void;
 

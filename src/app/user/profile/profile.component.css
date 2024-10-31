@@ -1,0 +1,48 @@
+.section-profile .container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tabs {
+    display: flex;
+    flex: 1 1 100%;
+  }
+  
+  .tabs ul {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .tabs ul li {
+    padding: 10px;
+  }
+  
+  .tabs ul li a {
+    text-decoration: none;
+    color: black;
+  }
+  
+  .tabs ul li.active a {
+    font-weight: bold;
+    border-bottom: 2px solid black;
+  }
+  
+  .content {
+    padding: 20px;
+    display: none;
+  }
+  
+  .content.active {
+    display: block;
+  }
+  
+  h2 {
+    margin-bottom: 15px;
+  }
+  

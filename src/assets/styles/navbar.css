@@ -53,6 +53,10 @@ a.nav-icon.logout::before {
   content: "\e5a9";
 }
 
+a.nav-icon.profile::before {
+  content: "\f2bb";
+}
+
 a.nav-icon.home::before {
   content: "\f015";
 }
