@@ -12,5 +12,6 @@ export interface SkiSnowboard {
     brand: string,
     quantity: number,
     price: number,
-    buyed: boolean
+    inCart: boolean,
+    _accountId: string
 }

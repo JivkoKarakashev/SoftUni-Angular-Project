@@ -21,7 +21,7 @@ import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for
 export class AccessoriesComponent implements OnInit, OnDestroy {
   public listItems: (CapHat | Belt | Glove | Sunglasses | Watch)[] = [];
   private cartItms: CartItem[] = [];
-  public buyedItems = 0;
+  public cartItemsCounter = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user: UserForAuth | null = null;
   public loading = true;
@@ -37,7 +37,7 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
     });
 
     const cartSubscription = this.cartService.getCartItems().subscribe(items => {
-      this.buyedItems = items.length;
+      this.cartItemsCounter = items.length;
       this.cartItms = [...this.cartItms, ...items];
       // console.log(this.cartItms);
     });
@@ -62,10 +62,10 @@ export class AccessoriesComponent implements OnInit, OnDestroy {
   }
 
   public addItemtoCart(item: CapHat | Belt | Glove | Sunglasses | Watch): void {
-    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, color, quantity, price } = item;
-    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, buyed: true, product: 0, checked: false };
+    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, color, quantity, price, _accountId } = item;
+    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, inCart: true, product: 0, checked: false, _accountId };
     const idx = this.listItems.findIndex(itm => itm._id == _id);
-    this.listItems[idx] = { ...this.listItems[idx], buyed: true };
+    this.listItems[idx] = { ...this.listItems[idx], inCart: true };
     this.cartService.addCartItem(newItem);
     // console.log(this.listItems);
     // console.log(this.cartItms);

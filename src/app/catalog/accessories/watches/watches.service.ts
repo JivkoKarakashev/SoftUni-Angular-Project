@@ -4,8 +4,9 @@ import { Injectable } from '@angular/core';
 import { Watch } from 'src/app/types/watch';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+import { environment } from 'src/environments/environment.development';
 
-const URL = 'http://localhost:3030/data/watches';
+const URL = `${environment.apiDBUrl}/data/watches`;
 
 @Injectable({
   providedIn: 'root'

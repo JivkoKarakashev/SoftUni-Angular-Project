@@ -5,25 +5,105 @@
     <div class="container">
         <nav class="tabs">
             <ul>
-                <li #tabLiElements><a #tabAnchorElements href="/auth/profile#overview" data-title="overview">Overview</a></li>
-                <li #tabLiElements><a #tabAnchorElements href="/auth/profile#purchases" data-title="purchases">Purchases</a></li>
-                <li #tabLiElements><a #tabAnchorElements href="/auth/profile#sales" data-title="sales">Sales</a></li>
+                <li #tabLiElements><a #tabAnchorElements href="/auth/profile#overview" [attr.data-title]="'overview'">Overview</a></li>
+                <li #tabLiElements><a #tabAnchorElements href="/auth/profile#purchases"[attr.data-title]="'purchases'">Purchases</a></li>
+                <li #tabLiElements><a #tabAnchorElements href="/auth/profile#sales" [attr.data-title]="'sales'">Sales</a></li>
             </ul>
         </nav>
 
-        <section #tabSectionElements class="content overview">
+        <section *ngIf="activeTab === 'overview'" class="content overview">
             <h2>Overview</h2>
             <!-- Add profile overview content here -->
         </section>
 
-        <section #tabSectionElements class="content purchases">
+        <section *ngIf="activeTab === 'purchases'" class="content purchases">
             <h2>Purchases</h2>
             <!-- Add purchases content here -->
         </section>
 
-        <section #tabSectionElements class="content sales">
+        <section *ngIf="activeTab === 'sales'" class="content sales">
             <h2>Sales</h2>
             <!-- Add sales content here -->
+            <div class="wrapper">
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <input #currInput type="text" class="filter" placeholder="Filter" ngModel
+                        (input)="onTextInput(currInput.value)">
+                </div>
+
+                <!-- Order Status Filter -->
+                <div class="status-filters">
+                    <button type="button" class="clear-btn">Clear filter</button>
+                    <button *ngFor="let order of dbOrders" class="status-btn active" [attr.data-ref]="order.referenceNumber">#{{order.referenceNumber}}</button>
+                    <!-- <button type="button" class="status-btn rejected active" data-seqnum="352">#352</button>
+                    <button type="button" class="status-btn pending active" data-seqnum="351">#351</button>
+                    <button type="button" class="status-btn pending active" data-seqnum="350">#350</button>
+                    <button type="button" class="status-btn accepted active" data-seqnum="349">#349</button> -->
+                    <!-- <button type="button" class="status-btn selected" data-seqnum="348">#348</button>
+                  <button type="button" class="status-btn inactive" data-seqnum="347">#347</button> -->
+                </div>
+
+                <!-- Order List -->
+                <div class="order-list">
+                    <!-- Order Card -->
+                    <ng-container *ngFor="let order of dbOrders; let i = index">
+                        <div class="order-card" [attr.data-ref]="order.referenceNumber" [attr.data-status]="order.status">
+                            <h3>Order #{{order.referenceNumber}}</h3>
+                            <p>{{dbOrdersDates[i]}}</p>
+                            <div class="items">
+                                <ng-container *ngFor="let item of order.purchasedItems; let idx = index">
+                                    <div class="item">
+                                        <div class="media itm">
+                                            <img [src]="item.image" alt="Vegetable Mixups">
+                                        </div>
+                                        <div class="sub-cat itm">
+                                            <p>{{capitalizeCategoryService.capitalize(item.subCat)}}</p>
+                                        </div>
+                                        <div class="qty itm">
+                                            <span>Qty: {{item.selectedQuantity}}</span>
+                                        </div>
+                                        <div class="price itm">
+                                            <span>P&dollar;{{item.price}}</span>
+                                        </div>
+                                        <div class="product itm">
+                                            <span>&dollar;{{item.product}}</span>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div class="bill-wrapper">
+                                <div class="subtotal">
+                                    <span class="title">Subtotal&colon;</span>
+                                    <span class="amount">&dollar;{{order.subtotal.toFixed(2)}}</span>
+                                </div>
+                                <div class="discount">
+                                    <span class="title">{{order.discount.code}}</span>
+                                    <span class="amount">&minus;&dollar;{{order.discountValue.toFixed(2)}}</span>
+                                </div>
+                                <div class="shipping">
+                                    <span class="title">{{order.shippingMethod.name}}</span>
+                                    <span class="amount">&dollar;{{order.shippingValue.toFixed(2)}}</span>
+                                </div>
+                                <div class="total">
+                                    <span class="title">Total&colon;</span>
+                                    <span class="amount">&dollar;{{order.total.toFixed(2)}}</span>
+                                </div>
+                            </div>
+                            <div class="order-status">
+                                <div *ngIf="order.status==='rejected'" class="rejected">Rejected</div>
+                                <div *ngIf="order.status==='confirmed'" class="confirmed">Confirmed</div>
+                                <div *ngIf="order.status==='pending'" class="pending">
+                                    <button type="button" class="reject">Reject</button>
+                                    <button type="button" class="confirm">Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Repeat for other orders... -->
+                </div>
+            </div>
         </section>
     </div>
 </section>

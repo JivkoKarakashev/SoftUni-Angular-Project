@@ -20,9 +20,10 @@ const cartItemSchema = {
     quantity: 'number',
     selectedQuantity: 'number',
     price: 'number',
-    buyed: 'boolean',
+    inCart: 'boolean',
     product: 'number',
-    checked: 'boolean'
+    checked: 'boolean',
+    _accountId: 'string'
 };
 
 const DBOrderSchema = {

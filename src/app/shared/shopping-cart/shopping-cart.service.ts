@@ -11,8 +11,10 @@ import { HttpLogoutInterceptorSkipHeader } from '../../interceptors/http-logout.
 import { HttpAJAXInterceptorSkipHeader } from '../../interceptors/http-ajax.interceptor';
 import { Item } from 'src/app/types/item';
 import { BuildUpdateRequestsArrayService } from '../utils/build-update-requests-array.service';
+import { BuildSalesRequestsArrayService } from '../utils/build-sales-requests-array.service';
+import { environment } from 'src/environments/environment.development';
 
-const BASE_URL = 'http://localhost:3030/data';
+const BASE_URL = `${environment.apiDBUrl}/data`;
 const SHIPPINGMETHODS_URL = `${BASE_URL}/shipping`;
 const DISCOUNTS_URL = `${BASE_URL}/discounts`;
 const ORDER_URL = `${BASE_URL}/order`;
@@ -29,7 +31,7 @@ export class ShoppingCartService {
   private shippingState$$ = new BehaviorSubject<Shipping>({ ...shippingInitialState });
   private shippingState$ = this.shippingState$$.asObservable();
 
-  constructor(private http: HttpClient, private checkForItemType: CheckForItemTypeService, private buildUpdReqsArr: BuildUpdateRequestsArrayService) { }
+  constructor(private http: HttpClient, private checkForItemType: CheckForItemTypeService, private buildUpdReqsArr: BuildUpdateRequestsArrayService, private buildSalesReqsArr: BuildSalesRequestsArrayService) { }
 
   getCartItems(): Observable<CartItem[]> {
     return this.cartItems$;
@@ -148,5 +150,10 @@ export class ShoppingCartService {
   updateItmsRemainQty(purchasedItems: CartItem[]): Observable<Item[]> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     return forkJoin([...this.buildUpdReqsArr.build(purchasedItems, headers)]);
+  }
+
+  createSalesByOwnerAccount(purchasedItems: CartItem[]): Observable<CartItem[]> {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
+    return forkJoin([...this.buildSalesReqsArr.build(purchasedItems, headers)]);
   }
 }

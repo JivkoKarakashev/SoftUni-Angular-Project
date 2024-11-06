@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { UserForAuth } from '../types/user';
+import { UserWithAccountId } from '../types/user';
 import { UserService } from '../user/user.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { UserService } from '../user/user.service';
   styleUrls: ['./authenticate.component.css']
 })
 export class AuthenticateComponent {
-  private userData: UserForAuth | null = null;
+  private userData: UserWithAccountId | null = null;
 
   constructor(private userService: UserService) {
     // console.log(this.userData);

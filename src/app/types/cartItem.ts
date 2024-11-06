@@ -15,9 +15,10 @@ export interface CartItem {
     quantity: number,
     selectedQuantity: number,
     price: number,
-    buyed: boolean,
+    inCart: boolean,
     product: number,
-    checked: boolean
+    checked: boolean,
+    _accountId: string
 }
 
 export const cartItemInitailState = {
@@ -37,7 +38,8 @@ export const cartItemInitailState = {
     quantity: NaN,
     selectedQuantity: NaN,
     price: NaN,
-    buyed: true,
+    inCart: true,
     product: NaN,
-    checked: false
+    checked: false,
+    _accountId: ''
 }

@@ -9,12 +9,14 @@ import { Sunglasses } from 'src/app/types/sunglasses';
 import { Watch } from 'src/app/types/watch';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+import { environment } from 'src/environments/environment.development';
 
-const CAPS_HATS_URL = 'http://localhost:3030/data/caps_hats';
-const BELTS_URL = 'http://localhost:3030/data/belts';
-const GLOVES_URL = 'http://localhost:3030/data/gloves';
-const SUNGLASSES_URL = 'http://localhost:3030/data/sunglasses';
-const WATCHES_URL = 'http://localhost:3030/data/watches';
+const BASE_URL = `${environment.apiDBUrl}/data`;
+const CAPS_HATS_URL = `${BASE_URL}/caps_hats`;
+const BELTS_URL = `${BASE_URL}/belts`;
+const GLOVES_URL = `${BASE_URL}/gloves`;
+const SUNGLASSES_URL = `${BASE_URL}/sunglasses`;
+const WATCHES_URL = `${BASE_URL}/watches`;
 
 @Injectable({
   providedIn: 'root'

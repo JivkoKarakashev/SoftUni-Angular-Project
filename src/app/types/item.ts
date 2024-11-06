@@ -12,7 +12,8 @@ export interface Item {
     brand: string,
     quantity: number,
     price: number,
-    buyed: boolean
+    inCart: boolean,
+    _accountId: string
 }
 
 export const initialItem: Item = {
@@ -29,5 +30,6 @@ export const initialItem: Item = {
     brand: '',
     quantity: NaN,
     price: NaN,
-    buyed: false
+    inCart: false,
+    _accountId: ''
 }

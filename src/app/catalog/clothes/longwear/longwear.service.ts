@@ -4,8 +4,9 @@ import { Injectable } from '@angular/core';
 import { Longwear } from 'src/app/types/longwear';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+import { environment } from 'src/environments/environment.development';
 
-const URL = 'http://localhost:3030/data/longwear';
+const URL = `${environment.apiDBUrl}/data/longwear`;
 
 @Injectable({
   providedIn: 'root'

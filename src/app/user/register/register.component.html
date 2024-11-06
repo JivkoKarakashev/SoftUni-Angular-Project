@@ -6,8 +6,8 @@
         <div class="title">
             <h2>Register</h2>
         </div>
-        <ng-container *ngIf="httpError?.error">
-            <div class="alert">{{httpError.error?.message}}</div>
+        <ng-container *ngIf="httpErrorsArr.length">
+            <div class="alert">{{httpErrorsArr.at(0)?.error?.message}}</div>
         </ng-container>
         <form [formGroup]="registerForm" (ngSubmit)="register()" method="post" action="#">
             <fieldset>

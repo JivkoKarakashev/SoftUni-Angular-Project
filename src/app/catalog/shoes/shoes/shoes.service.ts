@@ -7,10 +7,12 @@ import { Boot } from 'src/app/types/boot';
 import { Slippers } from 'src/app/types/slippers';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { environment } from 'src/environments/environment.development';
 
-const TRAINERS_URL = 'http://localhost:3030/data/trainers';
-const BOOTS_URL = 'http://localhost:3030/data/boots';
-const SLIPPERS_URL = 'http://localhost:3030/data/slippers';
+const BASE_URL = `${environment.apiDBUrl}/data`;
+const TRAINERS_URL = `${BASE_URL}/trainers`;
+const BOOTS_URL = `${BASE_URL}/boots`;
+const SLIPPERS_URL = `${BASE_URL}/slippers`;
 
 @Injectable({
   providedIn: 'root'

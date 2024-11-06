@@ -1379,7 +1379,8 @@
                 brand: "Fusce vel",
                 quantity: 3,
                 price: 67,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "8cbacf3d-cd95-4bfe-ae01-bbcbac8bcabc": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -1395,7 +1396,8 @@
                 brand: "Fusce vel",
                 quantity: 2,
                 price: 55,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "e2e8aa93-c44f-44c3-bde9-71d20fbfcd28": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1411,7 +1413,8 @@
                 brand: "Fusce vel",
                 quantity: 7,
                 price: 38,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "a782d9ad-5cff-4689-89ba-95eb608f6505": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1427,7 +1430,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 49,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "cadbc572-e875-44b6-9893-a9ce4225caad": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1443,7 +1447,8 @@
                 brand: "Fusce vel",
                 quantity: 14,
                 price: 55,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "cdb259c1-2a5f-459c-b2e0-b898f40cbe1d": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1459,7 +1464,8 @@
                 brand: "Fusce vel",
                 quantity: 22,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         longwear: {
@@ -1477,7 +1483,8 @@
                 brand: "Fusce vel",
                 quantity: 3,
                 price: 67,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "9886ebc1-bbb3-474d-b924-a7354f7cc8a7": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -1493,7 +1500,8 @@
                 brand: "Fusce vel",
                 quantity: 2,
                 price: 55,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "9be8a412-59b6-40ab-ac23-c11c93336c2f": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1509,7 +1517,8 @@
                 brand: "Fusce vel",
                 quantity: 7,
                 price: 38,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "f385d860-80c5-4333-a521-7f20d9fbc103": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1525,7 +1534,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 49,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "f9a3aeab-254f-448b-bd09-13a94a1ca6b8": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1541,7 +1551,8 @@
                 brand: "Fusce vel",
                 quantity: 14,
                 price: 55,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "82318714-2204-4908-9ef5-98e6b4c51a55": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1557,7 +1568,8 @@
                 brand: "Fusce vel",
                 quantity: 22,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         trainers: {
@@ -1575,7 +1587,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "db449a28-8294-4e57-bfd6-21767c2de7d3": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -1591,7 +1604,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "f48c7711-5d8e-4a33-81a8-54c12942e3d2": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1607,7 +1621,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "2a3fae4c-c7c1-41e8-a3ca-460e6d5911a6": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1623,7 +1638,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "6d23eba6-cae8-488e-9395-4a8a763fbcda": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1639,7 +1655,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "dd70c02f-8e4f-4e61-8707-9c9827045000": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1655,7 +1672,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         boots: {
@@ -1673,7 +1691,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "74f96ba9-afa5-464e-9589-81649b55c63b": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -1689,7 +1708,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "d26cc179-d72e-4e5e-a027-5fd95450bd20": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1705,7 +1725,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "05a1e9b5-6aed-47d1-8dbf-8710ed0a05f2": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1721,7 +1742,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "082fdb17-114d-414e-af85-7ce902fed3f8": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1737,7 +1759,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "8bc94d8f-b45d-4c5e-a2bb-ba5dc9957cea": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1753,7 +1776,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         slippers: {
@@ -1771,7 +1795,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "9f80a27b-c0e0-433b-979f-91b6c32a31e1": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -1787,7 +1812,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "d53f37a7-857f-4758-83cf-16d16f924b83": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1803,7 +1829,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "fb01dfe8-7f86-4eca-8055-311324238f15": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1819,7 +1846,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "140b3d37-e2e6-4c7a-8567-da67d82b7c74": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1835,7 +1863,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "19e5e727-b481-4eb8-95dd-5c5240bc5e3e": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1851,7 +1880,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         caps_hats: {
@@ -1869,7 +1899,8 @@
                 brand: "Fusce vel",
                 quantity: 3,
                 price: 67,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "9966e773-9487-4562-b537-22bc1c0c74e3": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -1885,7 +1916,8 @@
                 brand: "Fusce vel",
                 quantity: 2,
                 price: 55,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "cc515c51-25e2-4f9f-b552-dc315b1652d7": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1901,7 +1933,8 @@
                 brand: "Fusce vel",
                 quantity: 7,
                 price: 38,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "612ce75f-bfdd-4421-8f01-840ea9a29bb1": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1917,7 +1950,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 49,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "2587a3ec-7978-4eef-b7ff-46ed578fcc7a": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1933,7 +1967,8 @@
                 brand: "Fusce vel",
                 quantity: 14,
                 price: 55,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "545ce913-05c8-4c37-8a9b-277a1aa9b7c5": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -1949,7 +1984,8 @@
                 brand: "Fusce vel",
                 quantity: 22,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         belts: {
@@ -1967,7 +2003,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "0c7e01a6-fae7-40b8-b579-613c9aae776d": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -1983,7 +2020,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "9e57f29a-2910-4c4f-b211-e3271f7c07db": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1999,7 +2037,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "8e7979ce-50f7-41e7-9bc6-12af5e692516": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2015,7 +2054,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "572883fb-4f2e-443e-8bd9-280fc1072fa6": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2031,7 +2071,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "3019e643-54f5-4767-b90c-e102d8de51f2": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2047,7 +2088,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         gloves: {
@@ -2065,7 +2107,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "dea96f4e-1550-46b0-a6c7-9cc51b3f7ebd": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2081,7 +2124,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "4a7fa928-e054-4f2a-b2b5-f54ce046a0f7": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2097,7 +2141,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "299d18f0-6bf2-4605-8a00-82b9da04d2e6": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2113,7 +2158,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "cc73d130-210a-4e79-8d7a-7b200ed4170d": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2129,7 +2175,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "a092c650-5761-4c2f-a2c9-d65dd82faa7a": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2145,7 +2192,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         sunglasses: {
@@ -2163,7 +2211,8 @@
                 brand: "Fusce vel",
                 quantity: 3,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "995d201c-224b-492d-85dc-0f54c3caa1b8": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2179,7 +2228,8 @@
                 brand: "Fusce vel",
                 quantity: 2,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "700ecdb8-8987-42d7-b3c8-2350bb0a9b48": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2195,7 +2245,8 @@
                 brand: "Fusce vel",
                 quantity: 7,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "e2dae4a7-77f2-43ec-943a-2a89222dd672": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2211,7 +2262,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 42,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "af7a58f3-bb9d-4a09-9395-bfc124d6de37": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2227,7 +2279,8 @@
                 brand: "Fusce vel",
                 quantity: 14,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "bfb59ac0-328f-4f6d-afaa-fd74e5c1352f": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2243,7 +2296,8 @@
                 brand: "Fusce vel",
                 quantity: 22,
                 price: 37,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         watches: {
@@ -2261,7 +2315,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "c54ca5dc-c54b-4b76-b3b3-4bc70d191752": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2277,7 +2332,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "aab22e23-ce37-425b-b801-8f7f70f1061c": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2293,7 +2349,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "2c02cf71-206b-40a3-a099-92ab9a51d018": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2309,7 +2366,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "78741946-e9d2-4c76-8804-c1cb167d2413": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2325,7 +2383,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "e947c90c-1237-483b-b10d-dc51b7817e09": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2341,7 +2400,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         gym: {
@@ -2359,7 +2419,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "c56a32a8-6576-44bd-bb45-94b48b360d47": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2375,7 +2436,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "bd2ccbdf-a5ac-4e44-96f7-48cbd2cd957d": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2391,7 +2453,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "d490a02e-8387-4e9c-b8aa-b5cdb7275230": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2407,7 +2470,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "696154de-b8a1-490f-a72a-6b2f206deeec": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2423,7 +2487,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "edd931f2-3c23-417f-99fe-a42e91ffdc2f": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2439,7 +2504,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         running: {
@@ -2457,7 +2523,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "0d642883-bf87-4d7f-b402-9a91668d2da2": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2473,7 +2540,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "d8b7fc37-76a0-4ccc-b48a-07ffca1ad93a": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2489,7 +2557,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "1b4a7f92-b2e5-46a0-ae87-f02cc7d23896": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2505,7 +2574,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "ebde504e-796e-4a62-948a-d0421a113000": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2521,7 +2591,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "ca8c2516-93a7-4272-9c21-88f957acf407": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2537,7 +2608,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         ski_snowboard: {
@@ -2555,7 +2627,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "226de618-40e3-42a6-ab3e-fa4190f38cd5": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2571,7 +2644,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "a5a5b679-3fd7-481e-927b-8dd4dc311082": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2587,7 +2661,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "cd9dd1a7-f6ff-4a25-8358-fc849c4bdf0e": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2603,7 +2678,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "ed524511-5f80-43da-a423-b582cc01c31a": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2619,7 +2695,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "373a559d-6444-4da0-bbab-a806c988a919": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2635,7 +2712,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         swim_surf: {
@@ -2653,7 +2731,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "2dc43f78-3f9a-4a8b-a99f-8f93a4ccbdfd": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2669,7 +2748,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "43344240-038c-4f36-b1a6-1bda98f4bbcc": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2685,7 +2765,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "71ebb209-a644-4c7c-a5d0-9736d51490b7": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2701,7 +2782,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "a0bb6efa-2f47-4e6c-9d24-a547f166a0da": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2717,7 +2799,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "05707784-55b6-426d-a508-f3a620d337b4": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2733,7 +2816,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         outdoors: {
@@ -2751,7 +2835,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "34536797-32d3-450d-9413-42cf6380dd03": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2767,7 +2852,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "f24740ea-a402-4461-b58e-33a0d6cd2069": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2783,7 +2869,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "50601a75-1471-420f-9612-a5b362c301e1": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2799,7 +2886,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "c7c585fe-3529-4bda-a332-94408828c33a": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2815,7 +2903,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "cb3d2e2a-5014-4cfa-b5ff-da301ce8a5de": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2831,7 +2920,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         bottoms_leggings: {
@@ -2849,7 +2939,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "749f8a20-3a91-47ef-bb45-69d398560165": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2865,7 +2956,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "30a25db4-5c46-48c9-a225-93f74d895db7": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2881,7 +2973,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "cbcd493f-889d-4c95-9740-8595bbadb6e6": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2897,7 +2990,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "220e7c6e-14c4-47ec-90bd-3fcea4386156": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2913,7 +3007,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "d0057d1b-2ab9-44ce-a648-3348af3522cd": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -2929,7 +3024,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         sweaters: {
@@ -2947,7 +3043,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "ff927916-6d5b-42b4-85af-522070f4cafa": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -2963,7 +3060,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "6fc9e886-bf92-418d-bfb4-906cb11185e2": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2979,7 +3077,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "930f1cf0-9976-452b-b1b7-3eb5f6fe1297": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -2995,7 +3094,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "ed087cec-a8e2-4393-b687-fc9c8184d34c": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3011,7 +3111,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "2f02e9a6-d114-4bfd-bbc7-0f1c13ca5eef": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3027,7 +3128,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         blazers_jackets: {
@@ -3045,7 +3147,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "b484cd2a-34d7-431d-a127-33065192beea": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -3061,7 +3164,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "d3a62f1b-c2bf-49c9-8b13-cbc616a6c656": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -3077,7 +3181,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "50c5a399-3e2d-4f5a-9e61-9782c7b9d282": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -3093,7 +3198,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "dcc233b4-1e4e-4192-9465-ff044b12aaf8": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3109,7 +3215,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "f0c26045-329c-47b3-92e2-f6bc025d237d": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3125,7 +3232,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         waistcoats: {
@@ -3143,7 +3251,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "22213ca0-1ca9-4e12-9bd8-563553713e02": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -3159,7 +3268,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "7b2d831c-e578-4101-a354-08952eb66df4": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -3175,7 +3285,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "1f89964e-de86-4a3d-b55e-e8a0030d4530": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -3191,7 +3302,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "0d2e3f86-2879-43cf-825a-89505985b57a": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3207,7 +3319,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "e5d056e1-01bf-4f17-a57e-ea58f802f860": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3223,7 +3336,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         tuxedos_partywear: {
@@ -3241,7 +3355,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "333ccc5a-4f6f-4926-8456-ae8a9d7a314b": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -3257,7 +3372,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "e723574f-041f-47aa-a8a9-2c4065cb17d9": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -3273,7 +3389,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "0e0069e7-965d-4a63-8ad8-8f0d84c4a94f": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -3289,7 +3406,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "18f99028-862d-4f0d-8fa5-eabcdac35c4d": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3305,7 +3423,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "55b469f8-eed6-4efa-ab32-1888b604b777": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3321,7 +3440,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         ties: {
@@ -3339,7 +3459,8 @@
                 brand: "Fusce vel",
                 quantity: 15,
                 price: 47,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "2792c835-6429-4cf0-bca5-a24be7483a21": {
                 _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -3355,7 +3476,8 @@
                 brand: "Fusce vel",
                 quantity: 10,
                 price: 40,
-                buyed: false
+                buyed: false,
+                _accountId: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a"
             },
             "bd3ddc02-4641-4370-a29c-71277f341970": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -3371,7 +3493,8 @@
                 brand: "Fusce vel",
                 quantity: 20,
                 price: 50,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "f971f068-de3b-4e87-9dd4-3c1e69bd0285": {
                 _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -3387,7 +3510,8 @@
                 brand: "Fusce vel",
                 quantity: 25,
                 price: 33,
-                buyed: false
+                buyed: false,
+                _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806"
             },
             "63b9d741-25f6-4437-8dcb-4311dc8b08ca": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3403,7 +3527,8 @@
                 brand: "Fusce vel",
                 quantity: 27,
                 price: 21,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             },
             "978da206-c1a1-4ace-b8a9-de0049042c72": {
                 _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
@@ -3419,7 +3544,8 @@
                 brand: "Fusce vel",
                 quantity: 44,
                 price: 56,
-                buyed: false
+                buyed: false,
+                _accountId: "d148b388-8846-4112-9a4e-ee62f314261c"
             }
         },
         discounts: {
@@ -3496,7 +3622,7 @@
             "c9370d81-bbc9-4fe9-b6c4-cb9313dfa677": {
                 _createdOn: 1729856211104,
                 _id: "c9370d81-bbc9-4fe9-b6c4-cb9313dfa677",
-                _ownerId: "2beadf04-1d5d-4b6b-91a5-56e4f72a2b8c",
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
                 email: "peter@abv.bg",
                 username: "Peter",
                 address: {
@@ -3509,6 +3635,7 @@
                 },
                 purchasedItems: [
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "572883fb-4f2e-443e-8bd9-280fc1072fa6",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721715474524,
@@ -3541,6 +3668,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "cc73d130-210a-4e79-8d7a-7b200ed4170d",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721715480524,
@@ -3573,6 +3701,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "af7a58f3-bb9d-4a09-9395-bfc124d6de37",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721715486524,
@@ -3638,6 +3767,7 @@
                 },
                 purchasedItems: [
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "220e7c6e-14c4-47ec-90bd-3fcea4386156",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721747891094,
@@ -3669,6 +3799,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "c7c585fe-3529-4bda-a332-94408828c33a",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721747885094,
@@ -3700,6 +3831,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "ebde504e-796e-4a62-948a-d0421a113000",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721747867094,
@@ -3765,6 +3897,7 @@
                 },
                 purchasedItems: [
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "63b9d741-25f6-4437-8dcb-4311dc8b08ca",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721903387193,
@@ -3796,6 +3929,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "18f99028-862d-4f0d-8fa5-eabcdac35c4d",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721895762193,
@@ -3827,6 +3961,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "ed087cec-a8e2-4393-b687-fc9c8184d34c",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721747897094,
@@ -3892,6 +4027,7 @@
                 },
                 purchasedItems: [
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "6d23eba6-cae8-488e-9395-4a8a763fbcda",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721713467429,
@@ -3924,6 +4060,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "082fdb17-114d-414e-af85-7ce902fed3f8",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721713473429,
@@ -3956,6 +4093,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
                         _id: "140b3d37-e2e6-4c7a-8567-da67d82b7c74",
                         _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
                         _createdOn: 1721713479429,
@@ -4022,6 +4160,7 @@
                 },
                 purchasedItems: [
                     {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
                         _id: "1f89964e-de86-4a3d-b55e-e8a0030d4530",
                         _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
                         _createdOn: 1721797923893,
@@ -4054,6 +4193,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
                         _id: "50c5a399-3e2d-4f5a-9e61-9782c7b9d282",
                         _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
                         _createdOn: 1721752165912,
@@ -4086,6 +4226,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
                         _id: "2c02cf71-206b-40a3-a099-92ab9a51d018",
                         _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
                         _createdOn: 1721715491524,
@@ -4152,6 +4293,7 @@
                 },
                 purchasedItems: [
                     {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
                         _id: "cc515c51-25e2-4f9f-b552-dc315b1652d7",
                         _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
                         _createdOn: 1721715466524,
@@ -4182,6 +4324,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
                         _id: "8e7979ce-50f7-41e7-9bc6-12af5e692516",
                         _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
                         _createdOn: 1721715473524,
@@ -4214,6 +4357,7 @@
                         checked: false
                     },
                     {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
                         _id: "299d18f0-6bf2-4605-8a00-82b9da04d2e6",
                         _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
                         _createdOn: 1721715479524,
@@ -4265,7 +4409,613 @@
                 _updatedOn: 1729935362703
             }
         },
-        bought: {},
+        accounts: {
+            "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a": {
+                _createdOn: 1730742733158,
+                _id: "e3bfbc9e-6cfa-4376-8119-86dbbdaed42a",
+                _ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
+                sales: []
+            },
+            "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806": {
+                _createdOn: 1730794100303,
+                _id: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
+                _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                sales: [
+                    {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
+                        _id: "1f89964e-de86-4a3d-b55e-e8a0030d4530",
+                        _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                        _createdOn: 1721797923893,
+                        image: "https://cdn.pixabay.com/photo/2024/07/24/04/57/waistcoat-8916938_640.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/suits_tailoring/waistcoats/colors/waistcoats-4-pink.webp",
+                            "../../../assets/public/static/images/catalog/suits_tailoring/waistcoats/colors/waistcoats-4-orange.webp"
+                        ],
+                        cat: "suits_tailoring",
+                        subCat: "waistcoats",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "XS",
+                            "M",
+                            "L",
+                            "XL"
+                        ],
+                        selectedSize: "XS",
+                        color: [
+                            "pink",
+                            "orange"
+                        ],
+                        selectedColor: "orange",
+                        quantity: 25,
+                        selectedQuantity: 1,
+                        price: 33,
+                        buyed: true,
+                        product: 33,
+                        checked: false
+                    },
+                    {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
+                        _id: "50c5a399-3e2d-4f5a-9e61-9782c7b9d282",
+                        _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                        _createdOn: 1721752165912,
+                        image: "https://cdn.pixabay.com/photo/2024/07/23/16/19/jacket-8915748_640.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/suits_tailoring/blazers_jackets/colors/blazers_jackets-4-pink.webp",
+                            "../../../assets/public/static/images/catalog/suits_tailoring/blazers_jackets/colors/blazers_jackets-4-orange.webp"
+                        ],
+                        cat: "suits_tailoring",
+                        subCat: "blazers_jackets",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "XS",
+                            "M",
+                            "L",
+                            "XL"
+                        ],
+                        selectedSize: "M",
+                        color: [
+                            "pink",
+                            "orange"
+                        ],
+                        selectedColor: "pink",
+                        quantity: 25,
+                        selectedQuantity: 1,
+                        price: 33,
+                        buyed: true,
+                        product: 33,
+                        checked: false
+                    },
+                    {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
+                        _id: "2c02cf71-206b-40a3-a099-92ab9a51d018",
+                        _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                        _createdOn: 1721715491524,
+                        image: "https://cdn.pixabay.com/photo/2018/01/18/19/06/time-3091031_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/accessories/watches/colors/watches-4-pink.webp",
+                            "../../../assets/public/static/images/catalog/accessories/watches/colors/watches-4-orange.webp"
+                        ],
+                        cat: "accessories",
+                        subCat: "watches",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            22,
+                            24,
+                            26,
+                            28
+                        ],
+                        selectedSize: "26",
+                        color: [
+                            "pink",
+                            "orange"
+                        ],
+                        selectedColor: "orange",
+                        quantity: 25,
+                        selectedQuantity: 1,
+                        price: 33,
+                        buyed: true,
+                        product: 33,
+                        checked: false
+                    },
+                    {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
+                        _id: "cc515c51-25e2-4f9f-b552-dc315b1652d7",
+                        _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                        _createdOn: 1721715466524,
+                        image: "https://cdn.pixabay.com/photo/2021/06/18/10/30/cap-6345767_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/accessories/caps_hats/colors/caps_hats-3-green.webp",
+                            "../../../assets/public/static/images/catalog/accessories/caps_hats/colors/caps_hats-3-gray.webp"
+                        ],
+                        cat: "accessories",
+                        subCat: "caps_hats",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "XS",
+                            "S"
+                        ],
+                        selectedSize: "XS",
+                        color: [
+                            "green",
+                            "gray"
+                        ],
+                        selectedColor: "green",
+                        quantity: 7,
+                        selectedQuantity: 1,
+                        price: 38,
+                        buyed: true,
+                        product: 38,
+                        checked: false
+                    },
+                    {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
+                        _id: "8e7979ce-50f7-41e7-9bc6-12af5e692516",
+                        _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                        _createdOn: 1721715473524,
+                        image: "https://cdn.pixabay.com/photo/2021/02/02/08/48/belt-5973152_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/accessories/belts/colors/belts-4-pink.webp",
+                            "../../../assets/public/static/images/catalog/accessories/belts/colors/belts-4-orange.webp"
+                        ],
+                        cat: "accessories",
+                        subCat: "belts",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            27,
+                            28,
+                            29,
+                            30
+                        ],
+                        selectedSize: "28",
+                        color: [
+                            "pink",
+                            "orange"
+                        ],
+                        selectedColor: "pink",
+                        quantity: 25,
+                        selectedQuantity: 1,
+                        price: 33,
+                        buyed: true,
+                        product: 33,
+                        checked: false
+                    },
+                    {
+                        _accountId: "1e68f174-2fd9-4c46-9cd9-e5e8b8ee1806",
+                        _id: "299d18f0-6bf2-4605-8a00-82b9da04d2e6",
+                        _ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
+                        _createdOn: 1721715479524,
+                        image: "https://cdn.pixabay.com/photo/2021/04/26/13/34/gloves-6208920_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/accessories/gloves/colors/gloves-4-pink.webp",
+                            "../../../assets/public/static/images/catalog/accessories/gloves/colors/gloves-4-orange.webp"
+                        ],
+                        cat: "accessories",
+                        subCat: "gloves",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            7,
+                            7.5,
+                            8.5,
+                            10
+                        ],
+                        selectedSize: "7.5",
+                        color: [
+                            "pink",
+                            "orange"
+                        ],
+                        selectedColor: "orange",
+                        quantity: 25,
+                        selectedQuantity: 1,
+                        price: 33,
+                        buyed: true,
+                        product: 33,
+                        checked: false
+                    }
+                ]
+            },
+            "d148b388-8846-4112-9a4e-ee62f314261c": {
+                _createdOn: 1730742733158,
+                _id: "d148b388-8846-4112-9a4e-ee62f314261c",
+                _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                sales: [
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "572883fb-4f2e-443e-8bd9-280fc1072fa6",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721715474524,
+                        image: "https://cdn.pixabay.com/photo/2018/06/26/13/29/belt-buckle-3499410_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/accessories/belts/colors/belts-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/accessories/belts/colors/belts-5-chartreuse.webp"
+                        ],
+                        cat: "accessories",
+                        subCat: "belts",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            30,
+                            32,
+                            34,
+                            36
+                        ],
+                        selectedSize: "30",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "beige",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "cc73d130-210a-4e79-8d7a-7b200ed4170d",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721715480524,
+                        image: "https://cdn.pixabay.com/photo/2016/02/11/20/21/mens-leather-gloves-1194450_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/accessories/gloves/colors/gloves-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/accessories/gloves/colors/gloves-5-chartreuse.webp"
+                        ],
+                        cat: "accessories",
+                        subCat: "gloves",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            8,
+                            8.5,
+                            9.5,
+                            10
+                        ],
+                        selectedSize: "8",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "chartreuse",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "af7a58f3-bb9d-4a09-9395-bfc124d6de37",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721715486524,
+                        image: "https://cdn.pixabay.com/photo/2015/07/22/21/24/oakley-856122_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/accessories/sunglasses/colors/sunglasses-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/accessories/sunglasses/colors/sunglasses-5-chartreuse.webp"
+                        ],
+                        cat: "accessories",
+                        subCat: "sunglasses",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "M",
+                            "L",
+                            "XXL"
+                        ],
+                        selectedSize: "M",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "beige",
+                        quantity: 14,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "220e7c6e-14c4-47ec-90bd-3fcea4386156",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721747891094,
+                        image: "https://cdn.pixabay.com/photo/2024/07/19/08/36/sport-8905741_640.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/sportswear/bottoms_leggings/colors/bottoms_leggings-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/sportswear/bottoms_leggings/colors/bottoms_leggings-5-chartreuse.webp"
+                        ],
+                        cat: "sportswear",
+                        subCat: "bottoms_leggings",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "M",
+                            "L",
+                            "XXL"
+                        ],
+                        selectedSize: "M",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "chartreuse",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "c7c585fe-3529-4bda-a332-94408828c33a",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721747885094,
+                        image: "https://cdn.pixabay.com/photo/2024/07/18/11/37/outdoors-8903982_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/sportswear/outdoors/colors/outdoors-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/sportswear/outdoors/colors/outdoors-5-chartreuse.webp"
+                        ],
+                        cat: "sportswear",
+                        subCat: "outdoors",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "M",
+                            "L",
+                            "XXL"
+                        ],
+                        selectedSize: "M",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "beige",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "ebde504e-796e-4a62-948a-d0421a113000",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721747867094,
+                        image: "https://cdn.pixabay.com/photo/2024/07/17/20/40/fitness-8902499_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/sportswear/running/colors/running-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/sportswear/running/colors/running-5-chartreuse.webp"
+                        ],
+                        cat: "sportswear",
+                        subCat: "running",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "M",
+                            "L",
+                            "XXL"
+                        ],
+                        selectedSize: "M",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "chartreuse",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "63b9d741-25f6-4437-8dcb-4311dc8b08ca",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721903387193,
+                        image: "https://cdn.pixabay.com/photo/2024/07/25/10/14/neckties-8920676_640.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/suits_tailoring/ties/colors/ties-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/suits_tailoring/ties/colors/ties-5-chartreuse.webp"
+                        ],
+                        cat: "suits_tailoring",
+                        subCat: "ties",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "M",
+                            "L",
+                            "XXL"
+                        ],
+                        selectedSize: "M",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "beige",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "18f99028-862d-4f0d-8fa5-eabcdac35c4d",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721895762193,
+                        image: "https://cdn.pixabay.com/photo/2024/07/25/07/46/dress-8920413_640.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/suits_tailoring/tuxedos_partywear/colors/tuxedos_partywear-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/suits_tailoring/tuxedos_partywear/colors/tuxedos_partywear-5-chartreuse.webp"
+                        ],
+                        cat: "suits_tailoring",
+                        subCat: "tuxedos_partywear",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "M",
+                            "L",
+                            "XXL"
+                        ],
+                        selectedSize: "M",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "chartreuse",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "ed087cec-a8e2-4393-b687-fc9c8184d34c",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721747897094,
+                        image: "https://cdn.pixabay.com/photo/2024/07/19/12/03/clothes-8906159_640.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/sportswear/sweaters/colors/sweaters-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/sportswear/sweaters/colors/sweaters-5-chartreuse.webp"
+                        ],
+                        cat: "sportswear",
+                        subCat: "sweaters",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            "M",
+                            "L",
+                            "XXL"
+                        ],
+                        selectedSize: "XXL",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "beige",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "6d23eba6-cae8-488e-9395-4a8a763fbcda",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721713467429,
+                        image: "https://cdn.pixabay.com/photo/2020/06/29/04/33/shoes-5351339_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/shoes/trainers/colors/trainers-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/shoes/trainers/colors/trainers-5-chartreuse.webp"
+                        ],
+                        cat: "shoes",
+                        subCat: "trainers",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            8,
+                            8.5,
+                            9.5,
+                            10
+                        ],
+                        selectedSize: "8",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "chartreuse",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "082fdb17-114d-414e-af85-7ce902fed3f8",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721713473429,
+                        image: "https://cdn.pixabay.com/photo/2018/12/10/21/34/winter-boots-3867776_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/shoes/boots/colors/boots-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/shoes/boots/colors/boots-5-chartreuse.webp"
+                        ],
+                        cat: "shoes",
+                        subCat: "boots",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            8,
+                            8.5,
+                            9.5,
+                            10
+                        ],
+                        selectedSize: "10",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "beige",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    },
+                    {
+                        _accountId: "d148b388-8846-4112-9a4e-ee62f314261c",
+                        _id: "140b3d37-e2e6-4c7a-8567-da67d82b7c74",
+                        _ownerId: "60f0cf0b-34b0-4abd-9769-8c42f830dffc",
+                        _createdOn: 1721713479429,
+                        image: "https://cdn.pixabay.com/photo/2015/01/21/01/27/slippers-606277_960_720.jpg",
+                        altImages: [
+                            "../../../assets/public/static/images/catalog/shoes/slippers/colors/slippers-5-beige.webp",
+                            "../../../assets/public/static/images/catalog/shoes/slippers/colors/slippers-5-chartreuse.webp"
+                        ],
+                        cat: "shoes",
+                        subCat: "slippers",
+                        description: "Lorem ipsum dolor sit amet....",
+                        brand: "Fusce vel",
+                        size: [
+                            8,
+                            8.5,
+                            9.5,
+                            10
+                        ],
+                        selectedSize: "9.5",
+                        color: [
+                            "beige",
+                            "chartreuse"
+                        ],
+                        selectedColor: "chartreuse",
+                        quantity: 27,
+                        selectedQuantity: 1,
+                        price: 21,
+                        buyed: true,
+                        product: 21,
+                        checked: false
+                    }
+                ]
+            }
+        },
     };
     var rules$1 = {
         users: {

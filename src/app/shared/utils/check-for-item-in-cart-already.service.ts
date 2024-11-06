@@ -19,7 +19,7 @@ export class CheckForItemInCartAlreadyService {
             // console.log(currCollection);
             currCollection.forEach((itm, idx) => {
                 if (cartItmsArray.some(cartItm => cartItm._id === itm._id)) {
-                    currCollection[idx] = { ...currCollection[idx], buyed: true };
+                    currCollection[idx] = { ...currCollection[idx], inCart: true };
                     // console.log(currCollection[idx]);
                 }
             });

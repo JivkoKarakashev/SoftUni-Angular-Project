@@ -7,11 +7,12 @@ import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logou
 import { CheckForItemTypeService } from 'src/app/shared/utils/check-for-item-type.service';
 import { DBOrder, dbOrderInitialState } from 'src/app/types/order';
 import { SessionStatus } from 'src/app/types/sessionStatus';
+import { environment } from 'src/environments/environment.development';
 
 // const CHECKOUT_SESSSION_STATUS_URL = 'http://localhost:3000/checkout/session-status';
 // const CHECKOUT_SESSSION_STATUS_URL = 'http://localhost:5001/ecommerce-app-angularv16-v2/europe-west1/stripeEmbeddedCheckout/checkout/session-status';
-const CHECKOUT_SESSSION_STATUS_URL = 'https://stripeembeddedcheckout-n42dg4tbiq-ew.a.run.app/checkout/session-status';
-const BASE_URL = 'http://localhost:3030/data/order';
+const CHECKOUT_SESSSION_STATUS_URL = environment.apiCheckoutUrl;
+const BASE_URL = `${environment.apiDBUrl}/data/order`;
 
 @Injectable({
   providedIn: 'root'

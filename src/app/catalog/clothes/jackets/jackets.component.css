@@ -185,7 +185,7 @@ p span {
     color: #890000
 }
 
-p.buyed,
+p.in-cart,
 p.owner {
     background-color: #890000;
     color: #fff;

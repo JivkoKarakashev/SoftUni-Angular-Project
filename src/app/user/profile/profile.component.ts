@@ -3,6 +3,10 @@ import { Subscription } from 'rxjs';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from '../user.service';
+import { DBOrder } from 'src/app/types/order';
+import { CartItem } from 'src/app/types/cartItem';
+import { NumberToDateService } from 'src/app/shared/utils/number-to-date.service';
+import { CapitalizeCategoryService } from 'src/app/shared/utils/capitalize-category.service';
 
 type MyVoid = () => void;
 
@@ -15,13 +19,16 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = [];
   private unsubscriptionEventsArray: MyVoid[] = [];
   public user: UserForAuth | null = null;
+  public dbOrders: DBOrder[] = [];
+  public sales: CartItem[] = [];
+  public dbOrdersDates: string[] = [];
   public loading = true;
+  public activeTab: string | null | 'overview' | 'purchases' | 'sales' = null;
 
-  constructor(private render: Renderer2, private userService: UserService) { }
+  constructor(private render: Renderer2, private userService: UserService, private numberToDateService: NumberToDateService, public capitalizeCategoryService: CapitalizeCategoryService) { }
 
   @ViewChildren('tabLiElements') private tabLiElements!: QueryList<ElementRef>;
   @ViewChildren('tabAnchorElements') private tabAnchorElements!: QueryList<ElementRef>;
-  @ViewChildren('tabSectionElements') private tabSectionElements!: QueryList<ElementRef>;
 
   ngOnInit(): void {
     const userSubscription = this.userService.user$.subscribe(userData => {
@@ -31,6 +38,26 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this.unsubscriptionArray.push(userSubscription);
+
+    if (!this.user) {
+      return;
+    }
+    // const getAllPurchasesAndSalesSubscription = this.userService.getProfileDataByUserId(this.user?._id).subscribe(profileData => {
+    //   // this.dbOrders = [...this.dbOrders, ...ordersData];
+    //   console.log(profileData);
+    //   const [dbOrders, dbSales] = profileData;
+    //   this.dbOrders = [...this.dbOrders, ...dbOrders];
+    //   this.sales = [...this.sales, ...dbSales.sales];
+    //   console.log(this.dbOrders);
+    //   console.log(this.sales);
+    //   return;
+    //   this.dbOrders.forEach((dbOrder, idx) => {
+    //     this.dbOrders[idx] = {...this.dbOrders[idx], status: 'rejected'};
+    //     this.dbOrdersDates = [...this.dbOrdersDates, this.numberToDateService.convert(dbOrder._createdOn)];
+    //   });
+    //   // console.log(this.dbOrdersDates);
+    // });
+    // this.unsubscriptionArray.push(getAllPurchasesAndSalesSubscription);
   }
 
   ngAfterViewInit(): void {
@@ -50,25 +77,25 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       eventFn();
       console.log('UnsubEVENTSArray = 1');
     });
-    console.log('UnsubEVENTSArray = 7');
+    console.log('UnsubEVENTSArray = 3');
   }
 
   // Function to handle tab click and content display
-
   switchActiveTab(e: Event) {
     // console.log(e.target);
     const anchorNativeEL = e.target as HTMLAnchorElement;
-    // Add/Remove 'active' class to/from the clicked tab and corresponding section
-    // Remove 'active' class from all others tabs and sections
+    // Assign current 'activeTab' title to the 'activeTab' prop when switch between tabs and corresponding section
+    this.activeTab = anchorNativeEL.getAttribute('data-title');
+    // Add/Remove 'active' class to/from tabs depending on current 'activeTab' selection
     this.tabLiElements.forEach(tabLiEl => {
       const nativeLiEL = tabLiEl.nativeElement as HTMLLIElement;
       nativeLiEL === anchorNativeEL.parentElement ? this.render.addClass(nativeLiEL, 'active') : this.render.removeClass(nativeLiEL, 'active');
-      this.tabSectionElements.forEach(section => {
-        const nativeSectionEl = section.nativeElement;
-        // console.log(section.classList);
-        // console.log(e.target.getAttribute('data-title'));
-        nativeSectionEl.classList.contains(anchorNativeEL.getAttribute('data-title')) ? nativeSectionEl.classList.add('active') : nativeSectionEl.classList.remove('active');
-      });
     });
+
   }
+
+  onTextInput(input: string): void {
+    console.log(input);
+  }
+
 }

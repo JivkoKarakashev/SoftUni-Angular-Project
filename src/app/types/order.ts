@@ -34,7 +34,7 @@ export interface DBOrder {
     paymentState: 'unpaid' | 'paid',
     referenceNumber?: string,
     sequenceNumber?: number,
-    status: 'pending' | 'confirmed' | 'shipped' | 'delivered'
+    status: 'pending' | 'confirmed' | 'rejected' | 'shipped' | 'delivered'
 }
 
 export interface Address {

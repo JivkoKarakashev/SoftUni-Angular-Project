@@ -23,12 +23,12 @@
                             <ng-container *ngIf="user">
                                 <div class="buttons">
                                     <ul class="buttons">
-                                        <li *ngIf="item._ownerId !== user._id && !item.buyed" class="button buy" (click)="addItemtoCart(item)"><a href="javascript:void(0)">Add to basket</a></li>
+                                        <li *ngIf="item._ownerId !== user._id && !item.inCart" class="button buy" (click)="addItemtoCart(item)"><a href="javascript:void(0)">Add to basket</a></li>
                                         <li *ngIf="item._ownerId === user._id" class="button edit"><a href="javascript:void(0)">Edit</a></li>
                                         <li *ngIf="item._ownerId === user._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
                                     </ul>
                                 </div>
-                                <p *ngIf="item.buyed" [ngClass]="{buyed: item.buyed}">Already in cart</p>
+                                <p *ngIf="item.inCart" [ngClass]="{'in-cart': item.inCart}">Already in cart</p>
                                 <p *ngIf="item._ownerId === user._id" [ngClass]="{owner: item._ownerId === user._id}">You are owner! You can't purchase this Item!</p>
                             </ng-container>
                         </li>
@@ -41,7 +41,7 @@
     <div class="right-wrapper">
         <div class="sticky">
             <a class="cart" routerLink="/cart">
-                <span class="counter">{{buyedItems}}</span><i class="fi fi-rr-shopping-cart-check"></i>
+                <span class="counter">{{cartItemsCounter}}</span><i class="fi fi-rr-shopping-cart-check"></i>
             </a>
         </div>
     </div>

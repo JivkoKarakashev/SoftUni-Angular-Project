@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Item } from 'src/app/types/item';
+import { CapitalizeCategoryService } from './capitalize-category.service';
 
 export interface lastTwoSlideImgs {
   _id: string
@@ -15,6 +16,8 @@ export interface lastTwoSlideImgs {
 })
 export class ProcessLastTwoItemsService {
 
+  constructor(private capitalizeCategoryService: CapitalizeCategoryService) { }
+
   process(lastTwoitmsObjArray: Array<Item[]>): Array<lastTwoSlideImgs[]> {
     const lastTwoSlideImgsArr: Array<lastTwoSlideImgs[]> = [];
     // console.log(lastTwoitmsObjArray);
@@ -27,7 +30,7 @@ export class ProcessLastTwoItemsService {
       if (i === 0) {
         currLastTwoCollection.forEach(itm => {
           const { _id, cat, image, subCat } = itm;
-          const capitalizedCat = this.capitalizeCategory(cat);
+          const capitalizedCat = this.capitalizeCategoryService.capitalize(cat);
           if (!lastTwoSlideImgsArr[catIdxCounter]) {
             lastTwoSlideImgsArr[catIdxCounter] = [];
           }
@@ -36,7 +39,7 @@ export class ProcessLastTwoItemsService {
       } else {
         currLastTwoCollection.forEach(itm => {
           const { _id, cat, image, subCat } = itm;
-          const capitalizedCat = this.capitalizeCategory(cat);
+          const capitalizedCat = this.capitalizeCategoryService.capitalize(cat);
           const subArrLastIdx = lastTwoSlideImgsArr[catIdxCounter].length - 1;
           lastTwoSlideImgsArr[catIdxCounter][subArrLastIdx].cat !== cat ? catIdxCounter++ : null;
           if (!lastTwoSlideImgsArr[catIdxCounter]) {
@@ -50,14 +53,14 @@ export class ProcessLastTwoItemsService {
     return lastTwoSlideImgsArr;
   }
 
-  capitalizeCategory(category: string): string {
-    const arr = category.split('_');
-    let capitalizedCat = '';
-    arr.forEach((wrd) => {
-      wrd = wrd.charAt(0).toLocaleUpperCase().concat(wrd.slice(1));
-      capitalizedCat += (`${wrd} `);
-    });
-    // console.log(capitalizedCat);
-    return capitalizedCat;
-  }
+  // capitalizeCategory(category: string): string {
+  //   const arr = category.split('_');
+  //   let capitalizedCat = '';
+  //   arr.forEach((wrd) => {
+  //     wrd = wrd.charAt(0).toLocaleUpperCase().concat(wrd.slice(1));
+  //     capitalizedCat += (`${wrd} `);
+  //   });
+  //   // console.log(capitalizedCat);
+  //   return capitalizedCat;
+  // }
 }

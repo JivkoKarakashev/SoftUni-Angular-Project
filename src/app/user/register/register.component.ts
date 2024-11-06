@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs';
 
 import { UserService } from '../user.service';
 import { EmailValidaorService } from 'src/app/shared/utils/email-validator.service';
 import { PasswordValidatorService } from 'src/app/shared/utils/passwords-validator.service';
 import { HttpError } from 'src/app/types/httpError';
+import { UserWithAccountId, initialUserWithAccountId } from 'src/app/types/user';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { HttpError } from 'src/app/types/httpError';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  public httpError: HttpError = {};
+  public httpErrorsArr: HttpError[] = [];
   public loading = false;
 
   registerForm = this.fb.group({
@@ -61,19 +62,29 @@ export class RegisterComponent {
     const { email, username, addressGroup: { phone, street_building, city, region, postalCode, country } = {}, passGroup: { password } = {} } = this.registerForm.value;
     if (email && username && password && phone && street_building && city && region && postalCode && country) {
       const address = { phone, street_building, city, region, postalCode, country };
+      let userData: UserWithAccountId = initialUserWithAccountId;
       this.userService.register({ email, username, password, address }).pipe(
-        catchError((err) => {
-          // console.log(err);
-          this.httpError = err;
-          return of(err);
-        })
-      ).subscribe((res) => {
-        this.loading = false;
-        if (res == this.httpError) {
-          return;
+        switchMap(user => {
+          userData = { ...user, _accountId: '' };
+          this.userService.setUser(userData);
+          return this.userService.registerAccount();
+        }),
+        catchError(err => { throw err; })
+      ).subscribe(
+        {
+          next: account => {
+            this.loading = false;
+            userData = { ...userData, _accountId: account._id };
+            this.userService.setUser(userData);
+            this.router.navigate(['/']);
+          },
+          error: err => {
+            this.loading = false;
+            console.log(err);
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          }
         }
-        this.router.navigate(['/']);
-      });
+      );
     }
   }
 }

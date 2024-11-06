@@ -117,10 +117,10 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const itemSubscription = this.getItem(url, id).subscribe(itm => {
       // this.item$ = itm;
       this.loading = false;
-      const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = itm;
+      const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, _accountId } = itm;
       // const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
-      const buyed = this.cartItms.some(itm => itm._id == _id);
-      this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, buyed }
+      const inCart = this.cartItms.some(itm => itm._id == _id);
+      this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, inCart, _accountId };
       // console.log(itm);
       // console.log(this.item);
       // console.log(this.cartItms$$.value);
@@ -217,11 +217,11 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       console.log('Invalid FORM!');
       return;
     }
-    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price } = this.itemCtrlsGr.value;
-    const buyed = true;
+    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, _accountId } = this.itemCtrlsGr.value as CartItem;
+    const inCart = true;
     const product = selectedQuantity * price;
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, buyed, product, checked: false });
-    this.item = { ...this.item, buyed: true };
+    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, inCart, product, checked: false, _accountId });
+    this.item = { ...this.item, inCart: true };
     this.itemCtrlsGr.reset({ ...this.formInitalValue.get('fgItem')?.value });
     this.imgElements.forEach(el => el.nativeElement.classList.contains('active') ? this.render.removeClass(el.nativeElement, 'active') : null);
     this.defImgOpacity = 1;

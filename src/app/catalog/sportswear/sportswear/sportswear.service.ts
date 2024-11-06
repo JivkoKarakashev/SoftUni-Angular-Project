@@ -11,14 +11,16 @@ import { Sweater } from 'src/app/types/sweater';
 import { SwimSurf } from 'src/app/types/swimSurf';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+import { environment } from 'src/environments/environment.development';
 
-const GYM_URL = 'http://localhost:3030/data/gym';
-const RUNNING_URL = 'http://localhost:3030/data/running';
-const SKI_SNOWBOARD_URL = 'http://localhost:3030/data/ski_snowboard';
-const SWIM_SURF_URL = 'http://localhost:3030/data/swim_surf';
-const OUTDOORS_URL = 'http://localhost:3030/data/outdoors';
-const BOTTOMS_LEGGINGS_URL = 'http://localhost:3030/data/bottoms_leggings';
-const SWEATERS_URL = 'http://localhost:3030/data/sweaters';
+const BASE_URL = `${environment.apiDBUrl}/data`;
+const GYM_URL = `${BASE_URL}/gym`;
+const RUNNING_URL = `${BASE_URL}/running`;
+const SKI_SNOWBOARD_URL = `${BASE_URL}/ski_snowboard`;
+const SWIM_SURF_URL = `${BASE_URL}/swim_surf`;
+const OUTDOORS_URL = `${BASE_URL}/outdoors`;
+const BOTTOMS_LEGGINGS_URL = `${BASE_URL}/bottoms_leggings`;
+const SWEATERS_URL = `${BASE_URL}/sweaters`;
 
 @Injectable({
   providedIn: 'root'

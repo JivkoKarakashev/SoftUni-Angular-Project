@@ -20,9 +20,11 @@
                 <ng-container *ngIf="loading">
                     <app-loader />
                 </ng-container>
-                <ng-container *ngIf="httpError?.error">
-                    <div class="alert">{{httpError.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div>
-                    <!-- <div class="alert">{{httpError.error?.message}}</div> -->
+                <ng-container *ngIf="httpErrorsArr.length">
+                    <!-- <ng-container *ngFor="let err of httpErrors"> -->
+                        <div class="alert">{{httpErrorsArr.at(0)?.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div>
+                        <!-- <div class="alert">{{httpError.error?.message}}</div> -->
+                    <!-- </ng-container> -->
                 </ng-container>
                 <form [formGroup]="form" (ngSubmit)="onSubmit()"  *ngIf="!loading">
                     <fieldset>

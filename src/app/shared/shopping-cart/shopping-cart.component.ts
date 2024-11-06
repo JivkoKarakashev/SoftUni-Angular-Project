@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
-import { Subscription, catchError, forkJoin, of } from 'rxjs';
+import { Subscription, catchError, forkJoin } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -32,7 +32,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = [];
   private unsubscriptionEventsArray: MyVoid[] = [];
   public loading = true;
-  public httpError: HttpError = {};
+  public httpErrorsArr: HttpError[] = [];
 
   public availablePurchaseServices: (Discount | Shipping)[] = [];
   public discountCodes: Discount[] = [];
@@ -101,7 +101,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.cartItemsSubscription = this.cartService.getCartItems().subscribe(cartItms => {
       cartItms.forEach((itm) => {
-        const { _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, buyed, product, checked } = itm;
+        const { _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, inCart, product, checked, _accountId } = itm;
         const rowItm = this.fb.group({
           _id,
           _ownerId,
@@ -119,11 +119,12 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
           quantity,
           selectedQuantity: [selectedQuantity || '', [Validators.required,]],
           price,
-          buyed,
+          inCart,
           product,
-          checked
+          checked,
+          _accountId
         });
-        this.listItems.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: selectedSize || '', color, selectedColor: selectedColor || '', quantity, selectedQuantity: selectedQuantity || 0, price, buyed, product, checked });
+        this.listItems.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: selectedSize || '', color, selectedColor: selectedColor || '', quantity, selectedQuantity: selectedQuantity || 0, price, inCart, product, checked, _accountId });
         this.itms.push(rowItm);
       });
     });
@@ -345,32 +346,30 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     const status = 'pending';
     forkJoin([
       this.cartService.placeOrder({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status }).pipe(
-        catchError((err) => {
-          this.httpError = err;
-          console.log(err);
-          return of(err);
-        })
+        catchError(err => { throw err; })
       ),
       this.cartService.updateItmsRemainQty(purchasedItems).pipe(
-        catchError((err) => {
-          this.httpError = err;
-          console.log(err);
-          return of(err);
-        })
+        catchError(err => { throw err; })
+      ),
+      this.cartService.createSalesByOwnerAccount(purchasedItems).pipe(
+        catchError(err => { throw err; })
       )
     ])
-      .subscribe(res => {
-        console.log(res == this.httpError);
-        if (res == this.httpError) {
-          return;
+      .subscribe(
+        {
+          next: ([order,,]) => {
+            const dbOrder: DBOrder = { ...order };
+            // console.log(dbOrder);
+            this.confirmOrderService.setDBOrderState({ ...dbOrder });
+            this.router.navigate(['/checkout']);
+          },
+          error: err => {
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            console.log(err);
+            console.log(this.httpErrorsArr);
+          }
         }
-        // console.log(res);
-        const dbOrder: DBOrder = { ...res[0] };
-        // console.log(dbOrder);
-        // return;
-        this.confirmOrderService.setDBOrderState({ ...dbOrder });
-        this.router.navigate(['/checkout']);
-      });
+      );
     // console.log(this.form.value);
     // console.log(this.listItems);
     // console.log(this.form.get('itms')?.value);
@@ -417,19 +416,22 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   logout(): void {
     this.userService.logout().pipe(
-      catchError((err) => {
-        console.log(err);
-        this.httpError = err;
-        return of(err);
-      })
-    ).subscribe(res => {
-      if (res == this.httpError) {
-        return;
+      catchError(err => { throw err; })
+    ).subscribe(
+      {
+        next: () => {
+          this.cartItemsSubscription.unsubscribe();
+          this.discountStateSubscription.unsubscribe();
+          this.shippingStateSubscription.unsubscribe();
+          this.cartService.emptyCart();
+          this.confirmOrderService.resetDBOrderState();
+          this.router.navigate(['/auth/login']);
+        },
+        error: (err) => {
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+        }
       }
-    });
-    this.cartService.emptyCart();
-    this.confirmOrderService.resetDBOrderState();
-    this.router.navigate(['/auth/login']);
+    );
   }
 
   public trackById(index: number, item: CartItem): string {

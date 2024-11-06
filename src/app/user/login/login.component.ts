@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs';
 
 import { UserService } from '../user.service';
 import { EmailValidaorService } from 'src/app/shared/utils/email-validator.service';
 import { HttpError } from 'src/app/types/httpError';
+import { UserWithAccountId, initialUserWithAccountId } from 'src/app/types/user';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { HttpError } from 'src/app/types/httpError';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  public httpError: HttpError = {};
+  public httpErrorsArr: HttpError[] = [];
   public loading = false;
 
   loginForm = this.fb.group({
@@ -30,20 +31,31 @@ export class LoginComponent {
     }
     const { email, password } = this.loginForm.value;
     if (email && password) {
-      this.userService.login({email, password}).pipe(
-        catchError((err) => {
-          // console.log(err);
-          this.httpError = err;
-          return of(err);
-        })
-      ).subscribe((res) => {
-        // console.log(res);
-        this.loading = false;
-        if (res == this.httpError) {
-          return;
+      let userData: UserWithAccountId = initialUserWithAccountId;
+      this.userService.login({ email, password }).pipe(
+        switchMap(user => {
+          userData = { ...user, _accountId: '' };
+          // this.userService.setUser({ _id, accessToken, email, username, address });
+          return this.userService.getAlldbOrdersByUserId(user._id);
+        }),
+        catchError(err => { throw err; })
+      ).subscribe(
+        {
+          next: (idPropsArr) => {
+            this.loading = false;
+            // console.log(idPropsArr);
+            userData = { ...userData, _accountId: idPropsArr[0]._id };
+            console.log(userData);
+            this.userService.setUser(userData);
+            this.router.navigate(['/']);
+          },
+          error: (err) => {
+            this.loading = false;
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            console.log(err);
+          }
         }
-        this.router.navigate(['/']);
-      });
+      );
     }
   }
 }
