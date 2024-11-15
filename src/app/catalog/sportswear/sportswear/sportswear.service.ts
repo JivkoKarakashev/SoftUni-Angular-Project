@@ -2,16 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin } from 'rxjs';
 
-import { BottomsLeggings } from 'src/app/types/bottomsLeggings';
-import { Gym } from 'src/app/types/gym';
-import { Outdoors } from 'src/app/types/outdoors';
-import { Running } from 'src/app/types/running';
-import { SkiSnowboard } from 'src/app/types/skiSnowboard';
-import { Sweater } from 'src/app/types/sweater';
-import { SwimSurf } from 'src/app/types/swimSurf';
+import { environment } from 'src/environments/environment.development';
+import { Bottom, Gym, Legging, Outdoors, Running, Ski, Snowboard, Surf, Sweater, Swim } from 'src/app/types/item';
+
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { environment } from 'src/environments/environment.development';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
 const GYM_URL = `${BASE_URL}/gym`;
@@ -26,14 +21,6 @@ const SWEATERS_URL = `${BASE_URL}/sweaters`;
   providedIn: 'root'
 })
 export class SportswearService {
-  gym: Gym[] = [];
-  running: Running[] = [];
-  skiSnowboard: SkiSnowboard[] = [];
-  swimSurf: SwimSurf[] = [];
-  outdoors: Outdoors[] = [];
-  bottomsLeggings: BottomsLeggings[] = [];
-  sweaters: Sweater[] = [];
-  sportswear: (Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater)[] = [];
 
   constructor(private http: HttpClient) { }
 
@@ -42,10 +29,10 @@ export class SportswearService {
     return forkJoin([
       this.http.get<Gym[]>(GYM_URL, { headers }),
       this.http.get<Running[]>(RUNNING_URL, { headers }),
-      this.http.get<SkiSnowboard[]>(SKI_SNOWBOARD_URL, { headers }),
-      this.http.get<SwimSurf[]>(SWIM_SURF_URL, { headers }),
+      this.http.get<(Ski | Snowboard)[]>(SKI_SNOWBOARD_URL, { headers }),
+      this.http.get<(Swim | Surf)[]>(SWIM_SURF_URL, { headers }),
       this.http.get<Outdoors[]>(OUTDOORS_URL, { headers }),
-      this.http.get<BottomsLeggings[]>(BOTTOMS_LEGGINGS_URL, { headers }),
+      this.http.get<(Bottom | Legging)[]>(BOTTOMS_LEGGINGS_URL, { headers }),
       this.http.get<Sweater[]>(SWEATERS_URL, { headers })
     ]);
   }

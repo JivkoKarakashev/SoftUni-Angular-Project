@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, switchMap } from 'rxjs';
+import { catchError } from 'rxjs';
 
 import { UserService } from '../user.service';
 import { EmailValidaorService } from 'src/app/shared/utils/email-validator.service';
 import { HttpError } from 'src/app/types/httpError';
-import { UserWithAccountId, initialUserWithAccountId } from 'src/app/types/user';
+import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +22,7 @@ export class LoginComponent {
     password: ['', [Validators.required,]],
   });
 
-  constructor(private fb: FormBuilder, private userService: UserService, private router: Router, private emailValidator: EmailValidaorService) { }
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router, private emailValidator: EmailValidaorService, private userStateMgmnt: UserStateManagementService) { }
 
   login(): void {
     this.loading = true;
@@ -31,31 +31,25 @@ export class LoginComponent {
     }
     const { email, password } = this.loginForm.value;
     if (email && password) {
-      let userData: UserWithAccountId = initialUserWithAccountId;
-      this.userService.login({ email, password }).pipe(
-        switchMap(user => {
-          userData = { ...user, _accountId: '' };
-          // this.userService.setUser({ _id, accessToken, email, username, address });
-          return this.userService.getAlldbOrdersByUserId(user._id);
-        }),
-        catchError(err => { throw err; })
-      ).subscribe(
-        {
-          next: (idPropsArr) => {
-            this.loading = false;
-            // console.log(idPropsArr);
-            userData = { ...userData, _accountId: idPropsArr[0]._id };
-            console.log(userData);
-            this.userService.setUser(userData);
-            this.router.navigate(['/']);
-          },
-          error: (err) => {
-            this.loading = false;
-            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-            console.log(err);
+      this.userService.login({ email, password })
+        .pipe(
+          catchError(err => { throw err; })
+        )
+        .subscribe(
+          {
+            next: (userData) => {
+              this.loading = false;
+              // console.log(userData);
+              this.userStateMgmnt.setUserState({ ...userData });
+              this.router.navigate(['/']);
+            },
+            error: (err) => {
+              this.loading = false;
+              this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+              console.log(err);
+            }
           }
-        }
-      );
+        );
     }
   }
 }

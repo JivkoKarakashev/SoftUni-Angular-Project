@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Tie } from 'src/app/types/tie';
+import { environment } from 'src/environments/environment.development';
+import { Tie } from 'src/app/types/item';
+
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { environment } from 'src/environments/environment.development';
 
 const URL = `${environment.apiDBUrl}/data/ties`;
 
@@ -12,7 +13,6 @@ const URL = `${environment.apiDBUrl}/data/ties`;
   providedIn: 'root'
 })
 export class TiesService {
-  ties: Tie[] = [];
 
   constructor(private http: HttpClient) { }
 

@@ -1,3 +1,11 @@
 /* @import url('../../../assets/styles/navbar.css');
 @import url('../../../assets/styles/shopping-cart.css');
 @import url('../../../assets/styles/responsive.css'); */
+
+div.alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f44336;
+    color: white;
+}

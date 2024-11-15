@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Trainers } from 'src/app/types/trainers';
+import { environment } from 'src/environments/environment.development';
+import { Trainers } from 'src/app/types/item';
+
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { environment } from 'src/environments/environment.development';
 
 const URL = `${environment.apiDBUrl}/data/trainers`;
 
@@ -12,7 +13,6 @@ const URL = `${environment.apiDBUrl}/data/trainers`;
   providedIn: 'root'
 })
 export class TrainersService {
-  longwear: Trainers[] = [];
 
   constructor(private http: HttpClient) { }
 

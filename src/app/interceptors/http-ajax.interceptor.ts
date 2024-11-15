@@ -1,14 +1,14 @@
 import { Injectable, Provider } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Observable, catchError } from 'rxjs';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpResponse } from '@angular/common/http';
+import { Observable, catchError, of } from 'rxjs';
 
-import { UserService } from '../user/user.service';
+import { UserStateManagementService } from '../shared/state-management/user-state-management.service';
 export const HttpAJAXInterceptorSkipHeader = 'X-Skip-HttpAJAXInterceptor';
 
 @Injectable()
 export class HttpAJAXInterceptor implements HttpInterceptor {
 
-  constructor(private userService: UserService) { }
+  constructor(private userStateMgmnt: UserStateManagementService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.headers.has(HttpAJAXInterceptorSkipHeader)) {
@@ -20,7 +20,7 @@ export class HttpAJAXInterceptor implements HttpInterceptor {
     let newReq: HttpRequest<any> = req.clone({ ...req });
     // console.log(req.body);
     if (req.url.startsWith('http://localhost:3030/data/') && req.body) {
-      const userSubscription = this.userService.user$.subscribe(usr => {
+      const userSubscription = this.userStateMgmnt.getUserState().subscribe(usr => {
         if (usr) {
           // console.log(usr);
           const { accessToken } = usr;
@@ -42,10 +42,17 @@ export class HttpAJAXInterceptor implements HttpInterceptor {
       });
       userSubscription.unsubscribe();
     }
-    return next.handle(newReq).pipe(catchError((err) => {
-      console.log(err);
-      throw err;
-    }));
+    return next.handle(newReq).pipe(
+      catchError((err) => {
+        if ((newReq.url.startsWith('http://localhost:3030/data/order?where=_ownerId') && err.status == 404) || (newReq.url.startsWith('http://localhost:3030/data/traded_items?where=sellerId') && err.status == 404)) {
+          console.log('ERROR HANDLED!');
+          return of(new HttpResponse({ body: [], status: 204 }));
+        }
+        console.log('Error:', err);
+        console.log('ERROR RE-THROWN!!!');
+        throw err;
+      })
+    );
   }
 }
 

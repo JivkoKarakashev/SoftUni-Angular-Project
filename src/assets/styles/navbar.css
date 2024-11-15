@@ -81,17 +81,35 @@ a.nav-icon {
   border: 1px solid rgba(55, 255, 15, 0.001);
 }
 
-a.title-icon:hover,
-a.title-icon:focus,
-p.nav-icon:hover,
-p.nav-icon:focus,
-a.nav-icon:hover,
-a.nav-icon:focus {
-  border: 1px solid #5cb85c;
-  border-radius: 0.2em;
-  color: #fff;
+ul.navbar li {
   cursor: pointer;
-  outline: none;
+}
+
+@media screen and (pointer: coarse) {
+  a.title-icon,
+  p.nav-icon,
+  a.nav-icon {
+    border: 1px solid #5cb85c;
+    border-radius: 0.2em;
+    color: #ffffff;
+    cursor: pointer;
+    outline: none;
+  }
+}
+
+@media screen and (pointer: fine) {
+  a.title-icon:hover,
+  a.title-icon:focus,
+  p.nav-icon:hover,
+  p.nav-icon:focus,
+  a.nav-icon:hover,
+  a.nav-icon:focus {
+    border: 1px solid #5cb85c;
+    border-radius: 0.2em;
+    color: #ffffff;
+    cursor: pointer;
+    outline: none;
+  }
 }
 
 div.site-title {

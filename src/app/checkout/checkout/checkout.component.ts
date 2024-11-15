@@ -1,14 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, catchError, of, switchMap } from 'rxjs';
+import { Subscription, catchError, switchMap } from 'rxjs';
 import { injectStripe } from 'ngx-stripe';
 
 import { environment } from 'src/environments/environment';
-import { UserService } from 'src/app/user/user.service';
 import { UserForAuth } from 'src/app/types/user';
+import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
+
 import { EmbeddedCheckout } from 'src/app/types/embeddedCheckout';
-import { HttpError } from 'src/app/types/httpError';
 import { CheckoutService } from './checkout.service';
-import { DBOrder } from 'src/app/types/order';
+import { DBOrder, dbOrderInitialState } from 'src/app/types/order';
+import { TradedItem } from 'src/app/types/item';
+
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-checkout',
@@ -18,55 +21,66 @@ import { DBOrder } from 'src/app/types/order';
 export class CheckoutComponent implements OnInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = [];
   public user: UserForAuth | null = null;
-  private dbOrder: DBOrder | null = null;
+  private dbOrder: DBOrder = dbOrderInitialState;
+  private dbTradedItems: TradedItem[] = [];
   private embeddedCheckout$: EmbeddedCheckout | null = null;
-  public httpError: HttpError = {};
+
+  public httpErrorsArr: HttpErrorResponse[] = [];
+  public errorsArr: Error[] = [];
 
   // Initialize Stripe with your test publishable API key
   private stripe = injectStripe(environment.stripe.publicKey);
   public loading = true;
 
-  constructor(private checkoutService: CheckoutService, private userService: UserService) { }
+  constructor(private userStateMgmnt: UserStateManagementService, private checkoutService: CheckoutService) { }
 
   ngOnInit(): void {
-    const userSubscription = this.userService.user$.subscribe(userData => {
-      if (userData) {
-        this.user = { ...userData };
-      }
-    });
-    if (!this.user) {
-      return;
-    }
+
     // Create a Checkout Session
-    const embeddedCheckoutSubscription = this.checkoutService.getDBOrder()
+    const embeddedCheckoutSubscription = this.userStateMgmnt.getUserState()
       .pipe(
+        switchMap(userData => {
+          if (userData) {
+            this.user = { ...userData };
+          } else {
+            throw new Error('Please Login or Register to complete Order!');
+          }
+          return this.checkoutService.getDBOrder();
+        }),
         switchMap(dbOrder => {
-          // console.log(dbOrder);
-          this.dbOrder = { ...dbOrder };
-          return this.checkoutService.createCheckoutSession(this.dbOrder);
+          this.dbOrder = { ...this.dbOrder, ...dbOrder };
+          console.log(this.dbOrder);
+          return this.checkoutService.getDBTradedItems()
+        }),
+        switchMap(dbTradedItms => {
+          this.dbTradedItems = [...this.dbTradedItems, ...dbTradedItms];
+          console.log(this.dbTradedItems);
+          return this.checkoutService.createCheckoutSession({ ...this.dbOrder }, [...this.dbTradedItems]);
         }),
         switchMap(secret => {
           const { clientSecret } = secret;
-          // console.log(clientSecret);
+          console.log(clientSecret);
           return this.stripe.initEmbeddedCheckout({ clientSecret });
         }),
-        catchError((err) => {
-          console.log(err);
-          this.httpError = err;
-          return of(err);
-        })
+        catchError(err => { throw err; })
       )
-      .subscribe(res => {
-        console.log(res);
-        this.loading = false;
-        if (res == this.httpError) {
-          return;
+      .subscribe(
+        {
+          next: (strpEmbdChkOut) => {
+            this.loading = false;
+            this.embeddedCheckout$ = Object.create(strpEmbdChkOut);
+            // Mount Checkout
+            this.embeddedCheckout$?.mount('#checkout');
+          },
+          error: err => {
+            this.loading = false;
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            console.log(err);
+            console.log(this.httpErrorsArr);
+          }
         }
-        this.embeddedCheckout$ = Object.create(res);
-        // Mount Checkout
-        this.embeddedCheckout$?.mount('#checkout');
-      });
-    this.unsubscriptionArray.push(userSubscription, embeddedCheckoutSubscription);
+      );
+    this.unsubscriptionArray.push(embeddedCheckoutSubscription);
   }
 
   ngOnDestroy(): void {
@@ -74,6 +88,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');      
     });
-    // console.log('UnsubArray = 2');      
+    // console.log('UnsubArray = 1');
   }
 }

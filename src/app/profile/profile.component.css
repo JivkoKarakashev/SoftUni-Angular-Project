@@ -32,6 +32,12 @@
     font-weight: bold;
     border-bottom: 2px solid black;
   }
+
+  .section-profile .container div.alert {
+    color: #ffffff;
+    text-align: center;
+    background-color: #cc0033;
+  }
   
   /* .content {
     padding: 20px;
@@ -256,4 +262,3 @@
     border: none;
     border-radius: 5px;
 }
-  

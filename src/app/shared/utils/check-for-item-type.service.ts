@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CartItem } from 'src/app/types/cartItem';
-import { Item } from 'src/app/types/item';
+
+import { CartItem, Item, TradedItem } from 'src/app/types/item';
 import { DBOrder, Order } from 'src/app/types/order';
 
 const cartItemSchema = {
@@ -20,10 +20,33 @@ const cartItemSchema = {
     quantity: 'number',
     selectedQuantity: 'number',
     price: 'number',
-    inCart: 'boolean',
     product: 'number',
     checked: 'boolean',
-    _accountId: 'string'
+};
+
+const tradedItemSchema = {
+    _ownerId: 'string',
+    _id: 'string',
+    _createdOn: 'number',
+    image: 'string',
+    altImages: 'array',
+    cat: 'string',
+    subCat: 'string',
+    description: 'string',
+    brand: 'string',
+    size: 'array',
+    selectedSize: 'string' || 'number',
+    color: 'array',
+    selectedColor: 'string',
+    quantity: 'number',
+    selectedQuantity: 'number',
+    price: 'number',
+    product: 'number',
+    checked: 'boolean',
+    status: 'string',
+    orderId: 'string',
+    stockId: 'string',
+    sellerId: 'string'
 };
 
 const DBOrderSchema = {
@@ -33,7 +56,6 @@ const DBOrderSchema = {
     email: 'string',
     username: 'string',
     address: 'Address',
-    purchasedItems: 'CartItem[]',
     subtotal: 'number',
     discount: 'Discount',
     discountValue: 'number',
@@ -52,27 +74,42 @@ export class CheckForItemTypeService {
     //  return Object.keys(cartItemSchema).every((prop) => Object.keys(itm).includes(prop));
     //  return Object.keys(cartItemSchema).some((prop) => prop == undefined);
 
-    isItem(itm: Item | CartItem): itm is Item {
-        const itmPropsArr = Object.keys(itm);
+    isItem(inputItm: Item | CartItem): inputItm is Item {
+        const inputItmPropsArr = Object.keys(inputItm);
         const cartItemPropsArr = Object.keys(cartItemSchema);
-        if (cartItemPropsArr.some((prop) => !itmPropsArr.includes(prop))) {
+        if (cartItemPropsArr.some((prop) => !inputItmPropsArr.includes(prop))) {
             console.log('Item type');
             return true;
         } else {
-            console.log('CartItem type');
+            console.log('WRONG Item type!');
             return false;
         }
     }
-    isCartItem(itm: CartItem | Item): itm is CartItem {
-        const itmPropsArr = Object.keys(itm);
+    isCartItem(inputItm: CartItem | Item): inputItm is CartItem {
+        const inputItmPropsArr = Object.keys(inputItm);
         const cartItemPropsArr = Object.keys(cartItemSchema);
-        if (cartItemPropsArr.every((prop) => itmPropsArr.includes(prop))) {
+        if (cartItemPropsArr.every((prop) => inputItmPropsArr.includes(prop))) {
             console.log('CartItem type');
             return true;
         } else {
-            console.log('CartItem type');
+            console.log('WRONG CartItem type!');
             return false;
         }
+    }
+    isTradedItemsArr(inputItmsArr: TradedItem[]): inputItmsArr is TradedItem[] {
+        let result = true;
+        const tradedItmPropsArr = Object.keys(tradedItemSchema);
+        for (const itm of inputItmsArr) {
+            const inputItmPropsArr = Object.keys(itm);
+            if (tradedItmPropsArr.every((prop) => inputItmPropsArr.includes(prop))) {
+                console.log('TradedItem type');
+            } else {
+                console.log('WRONG TradedItem type!');
+                result = false;
+                break;
+            }
+        }
+        return result;
     }
 
     isOrder(itm: Order | DBOrder): itm is Order {
@@ -82,7 +119,7 @@ export class CheckForItemTypeService {
             console.log('Order type');
             return true;
         } else {
-            console.log('DBOrder type');
+            console.log('WRONG DBOrder type!');
             return false;
         }
     }
@@ -93,7 +130,7 @@ export class CheckForItemTypeService {
             console.log('DBOrder type');
             return true;
         } else {
-            console.log('Order type');
+            console.log('WRONG DBOrder type!');
             return false;
         }
     }

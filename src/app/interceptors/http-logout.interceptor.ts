@@ -3,13 +3,13 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { UserService } from '../user/user.service';
+import { UserStateManagementService } from '../shared/state-management/user-state-management.service';
 export const HttpLogoutInterceptorSkipHeader = 'X-Skip-HttpLogoutInterceptor';
 
 @Injectable()
 export class HttpLogoutInterceptor implements HttpInterceptor {
 
-  constructor(private userService: UserService) { }
+  constructor(private userStateMgmnt: UserStateManagementService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.headers.has(HttpLogoutInterceptorSkipHeader)) {
@@ -19,7 +19,7 @@ export class HttpLogoutInterceptor implements HttpInterceptor {
     ////////////////////////////////
     console.log('LogoutInterceptor invoked!');
     if (req.url == 'http://localhost:3030/users/logout') {
-      const userSubscription = this.userService.user$.subscribe(usr => {
+      const userSubscription = this.userStateMgmnt.getUserState().subscribe(usr => {
         if (usr) {
           const { accessToken } = usr;
           // console.log(accessToken);

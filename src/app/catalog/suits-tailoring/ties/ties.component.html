@@ -2,6 +2,10 @@
     <app-loader />
 </ng-container>
 
+<ng-container *ngIf="httpErrorsArr.length">
+    <div class="alert">{{httpErrorsArr.at(0)?.message}}</div>
+</ng-container>
+
 <div class="wrapper" *ngIf="!loading">
     <div class="left-wrapper">
         <section class="section-catalog">
@@ -19,18 +23,16 @@
                             <p>Color: <span><ng-container *ngFor="let col of item.color"> {{col}}</ng-container></span></p>
                             <p>Brand: <span>{{item.brand}}</span></p>
                             <p>Remaining: <span>{{item.quantity}}</span></p>
-                            <p>Price: <span><strong>${{item.price}}</strong></span></p>
-                            <ng-container *ngIf="user">
-                                <div class="buttons">
-                                    <ul class="buttons">
-                                        <li *ngIf="item._ownerId !== user._id && !item.inCart" class="button buy" (click)="addItemtoCart(item)"><a href="javascript:void(0)">Add to basket</a></li>
-                                        <li *ngIf="item._ownerId === user._id" class="button edit"><a href="javascript:void(0)">Edit</a></li>
-                                        <li *ngIf="item._ownerId === user._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
-                                    </ul>
-                                </div>
-                                <p *ngIf="item.inCart" [ngClass]="{'in-cart': item.inCart}">Already in cart</p>
-                                <p *ngIf="item._ownerId === user._id" [ngClass]="{owner: item._ownerId === user._id}">You are owner! You can't purchase this Item!</p>
-                            </ng-container>
+                            <p>Price: <span><strong>${{item.price}}</strong></span></p>                        
+                            <div class="buttons">
+                                <ul class="buttons">
+                                    <li *ngIf="item._ownerId !== user?._id && !item.inCart" class="button buy" (click)="addItemtoCart(item)">Add to basket</li>
+                                    <li *ngIf="item._ownerId === user?._id" class="button edit">Edit</li>
+                                    <li *ngIf="item._ownerId === user?._id" class="button delete">Delete</li>
+                                </ul>
+                            </div>
+                            <p *ngIf="item.inCart" [ngClass]="{'in-cart': item.inCart}">Already in cart</p>
+                            <p *ngIf="item._ownerId === user?._id" [ngClass]="{owner: item._ownerId === user?._id}">You are owner! You can't purchase this Item!</p>
                         </li>
         
                     </ul>

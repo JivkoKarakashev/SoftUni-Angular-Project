@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Running } from 'src/app/types/running';
+import { environment } from 'src/environments/environment.development';
+import { Running } from 'src/app/types/item';
+
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { environment } from 'src/environments/environment.development';
 
 const URL = `${environment.apiDBUrl}/data/running`;
 
@@ -12,7 +13,6 @@ const URL = `${environment.apiDBUrl}/data/running`;
   providedIn: 'root'
 })
 export class RunningService {
-  running: Running[] = [];
 
   constructor(private http: HttpClient) { }
 

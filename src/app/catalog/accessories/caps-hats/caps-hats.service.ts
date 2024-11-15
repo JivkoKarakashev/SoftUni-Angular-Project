@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { CapHat } from 'src/app/types/capHat';
+import { environment } from 'src/environments/environment.development';
+import { Cap, Hat } from 'src/app/types/item';
+
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { environment } from 'src/environments/environment.development';
 
 const URL = `${environment.apiDBUrl}/data/caps_hats`;
 
@@ -12,12 +13,11 @@ const URL = `${environment.apiDBUrl}/data/caps_hats`;
   providedIn: 'root'
 })
 export class CapsHatsService {
-  capsHats: CapHat[] = [];
 
   constructor(private http: HttpClient) { }
 
   getCapsHats() {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-    return this.http.get<CapHat[]>(URL, { headers });
+    return this.http.get<(Cap | Hat)[]>(URL, { headers });
   }
 }

@@ -2,36 +2,24 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, catchError, switchMap } from 'rxjs';
 
-import { Gym } from 'src/app/types/gym';
-import { Running } from 'src/app/types/running';
-import { SkiSnowboard } from 'src/app/types/skiSnowboard';
-import { SwimSurf } from 'src/app/types/swimSurf';
-import { Outdoors } from 'src/app/types/outdoors';
-import { BottomsLeggings } from 'src/app/types/bottomsLeggings';
-import { Sweater } from 'src/app/types/sweater';
-import { BlazerJacket } from 'src/app/types/blazerJacket';
-import { Waistcoat } from 'src/app/types/waistcoat';
-import { TuxedoPartywear } from 'src/app/types/tuxedoPartywear';
-import { Tie } from 'src/app/types/tie';
-import { CapHat } from 'src/app/types/capHat';
-import { Belt } from 'src/app/types/belt';
-import { Glove } from 'src/app/types/glove';
-import { Sunglasses } from 'src/app/types/sunglasses';
-import { Watch } from 'src/app/types/watch';
-import { Trainers } from 'src/app/types/trainers';
-import { Boot } from 'src/app/types/boot';
-import { Slippers } from 'src/app/types/slippers';
-import { Jacket } from 'src/app/types/jacket';
-import { Longwear } from 'src/app/types/longwear';
-import { initialItem } from 'src/app/types/item';
-import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
-import { CartItem } from 'src/app/types/cartItem';
+import { environment } from 'src/environments/environment.development';
+
 import { UserForAuth } from 'src/app/types/user';
-import { UserService } from 'src/app/user/user.service';
+import { UserStateManagementService } from '../state-management/user-state-management.service';
+// import { UserService } from 'src/app/user/user.service';
+
+import { Belt, Blazer, Boot, Bottom, Cap, CartItem, Glove, Gym, Hat, Jacket, Legging, Longwear, Outdoors, Partywear, Running, Ski, Slippers, Snowboard, Sunglasses, Surf, Sweater, Swim, Tie, Trainers, Tuxedo, Waistcoat, Watch, initialItem } from 'src/app/types/item';
+import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';
+import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
+
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+
+import { HttpError } from 'src/app/types/httpError';
+
+const BASE_URL = `${environment.apiDBUrl}/data`;
 
 @Component({
   selector: 'app-product-details',
@@ -39,16 +27,16 @@ import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.in
   styleUrls: ['./product-details.component.css']
 })
 export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+  private unsubscriptionArray: Subscription[] = [];
+
+  public user: UserForAuth | null = null;
+  private cartItms: CartItem[] = [];
   public item: Jacket | Longwear |
     Trainers | Boot | Slippers |
-    CapHat | Belt | Glove | Sunglasses | Watch |
-    Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
-    BlazerJacket | Waistcoat | TuxedoPartywear | Tie = initialItem;
-  private cartItms: CartItem[] = [];
+    Cap | Hat | Belt | Glove | Sunglasses | Watch |
+    Gym | Running | Ski | Snowboard | Swim | Surf | Outdoors | Bottom | Legging | Sweater |
+    Blazer | Jacket | Waistcoat | Tuxedo | Partywear | Tie = initialItem;
   public buyedItems = 0;
-  private unsubscriptionArray: Subscription[] = [];
-  public user: UserForAuth | null = null;
-  public loading = true;
   public defImgOpacity = 1;
 
   public form: FormGroup = this.fb.group({
@@ -73,7 +61,20 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   });
   private formInitalValue: FormGroup = this.fb.group({ fgItem: this.fb.group({ ...this.itemCtrlsGr.value }) });
 
-  constructor(private userService: UserService, private route: ActivatedRoute, private fb: FormBuilder, private http: HttpClient, private router: Router, private render: Renderer2, private cartService: ShoppingCartService) { }
+  public loading = true;
+  public httpErrorsArr: HttpError[] = [];
+
+  constructor(
+    private userStateMgmnt: UserStateManagementService,
+    private cartStateMgmnt: ShoppingCartStateManagementService,
+    // private userService: UserService,
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router,
+    private render: Renderer2,
+    private cartService: ShoppingCartService
+  ) { }
 
   @ViewChildren('imgElements') private imgElements!: QueryList<ElementRef>;
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;
@@ -104,51 +105,111 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
     const { id } = this.route.snapshot.params;
     // console.log(id);
-    const userSubscription = this.userService.user$.subscribe(userData => {
-      if (userData) {
-        this.user = { ...userData };
-      }
-    });
-    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
-      this.buyedItems = items.length;
-      this.cartItms = ([...this.cartItms, ...items]);
-      // console.log(this.cartItms);
-    });
-    const itemSubscription = this.getItem(url, id).subscribe(itm => {
-      // this.item$ = itm;
-      this.loading = false;
-      const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, _accountId } = itm;
-      // const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
-      const inCart = this.cartItms.some(itm => itm._id == _id);
-      this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, inCart, _accountId };
-      // console.log(itm);
-      // console.log(this.item);
-      // console.log(this.cartItms$$.value);
-      // const propsArr = Object.entries(itm);
-      // console.log(propsArr);
-      // propsArr.forEach(([k, v]) => {
-      //   (this.form.get('fgItem') as FormGroup).addControl(k, new FormControl(v, Validators.required));
-      // });
-      this.itemCtrlsGr.patchValue({
-        _ownerId,
-        _id,
-        _createdOn,
-        image,
-        altImages,
-        cat,
-        subCat,
-        description,
-        size,
-        color,
-        brand,
-        quantity,
-        price,
+
+    const detailsSubscription = this.userStateMgmnt.getUserState()
+      .pipe(
+        switchMap(userData => {
+          if (userData) {
+            this.user = { ...userData };
+          }
+          return this.cartStateMgmnt.getCartItemsState()
+        }),
+        switchMap(items => {
+          this.buyedItems = items.length;
+          this.cartItms = ([...this.cartItms, ...items]);
+          // console.log(this.cartItms);
+          return this.getItem(url, id);
+        }),
+        catchError(err => { throw err; })
+      )
+      .subscribe({
+        next: (itm) => {
+          this.loading = false;
+          // this.item = itm;
+          const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = itm;
+          // const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
+          // const inCart = this.cartItms.some(itm => itm._id == _id);
+          this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price };
+          // console.log(itm);
+          // console.log(this.item);
+          // console.log(this.cartItms$$.value);
+          // const propsArr = Object.entries(itm);
+          // console.log(propsArr);
+          // propsArr.forEach(([k, v]) => {
+          //   (this.form.get('fgItem') as FormGroup).addControl(k, new FormControl(v, Validators.required));
+          // });
+          this.itemCtrlsGr.patchValue({
+            _ownerId,
+            _id,
+            _createdOn,
+            image,
+            altImages,
+            cat,
+            subCat,
+            description,
+            size,
+            color,
+            brand,
+            quantity,
+            price,
+          });
+          (this.formInitalValue.get('fgItem') as FormGroup).patchValue({ ...this.itemCtrlsGr.value });
+          // console.log({ ...this.itemCtrlsGr.value });
+          // console.log(this.formInitalValue.get('fgItem')?.value);
+        },
+        error: err => {
+          this.loading = false;
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          console.log(err);
+          console.log(this.httpErrorsArr);
+        }
       });
-      (this.formInitalValue.get('fgItem') as FormGroup).patchValue({ ...this.itemCtrlsGr.value });
-      // console.log({ ...this.itemCtrlsGr.value });
-      // console.log(this.formInitalValue.get('fgItem')?.value);
-    });
-    this.unsubscriptionArray.push(userSubscription, itemSubscription, cartSubscription);
+    this.unsubscriptionArray.push(detailsSubscription);
+    // const userSubscription = this.userService.user$.subscribe(userData => {
+    //   if (userData) {
+    //     this.user = { ...userData };
+    //   }
+    // });
+    // const cartSubscription = this.cartService.getCartItems().subscribe(items => {
+    //   this.buyedItems = items.length;
+    //   this.cartItms = ([...this.cartItms, ...items]);
+    //   // console.log(this.cartItms);
+    // });
+    // const itemSubscription = this.getItem(url, id).subscribe(itm => {
+    //   // this.item$ = itm;
+    //   this.loading = false;
+    //   const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = itm;
+    //   // const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
+    //   // const inCart = this.cartItms.some(itm => itm._id == _id);
+    //   this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price };
+    //   // console.log(itm);
+    //   // console.log(this.item);
+    //   // console.log(this.cartItms$$.value);
+    //   // const propsArr = Object.entries(itm);
+    //   // console.log(propsArr);
+    //   // propsArr.forEach(([k, v]) => {
+    //   //   (this.form.get('fgItem') as FormGroup).addControl(k, new FormControl(v, Validators.required));
+    //   // });
+    //   this.itemCtrlsGr.patchValue({
+    //     _ownerId,
+    //     _id,
+    //     _createdOn,
+    //     image,
+    //     altImages,
+    //     cat,
+    //     subCat,
+    //     description,
+    //     size,
+    //     color,
+    //     brand,
+    //     quantity,
+    //     price,
+    //   });
+    //   (this.formInitalValue.get('fgItem') as FormGroup).patchValue({ ...this.itemCtrlsGr.value });
+    //   // console.log({ ...this.itemCtrlsGr.value });
+    //   // console.log(this.formInitalValue.get('fgItem')?.value);
+    // });
+    // this.unsubscriptionArray.push(userSubscription, itemSubscription, cartSubscription);
   }
 
   ngAfterViewInit(): void {
@@ -177,15 +238,20 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     // console.log('UnsubArray = 4');
   }
 
-  private getItem(url: string, id: string) {
+  private getItem(url: string, id: string): Observable<
+    Jacket | Longwear |
+    Trainers | Boot | Slippers |
+    Cap | Hat | Belt | Glove | Sunglasses | Watch |
+    Gym | Running | Ski | Snowboard | Swim | Surf | Outdoors | Bottom | Legging | Sweater |
+    Blazer | Jacket | Waistcoat | Tuxedo | Partywear | Tie> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     return this.http.get<
       Jacket | Longwear |
       Trainers | Boot | Slippers |
-      CapHat | Belt | Glove | Sunglasses | Watch |
-      Gym | Running | SkiSnowboard | SwimSurf | Outdoors | BottomsLeggings | Sweater |
-      BlazerJacket | Waistcoat | TuxedoPartywear | Tie
-    >(`http://localhost:3030/data/${url}/${id}`, { headers });
+      Cap | Hat | Belt | Glove | Sunglasses | Watch |
+      Gym | Running | Ski | Snowboard | Swim | Surf | Outdoors | Bottom | Legging | Sweater |
+      Blazer | Jacket | Waistcoat | Tuxedo | Partywear | Tie
+    >(`${BASE_URL}/${url}/${id}`, { headers });
   }
 
   // public selectSize(e: Event): void {
@@ -217,11 +283,11 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       console.log('Invalid FORM!');
       return;
     }
-    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, _accountId } = this.itemCtrlsGr.value as CartItem;
+    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price } = this.itemCtrlsGr.value as CartItem;
     const inCart = true;
     const product = selectedQuantity * price;
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, inCart, product, checked: false, _accountId });
-    this.item = { ...this.item, inCart: true };
+    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, product, checked: false });
+    // this.item = { ...this.item, inCart: true };
     this.itemCtrlsGr.reset({ ...this.formInitalValue.get('fgItem')?.value });
     this.imgElements.forEach(el => el.nativeElement.classList.contains('active') ? this.render.removeClass(el.nativeElement, 'active') : null);
     this.defImgOpacity = 1;

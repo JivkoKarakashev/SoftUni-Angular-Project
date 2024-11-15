@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Sweater } from 'src/app/types/sweater';
+import { environment } from 'src/environments/environment.development';
+import { Sweater } from 'src/app/types/item';
+
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { environment } from 'src/environments/environment.development';
 
 const URL = `${environment.apiDBUrl}/data/sweaters`;
 
@@ -12,7 +13,6 @@ const URL = `${environment.apiDBUrl}/data/sweaters`;
   providedIn: 'root'
 })
 export class SweatersService {
-  sweaters: Sweater[] = [];
 
   constructor(private http: HttpClient) { }
 

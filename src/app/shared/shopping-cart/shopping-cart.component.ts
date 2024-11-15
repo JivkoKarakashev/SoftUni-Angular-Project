@@ -1,19 +1,25 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
-import { Subscription, catchError, forkJoin } from 'rxjs';
+import { Subject, Subscription, catchError, of, switchMap, takeUntil } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+
+import { DestroySubsNotifierService } from '../utils/destroy-subs-notifier.service';
 
 import { ShoppingCartService } from './shopping-cart.service';
 import { Shipping, shippingInitialState } from 'src/app/types/shipping';
 import { Discount, discountInitialState } from 'src/app/types/discount';
 import { InvertColorService } from '../utils/invert-color.service';
-import { CartItem } from 'src/app/types/cartItem';
-import { DBOrder } from 'src/app/types/order';
-import { HttpError } from 'src/app/types/httpError';
+import { CartItem } from 'src/app/types/item';
+
 import { UserForAuth } from 'src/app/types/user';
 import { UserService } from 'src/app/user/user.service';
-import { ConfirmOrderService } from 'src/app/checkout/confirm-order/confirm-order.service';
+
+import { UserStateManagementService } from '../state-management/user-state-management.service';
+import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';
+import { OrderStateManagementService } from '../state-management/order-state-management.service';
+import { TradedItemsStateManagementService } from '../state-management/traded-items-state-management.service';
 
 type MyVoid = () => void;
 
@@ -23,23 +29,22 @@ type MyVoid = () => void;
   styleUrls: ['./shopping-cart.component.css'],
 })
 export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>;
 
   public user: UserForAuth | null = null;
-  public listItems: CartItem[] = [];
+  public cartItems: CartItem[] = [];
   public selectAllButtonStatement = false;
-  private cartItemsSubscription: Subscription = new Subscription;
 
   private unsubscriptionArray: Subscription[] = [];
   private unsubscriptionEventsArray: MyVoid[] = [];
   public loading = true;
-  public httpErrorsArr: HttpError[] = [];
+  public httpErrorsArr: HttpErrorResponse[] = [];
+  public errorsArr: Error[] = [];
 
   public availablePurchaseServices: (Discount | Shipping)[] = [];
   public discountCodes: Discount[] = [];
   public discountValue = 0;
-  private discountStateSubscription: Subscription = new Subscription;
   public shippingMethods: Shipping[] = [];
-  private shippingStateSubscription: Subscription = new Subscription;
 
   public form: FormGroup = this.fb.group({
     itms: this.fb.array([]),
@@ -49,7 +54,21 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     total: [0, [Validators.required]],
   });
 
-  constructor(private render: Renderer2, private location: Location, private cartService: ShoppingCartService, private fb: FormBuilder, private invertColor: InvertColorService, private router: Router, private userService: UserService, private confirmOrderService: ConfirmOrderService) { }
+  constructor
+    (
+      private destroySubsNotifier: DestroySubsNotifierService,
+      private userStateMgmnt: UserStateManagementService,
+      private cartService: ShoppingCartService,
+      private cartStateMgmnt: ShoppingCartStateManagementService,
+      private render: Renderer2,
+      private location: Location,
+      private fb: FormBuilder,
+      private invertColor: InvertColorService,
+      private router: Router,
+      private userService: UserService,
+      private orderStateMgmnt: OrderStateManagementService,
+      private tradedItmsStateMgmnt: TradedItemsStateManagementService
+    ) { }
 
   @ViewChild('modal') private modal!: ElementRef;
   @ViewChild('closeBtn') private closeBtn!: ElementRef;
@@ -84,75 +103,102 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Shopping Cart Page INITIALIZED!');
-    const userSubscription = this.userService.user$.subscribe(userData => {
-      if (userData) {
-        this.user = { ...userData };
-      }
-    });
-    const availablePurchaseServicesSubscription = this.cartService.getAvailablePurchaseServices().subscribe(availServsObjs => {
-      this.loading = false;
-      const [discountsObjs, shippingMthdsObjs] = availServsObjs;
-      const discounts = Object.entries(discountsObjs).map(disc => disc[1]);
-      const shippMthds = Object.entries(shippingMthdsObjs).map(method => method[1]);
-      this.discountCodes = [...discounts];
-      this.shippingMethods = [...shippMthds];
-    });
-    this.unsubscriptionArray.push(userSubscription, availablePurchaseServicesSubscription);
+    const destroySubscription = this.destroySubsNotifier.getNotifier().subscribe(() => this.destroy$.next());
+    this.unsubscriptionArray.push(destroySubscription);
 
-    this.cartItemsSubscription = this.cartService.getCartItems().subscribe(cartItms => {
-      cartItms.forEach((itm) => {
-        const { _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, inCart, product, checked, _accountId } = itm;
-        const rowItm = this.fb.group({
-          _id,
-          _ownerId,
-          _createdOn,
-          image,
-          altImages: [altImages],
-          cat,
-          subCat,
-          description,
-          brand,
-          size: [size],
-          selectedSize: [selectedSize || '', [Validators.required,]],
-          color: [color],
-          selectedColor: [selectedColor || '', [Validators.required,]],
-          quantity,
-          selectedQuantity: [selectedQuantity || '', [Validators.required,]],
-          price,
-          inCart,
-          product,
-          checked,
-          _accountId
-        });
-        this.listItems.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: selectedSize || '', color, selectedColor: selectedColor || '', quantity, selectedQuantity: selectedQuantity || 0, price, inCart, product, checked, _accountId });
-        this.itms.push(rowItm);
-      });
-    });
-    this.unsubscriptionArray.push(this.cartItemsSubscription);
-
-    this.discountStateSubscription = this.cartService.getDiscountState().subscribe(state => {
-      const { code, rate } = state;
-      console.log(state);
-      if (code !== discountInitialState.code) {
-        this.discount.patchValue({ code, rate });
-      }
-    });
-    this.unsubscriptionArray.push(this.discountStateSubscription);
-
-    this.shippingStateSubscription = this.cartService.getShippingState().subscribe(state => {
-      console.log(state);
-      const { name, value } = state;
-      if (name !== shippingInitialState.name) {
-        this.shipping.patchValue({ name, value });
-      }
-    });
-    this.unsubscriptionArray.push(this.shippingStateSubscription);
-
-    if (this.itms.length) {
-      this.subtotalCalc();
-      this.discountCalc(undefined, this.subtotalValue || 0);
-      this.totalCalc();
-    }
+    const cartSubscription = this.userStateMgmnt.getUserState()
+      .pipe(
+        switchMap(userData => {
+          if (userData) {
+            this.user = { ...this.user, ...userData };
+          } else {
+            this.errorsArr.push({ message: 'Please Login or Register to complete Order!', name: 'User Error' });
+          }
+          return this.cartService.getAvailablePurchaseServices();
+        }),
+        takeUntil(this.destroy$),
+        switchMap(availServsObjs => {
+          const [discountsObjs, shippingMthdsObjs] = availServsObjs;
+          const discounts = Object.entries(discountsObjs).map(disc => disc[1]);
+          const shippMthds = Object.entries(shippingMthdsObjs).map(method => method[1]);
+          this.discountCodes = [...discounts];
+          this.shippingMethods = [...shippMthds];
+          return this.cartStateMgmnt.getCartItemsState();
+        }),
+        takeUntil(this.destroy$),
+        switchMap(cartItms => {
+          // console.log(cartItms);
+          cartItms.forEach((itm) => {
+            const { _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, product, checked } = itm;
+            const rowItm = this.fb.group({
+              _id,
+              _ownerId,
+              _createdOn,
+              image,
+              altImages: [altImages],
+              cat,
+              subCat,
+              description,
+              brand,
+              size: [size],
+              selectedSize: [selectedSize || '', [Validators.required,]],
+              color: [color],
+              selectedColor: [selectedColor || '', [Validators.required,]],
+              quantity,
+              selectedQuantity: [selectedQuantity || '', [Validators.required,]],
+              price,
+              product,
+              checked
+            });
+            // console.log(this.cartItems);
+            this.cartItems.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: selectedSize || '', color, selectedColor: selectedColor || '', quantity, selectedQuantity: selectedQuantity || 0, price, product, checked });
+            // console.log(this.cartItems);
+            this.itms.push(rowItm);
+          });
+          return this.cartStateMgmnt.getDiscountState();
+        }),
+        takeUntil(this.destroy$),
+        switchMap(state => {
+          const { code, rate } = state;
+          // console.log(state);
+          if (code !== discountInitialState.code) {
+            this.discount.patchValue({ code, rate });
+          }
+          return this.cartStateMgmnt.getShippingState();
+        }),
+        takeUntil(this.destroy$),
+        catchError(err => { throw err; })
+      )
+      .subscribe(
+        {
+          next: (state) => {
+            this.loading = false;
+            // console.log(state);
+            console.log(this.errorsArr);
+            const { name, value } = state;
+            if (name !== shippingInitialState.name) {
+              this.shipping.patchValue({ name, value });
+            }
+            if (this.itms.length) {
+              this.subtotalCalc();
+              this.discountCalc(undefined, this.subtotalValue || 0);
+              this.totalCalc();
+            }
+          },
+          error: (err) => {
+            // console.log(err instanceof HttpErrorResponse);
+            // console.log(err.message);
+            this.loading = false;
+            (err instanceof HttpErrorResponse) ? this.httpErrorsArr = [...this.httpErrorsArr, { ...err }] : null;
+            (err instanceof Error) ? this.errorsArr = [...this.errorsArr, { ...err, message: err.message }] : null;
+            // this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            console.log(err);
+            console.log(this.httpErrorsArr);
+            console.log(this.errorsArr);
+          }
+        }
+      );
+    this.unsubscriptionArray.push(cartSubscription);
   }
 
   ngAfterViewInit(): void {
@@ -179,7 +225,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       this.colorSelectElements.forEach((el, idx) => {
         const nativeEl = el.nativeElement;
         // console.log(this.listItems[idx]);
-        if (this.listItems[idx].selectedColor != '') {
+        if (this.cartItems[idx].selectedColor != '') {
           // console.log(this.listItems[idx]);
           const color = nativeEl.value;
           // console.log(nativeEl.value);
@@ -195,11 +241,12 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroy$.complete();
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
     });
-    // console.log('UnsubArray = 7');      
+    // console.log('UnsubArray = 4');
     this.unsubscriptionEventsArray.forEach((eventFn) => {
       eventFn();
       // console.log('UnsubEVENTSArray = 1');
@@ -217,17 +264,17 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleSelect(e: Event, i: number): void {
     // const el = e.target as HTMLSelectElement;
-    this.listItems[i] = { ...this.listItems[i], checked: this.itms.controls[i].get('checked')?.value };
+    this.cartItems[i] = { ...this.cartItems[i], checked: this.itms.controls[i].get('checked')?.value };
     // console.log(i);
     // console.log(this.listItems$[i]);
   }
 
   toggleSelectAll(): void {
-    if (!this.listItems.length) {
+    if (!this.cartItems.length) {
       return;
     }
-    this.listItems.forEach((itm, i) => {
-      this.listItems[i] = { ...itm, checked: !this.selectAllButtonStatement };
+    this.cartItems.forEach((itm, i) => {
+      this.cartItems[i] = { ...itm, checked: !this.selectAllButtonStatement };
     });
     // console.log(this.listItems$);
     this.selectAllButtonStatement = !this.selectAllButtonStatement;
@@ -236,12 +283,12 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onRemoveSelected(): void {
     // console.log(this.listItems$);
-    if (!this.listItems.length) {
+    if (!this.cartItems.length) {
       return;
     }
-    const notSelected = this.listItems.filter((itm) => !itm.checked);
+    const notSelected = this.cartItems.filter((itm) => !itm.checked);
     const idxArr: number[] = [];
-    this.listItems.forEach((itm, idx) => {
+    this.cartItems.forEach((itm, idx) => {
       if (itm.checked) {
         idxArr.push(idx);
       }
@@ -251,11 +298,13 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     // console.log(idxArr);
     // console.log(this.itms.value);
-    this.listItems = [...notSelected];
+    this.cartItems = [...notSelected];
     this.subtotalCalc();
     this.discountCalc(undefined, this.subtotalValue);
     this.totalCalc();
-    this.cartItemsSubscription.unsubscribe();
+    // this.cartItemsSubscription.unsubscribe();
+    // this.cartSubscription.unsubscribe();
+    this.destroySubsNotifier.destroy();
     this.cartService.removeCartItems(idxArr);
   }
 
@@ -277,17 +326,21 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.removeStyle(el, 'background-color');
       this.render.removeStyle(el, 'color');
     }
-    this.listItems[i] = { ...this.listItems[i], selectedColor: this.itms.controls[i].get('selectedColor')?.value };
-    this.cartItemsSubscription.unsubscribe();
+    this.cartItems[i] = { ...this.cartItems[i], selectedColor: this.itms.controls[i].get('selectedColor')?.value };
+    // this.cartItemsSubscription.unsubscribe();
+    // this.cartSubscription.unsubscribe();
     // console.log(color);
+    this.destroySubsNotifier.destroy();
     this.cartService.updateCartItm(i, color, undefined, undefined);
   }
 
   onSizeChange(i: number): void {
     const selectedSize = this.itms.controls[i].get('selectedSize')?.value;
     // console.log(selectedSize);
-    this.listItems[i] = { ...this.listItems[i], selectedSize: selectedSize };
-    this.cartItemsSubscription.unsubscribe();
+    this.cartItems[i] = { ...this.cartItems[i], selectedSize: selectedSize };
+    // this.cartItemsSubscription.unsubscribe();
+    // this.cartSubscription.unsubscribe();
+    this.destroySubsNotifier.destroy();
     this.cartService.updateCartItm(i, undefined, selectedSize, undefined);
   }
   onShippingChange(e: Event): void {
@@ -296,8 +349,8 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(idx);
     const { name, value } = this.shippingMethods[idx];
     this.shipping.patchValue({ name, value });
-    this.shippingStateSubscription.unsubscribe();
-    this.cartService.setShippingState(name, value);
+    this.destroySubsNotifier.destroy();
+    this.cartStateMgmnt.setShippingState(name, value);
     this.totalCalc();
   }
   onQuantityChange(i: number): void {
@@ -319,8 +372,8 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('Index:', idx);
       const { code, rate } = this.discountCodes[idx];
       this.discount.patchValue({ code, rate });
-      this.discountStateSubscription.unsubscribe();
-      this.cartService.setDiscountState(code, rate);
+      this.destroySubsNotifier.destroy();
+      this.cartStateMgmnt.setDiscountState(code, rate);
       this.discountValue = this.subtotal.value * (rate || 0) / 100;
     } else if (subTotVal || subTotVal == 0) {
       console.log('SubTotalVal Invoked!', subTotVal);
@@ -331,7 +384,10 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSubmit() {
     // console.log(!this.listItems.length);
-    if (!this.user || this.form.invalid || !this.listItems.length) {
+    if (!this.user) {
+      throw new Error()
+    }
+    if (!this.user || this.form.invalid || !this.cartItems.length) {
       return;
     }
     const { email, username, address } = this.user;
@@ -344,23 +400,25 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     const total: number = this.totalValue;
     const paymentState = 'unpaid';
     const status = 'pending';
-    forkJoin([
-      this.cartService.placeOrder({ email, username, address, purchasedItems, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status }).pipe(
-        catchError(err => { throw err; })
-      ),
-      this.cartService.updateItmsRemainQty(purchasedItems).pipe(
-        catchError(err => { throw err; })
-      ),
-      this.cartService.createSalesByOwnerAccount(purchasedItems).pipe(
+    let orderId: string;
+
+    this.cartService.placeOrder({ email, username, address, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status })
+      .pipe(
+        switchMap(dbOrder => {
+          this.orderStateMgmnt.setDBOrderState({ ...dbOrder });
+          orderId = dbOrder._id;
+          return this.cartService.updateItmsRemainQty([...purchasedItems]);
+        }),
+        switchMap(() => {
+          return this.cartService.createTradedItems([...purchasedItems], status, orderId);
+        }),
         catchError(err => { throw err; })
       )
-    ])
       .subscribe(
         {
-          next: ([order,,]) => {
-            const dbOrder: DBOrder = { ...order };
-            // console.log(dbOrder);
-            this.confirmOrderService.setDBOrderState({ ...dbOrder });
+          next: (dbTradedItms) => {
+            // console.log(dbTradedItms);
+            this.tradedItmsStateMgmnt.setDBTradedItemsState([...dbTradedItms]);
             this.router.navigate(['/checkout']);
           },
           error: err => {
@@ -381,14 +439,16 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onRemoveItem(ItmIdx: number) {
     // console.log(this.listItems$);
-    const newListItems = this.listItems.filter((itm, idx) => idx != ItmIdx ? itm : null);
-    this.listItems = [...newListItems];
+    const newListItems = this.cartItems.filter((itm, idx) => idx != ItmIdx ? itm : null);
+    this.cartItems = [...newListItems];
     // console.log(this.listItems);
     this.itms.removeAt(ItmIdx);
     this.subtotalCalc();
     this.discountCalc(undefined, this.subtotalValue);
     this.totalCalc();
-    this.cartItemsSubscription.unsubscribe();
+    // this.cartItemsSubscription.unsubscribe();
+    // this.cartSubscription.unsubscribe();
+    this.destroySubsNotifier.destroy();
     this.cartService.removeCartItm(ItmIdx);
   }
 
@@ -396,16 +456,18 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(i);
     console.log('setProduct Invoked!');
     const selectedQuantity = this.itms.controls[i].get('selectedQuantity')?.value;
-    const product = selectedQuantity * this.listItems[i].price;
-    this.listItems[i] = { ...this.listItems[i], selectedQuantity: selectedQuantity, product: product };
+    const product = selectedQuantity * this.cartItems[i].price;
+    this.cartItems[i] = { ...this.cartItems[i], selectedQuantity: selectedQuantity, product: product };
     this.itms.controls[i].patchValue({ product: product });
-    this.cartItemsSubscription.unsubscribe();
+    // this.cartItemsSubscription.unsubscribe();
+    // this.cartSubscription.unsubscribe();
+    this.destroySubsNotifier.destroy();
     this.cartService.updateCartItm(i, undefined, undefined, selectedQuantity, product);
   }
 
   subtotalCalc(): void {
     console.log('subtotalCalc Invoked!');
-    this.subtotal.setValue(this.listItems.map(itm => itm.product).reduce((acc, currVal) => acc += currVal, 0));
+    this.subtotal.setValue(this.cartItems.map(itm => itm.product).reduce((acc, currVal) => acc += currVal, 0));
     // console.log(subTotal);
   }
 
@@ -420,11 +482,8 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     ).subscribe(
       {
         next: () => {
-          this.cartItemsSubscription.unsubscribe();
-          this.discountStateSubscription.unsubscribe();
-          this.shippingStateSubscription.unsubscribe();
-          this.cartService.emptyCart();
-          this.confirmOrderService.resetDBOrderState();
+          this.cartStateMgmnt.emptyCart();
+          this.orderStateMgmnt.resetDBOrderState();
           this.router.navigate(['/auth/login']);
         },
         error: (err) => {

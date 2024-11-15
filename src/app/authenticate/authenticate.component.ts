@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
-import { UserWithAccountId } from '../types/user';
-import { UserService } from '../user/user.service';
+import { UserForAuth } from '../types/user';
+import { UserStateManagementService } from '../shared/state-management/user-state-management.service';
 
 @Component({
   selector: 'app-authenticate',
@@ -9,14 +9,14 @@ import { UserService } from '../user/user.service';
   styleUrls: ['./authenticate.component.css']
 })
 export class AuthenticateComponent {
-  private userData: UserWithAccountId | null = null;
+  private userData: UserForAuth | null = null;
 
-  constructor(private userService: UserService) {
+  constructor(private userStateMgmnt: UserStateManagementService) {
     // console.log(this.userData);
     this.userData = JSON.parse(localStorage.getItem('userData') as string) || null;
     if (this.userData) {
       // console.log(this.userData);      
-      this.userService.setUser(this.userData);
+      this.userStateMgmnt.setUserState(this.userData);
     }
   }
 }

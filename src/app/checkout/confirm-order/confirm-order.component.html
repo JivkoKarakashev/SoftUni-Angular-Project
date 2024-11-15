@@ -3,9 +3,9 @@
     <app-loader />
 </ng-container>
 <section id="success" class="section-confirm-order" *ngIf="!loading">
-    <ng-container *ngIf="httpError?.error">
+    <ng-container *ngIf="httpErrorsArr.length">
         <!-- <div class="alert">{{httpError.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div> -->
-        <div class="alert">{{httpError.error?.message}}</div>
+        <div class="alert">{{httpErrorsArr.at(0)?.error?.message}}</div>
     </ng-container>
     <div class="container" *ngIf="session_status$==='complete'">
         <section class="component-section component-header">
@@ -33,7 +33,7 @@
         <section class="component-section component-body">
             <h4>Your item in this order</h4>
             <span>Order number&colon; &num;{{dbOrder?.referenceNumber}}</span>
-            <ng-container *ngFor="let itm of dbOrder?.purchasedItems">
+            <ng-container *ngFor="let itm of tradedItems">
                 <div class="item">
                     <div class="media">
                         <img class="img" src="{{itm.image}}" alt="Product picture">

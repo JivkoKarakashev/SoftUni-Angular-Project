@@ -1,13 +1,17 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+
 // import { UserForAuth } from 'src/app/types/user';
-import { DBOrder } from 'src/app/types/order';
+import { CheckoutOrder, DBOrder } from 'src/app/types/order';
 import { ClientSecret } from 'src/app/types/embeddedCheckout';
-import { ConfirmOrderService } from '../confirm-order/confirm-order.service';
+
+import { TradedItem } from 'src/app/types/item';
+import { OrderStateManagementService } from 'src/app/shared/state-management/order-state-management.service';
+import { TradedItemsStateManagementService } from 'src/app/shared/state-management/traded-items-state-management.service';
 
 // const BASE_URL = 'http://localhost:3030/data/order';
 // const CHECKOUT_SESSSION_URL = 'http://localhost:3000/checkout';
@@ -22,7 +26,7 @@ export class CheckoutService {
   // private _ownerId: string | null = null;
   // private order_url = '';
 
-  constructor(private http: HttpClient, private confirmOrderService: ConfirmOrderService) { }
+  constructor(private http: HttpClient, private orderStateMgmnt: OrderStateManagementService, private tradedItmsStateMgmnt: TradedItemsStateManagementService) { }
 
   // getOrder(): Observable<Order[]> {
   //   this.user$ = JSON.parse(localStorage?.getItem('userData') as string) || null;
@@ -34,12 +38,25 @@ export class CheckoutService {
   //   return this.http.get<Order[]>(this.order_url, { headers });
   // }
   getDBOrder(): Observable<DBOrder> {
-    return this.confirmOrderService.getDBOrderState();
+    return this.orderStateMgmnt.getDBOrderState();
   }
 
-  createCheckoutSession(dbOrder: DBOrder): Observable<ClientSecret> {
+  getDBTradedItems(): Observable<TradedItem[]> {
+    return this.tradedItmsStateMgmnt.getDBTradedItemsState();
+  }
+
+  getDBOrderData(): Observable<[DBOrder, TradedItem[]]> {
+    return forkJoin([
+      this.orderStateMgmnt.getDBOrderState(),
+      this.tradedItmsStateMgmnt.getDBTradedItemsState()
+    ]);
+  }
+
+  createCheckoutSession(dbOrder: DBOrder, purchasedItems: TradedItem[]): Observable<ClientSecret> {
+    const checkoutOrder: CheckoutOrder = { ...dbOrder, purchasedItems: [...purchasedItems] };
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-    const body = { ...dbOrder };
+    const body = { ...checkoutOrder };
+    console.log(body);
     return this.http.post<ClientSecret>(CHECKOUT_SESSSION_URL, body, { headers });
   }
 }

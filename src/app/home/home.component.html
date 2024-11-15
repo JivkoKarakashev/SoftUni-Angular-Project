@@ -2,6 +2,13 @@
     <app-loader />
 </ng-container>
 
+<ng-container *ngIf="httpErrorsArr.length">
+    <div class="alert">{{httpErrorsArr.at(0)?.message}}</div>
+    <!-- <ng-container *ngFor="let err of httpErrors"> -->
+        <!-- <div class="alert">{{httpError.error?.message}}</div> -->
+    <!-- </ng-container> -->
+</ng-container>
+
 <div class="wrapper" *ngIf="!loading">
     <div class="left-wrapper">
         <section class="section-home">
@@ -22,7 +29,7 @@
     <div class="right-wrapper">
         <div class="sticky">
             <a class="cart" routerLink="/cart">
-                <span class="counter">{{buyedItems}}</span><i class="fi fi-rr-shopping-cart-check"></i>
+                <span class="counter">{{cartItemsCounter}}</span><i class="fi fi-rr-shopping-cart-check"></i>
             </a>
         </div>
     </div>

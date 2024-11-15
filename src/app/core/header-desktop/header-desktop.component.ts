@@ -2,11 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, catchError, of } from 'rxjs';
 
-import { ConfirmOrderService } from 'src/app/checkout/confirm-order/confirm-order.service';
-import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
-import { HttpError } from 'src/app/types/httpError';
-import { LoggedInOrLoggedOut, loggedInOrLoggedOutInitState } from 'src/app/types/user';
+import { UserForAuth } from 'src/app/types/user';
+import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
+import { OrderStateManagementService } from 'src/app/shared/state-management/order-state-management.service';
+import { ShoppingCartStateManagementService } from 'src/app/shared/state-management/shopping-cart-state-management.service';
+import { TradedItemsStateManagementService } from 'src/app/shared/state-management/traded-items-state-management.service';
 import { UserService } from 'src/app/user/user.service';
+
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-header-desktop',
@@ -14,18 +17,27 @@ import { UserService } from 'src/app/user/user.service';
   styleUrls: ['./header-desktop.component.css']
 })
 export class HeaderDesktopComponent implements OnInit, OnDestroy {
-  public httpError: HttpError = {};
-  public loggedInOrLoggedOut: LoggedInOrLoggedOut = loggedInOrLoggedOutInitState;
   private unsubscriptionArray: Subscription[] = [];
+  
+  public user: UserForAuth | null = null;
 
-  constructor(private userService: UserService, private router: Router, private cartService: ShoppingCartService, private confirmOrderService: ConfirmOrderService) { }
+  public httpErrorsArr: HttpErrorResponse[] = [];
+
+  constructor(
+    private userService: UserService,
+    private userStateMgmnt: UserStateManagementService,
+    private cartStateMgmnt: ShoppingCartStateManagementService,
+    private orderStateMgmnt: OrderStateManagementService,
+    private tradedItmsStateMgmnt: TradedItemsStateManagementService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     // desktopModal();
-    const loggedInOrLoggedOutSubscription = this.userService.loggedInOrLoggedOut$.subscribe(loginInfo => {
-      this.loggedInOrLoggedOut = { ...loginInfo };
+    const userSubscription = this.userStateMgmnt.getUserState().subscribe(userData => {
+      (!!userData) ? this.user = { ...this.user, ...userData } : this.user = userData;
     });
-    this.unsubscriptionArray.push(loggedInOrLoggedOutSubscription);
+    this.unsubscriptionArray.push(userSubscription);
   }
 
   ngOnDestroy(): void {
@@ -39,16 +51,23 @@ export class HeaderDesktopComponent implements OnInit, OnDestroy {
     this.userService.logout().pipe(
       catchError((err) => {
         console.log(err);
-        this.httpError = err;
+        this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
         return of(err);
       })
-    ).subscribe((res) => {
-      if (res == this.httpError) {
-        return;
+    ).subscribe(
+      {
+        next: () => {
+          this.cartStateMgmnt.emptyCart();
+          this.orderStateMgmnt.resetDBOrderState();
+          this.tradedItmsStateMgmnt.resetDBTradedItemsState();
+          this.router.navigate(['/auth/login']);
+        },
+        error: (err) => {
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          console.log(err);
+          console.log(this.httpErrorsArr);
+        }
       }
-      this.cartService.emptyCart();
-      this.confirmOrderService.resetDBOrderState();
-      this.router.navigate(['/auth/login']);
-    });
+    );
   }
 }

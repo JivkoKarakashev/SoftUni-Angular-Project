@@ -1,12 +1,11 @@
-import { CartItem } from "./cartItem";
 import { Discount, discountInitialState } from "./discount";
+import { TradedItem } from "./item";
 import { Shipping, shippingInitialState } from "./shipping";
 
 export interface Order {
     email: string,
     username: string,
     address: Address,
-    purchasedItems: CartItem[],
     subtotal: number,
     discount: Discount,
     discountValue: number,
@@ -24,7 +23,6 @@ export interface DBOrder {
     email: string,
     username: string,
     address: Address,
-    purchasedItems: CartItem[],
     subtotal: number,
     discount: Discount,
     discountValue: number,
@@ -32,9 +30,12 @@ export interface DBOrder {
     shippingValue: number,
     total: number,
     paymentState: 'unpaid' | 'paid',
-    referenceNumber?: string,
-    sequenceNumber?: number,
     status: 'pending' | 'confirmed' | 'rejected' | 'shipped' | 'delivered'
+    referenceNumber?: string,
+}
+
+export interface CheckoutOrder extends DBOrder {
+    purchasedItems: TradedItem[],
 }
 
 export interface Address {
@@ -59,7 +60,6 @@ export const orderInitialState: Order = {
     email: '',
     username: '',
     address: addressInitialState,
-    purchasedItems: [],
     subtotal: NaN,
     discount: discountInitialState,
     discountValue: NaN,
@@ -77,7 +77,6 @@ export const dbOrderInitialState: DBOrder = {
     email: '',
     username: '',
     address: addressInitialState,
-    purchasedItems: [],
     subtotal: NaN,
     discount: discountInitialState,
     discountValue: NaN,

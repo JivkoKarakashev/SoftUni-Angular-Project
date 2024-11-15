@@ -1,6 +1,6 @@
 <!-- The Modal -->
 <li class="li-modal">
-    <div class="modal"#modal>
+    <div class="modal" #modal>
         <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
@@ -20,13 +20,33 @@
                 <ng-container *ngIf="loading">
                     <app-loader />
                 </ng-container>
+
                 <ng-container *ngIf="httpErrorsArr.length">
                     <!-- <ng-container *ngFor="let err of httpErrors"> -->
-                        <div class="alert">{{httpErrorsArr.at(0)?.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div>
-                        <!-- <div class="alert">{{httpError.error?.message}}</div> -->
+                        <div class="alert">
+                            <p>{{httpErrorsArr.at(0)?.message}}</p>
+                            <div *ngIf="httpErrorsArr.at(0)?.status === 403" class="buttons">
+                                <a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a>
+                            </div>
+                        </div>
+                    <!-- <div class="alert">{{httpError.error?.message}}</div> -->
                     <!-- </ng-container> -->
                 </ng-container>
-                <form [formGroup]="form" (ngSubmit)="onSubmit()"  *ngIf="!loading">
+                <ng-container *ngIf="errorsArr.length">
+                    <!-- <ng-container *ngFor="let err of errorsArr"> -->
+                        <div class="alert">
+                            <p>{{errorsArr.at(0)?.message}}</p>
+                            <div class="buttons">
+                                <a class="nav-icon guest" routerLink="/auth/login">sign in</a>
+                                <p>OR</p>
+                                <a class="nav-icon user" routerLink="/auth/register">register</a>
+                            </div>
+                        </div>
+                    <!-- <div class="alert">{{httpError.error?.message}}</div> -->
+                    <!-- </ng-container> -->
+                </ng-container>
+
+                <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
                     <fieldset>
                         <div class="label">
                             <label class="label-header">Select</label>
@@ -40,8 +60,8 @@
                             <div class="label-header">Remove</div>
                         </div>
                         <ng-container formArrayName="itms">
-                            <ng-container #rows *ngFor=" let itm of listItems; let i = index; trackBy: trackById">
-                                <div [formGroupName]="i" class="itms">                                    
+                            <ng-container #rows *ngFor=" let itm of cartItems; let i = index; trackBy: trackById">
+                                <div [formGroupName]="i" class="itms">
                                     <input formControlName="checked" [checked]="itm.checked" class="itm selectRow" type="checkbox" name="selectRow" (change)="toggleSelect($event, i)">
                                     <input #imgUrl formControlName="image" [hidden]="true" [value]="itm.image" class="media" type="text" name="media">
                                     <img class="itm" src="{{itm.image}}" alt="image">
@@ -49,7 +69,7 @@
                                     <span class="itm description">{{itm.description}}</span>
                                     <select #colorSelectElements class="itm decorate" formControlName="selectedColor" name="selectedColor" [value]="itm.selectedColor" (change)="onColorChange($event, i)" required>
                                         <option value="">select color</option>
-                                        <option  class="decorate" #colorOptionElements *ngFor="let col of itm.color; let i = index;" [value]="col" [attr.data-color]="col">{{col}}</option>
+                                        <option class="decorate" #colorOptionElements *ngFor="let col of itm.color; let i = index;" [value]="col" [attr.data-color]="col">{{col}}</option>
                                     </select>
                                     <select class="itm" formControlName="selectedSize" name="selectedSize" [value]="itm.selectedSize" (change)="onSizeChange(i)" required>
                                         <option value="">select size</option>
@@ -91,9 +111,9 @@
                             <span class="title">Total:</span>
                             <span class="amount">${{totalValue.toFixed(2)}}</span>
                         </div>
-                        
+
                         <div class="buttons">
-                            <input [disabled]="form.invalid || !listItems.length || shipping.value.name === 'shipping method' || discount.value.code === 'discount code'" class="button finish" type="submit" value="Checkout">
+                            <input [disabled]="!user || form.invalid || !cartItems.length || shipping.value.name === 'shipping method' || discount.value.code === 'discount code'" class="button finish" type="submit" value="Checkout">
                             <a class="button cancel" href="javascript:void(0)">Continue shopping</a>
                         </div>
                     </fieldset>

@@ -1,15 +1,14 @@
 import { Injectable } from "@angular/core";
 
-import { CartItem } from "src/app/types/cartItem";
-import { Item } from "src/app/types/item";
+import { CartItem, Item, ListItem } from "src/app/types/item";
 
 @Injectable({
     providedIn: 'root'
 })
 export class CheckForItemInCartAlreadyService {
 
-    check(itmsObjArray: Array<Item[]>, cartItmsArray: CartItem[]): Item[] {
-        let listItmesArray: Item[] = [];
+    check(itmsObjArray: Array<Item[]>, cartItmsArray: CartItem[]): ListItem[] {
+        let listItmesArray: ListItem[] = [];
         // console.log(itmsObjArray);
         // console.log(cartItmsArray);
         const length = itmsObjArray.length;
@@ -17,13 +16,16 @@ export class CheckForItemInCartAlreadyService {
         for (let i = 0; i < length; i++) {
             const currCollection = itmsObjArray[i];
             // console.log(currCollection);
+            let currListItemsCollection: ListItem[] = [];
+            // console.log(currCollection);
             currCollection.forEach((itm, idx) => {
+                currListItemsCollection[idx] = { ...currCollection[idx], inCart: false };
                 if (cartItmsArray.some(cartItm => cartItm._id === itm._id)) {
-                    currCollection[idx] = { ...currCollection[idx], inCart: true };
+                    currListItemsCollection[idx] = { ...currCollection[idx], inCart: true };
                     // console.log(currCollection[idx]);
                 }
             });
-            listItmesArray = [...listItmesArray, ...currCollection];
+            listItmesArray = [...listItmesArray, ...currListItemsCollection];
         }
         return listItmesArray;
     }

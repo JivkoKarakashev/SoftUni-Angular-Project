@@ -1,0 +1,6 @@
+.drop-down,
+.drop-down label,
+.drop-dwon label p.nav-icon,
+.drop-dwon label p.nav-icon::before {
+    cursor: pointer;
+}

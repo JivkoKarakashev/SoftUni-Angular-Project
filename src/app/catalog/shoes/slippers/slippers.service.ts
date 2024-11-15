@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Slippers } from 'src/app/types/slippers';
+import { environment } from 'src/environments/environment.development';
+import { Slippers } from 'src/app/types/item';
+
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { environment } from 'src/environments/environment.development';
 
 const URL = `${environment.apiDBUrl}/data/slippers`;
 
@@ -12,7 +13,6 @@ const URL = `${environment.apiDBUrl}/data/slippers`;
   providedIn: 'root'
 })
 export class SlippersService {
-  boots: Slippers[] = [];
 
   constructor(private http: HttpClient) { }
 

@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Jacket } from 'src/app/types/jacket';
+import { environment } from 'src/environments/environment.development';
+import { Jacket } from 'src/app/types/item';
+
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { environment } from 'src/environments/environment.development';
 
 const URL = `${environment.apiDBUrl}/data/jackets`;
 
@@ -12,7 +13,6 @@ const URL = `${environment.apiDBUrl}/data/jackets`;
   providedIn: 'root'
 })
 export class JacketsService {
-  jackets: Jacket[] = [];
 
   constructor(private http: HttpClient) { }
 

@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Longwear } from 'src/app/types/longwear';
+import { environment } from 'src/environments/environment.development';
+import { Longwear } from 'src/app/types/item';
+
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { environment } from 'src/environments/environment.development';
 
 const URL = `${environment.apiDBUrl}/data/longwear`;
 
@@ -12,7 +13,6 @@ const URL = `${environment.apiDBUrl}/data/longwear`;
   providedIn: 'root'
 })
 export class LongwearService {
-  longwear: Longwear[] = [];
 
   constructor(private http: HttpClient) { }
 

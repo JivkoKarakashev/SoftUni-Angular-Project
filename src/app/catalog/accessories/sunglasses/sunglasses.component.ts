@@ -1,12 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, catchError, switchMap, takeUntil } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
+import { DestroySubsNotifierService } from 'src/app/shared/utils/destroy-subs-notifier.service';
+
+import { UserForAuth } from 'src/app/types/user';
+import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
+
+import { CartItem, ListItem } from 'src/app/types/item';
 import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { SunglassesService } from './sunglasses.service';
-import { Sunglasses } from 'src/app/types/sunglasses';
-import { UserForAuth } from 'src/app/types/user';
-import { UserService } from 'src/app/user/user.service';
-import { CartItem } from 'src/app/types/cartItem';
+import { ShoppingCartStateManagementService } from 'src/app/shared/state-management/shopping-cart-state-management.service';
+
 import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for-item-in-cart-already.service';
 
 @Component({
@@ -15,54 +20,81 @@ import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for
   styleUrls: ['./sunglasses.component.css']
 })
 export class SunglassesComponent implements OnInit, OnDestroy {
-  public listItems: Sunglasses[] = [];
+  private destroy$: Subject<void> = new Subject<void>;
+
+  public listItems: ListItem[] = [];
   private cartItms: CartItem[] = [];
   public cartItemsCounter = 0;
   private unsubscriptionArray: Subscription[] = [];
   public user: UserForAuth | null = null;
+
   public loading = true;
+  public httpErrorsArr: HttpErrorResponse[] = [];
 
-
-  constructor(private userService: UserService, private sunglassesService: SunglassesService, private cartService: ShoppingCartService, private checkForInCartAlready: CheckForItemInCartAlreadyService) { }
+  constructor(
+    private destroySubsNotifier: DestroySubsNotifierService,
+    private userStateMgmnt: UserStateManagementService,
+    private cartStateMgmnt: ShoppingCartStateManagementService,
+    private sunglassesService: SunglassesService,
+    private checkForInCartAlready: CheckForItemInCartAlreadyService,
+    private cartService: ShoppingCartService
+  ) { }
 
   ngOnInit(): void {
-    const userSubscription = this.userService.user$.subscribe(userData => {
-      if (userData) {
-        this.user = { ...this.user, ...userData };
-      }
-    });
+    const destroySubscription = this.destroySubsNotifier.getNotifier().subscribe(() => this.destroy$.next());
+    this.unsubscriptionArray.push(destroySubscription);
 
-    const cartSubscription = this.cartService.getCartItems().subscribe(items => {
-      this.cartItemsCounter = items.length;
-      this.cartItms = [...this.cartItms, ...items];
-      // console.log(this.cartItms);
-    });
-
-    const sunglassesSubscription = this.sunglassesService.getSunglasses().subscribe(sunglassesObjs => {
-      this.loading = false;
-      // console.log(this.cartItms);
-      // console.log(this.listItems);
-      this.listItems = [...this.listItems, ...this.checkForInCartAlready.check([sunglassesObjs], this.cartItms)];
-      // console.log(this.listItems);
-    });
-
-    this.unsubscriptionArray.push(userSubscription, sunglassesSubscription, cartSubscription);
+    const sunglassesSubscription = this.userStateMgmnt.getUserState()
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(userData => {
+          if (userData) {
+            this.user = { ...this.user, ...userData };
+          }
+          return this.cartStateMgmnt.getCartItemsState();
+        }),
+        takeUntil(this.destroy$),
+        switchMap(itms => {
+          this.cartItemsCounter = itms.length;
+          this.cartItms = [...this.cartItms, ...itms];
+          return this.sunglassesService.getSunglasses();
+        }),
+        takeUntil(this.destroy$),
+        catchError(err => { throw err; })
+      )
+      .subscribe(
+        {
+          next: (sunglassesObjs) => {
+            this.loading = false;
+            this.listItems = [...this.listItems, ...this.checkForInCartAlready.check([sunglassesObjs], this.cartItms)];
+            // console.log(this.listItems);
+          },
+          error: (err) => {
+            this.loading = false;
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            console.log(err);
+            console.log(this.httpErrorsArr);
+          }
+        }
+      );
+    this.unsubscriptionArray.push(sunglassesSubscription);
   }
 
   ngOnDestroy(): void {
+    this.destroy$.complete();
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
     });
-    // console.log('UnsubArray = 3');
+    // console.log('UnsubArray = 1');
   }
 
-  public addItemtoCart(item: Sunglasses): void {
-    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, _accountId } = item;
-    const newItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, inCart: true, product: 0, checked: false, _accountId };
+  public addItemtoCart(item: ListItem): void {
+    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
+    const newCartItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false };
     const idx = this.listItems.findIndex(itm => itm._id == _id);
     this.listItems[idx] = { ...this.listItems[idx], inCart: true };
-    this.cartService.addCartItem(newItem);
+    this.cartService.addCartItem(newCartItem);
     // console.log(this.listItems);
     // console.log(this.cartItms);
   }

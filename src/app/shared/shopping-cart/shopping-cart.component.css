@@ -83,18 +83,31 @@ span {
 }
 
 /* The Close Button */
-.close-btn {
-    color: #fff;
-    float: right;
-    font-weight: bold;
-    font-size: 1.5em;
+@media screen and (pointer: coarse) {
+    .close-btn {
+        color: #000;
+        float: right;
+        font-weight: bold;
+        font-size: 1.5em;
+        text-decoration: none;
+        cursor: pointer;
+    }
 }
 
-.close-btn:hover,
-.close-btn:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
+@media screen and (pointer: fine) {
+    .close-btn {
+        color: #fff;
+        float: right;
+        font-weight: bold;
+        font-size: 1.5em;
+    }
+    
+    .close-btn:hover,
+    .close-btn:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
 }
 
 .modal-header {
@@ -225,11 +238,15 @@ div.buttons {
 
 .modal-body div.alert {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0 2em;
     align-items: center;
     justify-content: center;
     background-color: #f44336;
     color: #fff;
 
+    & a.nav-icon.user,
+    & a.nav-icon.guest,
     & a.nav-icon.logout {
         padding: .2em .3em;
         border: 1px solid #000;
@@ -240,7 +257,11 @@ div.buttons {
     }
 
     & a.nav-icon.logout:hover,
-    & a.nav-icon.logout:focus {
+    & a.nav-icon.logout:focus,
+    & a.nav-icon.user:hover,
+    & a.nav-icon.user:focus,
+    & a.nav-icon.guest:hover,
+    & a.nav-icon.guest:focus {
         color: #fff;
         background-color: #000;
     }
