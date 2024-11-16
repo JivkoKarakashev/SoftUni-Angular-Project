@@ -43,7 +43,7 @@ export class UserService {
   }
 
   logout() {
-    this.destroySubsNotifier.destroy();
+    // this.destroySubsNotifier.destroy();
     const headers = new HttpHeaders().set(HttpAJAXInterceptorSkipHeader, '');
     return this.http.get(`${USERS_URL}/logout`, { headers })
       .pipe(

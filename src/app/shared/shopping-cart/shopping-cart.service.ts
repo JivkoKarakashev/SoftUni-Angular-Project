@@ -27,7 +27,13 @@ const ORDER_URL = `${BASE_URL}/order`;
 })
 export class ShoppingCartService {
 
-  constructor(private http: HttpClient, private checkForItemType: CheckForItemTypeService, private buildUpdReqsArr: BuildUpdateRequestsArrayService, private buildTradesReqsArr: BuildTradedItemsRequestsArrayService, private cartStateMgmnt: ShoppingCartStateManagementService) { }
+  constructor(
+    private http: HttpClient,
+    private checkForItemType: CheckForItemTypeService,
+    private buildUpdReqsArr: BuildUpdateRequestsArrayService,
+    private buildTradesReqsArr: BuildTradedItemsRequestsArrayService,
+    private cartStateMgmnt: ShoppingCartStateManagementService
+  ) { }
 
   getAvailablePurchaseServices(): Observable<[Discount[], Shipping[]]> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
@@ -109,8 +115,8 @@ export class ShoppingCartService {
     return forkJoin([...this.buildUpdReqsArr.build(purchasedItems, headers)]);
   }
 
-  createTradedItems(purchasedItems: CartItem[], status:'pending', orderId: string): Observable<TradedItem[]> {
-    const tradedItems: TradedItem[] = this.buildTradesReqsArr.buildTradedItemsArr([...purchasedItems], status, orderId, );
+  createTradedItems(purchasedItems: CartItem[], status: 'pending', orderId: string): Observable<TradedItem[]> {
+    const tradedItems: TradedItem[] = this.buildTradesReqsArr.buildTradedItemsArr([...purchasedItems], status, orderId,);
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     return forkJoin([...this.buildTradesReqsArr.build(tradedItems, headers)]);
   }

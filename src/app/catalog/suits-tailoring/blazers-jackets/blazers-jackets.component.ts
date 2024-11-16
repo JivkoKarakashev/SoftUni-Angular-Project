@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription, catchError, switchMap, takeUntil } from 'rxjs';
+import { Subscription, catchError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-
-import { DestroySubsNotifierService } from 'src/app/shared/utils/destroy-subs-notifier.service';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
@@ -20,7 +18,6 @@ import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for
   styleUrls: ['./blazers-jackets.component.css']
 })
 export class BlazersJacketsComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>;
 
   public listItems: ListItem[] = [];
   private cartItms: CartItem[] = [];
@@ -32,7 +29,6 @@ export class BlazersJacketsComponent implements OnInit, OnDestroy {
   public httpErrorsArr: HttpErrorResponse[] = [];
 
   constructor(
-    private destroySubsNotifier: DestroySubsNotifierService,
     private userStateMgmnt: UserStateManagementService,
     private cartStateMgmnt: ShoppingCartStateManagementService,
     private blazers_jacketsService: BlazersJacketsService,
@@ -41,26 +37,13 @@ export class BlazersJacketsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const destroySubscription = this.destroySubsNotifier.getNotifier().subscribe(() => this.destroy$.next());
-    this.unsubscriptionArray.push(destroySubscription);
-
-    const blazers_jacketsSubscription = this.userStateMgmnt.getUserState()
+    const user = this.userStateMgmnt.getUser();
+    (!!user) ? this.user = { ...user } : this.user = this.user;
+    this.cartItms = [...this.cartItms, ...this.cartStateMgmnt.getCartItems()];
+    this.cartItemsCounter = this.cartItms.length;
+    const blazers_jacketsSub = this.blazers_jacketsService.getBlazersJackets()
       .pipe(
-        takeUntil(this.destroy$),
-        switchMap(userData => {
-          if (userData) {
-            this.user = { ...this.user, ...userData };
-          }
-          return this.cartStateMgmnt.getCartItemsState();
-        }),
-        takeUntil(this.destroy$),
-        switchMap(itms => {
-          this.cartItemsCounter = itms.length;
-          this.cartItms = [...this.cartItms, ...itms];
-          return this.blazers_jacketsService.getBlazersJackets();
-        }),
-        takeUntil(this.destroy$),
-        catchError(err => { throw err; })
+        catchError(err => { throw err; }),
       )
       .subscribe(
         {
@@ -77,11 +60,10 @@ export class BlazersJacketsComponent implements OnInit, OnDestroy {
           }
         }
       );
-    this.unsubscriptionArray.push(blazers_jacketsSubscription);
+    this.unsubscriptionArray.push(blazers_jacketsSub);
   }
 
   ngOnDestroy(): void {
-    this.destroy$.complete();
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
@@ -95,6 +77,7 @@ export class BlazersJacketsComponent implements OnInit, OnDestroy {
     const idx = this.listItems.findIndex(itm => itm._id == _id);
     this.listItems[idx] = { ...this.listItems[idx], inCart: true };
     this.cartService.addCartItem(newCartItem);
+    this.cartItemsCounter++;
     // console.log(this.listItems);
     // console.log(this.cartItms);
   }

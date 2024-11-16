@@ -14,6 +14,10 @@ export class UserStateManagementService {
     return this.user$
   }
 
+  getUser(): UserForAuth | null {
+    return this.user$$.value;
+  }
+
   setUserState(userData?: UserForAuth | null): void {
     // console.log(userData);
     if (userData) {

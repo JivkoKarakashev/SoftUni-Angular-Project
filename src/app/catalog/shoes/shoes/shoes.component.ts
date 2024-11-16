@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription, catchError, switchMap, takeUntil } from 'rxjs';
+import { Subscription, catchError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-
-import { DestroySubsNotifierService } from 'src/app/shared/utils/destroy-subs-notifier.service';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
@@ -20,7 +18,6 @@ import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for
   styleUrls: ['./shoes.component.css']
 })
 export class ShoesComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>;
 
   public listItems: ListItem[] = [];
   private cartItms: CartItem[] = [];
@@ -32,7 +29,6 @@ export class ShoesComponent implements OnInit, OnDestroy {
   public httpErrorsArr: HttpErrorResponse[] = [];
 
   constructor(
-    private destroySubsNotifier: DestroySubsNotifierService,
     private userStateMgmnt: UserStateManagementService,
     private cartStateMgmnt: ShoppingCartStateManagementService,
     private shoesService: ShoesService,
@@ -41,26 +37,13 @@ export class ShoesComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const destroySubscription = this.destroySubsNotifier.getNotifier().subscribe(() => this.destroy$.next());
-    this.unsubscriptionArray.push(destroySubscription);
-
-    const shoesSubscription = this.userStateMgmnt.getUserState()
+    const user = this.userStateMgmnt.getUser();
+    (!!user) ? this.user = { ...user } : this.user = this.user;
+    this.cartItms = [...this.cartItms, ...this.cartStateMgmnt.getCartItems()];
+    this.cartItemsCounter = this.cartItms.length;
+    const shoesSub = this.shoesService.getShoes()
       .pipe(
-        takeUntil(this.destroy$),
-        switchMap(userData => {
-          if (userData) {
-            this.user = { ...this.user, ...userData };
-          }
-          return this.cartStateMgmnt.getCartItemsState();
-        }),
-        takeUntil(this.destroy$),
-        switchMap(itms => {
-          this.cartItemsCounter = itms.length;
-          this.cartItms = [...this.cartItms, ...itms];
-          return this.shoesService.getShoes();
-        }),
-        takeUntil(this.destroy$),
-        catchError(err => { throw err; })
+        catchError(err => { throw err; }),
       )
       .subscribe(
         {
@@ -77,11 +60,10 @@ export class ShoesComponent implements OnInit, OnDestroy {
           }
         }
       );
-    this.unsubscriptionArray.push(shoesSubscription);
+    this.unsubscriptionArray.push(shoesSub);
   }
 
   ngOnDestroy(): void {
-    this.destroy$.complete();
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
@@ -95,6 +77,7 @@ export class ShoesComponent implements OnInit, OnDestroy {
     const idx = this.listItems.findIndex(itm => itm._id == _id);
     this.listItems[idx] = { ...this.listItems[idx], inCart: true };
     this.cartService.addCartItem(newCartItem);
+    this.cartItemsCounter++;
     // console.log(this.listItems);
     // console.log(this.cartItms);
   }
