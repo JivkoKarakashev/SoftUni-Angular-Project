@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,25 +17,17 @@ import { ExtractStatesComponent } from './extract-states/extract-states.componen
 // import { NgxStripeModule } from 'ngx-stripe';
 // import { environment } from 'src/environments/environment';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    MainComponent,
-    HomeComponent,
-    AuthenticateComponent,
-    ExtractStatesComponent
-  ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    CoreModule,
-    SharedModule,
-    HttpClientModule,
-    AppRoutingModule,
-    SlickCarouselModule,
-    // NgxStripeModule.forRoot(environment.stripe.publicKey)
-  ],
-  providers: [httpLogoutInterceptorProvider, httpAJAXInterceptorProvider],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        MainComponent,
+        HomeComponent,
+        AuthenticateComponent,
+        ExtractStatesComponent
+    ],
+    bootstrap: [AppComponent], imports: [CommonModule,
+        BrowserModule,
+        CoreModule,
+        SharedModule,
+        AppRoutingModule,
+        SlickCarouselModule], providers: [httpLogoutInterceptorProvider, httpAJAXInterceptorProvider, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
