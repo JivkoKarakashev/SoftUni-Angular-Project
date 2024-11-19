@@ -116,7 +116,7 @@ export class PurchasesComponent implements OnInit, OnDestroy {
   onFilterBtnClick(i: number): void {
     // console.log(e.target);
     const fltrBtnEl: HTMLButtonElement = this.buttonFilterElements.toArray()[i].nativeElement;
-    (this.filterButtons[i].state === 'active') ? this.filterButtons[i].state = 'inactive' : this.filterButtons[i].state = 'active';
+    (this.filteredFilterButtons[i].state === 'active') ? this.filteredFilterButtons[i].state = 'inactive' : this.filteredFilterButtons[i].state = 'active';
     if (this.filteredFilterButtons[i].state === 'active') {
       this.render.removeClass(fltrBtnEl, 'inactive');
       this.render.addClass(fltrBtnEl, 'active');

@@ -55,7 +55,7 @@ export class FilterPurchasesDataService {
           filteredOrdersDates.push(dbOrdersDates[i]);
           filteredOrders.push(dbOrders[i]);
           filteredTradedItems.push(dbTradedItemsArr[i]);
-          break;
+          continue;
         }
         const kvOPairArr = Object.entries(dbOrders[i]);
         let breakIt = false;
