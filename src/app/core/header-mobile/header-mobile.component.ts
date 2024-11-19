@@ -35,7 +35,7 @@ export class HeaderMobileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // mobileModal();
     const userSubscription = this.userStateMgmnt.getUserState().subscribe(userData => {
-      (!!userData) ? this.user = { ...this.user, ...userData } : this.user = userData;
+      (userData) ? this.user = { ...this.user, ...userData } : this.user = null;
     });
     this.unsubscriptionArray.push(userSubscription);
   }

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
 import { CartItem, TradedItem } from 'src/app/types/item';
+import { DBOrder } from 'src/app/types/order';
 
 const TRADES_URL = `${environment.apiDBUrl}/data/traded_items`;
 
@@ -28,10 +29,20 @@ export class BuildTradedItemsRequestsArrayService {
   buildTradedItemsArr(purchasedItems: CartItem[], status: 'pending', orderId: string): TradedItem[] {
     const tradedItemsArr: TradedItem[] = [];
     purchasedItems.forEach(itm => {
-      const {_id, _ownerId} = itm;
+      const { _id, _ownerId } = itm;
       const tradedItm: TradedItem = { ...itm, orderId, status, stockId: _id, sellerId: _ownerId };
       tradedItemsArr.push(tradedItm);
     });
     return tradedItemsArr;
+  }
+
+  buildGetReqs(dbOrdersArr: DBOrder[], headers: HttpHeaders): Array<Observable<TradedItem[]>> {
+    // console.log(tradedItemsArr);
+    const reqArr: Array<Observable<TradedItem[]>> = [];
+    dbOrdersArr.forEach(order => {
+      const { _id } = order;
+      reqArr.push(this.http.get<TradedItem[]>(`${TRADES_URL}?where=orderId%3D%22${_id}%22`, { headers }));
+    });
+    return reqArr;
   }
 }

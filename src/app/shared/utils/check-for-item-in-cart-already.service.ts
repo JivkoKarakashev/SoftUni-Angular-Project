@@ -16,7 +16,7 @@ export class CheckForItemInCartAlreadyService {
         for (let i = 0; i < length; i++) {
             const currCollection = itmsObjArray[i];
             // console.log(currCollection);
-            let currListItemsCollection: ListItem[] = [];
+            const currListItemsCollection: ListItem[] = [];
             // console.log(currCollection);
             currCollection.forEach((itm, idx) => {
                 currListItemsCollection[idx] = { ...currCollection[idx], inCart: false };

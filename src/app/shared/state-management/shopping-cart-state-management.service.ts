@@ -16,14 +16,15 @@ export class ShoppingCartStateManagementService {
   private shippingState$$ = new BehaviorSubject<Shipping>({ ...shippingInitialState });
   private shippingState$ = this.shippingState$$.asObservable();
 
-  constructor() { }
-
   /////////////////////<--- Cart State Management--->/////////////////////
   getCartItemsState(): Observable<CartItem[]> {
     return this.cartItems$;
   }
   getCartItems(): CartItem[] {
     return this.cartItems$$.value;
+  }
+  getCartItemsCount(): number {
+    return this.cartItems$$.value.length;
   }
 
   setCartItemsState(cartState: CartItem[]): void {

@@ -38,7 +38,7 @@ export class TuxedosPartywearComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user = this.userStateMgmnt.getUser();
-    (!!user) ? this.user = { ...user } : this.user = this.user;
+    (user) ? this.user = { ...user } : null;
     this.cartItms = [...this.cartItms, ...this.cartStateMgmnt.getCartItems()];
     this.cartItemsCounter = this.cartItms.length;
     const tuxedos_partywearSub = this.tuxedos_partywearService.getTuxedosPartywear()

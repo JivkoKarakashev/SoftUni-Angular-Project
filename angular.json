@@ -90,10 +90,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ecommerce-app-Angular-v16:build:production"
+              "browserTarget": "ecommerce-app-Angular-v16:build:production"
             },
             "development": {
-              "buildTarget": "ecommerce-app-Angular-v16:build:development"
+              "browserTarget": "ecommerce-app-Angular-v16:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -101,7 +101,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "ecommerce-app-Angular-v16:build"
+            "browserTarget": "ecommerce-app-Angular-v16:build"
           }
         },
         "test": {

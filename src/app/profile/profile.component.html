@@ -17,7 +17,7 @@
         <app-sales *ngIf="activeTab === 'sales'" />
 
         <ng-container *ngIf="httpErrorsArr.length">
-            <div class="alert">{{httpErrorsArr.at(0)?.error?.message}}</div>
+            <div class="alert">{{httpErrorsArr.at(0)?.message}}</div>
         </ng-container>
 
         <!-- <ng-container *ngIf="!loading">

@@ -14,6 +14,7 @@ export interface Item {
     price: number
 }
 
+/* eslint-disable */
 export interface Belt extends Item { }
 export interface Blazer extends Item { }
 export interface Jacket extends Item { }
@@ -41,6 +42,7 @@ export interface Tuxedo extends Item { }
 export interface Partywear extends Item { }
 export interface Waistcoat extends Item { }
 export interface Watch extends Item { }
+/* eslint-enable */
 
 export interface ListItem extends Item {
     inCart: boolean

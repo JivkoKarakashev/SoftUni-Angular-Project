@@ -8,8 +8,6 @@ export class DestroySubsNotifierService {
 
   private destroy$$: Subject<void> = new Subject<void>;
 
-  constructor() { }
-
   getNotifier(): Subject<void> {
     return this.destroy$$;
   }

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment.development';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from '../state-management/user-state-management.service';
-// import { UserService } from 'src/app/user/user.service';
 
 import { Belt, Blazer, Boot, Bottom, Cap, CartItem, Glove, Gym, Hat, Jacket, Legging, Longwear, Outdoors, Partywear, Running, Ski, Slippers, Snowboard, Sunglasses, Surf, Sweater, Swim, Tie, Trainers, Tuxedo, Waistcoat, Watch, initialItem } from 'src/app/types/item';
 import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';
@@ -16,8 +15,6 @@ import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
 
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
-
-import { HttpError } from 'src/app/types/httpError';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
 
@@ -30,13 +27,13 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   private unsubscriptionArray: Subscription[] = [];
 
   public user: UserForAuth | null = null;
-  private cartItms: CartItem[] = [];
+
   public item: Jacket | Longwear |
     Trainers | Boot | Slippers |
     Cap | Hat | Belt | Glove | Sunglasses | Watch |
     Gym | Running | Ski | Snowboard | Swim | Surf | Outdoors | Bottom | Legging | Sweater |
     Blazer | Jacket | Waistcoat | Tuxedo | Partywear | Tie = initialItem;
-  public buyedItems = 0;
+  public cartItemsCounter = 0;
   public defImgOpacity = 1;
 
   public form: FormGroup = this.fb.group({
@@ -62,19 +59,17 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   private formInitalValue: FormGroup = this.fb.group({ fgItem: this.fb.group({ ...this.itemCtrlsGr.value }) });
 
   public loading = true;
-  public httpErrorsArr: HttpError[] = [];
+  public httpErrorsArr: HttpErrorResponse[] = [];
 
   constructor(
-    private userStateMgmnt: UserStateManagementService,
-    private cartStateMgmnt: ShoppingCartStateManagementService,
-    // private userService: UserService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
     private render: Renderer2,
-    private cartService: ShoppingCartService
-  ) { }
+    private cartService: ShoppingCartService,
+    private cartStateMgmnt: ShoppingCartStateManagementService
+  ) { this.cartItemsCounter = this.cartStateMgmnt.getCartItemsCount() }
 
   @ViewChildren('imgElements') private imgElements!: QueryList<ElementRef>;
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;
@@ -106,20 +101,8 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const { id } = this.route.snapshot.params;
     // console.log(id);
 
-    const detailsSubscription = this.userStateMgmnt.getUserState()
+    const detailsSubscription = this.getItem(url, id)
       .pipe(
-        switchMap(userData => {
-          if (userData) {
-            this.user = { ...userData };
-          }
-          return this.cartStateMgmnt.getCartItemsState()
-        }),
-        switchMap(items => {
-          this.buyedItems = items.length;
-          this.cartItms = ([...this.cartItms, ...items]);
-          // console.log(this.cartItms);
-          return this.getItem(url, id);
-        }),
         catchError(err => { throw err; })
       )
       .subscribe({
@@ -165,51 +148,6 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         }
       });
     this.unsubscriptionArray.push(detailsSubscription);
-    // const userSubscription = this.userService.user$.subscribe(userData => {
-    //   if (userData) {
-    //     this.user = { ...userData };
-    //   }
-    // });
-    // const cartSubscription = this.cartService.getCartItems().subscribe(items => {
-    //   this.buyedItems = items.length;
-    //   this.cartItms = ([...this.cartItms, ...items]);
-    //   // console.log(this.cartItms);
-    // });
-    // const itemSubscription = this.getItem(url, id).subscribe(itm => {
-    //   // this.item$ = itm;
-    //   this.loading = false;
-    //   const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = itm;
-    //   // const buyed = this.cartItms$$.value.some(itm => itm._id == _id);
-    //   // const inCart = this.cartItms.some(itm => itm._id == _id);
-    //   this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price };
-    //   // console.log(itm);
-    //   // console.log(this.item);
-    //   // console.log(this.cartItms$$.value);
-    //   // const propsArr = Object.entries(itm);
-    //   // console.log(propsArr);
-    //   // propsArr.forEach(([k, v]) => {
-    //   //   (this.form.get('fgItem') as FormGroup).addControl(k, new FormControl(v, Validators.required));
-    //   // });
-    //   this.itemCtrlsGr.patchValue({
-    //     _ownerId,
-    //     _id,
-    //     _createdOn,
-    //     image,
-    //     altImages,
-    //     cat,
-    //     subCat,
-    //     description,
-    //     size,
-    //     color,
-    //     brand,
-    //     quantity,
-    //     price,
-    //   });
-    //   (this.formInitalValue.get('fgItem') as FormGroup).patchValue({ ...this.itemCtrlsGr.value });
-    //   // console.log({ ...this.itemCtrlsGr.value });
-    //   // console.log(this.formInitalValue.get('fgItem')?.value);
-    // });
-    // this.unsubscriptionArray.push(userSubscription, itemSubscription, cartSubscription);
   }
 
   ngAfterViewInit(): void {
@@ -254,13 +192,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     >(`${BASE_URL}/${url}/${id}`, { headers });
   }
 
-  // public selectSize(e: Event): void {
-  //   const el = e.target as HTMLSelectElement;
-  //   // const size = el.options[el.selectedIndex].text;
-  //   const size = el.value;
-  // }
-
-  public selectColor(): void {
+  selectColor(): void {
     this.imgElements.forEach(el => {
       // console.log(el.nativeElement.dataset['image']);
       // console.log(this.selectedColor?.value);
@@ -284,13 +216,13 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       return;
     }
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price } = this.itemCtrlsGr.value as CartItem;
-    const inCart = true;
     const product = selectedQuantity * price;
     this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, product, checked: false });
     // this.item = { ...this.item, inCart: true };
     this.itemCtrlsGr.reset({ ...this.formInitalValue.get('fgItem')?.value });
     this.imgElements.forEach(el => el.nativeElement.classList.contains('active') ? this.render.removeClass(el.nativeElement, 'active') : null);
     this.defImgOpacity = 1;
+    this.cartItemsCounter++;
     // console.log(this.cartItms$$.value);
   }
 

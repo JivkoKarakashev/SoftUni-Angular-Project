@@ -8,9 +8,9 @@ import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.in
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
-const ORDERS_URL = `${BASE_URL}/orders`;
+// const ORDERS_URL = `${BASE_URL}/orders`;
 // const ORDERS_URL = `${BASE_URL}/order`;
-const SALES_URL = `${BASE_URL}/traded_items`;
+// const TRADES_URL = `${BASE_URL}/traded_items`;
 
 @Injectable({
   providedIn: 'root'
