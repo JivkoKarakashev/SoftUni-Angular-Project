@@ -1,0 +1,44 @@
+div.alert {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: fit-content;
+    gap: 0 2em;
+    align-items: center;
+    justify-content: center;
+    background-color: #f44336;
+    color: #fff;
+
+    div.buttons {
+        padding: .2em 0;
+        display: flex;
+        justify-content: center;
+        gap: 2em;
+        text-transform: uppercase;
+        font-weight: bold;
+    
+        & .button {
+            padding: .2em .3em;
+            border: 1px solid #000;
+            border-radius: .4em;
+            outline: none;
+        }
+    }
+
+    & a.nav-icon.user,
+    & a.nav-icon.guest {
+        padding: .2em .3em;
+        border: 1px solid #000;
+        border-radius: .4em;
+        color: #000;
+        background-color: #e9e9ed;
+        outline: none;
+    }
+
+    & a.nav-icon.user:hover,
+    & a.nav-icon.user:focus,
+    & a.nav-icon.guest:hover,
+    & a.nav-icon.guest:focus {
+        color: #fff;
+        background-color: #000;
+    }
+}

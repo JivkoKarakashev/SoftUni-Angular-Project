@@ -1,0 +1,224 @@
+div.alert {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: fit-content;
+    gap: 0 2em;
+    align-items: center;
+    justify-content: center;
+    background-color: #f44336;
+    color: #fff;
+
+    div.buttons {
+        padding: .2em 0;
+        display: flex;
+        justify-content: center;
+        gap: 2em;
+        text-transform: uppercase;
+        font-weight: bold;
+    
+        & .button {
+            padding: .2em .3em;
+            border: 1px solid #000;
+            border-radius: .4em;
+            outline: none;
+        }
+    }
+
+    & a.nav-icon.user,
+    & a.nav-icon.guest {
+        padding: .2em .3em;
+        border: 1px solid #000;
+        border-radius: .4em;
+        color: #000;
+        background-color: #e9e9ed;
+        outline: none;
+    }
+
+    & a.nav-icon.user:hover,
+    & a.nav-icon.user:focus,
+    & a.nav-icon.guest:hover,
+    & a.nav-icon.guest:focus {
+        color: #fff;
+        background-color: #000;
+    }
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+/* <------SALES------ */
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+/* Filter Bar */
+.filter {
+    padding: .7em;
+    width: 100%;
+    border: 1px solid #cccccc;
+    border-radius: .4em;
+}
+
+/* Status Filters */
+.status-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: .5em 1em;
+    margin-bottom: 1.4em;
+}
+
+.status-btn,
+.clear-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.status-btn.confirmed {
+    background-color: #e0f7fa;
+    color: #00796b;
+}
+
+.status-btn.rejected {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.status-btn.pending {
+    background-color: #ffff00;
+    color: #000000;
+}
+
+.status-btn.shipped {
+    background-color: #e9fcff;
+    color: #0275d8;
+}
+
+.status-btn.delivered {
+    background-color: #ffacff;
+    color: #000;
+}
+
+.status-btn.active {
+    border: 2px solid #f57c00;
+}
+
+.status-btn.inactive {
+    background-color: #eeeeee;
+    color: #9e9e9e;
+}
+
+/* Sales List */
+.sales-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1em .5em;
+}
+/* Sold Item Card */
+.sales-list .item-card {
+    display: flex;
+    flex: 1 1 30%;
+    min-width: fit-content;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 30%;
+}
+
+.sales-list h3 {
+    margin-bottom: 10px;
+}
+
+.sales-list .item {
+    display: flex;
+    gap: .5em;
+    justify-content: space-between;
+    min-width: fit-content;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.sales-list .item .itm:nth-child(2),
+.sales-list .item .itm:nth-child(3),
+.sales-list .item .itm:nth-child(4) {
+    flex: 1 1 25%;
+}
+
+.item-card .item .media {
+    flex: unset;
+    display: flex;
+    width: 50px;
+    height: 50px;
+}
+
+.item-card .item .media img {
+    border-radius: 50%;
+    border: 1px solid #000000;
+}
+/* Item Buttons */
+.item-status div button {
+    flex: 0 1 40%;
+    min-width: max-content;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.item-status>* {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-status div {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.item-status .reject {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border: 1px solid rgba(211, 47, 47, 255);
+}
+
+.item-status .accept {
+    background-color: #e0f7fa;
+    color: #00796b;
+    border: 1px solid rgba(0, 121, 107, 255);
+}
+
+.item-status .ship {
+    background-color: #e9fcff;
+    color: #0275d8  ;
+    border: 1px solid rgba(2, 117, 216, 255);
+}
+
+.item-status .rejected {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.item-status .shipped {
+    background-color: #e9fcff;
+    color: #0275d8;
+}
+
+.item-status .delivered {
+    background-color: #ffacff;
+    color: #000;
+}

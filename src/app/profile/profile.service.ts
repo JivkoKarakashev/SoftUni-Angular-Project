@@ -39,7 +39,7 @@ export class ProfileService {
 
   getAllSalesByUserId(userId: string): Observable<TradedItem[]> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
-    return this.http.get<TradedItem[]>(`${ORDERS_URL}/${userId}?select=sales`, { headers });
+    return this.http.get<TradedItem[]>(`${TRADES_URL}?where=sellerId%3D%22${userId}%22`, { headers });
   }
 
   getProfileDataByUserId(userId: string): Observable<[DBOrder[], TradedItem[] | []]> {

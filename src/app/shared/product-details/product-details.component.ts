@@ -2,12 +2,11 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription, catchError, switchMap } from 'rxjs';
+import { Observable, Subscription, catchError } from 'rxjs';
 
 import { environment } from 'src/environments/environment.development';
 
 import { UserForAuth } from 'src/app/types/user';
-import { UserStateManagementService } from '../state-management/user-state-management.service';
 
 import { Belt, Blazer, Boot, Bottom, Cap, CartItem, Glove, Gym, Hat, Jacket, Legging, Longwear, Outdoors, Partywear, Running, Ski, Slippers, Snowboard, Sunglasses, Surf, Sweater, Swim, Tie, Trainers, Tuxedo, Waistcoat, Watch, initialItem } from 'src/app/types/item';
 import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';

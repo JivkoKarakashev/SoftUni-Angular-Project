@@ -9,6 +9,7 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { NgxStripeModule } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
 import { CheckoutRoutingModule } from '../checkout/checkout-routing.module';
+import { ErrorsComponent } from './errors/errors.component';
 
 
 
@@ -16,11 +17,12 @@ import { CheckoutRoutingModule } from '../checkout/checkout-routing.module';
   declarations: [
     ShoppingCartComponent,
     LoaderComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    ErrorsComponent
   ],
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule, RouterLink, CheckoutRoutingModule, NgxStripeModule.forChild(environment.stripe.publicKey)
   ],
-  exports: [ShoppingCartComponent, LoaderComponent, ProductDetailsComponent]
+  exports: [ShoppingCartComponent, LoaderComponent, ProductDetailsComponent, ErrorsComponent]
 })
 export class SharedModule { }

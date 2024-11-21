@@ -3,7 +3,7 @@ import { Subject, Subscription, catchError, switchMap, takeUntil } from 'rxjs';
 
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { DBOrder } from 'src/app/types/order';
+import { DBOrder, ProfilePageOrder } from 'src/app/types/order';
 import { UserForAuth } from 'src/app/types/user';
 
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
@@ -12,6 +12,8 @@ import { NumberToDateService } from 'src/app/shared/utils/number-to-date.service
 import { TradedItem } from 'src/app/types/item';
 import { CapitalizeCategoryService } from 'src/app/shared/utils/capitalize-category.service';
 import { FilterButton, FilterPurchasesDataService } from 'src/app/shared/utils/filter-purchases-data.service';
+import { OrderStatusCheckService } from 'src/app/shared/utils/order-status-check.service';
+import { ErrorsService } from 'src/app/shared/errors/errors.service';
 
 @Component({
   selector: 'app-purchases',
@@ -23,18 +25,19 @@ export class PurchasesComponent implements OnInit, OnDestroy {
   private destroy$$ = new Subject<void>();
 
   public user: UserForAuth | null = null;
-  public dbOrders: DBOrder[] = [];
+  public dbOrders: (DBOrder | ProfilePageOrder)[] = [];
   public dbOrdersDates: string[] = [];
   public dbTradedItemsArr: Array<TradedItem[]> = [];
   public filterButtons: FilterButton[] = [];
 
-  public filteredOrders: DBOrder[] = [];
+  public filteredOrders: (DBOrder | ProfilePageOrder)[] = [];
   public filteredOrdersDates: string[] = [];
   public filteredTradedItems: Array<TradedItem[]> = [];
   public filteredFilterButtons: FilterButton[] = [];
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
+  public errorsArr: Error[] = [];
 
   constructor(
     private userStateMgmnt: UserStateManagementService,
@@ -42,7 +45,9 @@ export class PurchasesComponent implements OnInit, OnDestroy {
     private numToDateService: NumberToDateService,
     public capitalizeCategoryService: CapitalizeCategoryService,
     private render: Renderer2,
-    private filterPurchasesData: FilterPurchasesDataService
+    private filterPurchasesData: FilterPurchasesDataService,
+    private orderStatusCheck: OrderStatusCheckService,
+    private errorsService: ErrorsService
   ) { }
 
   @ViewChildren('buttonFilterElements') private buttonFilterElements!: QueryList<ElementRef<HTMLButtonElement>>;
@@ -62,14 +67,15 @@ export class PurchasesComponent implements OnInit, OnDestroy {
               this.destroy$$.next();
             }
             this.dbOrders = [...this.dbOrders, ...dbOrdersArr];
-            dbOrdersArr.forEach((dbOrder, idx) => {
-              // this.dbOrders[idx] = { ...this.dbOrders[idx], status: 'pending' };
-              this.filterButtons = [...this.filterButtons, { ref: dbOrder.referenceNumber || '', status: this.dbOrders[idx].status, state: 'active' }];
-              this.dbOrdersDates = [...this.dbOrdersDates, this.numToDateService.convert(dbOrder._createdOn)];
-            });
             this.filteredOrders = [...this.dbOrders];
+            dbOrdersArr.forEach((dbOrder, idx) => {
+              this.filterButtons[idx] = { ref: dbOrder.referenceNumber || '', status: this.dbOrders[idx].status, state: 'active' };
+              this.dbOrdersDates[idx] = this.numToDateService.convert(dbOrder._createdOn);
+            });
             this.filteredFilterButtons = [...this.filterButtons];
             this.filteredOrdersDates = [...this.dbOrdersDates];
+            // console.log(this.filterButtons)
+            // console.log(this.filteredFilterButtons);
             return this.profileService.getAllPurchasesByUserOrders([...dbOrdersArr]);
           }),
           takeUntil(this.destroy$$),
@@ -78,21 +84,33 @@ export class PurchasesComponent implements OnInit, OnDestroy {
         .subscribe(
           {
             next: (tradedItemsArr) => {
-              // console.log(tradedItemsArr);
-              // console.log(this.filterButtons);
               this.loading = false;
+              console.log(tradedItemsArr);
+              // console.log(this.filterButtons);
+              tradedItemsArr.forEach((trItms, idx) => {
+                const status = this.orderStatusCheck.check(trItms);
+                this.filterButtons[idx] = { ...this.filterButtons[idx], status };
+                this.dbOrders[idx] = { ...this.dbOrders[idx], status };
+              });
+              this.filteredFilterButtons = [...this.filterButtons];
+              this.filteredOrders = [...this.dbOrders];
               this.dbTradedItemsArr = [...tradedItemsArr];
               this.filteredTradedItems = [...tradedItemsArr];
             },
             error: (err) => {
               this.loading = false;
               this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+              this.errorsService.sethttpErrorsArr([...this.httpErrorsArr]);
               console.log(err);
               console.log(this.httpErrorsArr);
             }
           }
         );
-      this.unsubscriptionArray.push(dbOrdersSub)
+      this.unsubscriptionArray.push(dbOrdersSub);
+    } else {
+      this.loading = false;
+      this.errorsArr.push({ message: 'Please Login or Register to access your Profile!', name: 'User Error' });
+      this.errorsService.setErrorsArr([...this.errorsArr]);
     }
   }
 

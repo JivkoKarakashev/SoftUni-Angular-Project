@@ -3587,7 +3587,8 @@
                 selectedQuantity: 1,
                 price: 33,
                 product: 33,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "5ccbd6d6-68bd-4cae-8933-ecca814ead46": {
                 orderId: "b6a57bc0-751b-45aa-8598-aa4e7f6b9079",
@@ -3621,7 +3622,8 @@
                 selectedQuantity: 1,
                 price: 33,
                 product: 33,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "d91eaacc-64ce-42f4-8cc2-8bf4f2c3500c": {
                 orderId: "b6a57bc0-751b-45aa-8598-aa4e7f6b9079",
@@ -3655,7 +3657,8 @@
                 selectedQuantity: 1,
                 price: 33,
                 product: 33,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "2aca21d2-8d55-4918-bc94-ea30c53bead2": {
                 orderId: "440cc882-0694-4ad7-8529-1a25cf6b3465",
@@ -3687,7 +3690,8 @@
                 selectedQuantity: 1,
                 price: 38,
                 product: 38,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "0de7091f-bc18-4822-9c84-ffb3b9a8b39c": {
                 orderId: "440cc882-0694-4ad7-8529-1a25cf6b3465",
@@ -3721,7 +3725,8 @@
                 selectedQuantity: 1,
                 price: 33,
                 product: 33,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "3bc75db4-1d29-46ba-98ce-95cd1930bbf2": {
                 orderId: "440cc882-0694-4ad7-8529-1a25cf6b3465",
@@ -3755,7 +3760,8 @@
                 selectedQuantity: 1,
                 price: 33,
                 product: 33,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "c6817c72-4899-4d2c-ad4f-963835af0025": {
                 orderId: "c9370d81-bbc9-4fe9-b6c4-cb9313dfa677",
@@ -3789,7 +3795,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "2098a22f-99e0-4dfa-bf43-a0ec68d952c4": {
                 orderId: "c9370d81-bbc9-4fe9-b6c4-cb9313dfa677",
@@ -3823,7 +3830,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "51914ce8-eaf7-4e77-aaa5-5fa1e8b8a66f": {
                 orderId: "c9370d81-bbc9-4fe9-b6c4-cb9313dfa677",
@@ -3856,7 +3864,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "438e8829-1429-4ac9-b8ea-50dafa2aa5ba": {
                 orderId: "cc2055f3-57b0-4deb-879a-1351bc920f98",
@@ -3889,7 +3898,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "cf1dfe48-f553-4d83-bf34-04cb29a26586": {
                 orderId: "cc2055f3-57b0-4deb-879a-1351bc920f98",
@@ -3922,7 +3932,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "0c205237-871d-47ca-9688-95124d27c0a3": {
                 orderId: "cc2055f3-57b0-4deb-879a-1351bc920f98",
@@ -3955,7 +3966,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "35ae6855-7773-4e5c-ae26-3c8fab5e7d44": {
                 orderId: "89ae512e-abc8-42d1-b371-58ad63e3c8b6",
@@ -3988,7 +4000,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "dfa9b995-d525-4e94-9243-88d2d8358fbb": {
                 orderId: "89ae512e-abc8-42d1-b371-58ad63e3c8b6",
@@ -4021,7 +4034,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "a5efd236-958a-4203-8fb6-a7f638dd015c": {
                 orderId: "89ae512e-abc8-42d1-b371-58ad63e3c8b6",
@@ -4054,7 +4068,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "372746b5-922a-4378-9a62-91ded0948d2d": {
                 orderId: "7a7790fa-bb37-4450-80d0-679ad90f3e5c",
@@ -4088,7 +4103,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "0282dac5-f5ed-44e3-8392-0c61c1d70dab": {
                 orderId: "7a7790fa-bb37-4450-80d0-679ad90f3e5c",
@@ -4122,7 +4138,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             },
             "53c31640-7b4b-44aa-940a-2989be017983": {
                 orderId: "7a7790fa-bb37-4450-80d0-679ad90f3e5c",
@@ -4156,7 +4173,8 @@
                 selectedQuantity: 1,
                 price: 21,
                 product: 21,
-                checked: false
+                checked: false,
+                status: 'pending'
             }
         }
     };

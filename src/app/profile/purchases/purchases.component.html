@@ -2,9 +2,7 @@
     <app-loader />
 </ng-container>
 
-<ng-container *ngIf="httpErrorsArr.length">
-    <div class="alert">{{httpErrorsArr.at(0)?.message}}</div>
-</ng-container>
+<app-errors *ngIf="httpErrorsArr.length || errorsArr.length" />
 
 <section class="content purchases">
     <h2>Purchases</h2>
@@ -22,12 +20,6 @@
             <ng-container *ngFor="let btn of filteredFilterButtons; let i = index">
                 <button class="status-btn" [class]="btn.status" [ngClass]="{'active': btn.state === 'active', 'inactive': btn.state === 'inactive'}" [attr.data-ref]="btn.ref" (click)="onFilterBtnClick(i)" #buttonFilterElements>#{{btn.ref}}</button>
             </ng-container>
-            <!-- <button type="button" class="status-btn rejected active" data-seqnum="352">#352</button>
-            <button type="button" class="status-btn pending active" data-seqnum="351">#351</button>
-            <button type="button" class="status-btn pending active" data-seqnum="350">#350</button>
-            <button type="button" class="status-btn accepted active" data-seqnum="349">#349</button>
-            <button type="button" class="status-btn selected" data-seqnum="348">#348</button>
-            <button type="button" class="status-btn inactive" data-seqnum="347">#347</button> -->
         </div>
 
         <!-- Order List -->
@@ -56,6 +48,15 @@
                                 <div class="product itm">
                                     <span>&dollar;{{item.product}}</span>
                                 </div>
+                                <div *ngIf="item.status==='pending' || item.status==='confirmed' || item.status==='rejected' || item.status==='delivered'" class="item-status itm" [ngClass]="item.status">
+                                    <span>{{item.status}}</span>
+                                </div>
+                                <div *ngIf="item.status==='shipped' && order.status==='shipped'" class="item-status itm" [ngClass]="order.status">
+                                    <span>awaits delivery</span>
+                                </div>
+                                <div *ngIf="item.status==='shipped' && order.status==='split'" class="item-status itm shipped" [ngClass]="order.status">
+                                    <button type="button" class="confirm-receipt">Confirm receipt</button>
+                                </div>
                             </div>
                         </ng-container>
                     </div>
@@ -81,12 +82,17 @@
                         <div *ngIf="order.status==='rejected'" class="rejected">Rejected</div>
                         <div *ngIf="order.status==='confirmed'" class="confirmed">Confirmed</div>
                         <div *ngIf="order.status==='pending'" class="pending">Pending</div>
+                        <div *ngIf="order.status==='shipped'" class="shipped">
+                            <button type="button" class="confirm-receipt">Confirm receipt</button>
+                        </div>
+                        <div *ngIf="order.status==='delivered'" class="delivered">Delivered</div>
+                        <div *ngIf="order.status==='split'" class="split">Split delivery from same merchant</div>
+                        <div *ngIf="order.status==='several'" class="several">Order is from several merchants</div>
                     </div>
                 </div>
 
             </ng-container>
 
-            <!-- Repeat for other orders... -->
         </div>
     </div>
 </section>

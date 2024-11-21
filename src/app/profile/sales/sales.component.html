@@ -1,1 +1,85 @@
-<p>sales works!</p>
+<ng-container *ngIf="loading">
+    <app-loader />
+</ng-container>
+
+<ng-container *ngIf="httpErrorsArr.length">
+    <div class="alert">{{httpErrorsArr.at(0)?.message}}</div>
+</ng-container>
+
+<ng-container *ngIf="errorsArr.length">
+    <!-- <ng-container *ngFor="let err of errorsArr"> -->
+        <div class="alert">
+            <p>{{errorsArr.at(0)?.message}}</p>
+            <div class="buttons">
+                <a class="nav-icon guest" routerLink="/auth/login">sign in</a>
+                <p>OR</p>
+                <a class="nav-icon user" routerLink="/auth/register">register</a>
+            </div>
+        </div>
+    <!-- <div class="alert">{{httpError.error?.message}}</div> -->
+    <!-- </ng-container> -->
+</ng-container>
+
+<section class="content sales">
+    <h2>Sales</h2>
+    <!-- Add sales content here -->
+    <div class="wrapper">
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <input #inputFilterElement type="text" class="filter" placeholder="Filter" ngModel (keyup)="onTextInput(inputFilterElement.value)">
+        </div>
+
+        <!-- Sales Filter -->
+        <div class="status-filters">
+            <button type="button" class="clear-btn" (click)="onClearBtnClick()">Clear filter</button>
+            <ng-container *ngFor="let btn of filteredFilterButtons; let i = index">
+                <button class="status-btn" [class]="btn.status" [ngClass]="{'active': btn.state === 'active', 'inactive': btn.state === 'inactive'}" [attr.data-ref]="btn.ref" (click)="onFilterBtnClick(i)" #buttonFilterElements>#{{btn.ref}}</button>
+            </ng-container>
+        </div>
+
+        <!-- Sales List -->
+        <div class="sales-list">
+            <!-- Sold Item Card -->
+            <ng-container *ngFor="let item of filteredTradedItems; let i = index">
+
+                <div *ngIf="filteredFilterButtons[i].state === 'active'" class="item-card" [attr.data-ref]="item._createdOn.toString(16)" [attr.data-status]="item.status">
+                    <h3>Sale #{{item._createdOn.toString(16)}}</h3>
+                    <p>{{filteredTradedItemsDates[i]}}</p>
+                    <div class="item">
+                        <div class="media itm">
+                            <img [src]="item.image" alt="Vegetable Mixups">
+                        </div>
+                        <div class="sub-cat itm">
+                            <p>{{capitalizeCategoryService.capitalize(item.subCat)}}</p>
+                        </div>
+                        <div class="qty itm">
+                            <span>Qty: {{item.selectedQuantity}}</span>
+                        </div>
+                        <div class="price itm">
+                            <span>P&dollar;{{item.price}}</span>
+                        </div>
+                        <div class="product itm">
+                            <span>&dollar;{{item.product}}</span>
+                        </div>
+                    </div>
+
+                    <div class="item-status">
+                        <div *ngIf="item.status==='pending'" class="pending">
+                            <button type="button" class="reject">Reject</button>
+                            <button type="button" class="accept">Accept</button>
+                        </div>
+                        <div *ngIf="item.status==='confirmed'" class="confirmed">
+                            <button type="button" class="ship">Mark as shipped</button>
+                        </div>
+                        <div *ngIf="item.status==='rejected'" class="rejected">Rejected</div>
+                        <div *ngIf="item.status==='shipped'" class="shipped">Awaits delivery</div>
+                        <div *ngIf="item.status==='delivered'" class="delivered">Completed</div>
+                    </div>
+                </div>
+
+            </ng-container>
+
+        </div>
+    </div>
+</section>
