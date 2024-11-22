@@ -14,7 +14,6 @@ export class ErrorsService {
   }
 
   sethttpErrorsArr(errors: HttpErrorResponse[]): void {
-    console.log(errors);
     this.httpErrorsArr$$.next([...errors]);
   }
 

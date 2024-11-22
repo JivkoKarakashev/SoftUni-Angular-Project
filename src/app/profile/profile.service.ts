@@ -27,18 +27,17 @@ export class ProfileService {
     ) { }
 
   getAlldbOrdersByUserId(userId: string): Observable<DBOrder[]> {
-    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     return this.http.get<DBOrder[]>(`${ORDERS_URL}?where=_ownerId%3D%22${userId}%22`, { headers });
   }
 
   getAllPurchasesByUserOrders(dbOrdersArr: DBOrder[]): Observable<Array<TradedItem[]>> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-    // return this.http.get<TradedItem[]>(`${TRADES_URL}?where=orderId%3D%22${orderId}%22`, { headers });
     return forkJoin([...this.buildTradesReqsArr.buildGetReqs(dbOrdersArr, headers)]);
   }
 
   getAllSalesByUserId(userId: string): Observable<TradedItem[]> {
-    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     return this.http.get<TradedItem[]>(`${TRADES_URL}?where=sellerId%3D%22${userId}%22`, { headers });
   }
 

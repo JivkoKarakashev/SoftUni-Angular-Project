@@ -1,15 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
-import { Subject, Subscription, catchError, takeUntil } from 'rxjs';
+import { EMPTY, Subscription, catchError } from 'rxjs';
+
+import { UserForAuth } from 'src/app/types/user';
+import { TradedItem } from 'src/app/types/item';
 
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
 import { ProfileService } from '../profile.service';
 import { NumberToDateService } from 'src/app/shared/utils/number-to-date.service';
 import { FilterButton } from 'src/app/shared/utils/filter-purchases-data.service';
-import { TradedItem } from 'src/app/types/item';
-import { UserForAuth } from 'src/app/types/user';
 import { FilterSalesDataService } from 'src/app/shared/utils/filter-sales-data.service';
 import { CapitalizeCategoryService } from 'src/app/shared/utils/capitalize-category.service';
+import { ErrorsService } from 'src/app/shared/errors/errors.service';
 
 @Component({
   selector: 'app-sales',
@@ -18,7 +20,6 @@ import { CapitalizeCategoryService } from 'src/app/shared/utils/capitalize-categ
 })
 export class SalesComponent implements OnInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = [];
-  private destroy$$ = new Subject<void>();
 
   public user: UserForAuth | null = null;
   public dbTradedItems: TradedItem[] = [];
@@ -39,7 +40,8 @@ export class SalesComponent implements OnInit, OnDestroy {
     private numToDateService: NumberToDateService,
     public capitalizeCategoryService: CapitalizeCategoryService,
     private render: Renderer2,
-    private filterSalesData: FilterSalesDataService
+    private filterSalesData: FilterSalesDataService,
+    private errorsService: ErrorsService
   ) { }
 
   @ViewChildren('buttonFilterElements') private buttonFilterElements!: QueryList<ElementRef<HTMLButtonElement>>;
@@ -48,42 +50,45 @@ export class SalesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     console.log('Sales Tab Initialized!');
     const user = this.userStateMgmnt.getUser();
-    (user) ? this.user = { ...user } : this.user = null;
+    try {
+      if (user) {
+        this.user = { ...user };
+      } else {
+        throw new Error('Please Login or Register to access your Profile!');
+      }
+    } catch (err) {
+      this.loading = false;
+      this.errorsArr.push(err as Error);
+      this.errorsService.setErrorsArr([...this.errorsArr]);
+    }
+
     if (this.user) {
       const dbTradedItemsSub = this.profileService.getAllSalesByUserId(this.user._id)
         .pipe(
-          // takeUntil(this.destroy$$),
-          catchError(err => { throw err; })
+          catchError(err => {
+            console.log('HERE');
+            this.loading = false;
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            this.errorsService.sethttpErrorsArr([...this.httpErrorsArr]);
+            return EMPTY;
+          })
         )
-        .subscribe(
-          {
-            next: (tradedItems) => {
-              this.loading = false;
-              this.dbTradedItems = [...tradedItems];
-              this.filteredTradedItems = [...tradedItems];
-              tradedItems.forEach((itm) => {
-                const ref = itm._createdOn.toString(16);
-                this.filterButtons = [...this.filterButtons, { ref, status: itm.status, state: 'active' }];
-                this.dbTradedItemsDates = [...this.dbTradedItemsDates, this.numToDateService.convert(itm._createdOn)];
-                // this.dbTradedItemsArr[idx] = { ...itm, status: 'pending' };
-                // this.filteredTradedItems[idx] = { ...itm, status: 'pending' };
-              });
-              this.filteredFilterButtons = [... this.filterButtons];
-              this.filteredTradedItemsDates = [...this.dbTradedItemsDates];
-              this.filteredTradedItems = [...tradedItems];
-            },
-            error: (err) => {
-              this.loading = false;
-              this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-              console.log(err);
-              console.log(this.httpErrorsArr);
-            }
-          }
-        );
+        .subscribe(tradedItems => {
+          this.loading = false;
+          this.dbTradedItems = [...tradedItems];
+          this.filteredTradedItems = [...tradedItems];
+          tradedItems.forEach((itm) => {
+            const ref = itm._createdOn.toString(16);
+            this.filterButtons = [...this.filterButtons, { ref, status: itm.status, state: 'active' }];
+            this.dbTradedItemsDates = [...this.dbTradedItemsDates, this.numToDateService.convert(itm._createdOn)];
+            // this.dbTradedItemsArr[idx] = { ...itm, status: 'pending' };
+            // this.filteredTradedItems[idx] = { ...itm, status: 'pending' };
+          });
+          this.filteredFilterButtons = [... this.filterButtons];
+          this.filteredTradedItemsDates = [...this.dbTradedItemsDates];
+          this.filteredTradedItems = [...tradedItems];
+        });
       this.unsubscriptionArray.push(dbTradedItemsSub);
-    } else {
-      this.loading = false;
-      this.errorsArr.push({ message: 'Please Login or Register to access your Profile!', name: 'User Error' });
     }
   }
 
@@ -92,8 +97,7 @@ export class SalesComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
     });
-    this.destroy$$.next();
-    this.destroy$$.complete();
+    // console.log('UnsubArray = 1');
   }
 
   onTextInput(input: string): void {

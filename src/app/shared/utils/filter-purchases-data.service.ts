@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { TradedItem } from 'src/app/types/item';
-import { DBOrder, ProfilePageOrder } from 'src/app/types/order';
+import { DBOrder } from 'src/app/types/order';
 
 export interface FilterButton {
   ref: string,
@@ -12,7 +12,7 @@ export interface FilterButton {
 export interface FilteredData {
   'buttons': FilterButton[],
   'dates': string[],
-  'orders': (DBOrder | ProfilePageOrder)[],
+  'orders': DBOrder[],
   'tradedItms': Array<TradedItem[]>
 }
 
@@ -26,7 +26,7 @@ export interface FilteredDataSales extends Omit<FilteredData, 'tradedItms'> {
 export class FilterPurchasesDataService {
   private filteredFilterButtons: FilterButton[] = [];
   private filteredOrdersDates: string[] = [];
-  private filteredOrders: (DBOrder | ProfilePageOrder)[] = [];
+  private filteredOrders: DBOrder[] = [];
   private filteredTradedItems: Array<TradedItem[]> = [];
   private fData: FilteredData = {
     buttons: [],
@@ -39,7 +39,7 @@ export class FilterPurchasesDataService {
     input: string,
     filterButtons: FilterButton[],
     dbOrdersDates: string[],
-    dbOrders: (DBOrder | ProfilePageOrder)[],
+    dbOrders: DBOrder[],
     dbTradedItemsArr: Array<TradedItem[]>
   ): FilteredData {
     this.filteredFilterButtons = [...filterButtons];
@@ -50,7 +50,7 @@ export class FilterPurchasesDataService {
     const filterQuery = input.toLowerCase();
     const filteredFilterButtons: FilterButton[] = [];
     const filteredOrdersDates: string[] = [];
-    const filteredOrders: DBOrder | ProfilePageOrder[] = [];
+    const filteredOrders: DBOrder[] = [];
     const filteredTradedItems: TradedItem[][] = [];
     if (filterQuery) {
       for (let i = 0; i < dbOrders.length; i++) {

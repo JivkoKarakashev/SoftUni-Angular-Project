@@ -2,11 +2,10 @@
 <ng-container *ngIf="loading">
     <app-loader />
 </ng-container>
+
+<app-errors *ngIf="httpErrorsArr.length || errorsArr.length" />
+
 <section id="success" class="section-confirm-order" *ngIf="!loading">
-    <ng-container *ngIf="httpErrorsArr.length">
-        <!-- <div class="alert">{{httpError.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div> -->
-        <div class="alert">{{httpErrorsArr.at(0)?.error?.message}}</div>
-    </ng-container>
     <div class="container" *ngIf="session_status$==='complete'">
         <section class="component-section component-header">
             <h2>Thank You for Order</h2>
