@@ -37,20 +37,20 @@ export class CheckoutService {
   //   const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
   //   return this.http.get<Order[]>(this.order_url, { headers });
   // }
-  getDBOrder(): Observable<DBOrder> {
-    return this.orderStateMgmnt.getDBOrderState();
+  getDBOrder(): DBOrder {
+    return this.orderStateMgmnt.getDBOrder();
   }
 
-  getDBTradedItems(): Observable<TradedItem[]> {
-    return this.tradedItmsStateMgmnt.getDBTradedItemsState();
+  getDBTradedItems(): TradedItem[] {
+    return this.tradedItmsStateMgmnt.getDBTradedItems();
   }
 
-  getDBOrderData(): Observable<[DBOrder, TradedItem[]]> {
-    return forkJoin([
-      this.orderStateMgmnt.getDBOrderState(),
-      this.tradedItmsStateMgmnt.getDBTradedItemsState()
-    ]);
-  }
+  // getDBOrderData(): Observable<[DBOrder, TradedItem[]]> {
+  //   return forkJoin([
+  //     this.orderStateMgmnt.getDBOrderState(),
+  //     this.tradedItmsStateMgmnt.getDBTradedItemsState()
+  //   ]);
+  // }
 
   createCheckoutSession(dbOrder: DBOrder, purchasedItems: TradedItem[]): Observable<ClientSecret> {
     const checkoutOrder: CheckoutOrder = { ...dbOrder, purchasedItems: [...purchasedItems] };

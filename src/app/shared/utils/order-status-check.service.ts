@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TradedItem } from 'src/app/types/item';
+import { CartItem, TradedItem } from 'src/app/types/item';
 
 export type OrderStatus = 'pending' | 'confirmed' | 'rejected' | 'shipped' | 'delivered' | 'split' | 'several';
 
@@ -33,7 +33,7 @@ export class OrderStatusCheckService {
     return this.orderStatus;
   }
 
-  private isItTheSameMerchant(dbTradedItemsArr: TradedItem[]): boolean {
+  isItTheSameMerchant(dbTradedItemsArr: TradedItem[]): boolean {
     const sellerId: string = dbTradedItemsArr[0].sellerId;
     return dbTradedItemsArr.every(itm => itm.sellerId === sellerId);
   }

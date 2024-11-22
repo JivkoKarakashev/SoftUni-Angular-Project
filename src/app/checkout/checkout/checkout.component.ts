@@ -12,6 +12,7 @@ import { DBOrder, dbOrderInitialState } from 'src/app/types/order';
 import { TradedItem } from 'src/app/types/item';
 
 import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorsService } from 'src/app/shared/errors/errors.service';
 
 @Component({
   selector: 'app-checkout',
@@ -32,55 +33,52 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private stripe = injectStripe(environment.stripe.publicKey);
   public loading = true;
 
-  constructor(private userStateMgmnt: UserStateManagementService, private checkoutService: CheckoutService) { }
+  constructor(
+    private userStateMgmnt: UserStateManagementService,
+    private checkoutService: CheckoutService,
+    private errorsService: ErrorsService
+  ) { }
 
   ngOnInit(): void {
 
     // Create a Checkout Session
-    const embeddedCheckoutSubscription = this.userStateMgmnt.getUserState()
-      .pipe(
-        switchMap(userData => {
-          if (userData) {
-            this.user = { ...userData };
-          } else {
-            throw new Error('Please Login or Register to complete Order!');
+    const user = this.userStateMgmnt.getUser();
+    (user) ? this.user = { ...user } : null;
+    if (user) {
+      this.dbOrder = { ...this.checkoutService.getDBOrder() };
+      this.dbTradedItems = [...this.checkoutService.getDBTradedItems()];
+      const embeddedCheckoutSub = this.checkoutService.createCheckoutSession({ ...this.dbOrder }, [...this.dbTradedItems])
+        .pipe(
+          switchMap(secret => {
+            const { clientSecret } = secret;
+            console.log(clientSecret);
+            return this.stripe.initEmbeddedCheckout({ clientSecret });
+          }),
+          catchError(err => { throw err; })
+        )
+        .subscribe(
+          {
+            next: (strpEmbdChkOut) => {
+              this.loading = false;
+              this.embeddedCheckout$ = Object.create(strpEmbdChkOut);
+              // Mount Checkout
+              this.embeddedCheckout$?.mount('#checkout');
+            },
+            error: err => {
+              this.loading = false;
+              (err instanceof HttpErrorResponse) ? this.httpErrorsArr = [...this.httpErrorsArr, { ...err }] : null;
+              (err instanceof Error) ? this.errorsArr = [...this.errorsArr, { ...err, message: err.message }] : null;
+              console.log(err);
+              console.log(this.httpErrorsArr);
+            }
           }
-          return this.checkoutService.getDBOrder();
-        }),
-        switchMap(dbOrder => {
-          this.dbOrder = { ...this.dbOrder, ...dbOrder };
-          console.log(this.dbOrder);
-          return this.checkoutService.getDBTradedItems()
-        }),
-        switchMap(dbTradedItms => {
-          this.dbTradedItems = [...this.dbTradedItems, ...dbTradedItms];
-          console.log(this.dbTradedItems);
-          return this.checkoutService.createCheckoutSession({ ...this.dbOrder }, [...this.dbTradedItems]);
-        }),
-        switchMap(secret => {
-          const { clientSecret } = secret;
-          console.log(clientSecret);
-          return this.stripe.initEmbeddedCheckout({ clientSecret });
-        }),
-        catchError(err => { throw err; })
-      )
-      .subscribe(
-        {
-          next: (strpEmbdChkOut) => {
-            this.loading = false;
-            this.embeddedCheckout$ = Object.create(strpEmbdChkOut);
-            // Mount Checkout
-            this.embeddedCheckout$?.mount('#checkout');
-          },
-          error: err => {
-            this.loading = false;
-            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-            console.log(err);
-            console.log(this.httpErrorsArr);
-          }
-        }
-      );
-    this.unsubscriptionArray.push(embeddedCheckoutSubscription);
+        );
+      this.unsubscriptionArray.push(embeddedCheckoutSub);
+    } else {
+      this.loading = false;
+      this.errorsArr.push({ message: 'Please Login or Register to access your Profile!', name: 'User Error' });
+      this.errorsService.setErrorsArr([...this.errorsArr]);
+    }
   }
 
   ngOnDestroy(): void {

@@ -18,6 +18,9 @@ export class TradedItemsStateManagementService {
   getDBTradedItemsState(): Observable<TradedItem[]> {
     return this.dbTradedItemsState$;
   }
+  getDBTradedItems(): TradedItem[] {
+    return this.dbTradedItemsState$$.value;
+  }
 
   setDBTradedItemsState(dbTradedItemsState: TradedItem[]): void {
     if (this.checkType.isTradedItemsArr(dbTradedItemsState)) {

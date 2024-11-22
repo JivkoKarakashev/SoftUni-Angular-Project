@@ -18,6 +18,9 @@ export class OrderStateManagementService {
   getDBOrderState(): Observable<DBOrder> {
     return this.dbOrderState$;
   }
+  getDBOrder(): DBOrder {
+    return this.dbOrderState$$.value;
+  }
 
   setDBOrderState(dbOrderState: DBOrder): void {
     if (this.checkType.isDBOrder(dbOrderState)) {

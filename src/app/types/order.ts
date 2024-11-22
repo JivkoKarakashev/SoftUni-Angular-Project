@@ -30,7 +30,7 @@ export interface DBOrder {
     shippingValue: number,
     total: number,
     paymentState: 'unpaid' | 'paid',
-    status: 'pending' | 'confirmed' | 'rejected' | 'shipped' | 'delivered'
+    status: 'pending' | 'confirmed' | 'rejected' | 'shipped' | 'delivered' | 'split' | 'several'
     referenceNumber?: string,
 }
 
