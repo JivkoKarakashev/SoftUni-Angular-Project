@@ -37,7 +37,7 @@ export class CheckoutService {
   //   const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
   //   return this.http.get<Order[]>(this.order_url, { headers });
   // }
-  getDBOrder(): DBOrder {
+  getDBOrder(): DBOrder | null {
     return this.orderStateMgmnt.getDBOrder();
   }
 

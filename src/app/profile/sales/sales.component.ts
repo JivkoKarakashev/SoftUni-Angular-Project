@@ -12,6 +12,7 @@ import { FilterButton } from 'src/app/shared/utils/filter-purchases-data.service
 import { FilterSalesDataService } from 'src/app/shared/utils/filter-sales-data.service';
 import { CapitalizeCategoryService } from 'src/app/shared/utils/capitalize-category.service';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
+import { CustomError } from 'src/app/shared/errors/custom-error';
 
 @Component({
   selector: 'app-sales',
@@ -32,7 +33,7 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
-  public errorsArr: Error[] = [];
+  public customErrorsArr: CustomError[] = [];
 
   constructor(
     private userStateMgmnt: UserStateManagementService,
@@ -54,12 +55,16 @@ export class SalesComponent implements OnInit, OnDestroy {
       if (user) {
         this.user = { ...user };
       } else {
-        throw new Error('Please Login or Register to access your Profile!');
+        const name = 'userError';
+        const isUsrErr = true;
+        const customError: CustomError = new CustomError(name, 'Please Login or Register to access your Profile!', isUsrErr);
+        throw customError;
       }
     } catch (err) {
       this.loading = false;
-      this.errorsArr.push(err as Error);
-      this.errorsService.setErrorsArr([...this.errorsArr]);
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
     }
 
     if (this.user) {
@@ -68,8 +73,8 @@ export class SalesComponent implements OnInit, OnDestroy {
           catchError(err => {
             console.log('HERE');
             this.loading = false;
+            this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
             this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-            this.errorsService.sethttpErrorsArr([...this.httpErrorsArr]);
             return EMPTY;
           })
         )

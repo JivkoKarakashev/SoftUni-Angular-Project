@@ -15,7 +15,7 @@ div.alert {
         gap: 2em;
         text-transform: uppercase;
         font-weight: bold;
-    
+
         & .button {
             padding: .2em .3em;
             border: 1px solid #000;
@@ -25,7 +25,8 @@ div.alert {
     }
 
     & a.nav-icon.user,
-    & a.nav-icon.guest {
+    & a.nav-icon.guest,
+    & a.nav-icon.logout {
         padding: .2em .3em;
         border: 1px solid #000;
         border-radius: .4em;
@@ -37,7 +38,9 @@ div.alert {
     & a.nav-icon.user:hover,
     & a.nav-icon.user:focus,
     & a.nav-icon.guest:hover,
-    & a.nav-icon.guest:focus {
+    & a.nav-icon.guest:focus,
+    & a.nav-icon.logout:hover,
+    & a.nav-icon.logout:focus {
         color: #fff;
         background-color: #000;
     }

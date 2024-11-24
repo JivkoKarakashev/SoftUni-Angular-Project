@@ -34,10 +34,6 @@ export interface DBOrder {
     referenceNumber?: string,
 }
 
-// export interface ProfilePageOrder extends Omit<DBOrder, 'status'> {
-//     status: 'pending' | 'confirmed' | 'rejected' | 'shipped' | 'delivered' | 'split' | 'several'
-// }
-
 export interface CheckoutOrder extends DBOrder {
     purchasedItems: TradedItem[],
 }

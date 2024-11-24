@@ -1,12 +1,14 @@
 <ng-container *ngIf="httpErrorsArr.length">
     <div class="alert">{{httpErrorsArr.at(0)?.message}}</div>
+    <div *ngIf="httpErrorsArr.at(0)?.status === 403" class="buttons">
+        <a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a>
+    </div>
 </ng-container>
-
-<ng-container *ngIf="errorsArr.length">
+<ng-container *ngIf="customErrorsArr.length">
     <!-- <ng-container *ngFor="let err of errorsArr"> -->
         <div class="alert">
-            <p>{{errorsArr.at(0)?.message}}</p>
-            <div class="buttons">
+            <p>{{customErrorsArr.at(0)?.message}}</p>
+            <div *ngIf="customErrorsArr.at(0)?.isUserError" class="buttons">
                 <a class="nav-icon guest" routerLink="/auth/login">sign in</a>
                 <p>OR</p>
                 <a class="nav-icon user" routerLink="/auth/register">register</a>

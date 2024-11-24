@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, Subscription, catchError, switchMap, takeUntil } from 'rxjs';
+import { EMPTY, Subscription, catchError, switchMap } from 'rxjs';
 
 import { DBOrder } from 'src/app/types/order';
 import { TradedItem } from 'src/app/types/item';
@@ -16,6 +16,7 @@ import { NumberToDateService } from 'src/app/shared/utils/number-to-date.service
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
 import { UserForAuth } from 'src/app/types/user';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
+import { CustomError } from 'src/app/shared/errors/custom-error';
 
 
 @Component({
@@ -25,7 +26,6 @@ import { ErrorsService } from 'src/app/shared/errors/errors.service';
 })
 export class ConfirmOrderComponent implements OnInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = []
-  private destroy$$ = new Subject<void>();;
 
   public user: UserForAuth | null = null;
   private session_id = '';
@@ -37,7 +37,7 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
-  public errorsArr: Error[] = [];
+  public customErrorsArr: CustomError[] = [];
 
   constructor(
     private userStateMgmnt: UserStateManagementService,
@@ -53,23 +53,46 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user = this.userStateMgmnt.getUser();
-    (user) ? this.user = { ...user } : null;
-    this.dbOrder = { ...this.orderStateMgmnt.getDBOrder() };
-    if (user) {
-      const sessionStatusSubs = this.confirmOrderService.getTradedItemsByOrderId(this.dbOrder._id)
-      .pipe(
+    const dbOrder = this.orderStateMgmnt.getDBOrder();
+    try {
+      if (user && dbOrder) {
+        this.user = { ...user };
+        this.dbOrder = { ...dbOrder };
+      } else {
+        if (!user) {
+          const name = 'userError';
+          const isUsrErr = true;
+          const customError = new CustomError(name, 'Please Login or Register to complete Order!', isUsrErr);
+          throw customError;
+        }
+        if (!dbOrder) {
+          const name = 'dbOrder Error';
+          const isUsrErr = false;
+          const customError = new CustomError(name, 'DBOrder is null!', isUsrErr);
+          throw customError;
+        }
+      }
+    } catch (err) {
+      this.loading = false;
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = ([...this.customErrorsArr, { name, message, isUserError }]);
+    }
+
+    if (user && dbOrder) {
+      const sessionStatusSubs = this.confirmOrderService.getTradedItemsByOrderId(dbOrder._id)
+        .pipe(
           switchMap(tradedItmsArr => {
             // console.log(tradedItmsArr);
             if (!tradedItmsArr.length) {
-              this.destroy$$.next();
               this.loading = false;
+              return EMPTY;
             }
             const status = this.orderStatusCheck.check([...tradedItmsArr]);
             (this.dbOrder) ? this.dbOrder = { ... this.dbOrder, status } : null;
             this.tradedItems = [...tradedItmsArr];
             return this.activeRoute.queryParams;
           }),
-          takeUntil(this.destroy$$),
           switchMap(params => {
             this.session_id = params['session_id'] || '';
             return this.confirmOrderService.getSessionStatus(this.session_id);
@@ -80,13 +103,11 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
             this.customer_email$ = customer_email;
             const paymentState = 'paid';
             if (!this.dbOrder) {
-              this.destroy$$.next();
-              throw new Error('DBOrder is null!');
+              return EMPTY;
             }
             const referenceNumber = this.dbOrder._createdOn.toString(16);
             return this.confirmOrderService.updateDBOrderById({ ...this.dbOrder, paymentState, referenceNumber }, this.dbOrder._id);
           }),
-          takeUntil(this.destroy$$),
           catchError((err) => { throw err; })
         )
         .subscribe(
@@ -97,7 +118,6 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
               this.dbOrder = { ...dbOrder };
               this.dbOrderDate = this.numToDateService.convert(dbOrder._createdOn);
               // console.log(this.dbOrderDate);
-
               this.cartStateMgmnt.emptyCart();
               this.orderStateMgmnt.resetDBOrderState();
               this.tradedItmsStateMgmnt.resetDBTradedItemsState();
@@ -105,12 +125,13 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
             error: err => {
               this.loading = false;
               if (err instanceof HttpErrorResponse) {
+                this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
                 this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-                this.errorsService.sethttpErrorsArr([...this.httpErrorsArr]);
               }
-              else if (err instanceof Error) {
-                this.errorsArr = [...this.errorsArr, { ...err, message: err.message }];
-                this.errorsService.setErrorsArr([...this.errorsArr]);
+              else if (err instanceof CustomError) {
+                const { name, message, isUserError } = err as CustomError;
+                this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+                this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
               }
               console.log(err);
               console.log(this.httpErrorsArr);
@@ -118,13 +139,11 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
           }
         );
       this.unsubscriptionArray.push(sessionStatusSubs);
-    } 
+    }
 
   }
 
   ngOnDestroy(): void {
-    this.destroy$$.next();
-    this.destroy$$.complete();
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');      

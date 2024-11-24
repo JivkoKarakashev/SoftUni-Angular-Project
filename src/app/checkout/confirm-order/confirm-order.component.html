@@ -3,7 +3,7 @@
     <app-loader />
 </ng-container>
 
-<app-errors *ngIf="httpErrorsArr.length || errorsArr.length" />
+<app-errors *ngIf="httpErrorsArr.length || customErrorsArr.length" />
 
 <section id="success" class="section-confirm-order" *ngIf="!loading">
     <div class="container" *ngIf="session_status$==='complete'">

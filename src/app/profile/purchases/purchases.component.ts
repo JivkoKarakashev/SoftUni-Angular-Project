@@ -1,18 +1,19 @@
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { EMPTY, Subscription, catchError, switchMap } from 'rxjs';
 
-import { HttpErrorResponse } from '@angular/common/http';
-
 import { UserForAuth } from 'src/app/types/user';
+import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
+
 import { DBOrder } from 'src/app/types/order';
 import { TradedItem } from 'src/app/types/item';
-
-import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
 import { ProfileService } from '../profile.service';
 import { NumberToDateService } from 'src/app/shared/utils/number-to-date.service';
 import { CapitalizeCategoryService } from 'src/app/shared/utils/capitalize-category.service';
 import { FilterButton, FilterPurchasesDataService } from 'src/app/shared/utils/filter-purchases-data.service';
 import { OrderStatusCheckService } from 'src/app/shared/utils/order-status-check.service';
+
+import { HttpErrorResponse } from '@angular/common/http';
+import { CustomError } from 'src/app/shared/errors/custom-error';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
 
 @Component({
@@ -36,7 +37,7 @@ export class PurchasesComponent implements OnInit, OnDestroy {
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
-  public errorsArr: Error[] = [];
+  public customErrorsArr: CustomError[] = [];
 
   constructor(
     private userStateMgmnt: UserStateManagementService,
@@ -54,17 +55,22 @@ export class PurchasesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Purchase Tab Initialized!');
+    console.log(this.customErrorsArr);
     const user = this.userStateMgmnt.getUser();
     try {
       if (user) {
         this.user = { ...user };
       } else {
-        throw new Error('Please Login or Register to access your Profile!');
+        const name = 'userError';
+        const isUsrErr = true;
+        const customError: CustomError = new CustomError(name, 'Please Login or Register to access your Profile!', isUsrErr);
+        throw customError;
       }
     } catch (err) {
       this.loading = false;
-      this.errorsArr.push(err as Error);
-      this.errorsService.setErrorsArr([...this.errorsArr]);
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
     }
 
     if (this.user) {
@@ -90,8 +96,8 @@ export class PurchasesComponent implements OnInit, OnDestroy {
           catchError(err => {
             console.log('HERE');
             this.loading = false;
+            this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
             this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-            this.errorsService.sethttpErrorsArr([...this.httpErrorsArr]);
             return EMPTY;
           })
         )

@@ -45,9 +45,9 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log('UnsubArray = 1');
     this.unsubscriptionEventsArray.forEach((eventFn) => {
       eventFn();
-      console.log('UnsubEVENTSArray = 1');
+      // console.log('UnsubEVENTSArray = 1');
     });
-    console.log('UnsubEVENTSArray = 3');
+    // console.log('UnsubEVENTSArray = 3');
   }
 
   // Function to handle tab click and content display

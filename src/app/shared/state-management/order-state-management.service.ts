@@ -9,16 +9,16 @@ import { CheckForItemTypeService } from '../utils/check-for-item-type.service';
   providedIn: 'root'
 })
 export class OrderStateManagementService {
-  private dbOrderState$$ = new BehaviorSubject<DBOrder>({ ...dbOrderInitialState });
+  private dbOrderState$$ = new BehaviorSubject<DBOrder | null>(null);
   private dbOrderState$ = this.dbOrderState$$.asObservable();
   
   constructor(private checkType: CheckForItemTypeService) { }
 
   /////////////////////<--- Order State Management--->/////////////////////
-  getDBOrderState(): Observable<DBOrder> {
+  getDBOrderState(): Observable<DBOrder | null> {
     return this.dbOrderState$;
   }
-  getDBOrder(): DBOrder {
+  getDBOrder(): DBOrder | null {
     return this.dbOrderState$$.value;
   }
 
@@ -41,7 +41,7 @@ export class OrderStateManagementService {
   }
 
   resetDBOrderState(): void {
-    this.dbOrderState$$.next({ ...this.dbOrderState$$.value, ...dbOrderInitialState });
+    this.dbOrderState$$.next(null);
     this.removeDBOrderStateFromLStor();
   }
 }
