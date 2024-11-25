@@ -14,6 +14,7 @@ import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
 
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { UserStateManagementService } from '../state-management/user-state-management.service';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
 
@@ -61,6 +62,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   public httpErrorsArr: HttpErrorResponse[] = [];
 
   constructor(
+    private userStateMgmnt: UserStateManagementService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private http: HttpClient,
@@ -88,6 +90,8 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit(): void {
     console.log('Details Page INITIALIZED!');
+    const user = this.userStateMgmnt.getUser();
+    (user) ? this.user = { ...user } : null;
     const regExp = /^\/catalog\/[a-z]+_?[a-z]+\/[a-z]+_?[a-z]+/g;
     const match: string[] | null = this.router.url.match(regExp);
     // console.log(this.router.url);

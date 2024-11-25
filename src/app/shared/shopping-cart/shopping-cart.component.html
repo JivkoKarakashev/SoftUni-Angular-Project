@@ -21,30 +21,7 @@
                     <app-loader />
                 </ng-container>
 
-                <ng-container *ngIf="httpErrorsArr.length">
-                    <!-- <ng-container *ngFor="let err of httpErrors"> -->
-                        <div class="alert">
-                            <p>{{httpErrorsArr.at(0)?.message}}</p>
-                            <div *ngIf="httpErrorsArr.at(0)?.status === 403" class="buttons">
-                                <a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a>
-                            </div>
-                        </div>
-                    <!-- <div class="alert">{{httpError.error?.message}}</div> -->
-                    <!-- </ng-container> -->
-                </ng-container>
-                <ng-container *ngIf="errorsArr.length">
-                    <!-- <ng-container *ngFor="let err of errorsArr"> -->
-                        <div class="alert">
-                            <p>{{errorsArr.at(0)?.message}}</p>
-                            <div class="buttons">
-                                <a class="nav-icon guest" routerLink="/auth/login">sign in</a>
-                                <p>OR</p>
-                                <a class="nav-icon user" routerLink="/auth/register">register</a>
-                            </div>
-                        </div>
-                    <!-- <div class="alert">{{httpError.error?.message}}</div> -->
-                    <!-- </ng-container> -->
-                </ng-container>
+                <app-errors *ngIf="httpErrorsArr.length || customErrorsArr.length"/>
 
                 <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
                     <fieldset>

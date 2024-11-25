@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, catchError, switchMap } from 'rxjs';
+import { Subscription, catchError, of, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { ErrorsService } from './errors.service';
@@ -58,16 +58,19 @@ export class ErrorsComponent implements OnInit, OnDestroy {
     this.userService.logout().pipe(
       catchError(err => { throw err; })
     ).subscribe(
-      {
-        next: () => {
-          this.cartStateMgmnt.emptyCart();
-          this.orderStateMgmnt.resetDBOrderState();
-          this.router.navigate(['/auth/login']);
-        },
-        error: (err) => {
-          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-        }
+      () => {
+        this.cartStateMgmnt.emptyCart();
+        this.orderStateMgmnt.resetDBOrderState();
+        this.router.navigate(['/auth/login']);
       }
+    );
+  }
+
+  resignIn(): void {
+    this.userService.logout().pipe(
+      catchError(err => { return of(err); })
+    ).subscribe(
+      () => this.router.navigate(['/auth/login'])
     );
   }
 

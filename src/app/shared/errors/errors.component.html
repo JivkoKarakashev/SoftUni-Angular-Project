@@ -1,7 +1,8 @@
 <ng-container *ngIf="httpErrorsArr.length">
-    <div class="alert">{{httpErrorsArr.at(0)?.message}}</div>
-    <div *ngIf="httpErrorsArr.at(0)?.status === 403" class="buttons">
-        <a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a>
+    <div class="alert">{{httpErrorsArr.at(0)?.message}}
+        <div *ngIf="httpErrorsArr.at(0)?.status === 403" class="buttons">
+            <a class="nav-icon logout" (click)="resignIn()">Please click HERE to re-sign in</a>
+        </div>
     </div>
 </ng-container>
 <ng-container *ngIf="customErrorsArr.length">

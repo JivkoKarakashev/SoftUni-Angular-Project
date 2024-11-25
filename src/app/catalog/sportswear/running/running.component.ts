@@ -1,16 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, catchError } from 'rxjs';
+import { Subscription, catchError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
 
-import { CartItem, ListItem } from 'src/app/types/item';
+import { CartItem, Item, ListItem } from 'src/app/types/item';
 import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { RunningService } from './running.service';
 import { ShoppingCartStateManagementService } from 'src/app/shared/state-management/shopping-cart-state-management.service';
 
 import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for-item-in-cart-already.service';
+import { ErrorsService } from 'src/app/shared/errors/errors.service';
 
 @Component({
   selector: 'app-running',
@@ -32,6 +33,7 @@ export class RunningComponent implements OnInit, OnDestroy {
     private userStateMgmnt: UserStateManagementService,
     private cartStateMgmnt: ShoppingCartStateManagementService,
     private runningService: RunningService,
+    private errorsService: ErrorsService,
     private checkForInCartAlready: CheckForItemInCartAlreadyService,
     private cartService: ShoppingCartService
   ) { }
@@ -43,23 +45,18 @@ export class RunningComponent implements OnInit, OnDestroy {
     this.cartItemsCounter = this.cartItms.length;
     const runningSub = this.runningService.getRunning()
       .pipe(
-        catchError(err => { throw err; }),
+        catchError(err => { return of(err); }),
       )
-      .subscribe(
-        {
-          next: (runObjs) => {
-            this.loading = false;
-            this.listItems = [...this.listItems, ...this.checkForInCartAlready.check([runObjs], this.cartItms)];
-            // console.log(this.listItems);
-          },
-          error: (err) => {
-            this.loading = false;
-            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-            console.log(err);
-            console.log(this.httpErrorsArr);
-          }
+      .subscribe(res => {
+        this.loading = false;
+        if (res instanceof HttpErrorResponse) {
+          this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...res }]);
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...res }];
+          return;
         }
-      );
+        this.listItems = [...this.listItems, ...this.checkForInCartAlready.check([res as Item[]], this.cartItms)];
+        // console.log(this.listItems);
+      });
     this.unsubscriptionArray.push(runningSub);
   }
 

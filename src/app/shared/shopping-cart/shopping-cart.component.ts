@@ -1,11 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { Location } from '@angular/common';
-import { Subject, Subscription, catchError, switchMap, takeUntil } from 'rxjs';
+import { EMPTY, Subject, Subscription, catchError, of, switchMap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-
-import { DestroySubsNotifierService } from '../utils/destroy-subs-notifier.service';
 
 import { ShoppingCartService } from './shopping-cart.service';
 import { Shipping, shippingInitialState } from 'src/app/types/shipping';
@@ -14,12 +12,13 @@ import { InvertColorService } from '../utils/invert-color.service';
 import { CartItem } from 'src/app/types/item';
 
 import { UserForAuth } from 'src/app/types/user';
-import { UserService } from 'src/app/user/user.service';
 
 import { UserStateManagementService } from '../state-management/user-state-management.service';
 import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';
 import { OrderStateManagementService } from '../state-management/order-state-management.service';
 import { TradedItemsStateManagementService } from '../state-management/traded-items-state-management.service';
+import { CustomError } from '../errors/custom-error';
+import { ErrorsService } from '../errors/errors.service';
 
 type MyVoid = () => void;
 
@@ -39,7 +38,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscriptionEventsArray: MyVoid[] = [];
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
-  public errorsArr: Error[] = [];
+  public customErrorsArr: CustomError[] = [];
 
   public availablePurchaseServices: (Discount | Shipping)[] = [];
   public discountCodes: Discount[] = [];
@@ -56,7 +55,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor
     (
-      private destroySubsNotifier: DestroySubsNotifierService,
       private userStateMgmnt: UserStateManagementService,
       private cartService: ShoppingCartService,
       private cartStateMgmnt: ShoppingCartStateManagementService,
@@ -65,9 +63,9 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       private fb: FormBuilder,
       private invertColor: InvertColorService,
       private router: Router,
-      private userService: UserService,
       private orderStateMgmnt: OrderStateManagementService,
-      private tradedItmsStateMgmnt: TradedItemsStateManagementService
+      private tradedItmsStateMgmnt: TradedItemsStateManagementService,
+      private errorsService: ErrorsService
     ) { }
 
   @ViewChild('modal') private modal!: ElementRef;
@@ -103,102 +101,94 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Shopping Cart Page INITIALIZED!');
-    const destroySubscription = this.destroySubsNotifier.getNotifier().subscribe(() => this.destroy$.next());
-    this.unsubscriptionArray.push(destroySubscription);
-
-    const cartSubscription = this.userStateMgmnt.getUserState()
+    /////////////////////<--- Get User Data --->/////////////////////
+    const user = this.userStateMgmnt.getUser();
+    try {
+      if (user) {
+        this.user = { ...user };
+      } else {
+        const name = 'userError';
+        const isUsrErr = true;
+        const customError = new CustomError(name, 'Please Login or Register to complete Order!', isUsrErr);
+        throw customError;
+      }
+    } catch (err) {
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = ([...this.customErrorsArr, { name, message, isUserError }]);
+    }
+    /////////////////////<--- Filling out a Form Array based on the Cart Items --->/////////////////////
+    const cartItems = this.cartStateMgmnt.getCartItems();
+    cartItems.forEach((itm) => {
+      const { _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, product, checked } = itm;
+      const rowItm = this.fb.group({
+        _id,
+        _ownerId,
+        _createdOn,
+        image,
+        altImages: [altImages],
+        cat,
+        subCat,
+        description,
+        brand,
+        size: [size],
+        selectedSize: [selectedSize || '', [Validators.required,]],
+        color: [color],
+        selectedColor: [selectedColor || '', [Validators.required,]],
+        quantity,
+        selectedQuantity: [selectedQuantity || '', [Validators.required,]],
+        price,
+        product,
+        checked
+      });
+      // console.log(this.cartItems);
+      this.cartItems.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: selectedSize || '', color, selectedColor: selectedColor || '', quantity, selectedQuantity: selectedQuantity || 0, price, product, checked });
+      // console.log(this.cartItems);
+      this.itms.push(rowItm);
+    })
+    /////////////////////<--- Retrieve Current Discount Option selected by the User --->/////////////////////
+    const discount = this.cartStateMgmnt.getDiscount();
+    // console.log(discount);
+    const { code, rate } = discount;
+    if (code !== discountInitialState.code) {
+      this.discount.patchValue({ code, rate });
+    }
+    /////////////////////<--- Retrieve Current Shipping Option selected by the User --->/////////////////////
+    const shipping = this.cartStateMgmnt.getShipping();
+    // console.log(shipping);
+    const { name, value } = shipping;
+    if (name !== shippingInitialState.name) {
+      this.shipping.patchValue({ name, value });
+    }
+    /////////////////////<--- Get Available Discount Options and Shipping Services --->/////////////////////
+    const availPurchSvcSub = this.cartService.getAvailablePurchaseServices()
       .pipe(
-        switchMap(userData => {
-          if (userData) {
-            this.user = { ...this.user, ...userData };
-          } else {
-            this.errorsArr.push({ message: 'Please Login or Register to complete Order!', name: 'User Error' });
-          }
-          return this.cartService.getAvailablePurchaseServices();
-        }),
-        takeUntil(this.destroy$),
-        switchMap(availServsObjs => {
-          const [discountsObjs, shippingMthdsObjs] = availServsObjs;
-          const discounts = Object.entries(discountsObjs).map(disc => disc[1]);
-          const shippMthds = Object.entries(shippingMthdsObjs).map(method => method[1]);
-          this.discountCodes = [...discounts];
-          this.shippingMethods = [...shippMthds];
-          return this.cartStateMgmnt.getCartItemsState();
-        }),
-        takeUntil(this.destroy$),
-        switchMap(cartItms => {
-          // console.log(cartItms);
-          cartItms.forEach((itm) => {
-            const { _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, product, checked } = itm;
-            const rowItm = this.fb.group({
-              _id,
-              _ownerId,
-              _createdOn,
-              image,
-              altImages: [altImages],
-              cat,
-              subCat,
-              description,
-              brand,
-              size: [size],
-              selectedSize: [selectedSize || '', [Validators.required,]],
-              color: [color],
-              selectedColor: [selectedColor || '', [Validators.required,]],
-              quantity,
-              selectedQuantity: [selectedQuantity || '', [Validators.required,]],
-              price,
-              product,
-              checked
-            });
-            // console.log(this.cartItems);
-            this.cartItems.push({ _id, _ownerId, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: selectedSize || '', color, selectedColor: selectedColor || '', quantity, selectedQuantity: selectedQuantity || 0, price, product, checked });
-            // console.log(this.cartItems);
-            this.itms.push(rowItm);
-          });
-          return this.cartStateMgmnt.getDiscountState();
-        }),
-        takeUntil(this.destroy$),
-        switchMap(state => {
-          const { code, rate } = state;
-          // console.log(state);
-          if (code !== discountInitialState.code) {
-            this.discount.patchValue({ code, rate });
-          }
-          return this.cartStateMgmnt.getShippingState();
-        }),
-        takeUntil(this.destroy$),
-        catchError(err => { throw err; })
+        catchError(err => {
+          return of(err);
+        })
       )
-      .subscribe(
-        {
-          next: (state) => {
-            this.loading = false;
-            // console.log(state);
-            console.log(this.errorsArr);
-            const { name, value } = state;
-            if (name !== shippingInitialState.name) {
-              this.shipping.patchValue({ name, value });
-            }
-            if (this.itms.length) {
-              this.subtotalCalc();
-              this.discountCalc(undefined, this.subtotalValue || 0);
-              this.totalCalc();
-            }
-          },
-          error: (err) => {
-            // console.log(err instanceof HttpErrorResponse);
-            // console.log(err.message);
-            this.loading = false;
-            (err instanceof HttpErrorResponse) ? this.httpErrorsArr = [...this.httpErrorsArr, { ...err }] : null;
-            (err instanceof Error) ? this.errorsArr = [...this.errorsArr, { ...err, message: err.message }] : null;
-            // this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-            console.log(err);
-            console.log(this.httpErrorsArr);
-            console.log(this.errorsArr);
-          }
+      .subscribe(res => {
+        this.loading = false;
+        if (res instanceof HttpErrorResponse) {
+          console.log('HERE');
+          this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...res }]);
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...res }];
+          return;
         }
-      );
-    this.unsubscriptionArray.push(cartSubscription);
+        const [discountsObjs, shippingMthdsObjs] = res as [Discount[], Shipping[]];
+        const discounts = Object.entries(discountsObjs).map(disc => disc[1]);
+        const shippMthds = Object.entries(shippingMthdsObjs).map(method => method[1]);
+        this.discountCodes = [...discounts];
+        this.shippingMethods = [...shippMthds];
+      });
+    this.unsubscriptionArray.push(availPurchSvcSub);
+
+    if (this.itms.length) {
+      this.subtotalCalc();
+      this.discountCalc(undefined, this.subtotalValue || 0);
+      this.totalCalc();
+    }
+    /////////////////////<--- END of ngOninit Lifecycle Hook --->/////////////////////
   }
 
   ngAfterViewInit(): void {
@@ -246,7 +236,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
     });
-    // console.log('UnsubArray = 4');
+    // console.log('UnsubArray = 3');
     this.unsubscriptionEventsArray.forEach((eventFn) => {
       eventFn();
       // console.log('UnsubEVENTSArray = 1');
@@ -304,7 +294,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.totalCalc();
     // this.cartItemsSubscription.unsubscribe();
     // this.cartSubscription.unsubscribe();
-    this.destroySubsNotifier.destroy();
     this.cartService.removeCartItems(idxArr);
   }
 
@@ -330,7 +319,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.cartItemsSubscription.unsubscribe();
     // this.cartSubscription.unsubscribe();
     // console.log(color);
-    this.destroySubsNotifier.destroy();
     this.cartService.updateCartItm(i, color, undefined, undefined);
   }
 
@@ -340,7 +328,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cartItems[i] = { ...this.cartItems[i], selectedSize: selectedSize };
     // this.cartItemsSubscription.unsubscribe();
     // this.cartSubscription.unsubscribe();
-    this.destroySubsNotifier.destroy();
     this.cartService.updateCartItm(i, undefined, selectedSize, undefined);
   }
   onShippingChange(e: Event): void {
@@ -349,7 +336,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(idx);
     const { name, value } = this.shippingMethods[idx];
     this.shipping.patchValue({ name, value });
-    this.destroySubsNotifier.destroy();
     this.cartStateMgmnt.setShippingState(name, value);
     this.totalCalc();
   }
@@ -372,7 +358,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('Index:', idx);
       const { code, rate } = this.discountCodes[idx];
       this.discount.patchValue({ code, rate });
-      this.destroySubsNotifier.destroy();
       this.cartStateMgmnt.setDiscountState(code, rate);
       this.discountValue = this.subtotal.value * (rate || 0) / 100;
     } else if (subTotVal || subTotVal == 0) {
@@ -412,7 +397,11 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
         switchMap(() => {
           return this.cartService.createTradedItems([...purchasedItems], status, orderId);
         }),
-        catchError(err => { throw err; })
+        catchError(err => {
+          this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          return EMPTY;
+        })
       )
       .subscribe(
         {
@@ -448,7 +437,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.totalCalc();
     // this.cartItemsSubscription.unsubscribe();
     // this.cartSubscription.unsubscribe();
-    this.destroySubsNotifier.destroy();
     this.cartService.removeCartItm(ItmIdx);
   }
 
@@ -461,7 +449,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.itms.controls[i].patchValue({ product: product });
     // this.cartItemsSubscription.unsubscribe();
     // this.cartSubscription.unsubscribe();
-    this.destroySubsNotifier.destroy();
     this.cartService.updateCartItm(i, undefined, undefined, selectedQuantity, product);
   }
 
@@ -474,23 +461,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
   totalCalc(): void {
     console.log('totalCalc invoked!');
     this.total.setValue(this.subtotalValue - this.discountValue + this.shippingValue);
-  }
-
-  logout(): void {
-    this.userService.logout().pipe(
-      catchError(err => { throw err; })
-    ).subscribe(
-      {
-        next: () => {
-          this.cartStateMgmnt.emptyCart();
-          this.orderStateMgmnt.resetDBOrderState();
-          this.router.navigate(['/auth/login']);
-        },
-        error: (err) => {
-          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-        }
-      }
-    );
   }
 
   public trackById(index: number, item: CartItem): string {

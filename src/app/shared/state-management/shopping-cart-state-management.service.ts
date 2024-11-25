@@ -59,6 +59,9 @@ export class ShoppingCartStateManagementService {
   getDiscountState(): Observable<Discount> {
     return this.discountState$;
   }
+  getDiscount(): Discount {
+    return this.discountState$$.value;
+  }
 
   setDiscountState(code: string, rate: number): void {
     // console.log('Code:', code);
@@ -71,6 +74,9 @@ export class ShoppingCartStateManagementService {
   /////////////////////<--- Shipping State Management--->/////////////////////
   getShippingState(): Observable<Shipping> {
     return this.shippingState$;
+  }
+  getShipping(): Shipping {
+    return this.shippingState$$.value;
   }
 
   setShippingState(name: string, value: number): void {
