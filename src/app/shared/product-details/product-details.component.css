@@ -1,11 +1,3 @@
-div.alert {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f44336;
-    color: white;
-}
-
 .wrapper {
     display: flex;
     flex-direction: row;
@@ -15,9 +7,8 @@ div.alert {
 div.left-wrapper {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    flex: 1 1 95%;
-    max-width: 95%;
+    /* flex-wrap: wrap; */
+    flex: 1 1 96%;
 }
 
 div.right-wrapper {
@@ -56,7 +47,7 @@ a.cart span.counter {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    flex:1 1 50%;
+    flex: 1 1 50%;
     max-width: 50%;
     height: 100%;
     color: #fff;
@@ -72,25 +63,13 @@ i.fi.fi-rr-shopping-cart-check {
     font-size: 1em;
     color: #fff;
 }
-/* ////////////////////////// */
-.section-product-details,
-.container {
-    display: flex;
-    flex: 1 1 100%;
-    gap: 1em;
-}
-
-.container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
 
 div.sticky:hover,
 div.sticky:focus {
     cursor: pointer;
     outline: none;
     border-color: #5cb85c;
+
     & i.fi.fi-rr-shopping-cart-check,
     span.counter {
         color: #5cb85c;
@@ -101,48 +80,39 @@ a.cart:active {
     filter: blur(1px);
 }
 
+/* ////////////////////////////////////// */
+.section-product-details,
+.container {
+    display: flex;
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
 /* Columns */
 .left-column {
-    flex: 1 1 100%;
-    position: relative;
+    flex: 0 0 65%;
 }
 
 .right-column {
-    flex: 1 1 100%;
+    flex: 1 1 25%;
+    justify-content: space-between;
     display: flex;
-    flex-wrap: wrap;
     flex-direction: column;
     gap: 1em;
+    min-width: fit-content;
 }
 
 /* Left Column */
 .left-column img {
-    max-height: 70vh;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
+    max-width: 100%;
     object-fit: scale-down;
     transition: all 0.3s ease;
 }
 
-.left-column img.def {
-    opacity: 1;
-}
-
-.left-column img.active {
-    opacity: 1;
-}
-
-/* .right-column {
-    display: flex;
-    flex-direction: column;
-} */
-
 /* Product Description */
 .product-description {
     border-bottom: 1px solid #E1E8EE;
-    margin-bottom: 20px;
 }
 
 .product-description span {
@@ -153,25 +123,25 @@ a.cart:active {
     text-decoration: none;
 }
 
-.product-description h1 {
+.product-description h4 {
     font-weight: 300;
-    font-size: 52px;
     color: #43484D;
-    letter-spacing: -2px;
 }
 
 .product-description p {
     font-size: 16px;
     font-weight: 300;
     color: #86939E;
-    line-height: 24px;
+    line-height: 1.7em;
+}
+
+.product-configuration fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
 }
 
 /* Product Color */
-.product-color {
-    margin-bottom: 30px;
-}
-
 .color-choose div {
     display: inline-block;
 }
@@ -182,9 +152,8 @@ a.cart:active {
 
 .color-choose input[type="radio"]+label span {
     display: inline-block;
-    width: 40px;
-    height: 40px;
-    margin: -1px 4px 0 0;
+    width: 2.8em;
+    height: 2.8em;
     vertical-align: middle;
     cursor: pointer;
     border-radius: 50%;
@@ -201,15 +170,9 @@ a.cart:active {
 }
 
 /* Size Configuration */
-.size-choose {
-    margin-bottom: 20px;
-}
-
 .size-choose button {
     border: 2px solid #E1E8EE;
     border-radius: 6px;
-    padding: 13px 20px;
-    font-size: 14px;
     color: #5E6977;
     background-color: #fff;
     cursor: pointer;
@@ -225,29 +188,6 @@ a.cart:active {
 
 .size-config {
     border-bottom: 1px solid #E1E8EE;
-    margin-bottom: 20px;
-}
-
-.size-config a {
-    color: #358ED7;
-    text-decoration: none;
-    font-size: 12px;
-    position: relative;
-    margin: 10px 0;
-    display: inline-block;
-}
-
-.size-config a:before {
-    content: "?";
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    border: 2px solid rgba(53, 142, 215, 0.5);
-    display: inline-block;
-    text-align: center;
-    line-height: 16px;
-    opacity: 0.5;
-    margin-right: 5px;
 }
 
 /* Product Price */
@@ -257,18 +197,16 @@ a.cart:active {
 }
 
 .product-price span {
-    font-size: 26px;
+    font-size: 1.8em;
     font-weight: 300;
     color: #43474D;
-    margin-right: 20px;
 }
 
 .cart-btn {
-    display: inline-block;
     border-radius: 0.4em;
     font-size: 1em;
     text-decoration: none;
-    padding: 12px 30px;
+    padding: .9em 2.1em;
     transition: all .5s;
 }
 
@@ -281,7 +219,7 @@ a.cart:active {
 }
 
 .cart-btn:hover:enabled,
-.cart-btn:focus:enabled{
+.cart-btn:focus:enabled {
     background-color: #64af3d;
 }
 
@@ -315,6 +253,9 @@ div.disabled {
 }
 
 div.buttons {
+    padding: .4em 0;
+    min-height: 4em;
+    background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -324,7 +265,7 @@ div.buttons {
         flex-wrap: wrap;
         justify-content: center;
         gap: 1em;
-        /* padding: 1em 0; */
+        cursor: pointer;
 
         & li.button {
             padding: .3em .5em;
@@ -336,39 +277,60 @@ div.buttons {
             }
         }
 
+        @media screen and (pointer: coarse) {
 
-        & {
-
-            li.button.buy:hover,
-            li.button.buy:focus-within {
-                background-color: #5cb85c;
-
-                & a {
-                    color: #fff;
-                    outline: none;
-                    /* font-style: italic; */
+            & {
+    
+                li.button.buy {
+                    background-color: #5cb85c;
+                }
+    
+                li.button.edit {
+                    background-color: #fdf90a;
+    
+                    & a {
+                        color: #000;
+                        outline: none;
+                    }
+                }
+    
+                li.button.delete {
+                    background-color: #cc5656;
+    
+                    & a {
+                        color: #fff;
+                        outline: none;
+                    }
                 }
             }
+        }
+        @media screen and (pointer: fine) {
 
-            li.button.edit:hover,
-            li.button.edit:focus-within {
-                background-color: #fdf90a;
-
-                & a {
-                    color: #000;
-                    outline: none;
-                    /* font-style: italic; */
+            & {
+    
+                li.button.buy:hover,
+                li.button.buy:focus-within {
+                    background-color: #5cb85c;
                 }
-            }
-
-            li.button.delete:hover,
-            li.button.delete:focus-within {
-                background-color: #cc5656;
-
-                & a {
-                    color: #fff;
-                    outline: none;
-                    /* font-style: italic; */
+    
+                li.button.edit:hover,
+                li.button.edit:focus-within {
+                    background-color: #fdf90a;
+    
+                    & a {
+                        color: #000;
+                        outline: none;
+                    }
+                }
+    
+                li.button.delete:hover,
+                li.button.delete:focus-within {
+                    background-color: #cc5656;
+    
+                    & a {
+                        color: #fff;
+                        outline: none;
+                    }
                 }
             }
         }

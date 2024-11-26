@@ -2,10 +2,7 @@
     <app-loader />
 </ng-container>
 
-<ng-container *ngIf="httpErrorsArr.length">
-    <!-- <div class="alert">{{httpError.error?.message}}<a class="nav-icon logout" (click)="logout()">Please click HERE to re-sign in</a></div> -->
-    <div class="alert">{{httpErrorsArr.at(0)?.message}}</div>
-</ng-container>
+<app-errors *ngIf="httpErrorsArr.length" />
 
 <div class="wrapper" *ngIf="!loading">
     <div class="left-wrapper">
@@ -13,21 +10,18 @@
             <div class="container">
                 <!-- Left Column / Product Image -->
                 <div class="left-column">
-                    <img #stockImg [style.opacity]="defImgOpacity" class="def" alt="default image" [src]="item.image">
-                    <ng-container *ngFor=" let imgUrl of item.altImages; let i = index; trackBy: trackByUrl">
-                        <img #imgElements [attr.data-image]="item.color[i]" [src]="imgUrl" alt="color item" [id]="imgUrl">
-                    </ng-container>
+                    <img class="image" alt="image" [src]="selectedImgUrl || item.image">
                 </div>
                 <!-- Right Column -->
                 <div class="right-column">
                     <!-- Product Description -->
                     <div class="product-description">
                         <span>{{item.subCat}}</span>
-                        <h1>{{item.brand}}</h1>
+                        <h4>{{item.brand}}</h4>
                         <p>{{item.description}}</p>
                     </div>
                     <!-- Product Configuration -->
-                    <div class="product-configuration">
+                    <div *ngIf="item._ownerId !== user?._id" class="product-configuration">
                         <form [formGroup]="form" (ngSubmit)="addItemtoCart()">
                             <fieldset formGroupName="fgItem">
                                 <!-- Product Color -->
@@ -35,7 +29,7 @@
                                     <span>Color</span>
                                     <div class="color-choose">
                                         <div [ngClass]="{disabled: item._ownerId === user?._id || item.quantity === 0}" *ngFor="let col of item.color; let i = index" [id]="col+i">
-                                            <input [readonly]="item._ownerId === user?._id || item.quantity === 0" formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectColor()" required>
+                                            <input [readonly]="item._ownerId === user?._id || item.quantity === 0" formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectColor(i)" required>
                                             <label [for]="col"><span #spanColorElements></span></label>
                                         </div>
                                     </div>
@@ -61,18 +55,20 @@
                                 <div class="product-price">
                                     <span>${{item.price}}</span>                                    
                                     <input *ngIf="item._ownerId !== user?._id || item.quantity === 0" [disabled]="form.invalid" type="submit" class="cart-btn" value="Add to cart">
-                                    <div class="buttons">
-                                        <ul class="buttons">
-                                            <li *ngIf="item._ownerId === user?._id" class="button edit"><a href="javascript:void(0)">Edit</a></li>
-                                            <li *ngIf="item._ownerId === user?._id" class="button delete"><a href="javascript:void(0)">Delete</a></li>
-                                        </ul>
-                                    </div>
                                 </div>
-                                <p *ngIf="item._ownerId === user?._id" class="owner">You are owner! You can't purchase this Item!</p>
-                                <p *ngIf="item.quantity === 0" class="sold">This item is sold out and out of stock!</p>
                             </fieldset>
                         </form>
                     </div>
+                    <ng-container *ngIf="item._ownerId === user?._id">
+                        <div class="buttons">
+                            <ul class="buttons">
+                                <li class="button edit"><a href="javascript:void(0)">Edit</a></li>
+                                <li class="button delete"><a href="javascript:void(0)">Delete</a></li>
+                            </ul>
+                        </div>
+                        <p class="owner">You are owner! You can't purchase this Item!</p>
+                    </ng-container>
+                    <p *ngIf="item.quantity === 0" class="sold">This item is sold out and out of stock!</p>
                 </div>
             </div>
         </section>
