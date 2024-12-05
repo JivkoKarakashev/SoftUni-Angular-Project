@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "@canvasjs/angular-charts": "^1.2.0",
     "@stripe/stripe-js": "^3.5.0",
     "jquery": "^3.7.1",
     "ngx-slick-carousel": "^15.0.0",

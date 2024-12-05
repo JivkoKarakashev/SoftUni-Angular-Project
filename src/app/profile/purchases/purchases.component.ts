@@ -55,7 +55,7 @@ export class PurchasesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Purchase Tab Initialized!');
-    console.log(this.customErrorsArr);
+
     const user = this.userStateMgmnt.getUser();
     try {
       if (user) {

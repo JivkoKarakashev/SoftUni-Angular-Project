@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment.development';
@@ -41,11 +41,4 @@ export class ProfileService {
     return this.http.get<TradedItem[]>(`${TRADES_URL}?where=sellerId%3D%22${userId}%22`, { headers });
   }
 
-  getProfileDataByUserId(userId: string): Observable<[DBOrder[], TradedItem[] | []]> {
-    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
-    return forkJoin([
-      this.http.get<DBOrder[]>(`${ORDERS_URL}?where=_ownerId%3D%22${userId}%22`, { headers }).pipe(catchError(err => { throw err; })),
-      this.http.get<TradedItem[] | []>(`${TRADES_URL}?where=sellerId%3D%22${userId}%22`, { headers }).pipe(catchError(err => { throw err; }))
-    ]);
-  }
 }

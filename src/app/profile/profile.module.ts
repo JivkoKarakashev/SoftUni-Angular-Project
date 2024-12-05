@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+
 import { ProfileRoutingModule } from './profile-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
@@ -19,7 +21,7 @@ import { SalesComponent } from './sales/sales.component';
     SalesComponent
   ],
   imports: [
-    CommonModule, ProfileRoutingModule, SharedModule
+    CommonModule, ProfileRoutingModule, SharedModule, CanvasJSAngularChartsModule
   ]
 })
 export class ProfileModule { }
