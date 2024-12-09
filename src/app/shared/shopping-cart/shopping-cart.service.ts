@@ -118,6 +118,6 @@ export class ShoppingCartService {
   createTradedItems(purchasedItems: CartItem[], status: 'pending', orderId: string): Observable<TradedItem[]> {
     const tradedItems: TradedItem[] = this.buildTradesReqsArr.buildTradedItemsArr([...purchasedItems], status, orderId,);
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
-    return forkJoin([...this.buildTradesReqsArr.build(tradedItems, headers)]);
+    return forkJoin([...this.buildTradesReqsArr.buildPostReqs(tradedItems, headers)]);
   }
 }

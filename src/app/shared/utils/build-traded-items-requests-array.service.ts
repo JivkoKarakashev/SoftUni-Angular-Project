@@ -16,7 +16,7 @@ export class BuildTradedItemsRequestsArrayService {
 
   constructor(private http: HttpClient) { }
 
-  build(tradedItemsArr: TradedItem[], headers: HttpHeaders): Array<Observable<TradedItem>> {
+  buildPostReqs(tradedItemsArr: TradedItem[], headers: HttpHeaders): Array<Observable<TradedItem>> {
     // console.log(tradedItemsArr);
     const reqArr: Array<Observable<TradedItem>> = [];
     tradedItemsArr.forEach(itm => {
@@ -42,6 +42,17 @@ export class BuildTradedItemsRequestsArrayService {
     dbOrdersArr.forEach(order => {
       const { _id } = order;
       reqArr.push(this.http.get<TradedItem[]>(`${TRADES_URL}?where=orderId%3D%22${_id}%22`, { headers }));
+    });
+    return reqArr;
+  }
+
+  buildPutReqs(tradedItemsArr: TradedItem[], headers: HttpHeaders): Array<Observable<TradedItem>> {
+    // console.log(tradedItemsArr);
+    const reqArr: Array<Observable<TradedItem>> = [];
+    tradedItemsArr.forEach(itm => {
+      const id = itm._id;
+      const body = JSON.stringify({ ...itm });
+      reqArr.push(this.http.put<TradedItem>(`${TRADES_URL}/${id}`, body, { headers }));
     });
     return reqArr;
   }

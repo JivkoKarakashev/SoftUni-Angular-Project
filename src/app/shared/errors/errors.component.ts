@@ -41,7 +41,7 @@ export class ErrorsComponent implements OnInit, OnDestroy {
         this.customErrorsArr = [...this.customErrorsArr, ...customErrs];
       });
     this.unsubscriptionArray.push(errsSub);
-    console.log(this.customErrorsArr);
+    console.log('Custom Errors:' + this.customErrorsArr);
   }
 
   ngOnDestroy(): void {

@@ -1,3 +1,54 @@
+.container-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 0 1em;
+}
+
+div.left-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 0 1 96%;
+}
+
+div.right-wrapper {
+    min-width: fit-content;
+    flex: 1 1 1%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: 0 1em 1em 0;
+}
+
+div.sticky {
+    position: sticky;
+    bottom: 1em;
+
+    & .button {
+        cursor: pointer;
+        padding: .2em .3em;
+        color: #fff;
+        background-color: #000;
+        border-radius: .4em;
+    }
+
+    & .button:hover,
+    .button:focus {
+        color: #000;
+        background-color: #fff;
+    }
+
+    & .button:disabled {
+        background-color: #696969;
+        color: #faf0e6;
+        opacity: 1;
+        filter: none;
+        cursor: not-allowed;
+    }
+}
+
+
 h2 {
     margin-bottom: 15px;
 }
@@ -76,6 +127,7 @@ h2 {
     justify-content: space-between;
     gap: 1em .5em;
 }
+
 /* Sold Item Card */
 .sales-list .item-card {
     display: flex;
@@ -120,6 +172,7 @@ h2 {
     border-radius: 50%;
     border: 1px solid #000000;
 }
+
 /* Item Buttons */
 .item-status div button {
     flex: 0 1 40%;
@@ -159,7 +212,7 @@ h2 {
 
 .item-status .ship {
     background-color: #e9fcff;
-    color: #0275d8  ;
+    color: #0275d8;
     border: 1px solid rgba(2, 117, 216, 255);
 }
 

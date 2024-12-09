@@ -1,4 +1,6 @@
-import { Component, ElementRef, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Subscription, forkJoin } from 'rxjs';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
@@ -9,13 +11,21 @@ import { NumberToDateService } from 'src/app/shared/utils/number-to-date.service
 import { CapitalizeCategoryService } from 'src/app/shared/utils/capitalize-category.service';
 import { FilterButton } from 'src/app/shared/utils/filter-purchases-data.service';
 import { FilterSalesDataService } from 'src/app/shared/utils/filter-sales-data.service';
+import { ErrorsService } from 'src/app/shared/errors/errors.service';
+import { BuildTradedItemsRequestsArrayService } from 'src/app/shared/utils/build-traded-items-requests-array.service';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.css']
 })
-export class SalesComponent implements OnInit {
+export class SalesComponent implements OnInit, OnDestroy {
+
+  private unsubscriptionArray: Subscription[] = [];
+
+  public loading = false;
+  public httpErrorsArr: HttpErrorResponse[] = [];
 
   public user: UserForAuth | null = null;
   public dbTradedItems: TradedItem[] = [];
@@ -26,13 +36,17 @@ export class SalesComponent implements OnInit {
   public filteredTradedItems: TradedItem[] = [];
   public filteredFilterButtons: FilterButton[] = [];
 
+  public updatedDbTradedItems: TradedItem[] = [];
+
   constructor(
     private userStateMgmnt: UserStateManagementService,
     private profileDataStateMgmnt: ProfileDataStateManagementService,
     private numToDateService: NumberToDateService,
     public capitalizeCategoryService: CapitalizeCategoryService,
     private render: Renderer2,
-    private filterSalesData: FilterSalesDataService
+    private filterSalesData: FilterSalesDataService,
+    private buildTradesReqsArr: BuildTradedItemsRequestsArrayService,
+    private errorsService: ErrorsService
   ) { }
 
   @ViewChildren('buttonFilterElements') private buttonFilterElements!: QueryList<ElementRef<HTMLButtonElement>>;
@@ -56,6 +70,14 @@ export class SalesComponent implements OnInit {
     this.filteredTradedItemsDates = [...this.dbTradedItemsDates];
   }
 
+  ngOnDestroy(): void {
+    this.unsubscriptionArray.forEach((subscription) => {
+      subscription.unsubscribe();
+      // console.log('UnsubArray = 1');
+    });
+    // console.log('UnsubArray = 1');
+  }
+
   onTextInput(input: string): void {
     const { buttons, dates, tradedItms } = this.filterSalesData.filter(input, [...this.filterButtons], [...this.dbTradedItemsDates], [...this.dbTradedItems]);
     this.filteredFilterButtons = [...buttons];
@@ -77,10 +99,44 @@ export class SalesComponent implements OnInit {
     // console.log(this.filterButtons);
   }
 
-  onClearBtnClick() {
+  onClearBtnClick(): void {
     this.inputFilterElement.nativeElement.value = '';
     this.filteredFilterButtons = [...this.filterButtons];
     this.filteredTradedItemsDates = [...this.dbTradedItemsDates];
     this.filteredTradedItems = [...this.dbTradedItems];
+  }
+
+  onStatusChange(i: number, status: 'confirmed' | 'rejected' | 'shipped' | 'delivered'): void {
+    const itmId = this.dbTradedItems[i]._id;
+    const idx = this.updatedDbTradedItems.map(itm => itm._id).indexOf(itmId);
+    (idx > -1) ? this.updatedDbTradedItems[idx] = { ...this.updatedDbTradedItems[idx], status } : this.updatedDbTradedItems.push({ ...this.dbTradedItems[i], status });
+    this.dbTradedItems[i] = { ...this.dbTradedItems[i], status };
+    this.filteredTradedItems[i] = { ...this.filteredTradedItems[i], status };
+    this.filterButtons[i] = { ...this.filterButtons[i], status };
+    this.filteredFilterButtons[i] = { ...this.filteredFilterButtons[i], status };
+  }
+
+  onSaveChanges(): void {
+    if (!this.updatedDbTradedItems.length) {
+      return;
+    }
+    this.loading = true;
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
+    const updatedTrItmsSubscription = forkJoin([...this.buildTradesReqsArr.buildPutReqs([...this.updatedDbTradedItems], headers)])
+      .subscribe(
+        {
+          next: () => {
+            this.loading = false;
+            this.profileDataStateMgmnt.setSoldItemsState([...this.dbTradedItems]);
+          },
+          error: (err) => {
+            console.log('HERE');
+            this.loading = false;
+            this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          }
+        }
+      );
+    this.unsubscriptionArray.push(updatedTrItmsSubscription);
   }
 }

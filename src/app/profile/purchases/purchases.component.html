@@ -1,3 +1,9 @@
+<ng-container *ngIf="loading">
+    <app-loader />
+</ng-container>
+
+<app-errors *ngIf="httpErrorsArr.length" />
+
 <section class="content purchases">
     <h2>Purchases</h2>
     <!-- Add purchases content here -->
@@ -48,7 +54,7 @@
                                 <div *ngIf="item.status==='shipped' && order.status==='shipped'" class="item-status itm" [ngClass]="order.status">
                                     <span>awaits delivery</span>
                                 </div>
-                                <div *ngIf="item.status==='shipped' && order.status==='split'" class="item-status itm shipped" [ngClass]="order.status">
+                                <div *ngIf="item.status==='shipped' && (order.status==='split' || order.status==='several')" class="item-status itm shipped" [ngClass]="order.status">
                                     <button type="button" class="confirm-receipt">Confirm receipt</button>
                                 </div>
                             </div>
@@ -77,7 +83,7 @@
                         <div *ngIf="order.status==='confirmed'" class="confirmed">Confirmed</div>
                         <div *ngIf="order.status==='pending'" class="pending">Pending</div>
                         <div *ngIf="order.status==='shipped'" class="shipped">
-                            <button type="button" class="confirm-receipt">Confirm receipt</button>
+                            <button type="button" class="confirm-receipt" (click)="onConfirmOrderReceipt(i)">Confirm receipt</button>
                         </div>
                         <div *ngIf="order.status==='delivered'" class="delivered">Delivered</div>
                         <div *ngIf="order.status==='split'" class="split">Split delivery from same merchant</div>
