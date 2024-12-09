@@ -1,13 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 
 import { ChartOptions, purchaseCategoriesChartOptsInit, purchasesSalesChartOptsInit, salesCategoriesChartOptsInit } from 'src/app/types/chartOptions/chartOptions';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
-
-import { CustomError } from 'src/app/shared/errors/custom-error';
 
 import { DBOrder } from 'src/app/types/order';
 import { TradedItem } from 'src/app/types/item';
@@ -15,48 +11,25 @@ import { TradedItem } from 'src/app/types/item';
 import { ProfileDataStateManagementService } from 'src/app/shared/state-management/profile-data-state-management.service';
 import { BuildChartsService } from 'src/app/shared/utils/build-charts.service';
 
-// import { DBOrder } from 'src/app/types/order';
-// import { Item, TradedItem, } from 'src/app/types/item';
-
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.css']
 })
-export class OverviewComponent implements OnInit, OnDestroy {
-
-  private unsubscriptionArray: Subscription[] = [];
+export class OverviewComponent implements OnInit {
 
   public user: UserForAuth | null = null;
-  // // private publishedItems: Item[] = [];
-  // private publishedItemsCounter: number = 0;
   private orders: DBOrder[] = [];
-  // private ordersCounter: number = 0;
   private purchasedItems: TradedItem[] = [];
-  // private purchasedItemsCounter: number = 0;
   private soldItems: TradedItem[] = [];
-  // private soldItemsCounter: number = 0;
 
-  public loading = false;
-  public httpErrorsArr: HttpErrorResponse[] = [];
-  public customErrorsArr: CustomError[] = [];
-
-  // public chartOpts1: ChartOptions | null = null;
-  // public chartOpts2: ChartOptions | null = null;
-  // public chartOpts3: ChartOptions | null = null;
-  // public chartOpts4: ChartOptions | null = null;
-  // public chartOpts5: ChartOptions | null = null;
-
-  public purchasesSalesChartOpts: ChartOptions = purchasesSalesChartOptsInit;
-  private purchasesSalesChrtInstance: any;
+  public purchasesSalesChartOpts: ChartOptions = { ...purchasesSalesChartOptsInit };
   public purchasesSalesChrtReadyToShow: boolean = false;
 
-  public purchaseCategoriesChartOpts: ChartOptions = purchaseCategoriesChartOptsInit;
-  private purchaseCategoriesChrtInstance: any;
+  public purchaseCategoriesChartOpts: ChartOptions = { ...purchaseCategoriesChartOptsInit };
   public purchaseCategoriesChrtReadyToShow: boolean = false;
 
-  public salesCategoriesChartOpts: ChartOptions = salesCategoriesChartOptsInit;
-  private salesCategoriesChrtInstance: any;
+  public salesCategoriesChartOpts: ChartOptions = { ...salesCategoriesChartOptsInit };
   public salesCategoriesChrtReadyToShow: boolean = false;
 
   constructor(
@@ -80,34 +53,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
       this.purchasesSalesChrtReadyToShow = true;
     }
     if (purchasedItemsQty) {
-      this.purchaseCategoriesChartOpts = { ...this.buildCharts.buildCategoryChart([...this.purchasedItems]) };
+      this.purchaseCategoriesChartOpts = { ...this.buildCharts.buildPurchaseCategoryChart([...this.purchasedItems]) };
       this.purchaseCategoriesChrtReadyToShow = true;
     }
     if (soldItemsQty) {
-      this.salesCategoriesChartOpts = { ...this.buildCharts.buildCategoryChart([...this.soldItems]) };
+      this.salesCategoriesChartOpts = { ...this.buildCharts.buildSalesCategoryChart([...this.soldItems]) };
       this.salesCategoriesChrtReadyToShow = true;
     }
 
   }
 
-  ngOnDestroy(): void {
-    this.unsubscriptionArray.forEach((subscription) => {
-      subscription.unsubscribe();
-      // console.log('UnsubArray = 1');
-    });
-    // console.log('UnsubArray = 1');
-  }
-
-  getPurchasesSalesChartInstance(e: any) {
-    console.log(e);
-    this.purchasesSalesChrtInstance = e;
-  }
-  getPurchaseCategoriesChartInstance(e: any) {
-    console.log(e);
-    this.purchaseCategoriesChrtInstance = e;
-  }
-  getSalesCategoriesChartInstance(e: any) {
-    console.log(e);
-    this.salesCategoriesChrtInstance = e;
-  }
 }

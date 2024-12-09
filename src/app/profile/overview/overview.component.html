@@ -1,24 +1,16 @@
-<ng-container *ngIf="loading">
-    <app-loader />
-</ng-container>
-
-<app-errors *ngIf="httpErrorsArr.length || customErrorsArr.length" />
-
 <section class="content overview">
     <h2>Overview</h2>
 
     <div class="charts-wrapper">
         <div *ngIf="purchasesSalesChrtReadyToShow" class="chart-container">
-            <canvasjs-chart [options]="purchasesSalesChartOpts" (chartInstance)="getPurchasesSalesChartInstance($event)" />
+            <canvasjs-chart [options]="purchasesSalesChartOpts" />
         </div>
         <div *ngIf="purchaseCategoriesChrtReadyToShow" class="chart-container">
-            <canvasjs-chart [options]="purchaseCategoriesChartOpts" (chartInstance)="getPurchaseCategoriesChartInstance($event)" />
+            <canvasjs-chart [options]="purchaseCategoriesChartOpts" />
         </div>
         <div *ngIf="salesCategoriesChrtReadyToShow" class="chart-container">
-            <canvasjs-chart [options]="salesCategoriesChartOpts" (chartInstance)="getSalesCategoriesChartInstance($event)" />
+            <canvasjs-chart [options]="salesCategoriesChartOpts" />
         </div>
-        <!-- <canvasjs-chart [options]="chartOpts4" />
-        <canvasjs-chart [options]="chartOpts5" /> -->
     </div>
 
 </section>
