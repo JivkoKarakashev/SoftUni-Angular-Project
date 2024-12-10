@@ -10,6 +10,7 @@ import { NgxStripeModule } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
 import { CheckoutRoutingModule } from '../checkout/checkout-routing.module';
 import { ErrorsComponent } from './errors/errors.component';
+import { Error404Component } from './error-404/error-404.component';
 
 
 
@@ -18,7 +19,8 @@ import { ErrorsComponent } from './errors/errors.component';
     ShoppingCartComponent,
     LoaderComponent,
     ProductDetailsComponent,
-    ErrorsComponent
+    ErrorsComponent,
+    Error404Component
   ],
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule, RouterLink, CheckoutRoutingModule, NgxStripeModule.forChild(environment.stripe.publicKey)

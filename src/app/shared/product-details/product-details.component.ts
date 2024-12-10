@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription, catchError, of } from 'rxjs';
+import { EMPTY, Observable, Subscription, catchError, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment.development';
 
@@ -107,10 +107,19 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
     const detailsSubscription = this.getItem(url, id)
       .pipe(
-        catchError(err => { return of(err); })
+        catchError(err => {
+          if (err.status === 404) {
+            return of(EMPTY);
+          }
+          return of(err);
+        })
       )
       .subscribe(res => {
         this.loading = false;
+        if (res instanceof Observable) {
+          console.log(res instanceof Observable);
+          this.router.navigate(['**']);
+        }
         if (res instanceof HttpErrorResponse) {
           this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...res }]);
           this.httpErrorsArr = [...this.httpErrorsArr, { ...res }];

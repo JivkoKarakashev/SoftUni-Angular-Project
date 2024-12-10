@@ -1,0 +1,7 @@
+.error-404 {
+    background-image: url('../../../assets/public/static/images/404.jpg');
+    background-size: 100vw 90vh;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    background-color: #fbb03d;
+}
