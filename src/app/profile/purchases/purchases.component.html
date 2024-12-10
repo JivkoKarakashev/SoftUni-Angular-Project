@@ -4,95 +4,104 @@
 
 <app-errors *ngIf="httpErrorsArr.length" />
 
-<section class="content purchases">
-    <h2>Purchases</h2>
-    <!-- Add purchases content here -->
-    <div class="wrapper">
+<div class="container-wrapper" *ngIf="!loading">
+    <div class="left-wrapper">
+        <section class="content purchases">
+            <h2>Purchases</h2>
+            <!-- Add purchases content here -->
+            <div class="wrapper">
 
-        <!-- Filter Bar -->
-        <div class="filter-bar">
-            <input #inputFilterElement type="text" class="filter" placeholder="Filter" ngModel (keyup)="onTextInput(inputFilterElement.value)">
-        </div>
-
-        <!-- Order Status Filter -->
-        <div class="status-filters">
-            <button type="button" class="clear-btn"(click)="onClearBtnClick()">Clear filter</button>
-            <ng-container *ngFor="let btn of filteredFilterButtons; let i = index">
-                <button class="status-btn" [class]="btn.status" [ngClass]="{'active': btn.state === 'active', 'inactive': btn.state === 'inactive'}" [attr.data-ref]="btn.ref" (click)="onFilterBtnClick(i)" #buttonFilterElements>#{{btn.ref}}</button>
-            </ng-container>
-        </div>
-
-        <!-- Order List -->
-        <div class="order-list">
-            <!-- Order Card -->
-            <ng-container *ngFor="let order of filteredOrders; let i = index">
-
-                <div *ngIf="filteredFilterButtons[i].state === 'active'" class="order-card" [attr.data-ref]="order.referenceNumber" [attr.data-status]="order.status">
-                    <h3>Order #{{order.referenceNumber}}</h3>
-                    <p>{{filteredOrdersDates[i]}}</p>
-                    <div class="items">
-                        <ng-container *ngFor="let item of filteredTradedItems[i]; let idx = index">
-                            <div class="item">
-                                <div class="media itm">
-                                    <img [src]="item.image" alt="Vegetable Mixups">
-                                </div>
-                                <div class="sub-cat itm">
-                                    <p>{{capitalizeCategoryService.capitalize(item.subCat)}}</p>
-                                </div>
-                                <div class="qty itm">
-                                    <span>Qty: {{item.selectedQuantity}}</span>
-                                </div>
-                                <div class="price itm">
-                                    <span>P&dollar;{{item.price}}</span>
-                                </div>
-                                <div class="product itm">
-                                    <span>&dollar;{{item.product}}</span>
-                                </div>
-                                <div *ngIf="item.status==='pending' || item.status==='confirmed' || item.status==='rejected' || item.status==='delivered'" class="item-status itm" [ngClass]="item.status">
-                                    <span>{{item.status}}</span>
-                                </div>
-                                <div *ngIf="item.status==='shipped' && order.status==='shipped'" class="item-status itm" [ngClass]="order.status">
-                                    <span>awaits delivery</span>
-                                </div>
-                                <div *ngIf="item.status==='shipped' && (order.status==='split' || order.status==='several')" class="item-status itm shipped" [ngClass]="order.status">
-                                    <button type="button" class="confirm-receipt">Confirm receipt</button>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </div>
-                    <div class="bill-wrapper">
-                        <div class="subtotal">
-                            <span class="title">Subtotal&colon;</span>
-                            <span class="amount">&dollar;{{order.subtotal.toFixed(2)}}</span>
-                        </div>
-                        <div class="discount">
-                            <span class="title">{{order.discount.code}}</span>
-                            <span class="amount">&minus;&dollar;{{order.discountValue.toFixed(2)}}</span>
-                        </div>
-                        <div class="shipping">
-                            <span class="title">{{order.shippingMethod.name}}</span>
-                            <span class="amount">&dollar;{{order.shippingValue.toFixed(2)}}</span>
-                        </div>
-                        <div class="total">
-                            <span class="title">Total&colon;</span>
-                            <span class="amount">&dollar;{{order.total.toFixed(2)}}</span>
-                        </div>
-                    </div>
-                    <div class="order-status">
-                        <div *ngIf="order.status==='rejected'" class="rejected">Rejected</div>
-                        <div *ngIf="order.status==='confirmed'" class="confirmed">Confirmed</div>
-                        <div *ngIf="order.status==='pending'" class="pending">Pending</div>
-                        <div *ngIf="order.status==='shipped'" class="shipped">
-                            <button type="button" class="confirm-receipt" (click)="onConfirmOrderReceipt(i)">Confirm receipt</button>
-                        </div>
-                        <div *ngIf="order.status==='delivered'" class="delivered">Delivered</div>
-                        <div *ngIf="order.status==='split'" class="split">Split delivery from same merchant</div>
-                        <div *ngIf="order.status==='several'" class="several">Order is from several merchants</div>
-                    </div>
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <input #inputFilterElement type="text" class="filter" placeholder="Filter" ngModel (keyup)="onTextInput(inputFilterElement.value)">
                 </div>
 
-            </ng-container>
+                <!-- Order Status Filter -->
+                <div class="status-filters">
+                    <button type="button" class="clear-btn" (click)="onClearBtnClick()">Clear filter</button>
+                    <ng-container *ngFor="let btn of filteredFilterButtons; let i = index">
+                        <button class="status-btn" [class]="btn.status" [ngClass]="{'active': btn.state === 'active', 'inactive': btn.state === 'inactive'}" [attr.data-ref]="btn.ref" (click)="onFilterBtnClick(i)" #buttonFilterElements>#{{btn.ref}}</button>
+                    </ng-container>
+                </div>
 
+                <!-- Order List -->
+                <div class="order-list">
+                    <!-- Order Card -->
+                    <ng-container *ngFor="let order of filteredOrders; let i = index">
+
+                        <div *ngIf="filteredFilterButtons[i].state === 'active'" class="order-card" [attr.data-ref]="order.referenceNumber" [attr.data-status]="order.status">
+                            <h3>Order #{{order.referenceNumber}}</h3>
+                            <p>{{filteredOrdersDates[i]}}</p>
+                            <div class="items">
+                                <ng-container *ngFor="let item of filteredTradedItems[i]; let idx = index">
+                                    <div class="item">
+                                        <div class="media itm">
+                                            <img [src]="item.image" alt="Vegetable Mixups">
+                                        </div>
+                                        <div class="sub-cat itm">
+                                            <p>{{capitalizeCategoryService.capitalize(item.subCat)}}</p>
+                                        </div>
+                                        <div class="qty itm">
+                                            <span>Qty: {{item.selectedQuantity}}</span>
+                                        </div>
+                                        <div class="price itm">
+                                            <span>P&dollar;{{item.price}}</span>
+                                        </div>
+                                        <div class="product itm">
+                                            <span>&dollar;{{item.product}}</span>
+                                        </div>
+                                        <div *ngIf="item.status==='pending' || item.status==='confirmed' || item.status==='rejected' || item.status==='delivered'" class="item-status itm" [ngClass]="item.status">
+                                            <span>{{item.status}}</span>
+                                        </div>
+                                        <div *ngIf="item.status==='shipped' && order.status==='shipped'" class="item-status itm" [ngClass]="order.status">
+                                            <span>awaits delivery</span>
+                                        </div>
+                                        <div *ngIf="item.status==='shipped' && (order.status==='split' || order.status==='several')" class="item-status itm shipped" [ngClass]="order.status">
+                                            <button type="button" class="confirm-receipt" (click)="onConfirmItemReceipt(i, idx)">Confirm receipt</button>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div class="bill-wrapper">
+                                <div class="subtotal">
+                                    <span class="title">Subtotal&colon;</span>
+                                    <span class="amount">&dollar;{{order.subtotal.toFixed(2)}}</span>
+                                </div>
+                                <div class="discount">
+                                    <span class="title">{{order.discount.code}}</span>
+                                    <span class="amount">&minus;&dollar;{{order.discountValue.toFixed(2)}}</span>
+                                </div>
+                                <div class="shipping">
+                                    <span class="title">{{order.shippingMethod.name}}</span>
+                                    <span class="amount">&dollar;{{order.shippingValue.toFixed(2)}}</span>
+                                </div>
+                                <div class="total">
+                                    <span class="title">Total&colon;</span>
+                                    <span class="amount">&dollar;{{order.total.toFixed(2)}}</span>
+                                </div>
+                            </div>
+                            <div class="order-status">
+                                <div *ngIf="order.status==='rejected'" class="rejected">Rejected</div>
+                                <div *ngIf="order.status==='confirmed'" class="confirmed">Confirmed</div>
+                                <div *ngIf="order.status==='pending'" class="pending">Pending</div>
+                                <div *ngIf="order.status==='shipped'" class="shipped">
+                                    <button type="button" class="confirm-receipt" (click)="onConfirmOrderReceipt(i)">Confirm receipt</button>
+                                </div>
+                                <div *ngIf="order.status==='delivered'" class="delivered">Delivered</div>
+                                <div *ngIf="order.status==='split'" class="split">Split delivery from same merchant</div>
+                                <div *ngIf="order.status==='several'" class="several">Order is from several merchants</div>
+                            </div>
+                        </div>
+
+                    </ng-container>
+
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="right-wrapper">
+        <div class="sticky">
+            <button [disabled]="!updatedDbTradedItems.length" type="button" class="button" (click)="onSaveChanges()">Save changes</button>
         </div>
     </div>
-</section>
+</div>

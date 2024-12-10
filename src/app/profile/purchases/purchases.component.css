@@ -1,3 +1,56 @@
+.container-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 0 1em;
+}
+
+div.left-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 0 1 96%;
+    & .content.purchases {
+        flex: 1 1 100%;
+    }
+}
+
+div.right-wrapper {
+    min-width: fit-content;
+    flex: 1 1 1%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: 0 1em 1em 0;
+}
+
+div.sticky {
+    position: sticky;
+    bottom: 1em;
+
+    & .button {
+        cursor: pointer;
+        padding: .2em .3em;
+        color: #fff;
+        background-color: #000;
+        border-radius: .4em;
+    }
+
+    & .button:hover,
+    .button:focus {
+        color: #000;
+        background-color: #fff;
+    }
+
+    & .button:disabled {
+        background-color: #696969;
+        color: #faf0e6;
+        opacity: 1;
+        filter: none;
+        cursor: not-allowed;
+    }
+}
+
 h2 {
     margin-bottom: 15px;
 }

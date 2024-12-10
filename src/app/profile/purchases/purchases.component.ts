@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Subscription, forkJoin } from 'rxjs';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
@@ -12,8 +12,9 @@ import { NumberToDateService } from 'src/app/shared/utils/number-to-date.service
 import { CapitalizeCategoryService } from 'src/app/shared/utils/capitalize-category.service';
 import { FilterButton, FilterPurchasesDataService } from 'src/app/shared/utils/filter-purchases-data.service';
 import { OrderStatusCheckService } from 'src/app/shared/utils/order-status-check.service';
-import { ProfileService } from '../profile.service';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
+import { BuildTradedItemsRequestsArrayService } from 'src/app/shared/utils/build-traded-items-requests-array.service';
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 
 @Component({
   selector: 'app-purchases',
@@ -38,6 +39,8 @@ export class PurchasesComponent implements OnInit, OnDestroy {
   public filteredTradedItems: Array<TradedItem[]> = [];
   public filteredFilterButtons: FilterButton[] = [];
 
+  public updatedDbTradedItems: TradedItem[] = [];
+
   constructor(
     private userStateMgmnt: UserStateManagementService,
     private profileDataStateMgmnt: ProfileDataStateManagementService,
@@ -46,7 +49,7 @@ export class PurchasesComponent implements OnInit, OnDestroy {
     private render: Renderer2,
     private filterPurchasesData: FilterPurchasesDataService,
     private orderStatusCheck: OrderStatusCheckService,
-    private profileService: ProfileService,
+    private buildTradesReqsArr: BuildTradedItemsRequestsArrayService,
     private errorsService: ErrorsService
   ) { }
 
@@ -81,9 +84,9 @@ export class PurchasesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
-      console.log('UnsubArray = 1');
+      // console.log('UnsubArray = 1');
     });
-    console.log('UnsubArray = 1');
+    // console.log('UnsubArray = 1');
   }
 
   onTextInput(input: string): void {
@@ -122,15 +125,43 @@ export class PurchasesComponent implements OnInit, OnDestroy {
     const updatedTrItms: TradedItem[] = [];
     this.dbTradedItemsArr[i].forEach((trItm, idx) => {
       updatedTrItms[idx] = { ...trItm, status: 'delivered' };
+      this.updatedDbTradedItems.push({ ...trItm, status: 'delivered' });
     });
     this.dbTradedItemsArr[i] = [...updatedTrItms];
 
     this.filteredFilterButtons[i] = { ...this.filterButtons[i] };
     this.filteredOrders[i] = { ...this.dbOrders[i] };
     this.filteredTradedItems[i] = [...this.dbTradedItemsArr[i]];
+  }
 
-    this.profileDataStateMgmnt.setOrdersState([...this.dbOrders]);
-    this.profileDataStateMgmnt.setPurchasedItemsByOrderState([...this.dbTradedItemsArr]);
+  onConfirmItemReceipt(orderIdx: number, itemIdx: number): void {
+    this.updatedDbTradedItems.push({ ...this.dbTradedItemsArr[orderIdx][itemIdx], status: 'delivered' });
+    this.dbTradedItemsArr[orderIdx][itemIdx] = { ...this.dbTradedItemsArr[orderIdx][itemIdx], status: 'delivered' };
+    this.filteredTradedItems[orderIdx][itemIdx] = { ...this.filteredTradedItems[orderIdx][itemIdx], status: 'delivered' };
+  }
+
+  onSaveChanges(): void {
+    if (!this.updatedDbTradedItems.length) {
+      return;
+    }
+    this.loading = true;
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
+    const updatedTrItmsSubscription = forkJoin([...this.buildTradesReqsArr.buildPutReqs([...this.updatedDbTradedItems], headers)])
+      .subscribe(
+        {
+          next: () => {
+            this.loading = false;
+            this.profileDataStateMgmnt.setPurchasedItemsByOrderState([...this.dbTradedItemsArr]);
+          },
+          error: (err) => {
+            console.log('HERE');
+            this.loading = false;
+            this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          }
+        }
+      );
+    this.unsubscriptionArray.push(updatedTrItmsSubscription);
   }
 
 }
