@@ -20,7 +20,5 @@
         </ul>
     </nav>
 
-    <ng-container *ngIf="httpErrorsArr.length">
-        <div class="alert">{{httpErrorsArr.at(0)?.statusText}}</div>
-    </ng-container>
+    <app-errors *ngIf="httpErrorsArr.length" />
 </section>

@@ -2,12 +2,7 @@
     <app-loader />
 </ng-container>
 
-<ng-container *ngIf="httpErrorsArr.length">
-    <div class="alert">{{httpErrorsArr.at(0)?.message}}</div>
-    <!-- <ng-container *ngFor="let err of httpErrors"> -->
-        <!-- <div class="alert">{{httpError.error?.message}}</div> -->
-    <!-- </ng-container> -->
-</ng-container>
+<app-errors *ngIf="httpErrorsArr.length" />
 
 <div class="wrapper" *ngIf="!loading">
     <div class="left-wrapper">

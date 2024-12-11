@@ -16,9 +16,9 @@ export class TrimDirective {
 
   private trimUserInput() {
     const value: string = this.element.nativeElement.value;
-    console.log(`${value} - ${value.length}`);
+    // console.log(`${value} - ${value.length}`);
     this.ngControl.control?.setValue(this.element.nativeElement.value = value.trim());
-    console.log(`${this.element.nativeElement.value} - ${this.element.nativeElement.value.length}`);
+    // console.log(`${this.element.nativeElement.value} - ${this.element.nativeElement.value.length}`);
   }
 
 }

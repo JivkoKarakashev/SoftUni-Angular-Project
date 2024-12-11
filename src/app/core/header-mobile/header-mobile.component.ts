@@ -10,6 +10,7 @@ import { TradedItemsStateManagementService } from 'src/app/shared/state-manageme
 import { UserService } from 'src/app/user/user.service';
 
 import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorsService } from 'src/app/shared/errors/errors.service';
 
 @Component({
   selector: 'app-header-mobile',
@@ -18,13 +19,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class HeaderMobileComponent implements OnInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = [];
-  
+
   public user: UserForAuth | null = null;
 
   public httpErrorsArr: HttpErrorResponse[] = [];
 
   constructor(
     private userService: UserService,
+    private errorsService: ErrorsService,
     private userStateMgmnt: UserStateManagementService,
     private cartStateMgmnt: ShoppingCartStateManagementService,
     private orderStateMgmnt: OrderStateManagementService,
@@ -45,29 +47,24 @@ export class HeaderMobileComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
     });
+    // console.log('UnsubArray = 1');
   }
 
   public logout(): void {
-    this.userService.logout().pipe(
-      catchError((err) => {
-        console.log(err);
-        this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-        return of(err);
-      })
-    ).subscribe(
-      {
-        next: () => {
-          this.cartStateMgmnt.emptyCart();
-          this.orderStateMgmnt.resetDBOrderState();
-          this.tradedItmsStateMgmnt.resetDBTradedItemsState();
-          this.router.navigate(['/auth/login']);
-        },
-        error: (err) => {
-          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-          console.log(err);
-          console.log(this.httpErrorsArr);
+    this.userService.logout()
+      .pipe(
+        catchError(err => { return of(err); })
+      )
+      .subscribe(res => {
+        if (res instanceof HttpErrorResponse) {
+          this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...res }]);
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...res }];
+          return;
         }
-      }
-    );
+        this.cartStateMgmnt.emptyCart();
+        this.orderStateMgmnt.resetDBOrderState();
+        this.tradedItmsStateMgmnt.resetDBTradedItemsState();
+        this.router.navigate(['/auth/login']);
+      });
   }
 }

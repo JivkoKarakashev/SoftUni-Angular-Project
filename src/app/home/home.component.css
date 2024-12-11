@@ -1,13 +1,5 @@
 @import url('https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css');
 
-div.alert {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f44336;
-    color: white;
-}
-
 .wrapper {
     display: flex;
     flex-direction: row;

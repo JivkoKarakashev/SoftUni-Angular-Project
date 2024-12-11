@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { UserService } from '../user.service';
 import { EmailValidaorService } from 'src/app/shared/utils/email-validator.service';
-import { HttpError } from 'src/app/types/httpError';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { UserStateManagementService } from 'src/app/shared/state-management/user
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  public httpErrorsArr: HttpError[] = [];
+  public httpErrorsArr: HttpErrorResponse[] = [];
   public loading = false;
 
   loginForm = this.fb.group({
