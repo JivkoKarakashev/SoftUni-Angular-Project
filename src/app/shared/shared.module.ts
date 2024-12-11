@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import { CheckoutRoutingModule } from '../checkout/checkout-routing.module';
 import { ErrorsComponent } from './errors/errors.component';
 import { Error404Component } from './error-404/error-404.component';
+import { TrimDirective } from './directives/trim.directive';
 
 
 
@@ -20,11 +21,12 @@ import { Error404Component } from './error-404/error-404.component';
     LoaderComponent,
     ProductDetailsComponent,
     ErrorsComponent,
-    Error404Component
+    Error404Component,
+    TrimDirective
   ],
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule, RouterLink, CheckoutRoutingModule, NgxStripeModule.forChild(environment.stripe.publicKey)
   ],
-  exports: [ShoppingCartComponent, LoaderComponent, ProductDetailsComponent, ErrorsComponent]
+  exports: [ShoppingCartComponent, LoaderComponent, ProductDetailsComponent, ErrorsComponent, TrimDirective]
 })
 export class SharedModule { }
