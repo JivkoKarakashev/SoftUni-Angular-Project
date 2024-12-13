@@ -212,6 +212,7 @@ div.buttons {
     font-weight: bold;
 
     & .button {
+        cursor: pointer;
         padding: .2em .3em;
         border: 1px solid #000;
         border-radius: .4em;

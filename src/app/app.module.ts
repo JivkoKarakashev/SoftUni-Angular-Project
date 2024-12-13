@@ -14,20 +14,38 @@ import { httpAJAXInterceptorProvider } from './interceptors/http-ajax.intercepto
 import { AuthenticateComponent } from './authenticate/authenticate.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { ExtractStatesComponent } from './extract-states/extract-states.component';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 // import { NgxStripeModule } from 'ngx-stripe';
 // import { environment } from 'src/environments/environment';
 
-@NgModule({ declarations: [
+@NgModule({
+    declarations: [
         AppComponent,
         MainComponent,
         HomeComponent,
         AuthenticateComponent,
         ExtractStatesComponent
     ],
-    bootstrap: [AppComponent], imports: [CommonModule,
+    bootstrap: [AppComponent],
+    imports: [
+        CommonModule,
         BrowserModule,
         CoreModule,
         SharedModule,
         AppRoutingModule,
-        SlickCarouselModule], providers: [httpLogoutInterceptorProvider, httpAJAXInterceptorProvider, provideHttpClient(withInterceptorsFromDi())] })
+        SlickCarouselModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot({
+            timeOut: 3000,
+            positionClass: 'toast-top-full-width',
+        })
+    ],
+    providers: [
+        httpLogoutInterceptorProvider,
+        httpAJAXInterceptorProvider,
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+})
 export class AppModule { }

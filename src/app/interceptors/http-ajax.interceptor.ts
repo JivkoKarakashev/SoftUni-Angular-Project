@@ -19,7 +19,7 @@ export class HttpAJAXInterceptor implements HttpInterceptor {
     console.log('AJAXInterceptor invoked!');
     let newReq: HttpRequest<any> = req.clone({ ...req });
     // console.log(req.body);
-    if (req.url.startsWith('http://localhost:3030/data/') && req.body) {
+    if (req.url.startsWith('http://localhost:3030/data/') && (req.body || req.method === 'DELETE')) {
       const userSubscription = this.userStateMgmnt.getUserState().subscribe(usr => {
         if (usr) {
           // console.log(usr);
@@ -44,7 +44,7 @@ export class HttpAJAXInterceptor implements HttpInterceptor {
     }
     return next.handle(newReq).pipe(
       catchError((err) => {
-        if ((newReq.url.startsWith('http://localhost:3030/data/order?where=_ownerId') && err.status == 404) || (newReq.url.startsWith('http://localhost:3030/data/traded_items?where=sellerId') && err.status == 404)) {
+        if ((newReq.url.startsWith('http://localhost:3030/data/orders?where=_ownerId') && err.status == 404) || (newReq.url.startsWith('http://localhost:3030/data/traded_items?where=sellerId') && err.status == 404)) {
           console.log('ERROR HANDLED!');
           return of(new HttpResponse({ body: [], status: 204 }));
         }

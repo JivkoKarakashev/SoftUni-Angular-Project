@@ -91,7 +91,7 @@
 
                         <div class="buttons">
                             <input [disabled]="!user || form.invalid || !cartItems.length || shipping.value.name === 'shipping method' || discount.value.code === 'discount code'" class="button finish" type="submit" value="Checkout">
-                            <a class="button cancel" href="javascript:void(0)">Continue shopping</a>
+                            <a class="button cancel" (click)="onContinue()">Continue shopping</a>
                         </div>
                     </fieldset>
                 </form>

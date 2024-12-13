@@ -20,7 +20,8 @@ import { ShoppingCartStateManagementService } from '../state-management/shopping
 const BASE_URL = `${environment.apiDBUrl}/data`;
 const SHIPPINGMETHODS_URL = `${BASE_URL}/shipping`;
 const DISCOUNTS_URL = `${BASE_URL}/discounts`;
-const ORDER_URL = `${BASE_URL}/order`;
+const ORDERS_URL = `${BASE_URL}/orders`;
+// const ORDER_URL = `${BASE_URL}/order`;
 
 @Injectable({
   providedIn: 'root'
@@ -107,7 +108,7 @@ export class ShoppingCartService {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     const { email, username, address, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status } = order;
     const body = JSON.stringify({ email, username, address, subtotal, discount, discountValue, shippingMethod, shippingValue, total, paymentState, status });
-    return this.http.post<DBOrder>(ORDER_URL, body, { headers });
+    return this.http.post<DBOrder>(ORDERS_URL, body, { headers });
   }
 
   updateItmsRemainQty(purchasedItems: CartItem[]): Observable<Item[]> {

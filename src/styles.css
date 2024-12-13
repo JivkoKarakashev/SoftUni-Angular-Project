@@ -3,3 +3,5 @@
 @import url('./assets/styles/navbar.css');
 
 @import url('./assets/styles/responsive.css');
+
+@import url('../node_modules/ngx-toastr/toastr.css');

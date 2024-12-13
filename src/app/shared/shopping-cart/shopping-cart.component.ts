@@ -426,6 +426,10 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(this.total);
   }
 
+  onContinue(): void {
+    this.location.back();
+  }
+
   onRemoveItem(ItmIdx: number) {
     // console.log(this.listItems$);
     const newListItems = this.cartItems.filter((itm, idx) => idx != ItmIdx ? itm : null);

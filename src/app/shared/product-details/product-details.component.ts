@@ -11,11 +11,13 @@ import { UserForAuth } from 'src/app/types/user';
 import { Belt, Blazer, Boot, Bottom, Cap, CartItem, Glove, Gym, Hat, Item, Jacket, Legging, Longwear, Outdoors, Partywear, Running, Ski, Slippers, Snowboard, Sunglasses, Surf, Sweater, Swim, Tie, Trainers, Tuxedo, Waistcoat, Watch, initialItem } from 'src/app/types/item';
 import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';
 import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
+import { CatalogManagerService } from 'src/app/catalog-manager/catalog-manager.service';
 
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { UserStateManagementService } from '../state-management/user-state-management.service';
 import { ErrorsService } from '../errors/errors.service';
+import { ToastrMessageHandlerService } from '../utils/toastr-message-handler.service';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
 
@@ -71,7 +73,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private router: Router,
     private render: Renderer2,
     private cartService: ShoppingCartService,
-    private cartStateMgmnt: ShoppingCartStateManagementService
+    private cartStateMgmnt: ShoppingCartStateManagementService,
+    private catalogManagerService: CatalogManagerService,
+    private toastrMessageHandler: ToastrMessageHandlerService
   ) { this.cartItemsCounter = this.cartStateMgmnt.getCartItemsCount() }
 
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;
@@ -187,12 +191,12 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     this.selectedImgUrl = this.item.altImages[idx];
   }
 
-  public trackByUrl(index: number, url: string): string {
+  trackByUrl(index: number, url: string): string {
     // console.log(url);
     return url;
   }
 
-  public addItemtoCart(): void {
+  onAddToCart(): void {
     if (this.form.invalid) {
       console.log('Invalid FORM!');
       return;
@@ -203,7 +207,30 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     this.itemCtrlsGr.reset({ ...this.formInitalValue.get('fgItem')?.value });
     this.selectedImgUrl = this.item.image;
     this.cartItemsCounter++;
+    this.toastrMessageHandler.showSuccess();
     // console.log(this.cartItms$$.value);
   }
 
+  onDelete(): void {
+    const { _id, cat, subCat } = this.item;
+    const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
+      .pipe(
+        catchError(err => { throw err; })
+      )
+      .subscribe(
+        {
+          next: () => {
+            this.toastrMessageHandler.showInfo();
+            this.router.navigate([`/catalog/${cat}/${subCat}`]);
+          },
+          error: (err) => {
+            const errMsg: string = err.error.message;
+            this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            this.toastrMessageHandler.showError(errMsg);
+          }
+        }
+      );
+    this.unsubscriptionArray.push(deleteSub);
+  }
 }

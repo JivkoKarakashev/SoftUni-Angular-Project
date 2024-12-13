@@ -1,5 +1,5 @@
 <ng-container *ngIf="httpErrorsArr.length">
-    <div class="alert">{{httpErrorsArr.at(0)?.message}}
+    <div class="alert">{{httpErrorsArr.at(0)?.error.message}}
         <div *ngIf="httpErrorsArr.at(0)?.status === 403" class="buttons">
             <a class="nav-icon logout" (click)="resignIn()">Please click HERE to re-sign in</a>
         </div>

@@ -22,7 +22,7 @@
                     </div>
                     <!-- Product Configuration -->
                     <div *ngIf="item._ownerId !== user?._id" class="product-configuration">
-                        <form [formGroup]="form" (ngSubmit)="addItemtoCart()">
+                        <form [formGroup]="form" (ngSubmit)="onAddToCart()">
                             <fieldset formGroupName="fgItem">
                                 <!-- Product Color -->
                                 <div class="product-color">
@@ -62,8 +62,8 @@
                     <ng-container *ngIf="item._ownerId === user?._id">
                         <div class="buttons">
                             <ul class="buttons">
-                                <li class="button edit"><a href="javascript:void(0)">Edit</a></li>
-                                <li class="button delete"><a href="javascript:void(0)">Delete</a></li>
+                                <li class="button edit">Edit</li>
+                                <li class="button delete" (click)="onDelete()">Delete</li>
                             </ul>
                         </div>
                         <p class="owner">You are owner! You can't purchase this Item!</p>

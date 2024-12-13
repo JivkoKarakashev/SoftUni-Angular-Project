@@ -271,10 +271,7 @@ div.buttons {
             padding: .3em .5em;
             background-color: #000;
             border-radius: 0.4em;
-
-            & a {
-                color: #fff;
-            }
+            color: #fff;
         }
 
         @media screen and (pointer: coarse) {
@@ -287,20 +284,12 @@ div.buttons {
     
                 li.button.edit {
                     background-color: #fdf90a;
-    
-                    & a {
-                        color: #000;
-                        outline: none;
-                    }
+                    color: #000;
                 }
     
                 li.button.delete {
                     background-color: #cc5656;
-    
-                    & a {
-                        color: #fff;
-                        outline: none;
-                    }
+                    color: #fff;
                 }
             }
         }
@@ -316,21 +305,13 @@ div.buttons {
                 li.button.edit:hover,
                 li.button.edit:focus-within {
                     background-color: #fdf90a;
-    
-                    & a {
-                        color: #000;
-                        outline: none;
-                    }
+                    color: #000;
                 }
     
                 li.button.delete:hover,
                 li.button.delete:focus-within {
                     background-color: #cc5656;
-    
-                    & a {
-                        color: #fff;
-                        outline: none;
-                    }
+                    color: #fff;
                 }
             }
         }

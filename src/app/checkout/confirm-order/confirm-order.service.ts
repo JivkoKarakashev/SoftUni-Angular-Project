@@ -15,7 +15,8 @@ import { environment } from 'src/environments/environment.development';
 // const CHECKOUT_SESSSION_STATUS_URL = 'http://localhost:5001/ecommerce-app-angularv16-v2/europe-west1/stripeEmbeddedCheckout/checkout/session-status';
 const CHECKOUT_SESSSION_STATUS_URL = environment.apiCheckoutUrl;
 const BASE_URL = `${environment.apiDBUrl}/data`;
-const ORDER_URL = `${BASE_URL}/order`;
+const ORDERS_URL = `${BASE_URL}/orders`;
+// const ORDER_URL = `${BASE_URL}/order`;
 const TRADES_URL = `${BASE_URL}/traded_items`;
 
 @Injectable({
@@ -33,7 +34,7 @@ export class ConfirmOrderService {
   updateDBOrderById(dbOrder: DBOrder, orderId: string): Observable<DBOrder> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     const body = JSON.stringify({ ...dbOrder });
-    return this.http.put<DBOrder>(`${ORDER_URL}/${orderId}`, body, { headers });
+    return this.http.put<DBOrder>(`${ORDERS_URL}/${orderId}`, body, { headers });
   }
 
   getTradedItemsByOrderId(orderId: string): Observable<TradedItem[]> {

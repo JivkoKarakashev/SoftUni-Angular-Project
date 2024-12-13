@@ -9,9 +9,11 @@ import { CartItem, Item, ListItem } from 'src/app/types/item';
 import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { BottomsLeggingsService } from './bottoms-leggings.service';
 import { ShoppingCartStateManagementService } from 'src/app/shared/state-management/shopping-cart-state-management.service';
+import { CatalogManagerService } from 'src/app/catalog-manager/catalog-manager.service';
 
 import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for-item-in-cart-already.service';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
+import { ToastrMessageHandlerService } from 'src/app/shared/utils/toastr-message-handler.service';
 
 @Component({
   selector: 'app-bottoms-leggings',
@@ -35,7 +37,9 @@ export class BottomsLeggingsComponent implements OnInit, OnDestroy {
     private bottoms_leggingsService: BottomsLeggingsService,
     private errorsService: ErrorsService,
     private checkForInCartAlready: CheckForItemInCartAlreadyService,
-    private cartService: ShoppingCartService
+    private cartService: ShoppingCartService,
+    private catalogManagerService: CatalogManagerService,
+    private toastrMessageHandler: ToastrMessageHandlerService
   ) { }
 
   ngOnInit(): void {
@@ -65,17 +69,42 @@ export class BottomsLeggingsComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
     });
-    // console.log('UnsubArray = 1');
+    // console.log('UnsubArray = 2');
   }
 
-  public addItemtoCart(item: ListItem): void {
-    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = item;
+  onAddToCart(i: number): void {
+    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = this.listItems[i];
     const newCartItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false };
     const idx = this.listItems.findIndex(itm => itm._id == _id);
     this.listItems[idx] = { ...this.listItems[idx], inCart: true };
     this.cartService.addCartItem(newCartItem);
     this.cartItemsCounter++;
+    this.toastrMessageHandler.showSuccess();
     // console.log(this.listItems);
     // console.log(this.cartItms);
+  }
+
+  onDelete(i: number): void {
+    const { _id, subCat } = this.listItems[i];
+    const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
+      .pipe(
+        catchError(err => { throw err; })
+      )
+      .subscribe(
+        {
+          next: () => {
+            const newListItems = this.listItems.filter((itm, idx) => idx != i ? itm : null);
+            this.listItems = [...newListItems];
+            this.toastrMessageHandler.showInfo();
+          },
+          error: (err) => {
+            const errMsg: string = err.error.message;
+            this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            this.toastrMessageHandler.showError(errMsg);
+          }
+        }
+      );
+    this.unsubscriptionArray.push(deleteSub);
   }
 }
