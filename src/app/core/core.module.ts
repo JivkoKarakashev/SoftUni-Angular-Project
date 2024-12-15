@@ -7,6 +7,7 @@ import { FooterComponent } from './footer/footer.component';
 import { SharedModule } from '../shared/shared.module';
 import { CategoryModule } from '../category/category.module';
 import { CoreRoutingModule } from './core-routing.modules';
+import { CatalogManagerRoutingModule } from '../catalog-manager/catalog-manager-routing.modules';
 
 
 
@@ -21,6 +22,7 @@ import { CoreRoutingModule } from './core-routing.modules';
     CoreRoutingModule,
     SharedModule,
     CategoryModule,
+    CatalogManagerRoutingModule
   ],
   exports: [HeaderDesktopComponent, HeaderMobileComponent, FooterComponent]
 })

@@ -22,6 +22,8 @@
     "@canvasjs/angular-charts": "^1.2.0",
     "@stripe/stripe-js": "^3.5.0",
     "jquery": "^3.7.1",
+    "ng-multiselect-dropdown": "^1.0.0",
+    "ngx-color-picker": "^17.0.0",
     "ngx-slick-carousel": "^15.0.0",
     "ngx-stripe": "^16.4.0",
     "ngx-toastr": "^17.0.2",

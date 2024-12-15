@@ -69,6 +69,10 @@ a.nav-icon.basket:before {
   content: "\f291";
 }
 
+a.nav-icon.square-plus:before {
+  content: "\f0fe";
+}
+
 p.nav-icon.menu:before {
   content: "\f0c9";
 }
@@ -129,6 +133,6 @@ a.nav-icon:active {
 }
 
 #check-box:checked ~ nav.mobile ul.navbar {
-  max-height: 100px;
-  transition: all 0.5s;
+  max-height: 120px;
+  transition: all .5s;
 }

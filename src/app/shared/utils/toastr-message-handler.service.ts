@@ -13,8 +13,8 @@ export class ToastrMessageHandlerService {
     this.toastr.info(`Item was deleted successfully!`, 'Info!', { timeOut: 3000, positionClass: 'toast-top-right' });
   }
 
-  showSuccess() {
-    this.toastr.success('Item was successfully added to the cart!', 'Success!', { timeOut: 3000, positionClass: 'toast-top-right' });
+  showSuccess(msg: string) {
+    this.toastr.success(msg, 'Success!', { timeOut: 3000, positionClass: 'toast-top-right' });
   }
 
   showError(errMsg: string) {

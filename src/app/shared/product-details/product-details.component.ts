@@ -207,7 +207,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     this.itemCtrlsGr.reset({ ...this.formInitalValue.get('fgItem')?.value });
     this.selectedImgUrl = this.item.image;
     this.cartItemsCounter++;
-    this.toastrMessageHandler.showSuccess();
+    this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
     // console.log(this.cartItms$$.value);
   }
 

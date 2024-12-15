@@ -1,0 +1,164 @@
+.section-product-create,
+.container {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 100%;
+    min-width: 70vw;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+div.header,
+h1 {
+    color: #BABECC;
+    text-shadow: 1px 1px 1px #FFF;
+}
+
+.section-product-create form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1em 0;
+}
+
+.section-product-create form fieldset {
+    border: unset;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 80vw;
+    gap: .5em 0;
+}
+
+
+.row.color {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: .5em 0;
+
+    & .column-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1em;
+        justify-content: space-between;
+
+        &>div {
+            flex: 1 1 30%;
+            min-width: fit-content;
+        }
+    }
+}
+
+.cat-subcat-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .5em 1em;
+
+    & .row {
+        flex: 1 1 30%;
+        min-width: fit-content;
+
+        & select {
+            width: 100%;
+        }
+    }
+}
+
+button,
+input {
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    padding: .5em;
+    background-color: #EBECF0;
+    text-shadow: 1px 1px 0 #FFF;
+}
+
+input {
+    box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.2s ease-in-out;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+input:focus {
+    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+}
+
+button {
+    font-weight: 400;
+    box-shadow: -5px -5px 20px #FFF, 5px 5px 20px #BABECC;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+button .icon {
+    margin-right: .6em;
+}
+
+button {
+    display: block;
+    width: 100%;
+    background-color: #7DC855;
+    color: #fff;
+}
+
+button:hover,
+button:focus {
+    background-color: #64af3d;
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+}
+
+button:active {
+    background-color: #64af3d;
+    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+}
+
+.button:disabled,
+.button:disabled:hover,
+.button:disabled:focus,
+.button:disabled:active {
+    box-shadow: unset;
+    background-color: #696969;
+    color: #faf0e6;
+    opacity: 1;
+    filter: none;
+    cursor: not-allowed;
+}
+
+.container form fieldset .row input.fieldCtr:focus {
+    border: 1px solid #5cb85c;
+    box-shadow: inset 0px 0px 2px 2px rgba(27, 136, 187, 0.25);
+    outline: none;
+}
+
+.container form fieldset div.err-msg {
+    color: #cc0033;
+    text-align: center;
+}
+
+.container form fieldset .row.error {
+    background-color: #fce4e4;
+    border: none;
+    outline: none;
+
+    & input.fieldCtr,
+    input.fieldCtr:focus,
+    label>select {
+        border: 1px solid #cc0033;
+    }
+
+    &>input.fieldCtr:focus {
+        box-shadow: inset 0px 0px 2px 2px rgba(126, 15, 15, 0.25);
+    }
+}
+
+.container form fieldset .row.custom.error {
+    flex: 1 1 100%;
+    border: 1px solid #cc0033;
+    text-align: center;
+}

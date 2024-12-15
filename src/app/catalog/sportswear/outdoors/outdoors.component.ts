@@ -79,7 +79,7 @@ export class OutdoorsComponent implements OnInit, OnDestroy {
     this.listItems[idx] = { ...this.listItems[idx], inCart: true };
     this.cartService.addCartItem(newCartItem);
     this.cartItemsCounter++;
-    this.toastrMessageHandler.showSuccess();
+    this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
     // console.log(this.listItems);
     // console.log(this.cartItms);
   }

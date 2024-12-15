@@ -8,6 +8,7 @@
                 <li><a class="nav-icon user" routerLink="/auth/register">Register</a></li>
             </ng-container>
             <ng-container *ngIf="user">
+                <li><a class="nav-icon square-plus" routerLink="/create-product">Publish</a></li>
                 <li><a class="nav-icon profile" routerLink="/auth/profile">Profile</a></li>
                 <li><a class="nav-icon logout" (click)="logout()">Logout</a></li>
             </ng-container>

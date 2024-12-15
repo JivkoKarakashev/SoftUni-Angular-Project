@@ -1,7 +1,4 @@
-export interface Item {
-    _ownerId: string,
-    _id: string,
-    _createdOn: number,
+export interface CreateItem {
     image: string,
     altImages: string[],
     cat: string,
@@ -12,6 +9,12 @@ export interface Item {
     brand: string,
     quantity: number,
     price: number
+}
+
+export interface Item extends CreateItem {
+    _ownerId: string,
+    _id: string,
+    _createdOn: number,
 }
 
 /* eslint-disable */
