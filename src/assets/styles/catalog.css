@@ -172,7 +172,8 @@ p span {
 }
 
 p.in-cart,
-p.owner {
+p.owner,
+p.sold {
     background-color: #890000;
     color: #fff;
     text-align: center;

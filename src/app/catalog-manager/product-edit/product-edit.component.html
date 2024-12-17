@@ -1,8 +1,8 @@
-<section class="section-product-create">
+<section class="section-product-edit">
     <div class="container">
 
         <div class="header">
-            <h1>Publishing Form</h1>
+            <h1>Edit Product Form</h1>
         </div>
 
         <ng-container *ngIf="loading">
@@ -122,7 +122,7 @@
             </fieldset>
 
             <div class="row button" [ngClass]="{'disabled':(form.invalid)}">
-                <button [disabled]="form.invalid || altImages.length !== colors.length" class="button submit" type="submit"><i class="fa-regular fa-square-plus icon"></i>Publish</button>
+                <button [disabled]="form.invalid || altImages.length !== colors.length" class="button submit" type="submit"><i class="fa-regular fa-floppy-disk"></i>Save Changes</button>
             </div>
 
         </form>

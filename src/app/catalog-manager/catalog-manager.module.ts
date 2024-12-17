@@ -7,12 +7,14 @@ import { CatalogManagerRoutingModule } from './catalog-manager-routing.modules';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { SharedModule } from '../shared/shared.module';
+import { ProductEditComponent } from './product-edit/product-edit.component';
 
 
 
 @NgModule({
   declarations: [
-    ProductCreateComponent
+    ProductCreateComponent,
+    ProductEditComponent
   ],
   imports: [
     CommonModule,

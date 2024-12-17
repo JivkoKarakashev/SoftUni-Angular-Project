@@ -233,4 +233,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       );
     this.unsubscriptionArray.push(deleteSub);
   }
+
+  onEdit(): void {
+    this.catalogManagerService.setCatalogItemToEdit({ ...this.item });
+    this.router.navigate(['/edit-product']);
+  }
 }

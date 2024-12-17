@@ -127,6 +127,7 @@ export class SalesComponent implements OnInit, OnDestroy {
         {
           next: () => {
             this.loading = false;
+            this.updatedDbTradedItems = [];
             this.profileDataStateMgmnt.setSoldItemsState([...this.dbTradedItems]);
           },
           error: (err) => {

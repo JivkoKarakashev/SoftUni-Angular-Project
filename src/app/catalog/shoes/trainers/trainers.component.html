@@ -24,13 +24,14 @@
                             <p>Price: <span><strong>${{item.price}}</strong></span></p>                        
                             <div class="buttons">
                                 <ul class="buttons">
-                                    <li *ngIf="item._ownerId !== user?._id && !item.inCart" class="button buy" (click)="onAddToCart(i)">Add to basket</li>
-                                    <li *ngIf="item._ownerId === user?._id" class="button edit">Edit</li>
+                                    <li *ngIf="item._ownerId !== user?._id && !item.inCart && item.quantity > 0" class="button buy" (click)="onAddToCart(i)">Add to basket</li>
+                                    <li *ngIf="item._ownerId === user?._id" class="button edit" (click)="onEdit(i)">Edit</li>
                                     <li *ngIf="item._ownerId === user?._id" class="button delete" (click)="onDelete(i)">Delete</li>
                                 </ul>
                             </div>
                             <p *ngIf="item.inCart" [ngClass]="{'in-cart': item.inCart}">Already in cart</p>
-                            <p *ngIf="item._ownerId === user?._id" [ngClass]="{owner: item._ownerId === user?._id}">You are owner! You can't purchase this Item!</p>
+                            <p *ngIf="item.quantity === 0" class="sold">This item is sold out and out of stock!</p>
+                            <p *ngIf="item._ownerId === user?._id && item.quantity > 0" [ngClass]="{owner: item._ownerId === user?._id}">You are owner! You can't purchase this Item!</p>
                         </li>
         
                     </ul>

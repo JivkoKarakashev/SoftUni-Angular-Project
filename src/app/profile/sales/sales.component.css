@@ -48,6 +48,9 @@ div.sticky {
     }
 }
 
+.content.sales {
+    flex: 1 1 100%;
+}
 
 h2 {
     margin-bottom: 15px;

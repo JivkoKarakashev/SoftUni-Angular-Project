@@ -62,11 +62,11 @@
                     <ng-container *ngIf="item._ownerId === user?._id">
                         <div class="buttons">
                             <ul class="buttons">
-                                <li class="button edit">Edit</li>
+                                <li class="button edit" (click)="onEdit()">Edit</li>
                                 <li class="button delete" (click)="onDelete()">Delete</li>
                             </ul>
                         </div>
-                        <p class="owner">You are owner! You can't purchase this Item!</p>
+                        <p *ngIf="item.quantity > 0" class="owner">You are owner! You can't purchase this Item!</p>
                     </ng-container>
                     <p *ngIf="item.quantity === 0" class="sold">This item is sold out and out of stock!</p>
                 </div>

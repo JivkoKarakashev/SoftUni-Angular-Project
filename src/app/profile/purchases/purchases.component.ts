@@ -151,6 +151,7 @@ export class PurchasesComponent implements OnInit, OnDestroy {
         {
           next: () => {
             this.loading = false;
+            this.updatedDbTradedItems = [];
             this.profileDataStateMgmnt.setPurchasedItemsByOrderState([...this.dbTradedItemsArr]);
           },
           error: (err) => {

@@ -14,6 +14,7 @@ import { CatalogManagerService } from 'src/app/catalog-manager/catalog-manager.s
 import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for-item-in-cart-already.service';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
 import { ToastrMessageHandlerService } from 'src/app/shared/utils/toastr-message-handler.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-boots',
@@ -39,7 +40,8 @@ export class BootsComponent implements OnInit, OnDestroy {
     private checkForInCartAlready: CheckForItemInCartAlreadyService,
     private cartService: ShoppingCartService,
     private catalogManagerService: CatalogManagerService,
-    private toastrMessageHandler: ToastrMessageHandlerService
+    private toastrMessageHandler: ToastrMessageHandlerService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -106,5 +108,10 @@ export class BootsComponent implements OnInit, OnDestroy {
         }
       );
     this.unsubscriptionArray.push(deleteSub);
+  }
+
+  onEdit(i: number): void {
+    this.catalogManagerService.setCatalogItemToEdit({ ...this.listItems[i] });
+    this.router.navigate(['/edit-product']);
   }
 }

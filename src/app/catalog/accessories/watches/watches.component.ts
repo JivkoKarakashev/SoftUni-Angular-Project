@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, catchError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
@@ -39,7 +40,8 @@ export class WatchesComponent implements OnInit, OnDestroy {
     private checkForInCartAlready: CheckForItemInCartAlreadyService,
     private cartService: ShoppingCartService,
     private catalogManagerService: CatalogManagerService,
-    private toastrMessageHandler: ToastrMessageHandlerService
+    private toastrMessageHandler: ToastrMessageHandlerService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -72,7 +74,7 @@ export class WatchesComponent implements OnInit, OnDestroy {
     // console.log('UnsubArray = 2');
   }
 
-  onAddtoCart(i: number): void {
+  onAddToCart(i: number): void {
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = this.listItems[i];
     const newCartItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false };
     const idx = this.listItems.findIndex(itm => itm._id == _id);
@@ -106,5 +108,10 @@ export class WatchesComponent implements OnInit, OnDestroy {
         }
       );
     this.unsubscriptionArray.push(deleteSub);
+  }
+
+  onEdit(i: number): void {
+    this.catalogManagerService.setCatalogItemToEdit({ ...this.listItems[i] });
+    this.router.navigate(['/edit-product']);
   }
 }
