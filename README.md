@@ -296,7 +296,7 @@ Welcome to the Clothing store Application! This is an E-Commerce Single Page App
     }
     ```
 
-    - Array of purchased/sold Items and their status changes URL: http://localhost:3030/data/traded_items/{:itemId}_ - for changing change of the items status to the system.
+    - Array of purchased/sold Items and their status changes URL: http://localhost:3030/data/traded_items/{:itemId}_ - for changing of the items status to the system.
 
 ## Project Structure
 
@@ -344,28 +344,25 @@ Welcome to the Clothing store Application! This is an E-Commerce Single Page App
   ```
 - **Install Client Dependencies:**
   - Navigate to the root directory of the project and install the dependencies for the client.
-    - Navigate to the root directory and run:
-    ```bash
-    cd client
-    ```
-    - In the 'client' directory, install client dependencies by running:
+    - In the 'root' directory, install client dependencies by running:
     ```bash
     npm install
     ```
 - **Start the Server:**
-  - Navigate to the server directory of the project and start the Node.js server. - Navigate to the root directory and run:
-    ```bash
-	cd server
-	  ``` 
-  - In the 'server' directory run:
-    ```bash
-	node server.js
-	  ```
+  - Navigate to the server directory of the project and start the Node.js server. 
+    - Navigate to the root directory and run:
+      ```bash
+	    cd server
+	    ``` 
+    - In the 'server' directory run:
+      ```bash
+	    node server.js
+	    ```
     This will start the RESTful API Service, and you should see output 'Server started on port 3030. You can make requests to http://localhost:3030/' indicating that the service API is running. It should be accessible at http://localhost:3030.
 - **Start the Client Development Server:**
   - Open a new terminal window and navigate to the root directory. Start the Angular development server:
     ```bash
-	npm run start
+	  npm run start
 	  ```
     This will start the development server, and you should see output indicating that the development server is running and listening. It should be accessible at http://localhost:4200.
 
