@@ -354,18 +354,19 @@ Welcome to the Clothing store Application! This is an E-Commerce Single Page App
     ```
 - **Start the Server:**
   - Navigate to the server directory of the project and start the Node.js server. - Navigate to the root directory and run:
-    `bash
+    ```bash
 	cd server
-	` - In the 'server' directory run:
-    `bash
+	  ``` 
+  - In the 'server' directory run:
+    ```bash
 	node server.js
-	`
+	  ```
     This will start the RESTful API Service, and you should see output 'Server started on port 3030. You can make requests to http://localhost:3030/' indicating that the service API is running. It should be accessible at http://localhost:3030.
 - **Start the Client Development Server:**
   - Open a new terminal window and navigate to the root directory. Start the Angular development server:
-    `bash
+    ```bash
 	npm run start
-	`
+	  ```
     This will start the development server, and you should see output indicating that the development server is running and listening. It should be accessible at http://localhost:4200.
 
 ## License
