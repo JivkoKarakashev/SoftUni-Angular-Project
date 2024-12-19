@@ -24,7 +24,7 @@
                 </ng-container>
 
                 <div class="row color" formArrayName="altImges">
-                    <button class="button add-alt-image-url" (click)="addAltImageUrl()">Add addt'l Image URL</button>
+                    <button class="button add-alt-image-url" type="button" (click)="addAltImageUrl()">Add addt'l Image URL</button>
                     <div class="row custom" *ngIf="altImages.errors?.['required'] || altImages.length < 1" [ngClass]="{'error': altImages.errors?.['required'] || altImages.length < 1}">At least one addt'l Image URL per item is required!</div>
                     <div class="column-wrapper">
                         <div class="row" *ngFor="let altImage of altImages.controls; let i = index" [formGroupName]="i" [ngClass]="{'error': (altImages.at(i).get('altImage')?.touched || altImages.at(i).get('altImage')?.dirty) && altImages.at(i).get('altImage')?.invalid}">
@@ -33,7 +33,7 @@
                                 <div *ngIf="altImages.at(i).get('altImage')?.errors?.['required']" class="err-msg">Addt'l Image-{{i+1}} URL is required!</div>
                                 <div *ngIf="!altImages.at(i).get('altImage')?.errors?.['required'] && altImages.at(i).get('altImage')?.errors?.['invalidImgUrl']" class="err-msg">Valid Addt'l Image-{{i+1}} URL is required!</div>
                             </ng-container>
-                            <button class="remove" (click)="removeAltImageUrl(i)"><i class="fa-regular fa-circle-xmark"></i>Remove</button>
+                            <button class="remove" type="button" (click)="removeAltImageUrl(i)"><i class="fa-regular fa-circle-xmark"></i>Remove</button>
                         </div>
                     </div>
                 </div>
@@ -81,14 +81,14 @@
                 </ng-container>
 
                 <div class="row color" formArrayName="color">
-                    <button [disabled]="colors.length === altImages.length" class="button add-color" (click)="addColorPicker()">Add color</button>
+                    <button [disabled]="colors.length === altImages.length" class="button add-color" type="button" (click)="addColorPicker()">Add color</button>
                     <div class="row custom" *ngIf="colors.errors?.['required'] || (colors.length < 1 || colors.length !== altImages.length)" [ngClass]="{'error': colors.errors?.['required'] || (colors.length < 1 || colors.length !== altImages.length)}">Colors must be equal to the addt'l Images!</div>
                     <div class="column-wrapper">
                         <div class="row" *ngFor="let color of colors.controls; let i = index" [formGroupName]="i">
                             <label [for]="colorsFbArr[i]+i">
                                 <input formControlName="pickedColor" [id]="colorsFbArr[i]+i" [name]="colorsFbArr[i]+i" [(colorPicker)]="colorsFbArr[i]" [value]="colorsFbArr[i]" [style.background]="colorsFbArr[i]" [cpAlphaChannel]="'disabled'" [cpOutputFormat]="'hex'" placeholder="Pick a color" (colorPickerSelect)="onColorChange($event, i)" [cpPosition]="'bottom-right'" [cpOKButton]="true" [cpCancelButton]="true" required appTrim />
                             </label>
-                            <button class="remove" (click)="removeColor(i)"><i class="fa-regular fa-circle-xmark"></i>Remove</button>
+                            <button class="remove" type="button" (click)="removeColor(i)"><i class="fa-regular fa-circle-xmark"></i>Remove</button>
                         </div>
                     </div>
                 </div>
