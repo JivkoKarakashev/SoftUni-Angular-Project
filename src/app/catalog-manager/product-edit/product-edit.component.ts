@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Subscription, catchError } from 'rxjs';
+import { Observable, Subscription, catchError, switchMap } from 'rxjs';
 
 import { ImageUrlValidatorService } from 'src/app/shared/utils/image-url-validator.service';
 import { CatalogManagerService } from '../catalog-manager.service';
@@ -77,6 +77,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   public item: Item | null = null;
+  private itemInitSubCat: string = '';
   public dropdownList: DropdownList[] = [];
   public dropdownSettings!: IDropdownSettings;
   public altImagesFbArr: string[] = [];
@@ -108,6 +109,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     const item = this.catalogManagerService.getCatalogItemToEdit();
     if (item) {
       this.item = { ...item };
+      this.itemInitSubCat = item.subCat;
       const { altImages, brand, cat, color, description, image, price, quantity, size, subCat } = item;
       this.image.setValue(image);
       altImages.forEach((img, i) => {
@@ -127,6 +129,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.catalogManagerService.resetCatalogItemToEdit();
+    this.unsubscriptionArray.forEach((subscription) => {
+      subscription.unsubscribe();
+      // console.log('UnsubArray = 1');
+    });
+    // console.log('UnsubArray = 1');
   }
 
   onSubmit() {
@@ -147,29 +154,40 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       }
     });
     if (this.item) {
+      let editedItem: Observable<Item>;
       const { _createdOn, _id, _ownerId } = this.item;
-      const editSub = this.catalogManagerService.editItem({ _createdOn, _id, _ownerId, image, altImages, cat, subCat, description, size, color, brand, quantity, price })
-        .pipe(
-          catchError(err => { throw err; })
-        )
-        .subscribe(
-          {
-            next: (itm) => {
-              this.loading = false;
-              this.toastrMessageHandler.showSuccess('Item was edited successfully!');
-              const { _id, cat, subCat } = itm;
-              this.form.reset();
-              this.router.navigate([`/catalog/${cat}/${subCat}/${_id}`]);
-            },
-            error: (err) => {
-              this.loading = false;
-              const errMsg: string = err.error.message;
-              this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
-              this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-              this.toastrMessageHandler.showError(errMsg);
-            }
+      if (subCat !== this.itemInitSubCat) {
+        editedItem = this.catalogManagerService.deleteItem(this.itemInitSubCat, _id)
+          .pipe(
+            switchMap(() => {
+              return this.catalogManagerService.createItem({ image, altImages, cat, subCat, description, size, color, brand, quantity, price })
+            }),
+            catchError(err => { throw err; })
+          )
+      } else {
+        editedItem = this.catalogManagerService.editItem({ _createdOn, _id, _ownerId, image, altImages, cat, subCat, description, size, color, brand, quantity, price })
+          .pipe(
+            catchError(err => { throw err; })
+          )
+      }
+      const editSub = editedItem.subscribe(
+        {
+          next: (itm) => {
+            this.loading = false;
+            this.toastrMessageHandler.showSuccess('Item was edited successfully!');
+            const { _id, cat, subCat } = itm;
+            this.form.reset();
+            this.router.navigate([`/catalog/${cat}/${subCat}/${_id}`]);
+          },
+          error: (err) => {
+            this.loading = false;
+            const errMsg: string = err.error.message;
+            this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            this.toastrMessageHandler.showError(errMsg);
           }
-        );
+        }
+      );
       this.unsubscriptionArray.push(editSub);
     }
   }
