@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
 
 import { environment } from 'src/environments/environment.development';
-import { Belt, Blazer, Boot, Bottom, Cap, Glove, Gym, Hat, Jacket, Legging, Longwear, Outdoors, Partywear, Running, Ski, Slippers, Snowboard, Sunglasses, Surf, Sweater, Swim, Tie, Trainers, Tuxedo, Waistcoat, Watch } from '../types/item';
+import { Belt, Blazer, Boot, Bottom, Cap, Glove, Gym, Hat, Jacket, Legging, Longwear, Outdoors, Partywear, Running, Ski, Slippers, Snowboard, Sunglasses, Surf, Sweater, Swim, Tie, Trainers, Tuxedo, Waistcoat, Watch, Workwear } from '../types/item';
 
 import { HttpLogoutInterceptorSkipHeader } from '../interceptors/http-logout.interceptor';
 import { HttpAJAXInterceptorSkipHeader } from '../interceptors/http-ajax.interceptor';
@@ -30,6 +30,7 @@ const RECENT_TWO_BLAZERS_JACKETS_URL = `${BASE_URL}/blazers_jackets?sortBy=_crea
 const RECENT_TWO_WAISTCOATS_URL = `${BASE_URL}/waistcoats?sortBy=_createdOn%20desc&offset=0&pageSize=2`;
 const RECENT_TWO_TUXEDOS_PARTYWEAR = `${BASE_URL}/tuxedos_partywear?sortBy=_createdOn%20desc&offset=0&pageSize=2`;
 const RECENT_TWO_TIES = `${BASE_URL}/ties?sortBy=_createdOn%20desc&offset=0&pageSize=2`;
+const RECENT_TWO_WORKWEAR = `${BASE_URL}/workwear?sortBy=_createdOn%20desc&offset=0&pageSize=2`;
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +62,8 @@ export class HomeService {
       this.http.get<(Blazer | Jacket)[]>(RECENT_TWO_BLAZERS_JACKETS_URL, { headers }),
       this.http.get<Waistcoat[]>(RECENT_TWO_WAISTCOATS_URL, { headers }),
       this.http.get<(Tuxedo | Partywear)[]>(RECENT_TWO_TUXEDOS_PARTYWEAR, { headers }),
-      this.http.get<Tie[]>(RECENT_TWO_TIES, { headers })
+      this.http.get<Tie[]>(RECENT_TWO_TIES, { headers }),
+      this.http.get<Workwear[]>(RECENT_TWO_WORKWEAR, { headers })
     ]);
   }
 }

@@ -45,6 +45,7 @@ export interface Tuxedo extends Item { }
 export interface Partywear extends Item { }
 export interface Waistcoat extends Item { }
 export interface Watch extends Item { }
+export interface Workwear extends Item { }
 /* eslint-enable */
 
 export interface ListItem extends Item {

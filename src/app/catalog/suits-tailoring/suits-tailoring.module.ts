@@ -7,6 +7,8 @@ import { BlazersJacketsComponent } from './blazers-jackets/blazers-jackets.compo
 import { WaistcoatsComponent } from './waistcoats/waistcoats.component';
 import { TuxedosPartywearComponent } from './tuxedos-partywear/tuxedos-partywear.component';
 import { TiesComponent } from './ties/ties.component';
+import { WorkwearComponent } from './workwear/workwear.component';
+import { SuitsTailoringComponent } from './suits-tailoring/suits-tailoring.component';
 
 
 
@@ -15,7 +17,9 @@ import { TiesComponent } from './ties/ties.component';
     BlazersJacketsComponent,
     WaistcoatsComponent,
     TuxedosPartywearComponent,
-    TiesComponent
+    TiesComponent,
+    WorkwearComponent,
+    SuitsTailoringComponent
   ],
   imports: [
     CommonModule, SuitsTailoringRoutingModule, SharedModule
