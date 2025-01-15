@@ -9,6 +9,11 @@
         <div class="site-title">
           <a class="title-icon store" routerLink="/">eStore</a>
         </div>
+        <div class="user">
+          <span>
+            <a [ngClass]="{'disabled': !user}" routerLink="/auth/profile">Welcome {{user?.username || guest}}</a>
+          </span>
+        </div>
         <app-header-desktop></app-header-desktop>
         <div class="drop-down">
           <label for="check-box">

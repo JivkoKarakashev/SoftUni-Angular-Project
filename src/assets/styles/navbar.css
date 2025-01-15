@@ -85,6 +85,18 @@ a.nav-icon {
   border: 1px solid rgba(55, 255, 15, 0.001);
 }
 
+div.user {
+  & span {
+    font-weight: 600;
+    & a {
+      color: #ffffff;
+    }
+    & a.disabled {
+      pointer-events: none;
+    }
+  }
+}
+
 ul.navbar li {
   cursor: pointer;
 }
