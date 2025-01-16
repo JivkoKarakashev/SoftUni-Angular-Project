@@ -87,11 +87,13 @@ a.cart:active {
     flex: 1 1 100%;
     flex-wrap: wrap;
     gap: 1em;
+    justify-content: space-evenly;
 }
 
 /* Columns */
 .left-column {
     flex: 0 0 65%;
+    /* min-width: fit-content; */
 }
 
 .right-column {

@@ -7,6 +7,7 @@ import { TrainersComponent } from './trainers/trainers.component';
 import { BootsComponent } from './boots/boots.component';
 import { SlippersComponent } from './slippers/slippers.component';
 import { ShoesComponent } from './shoes/shoes.component';
+import { NgConfirmModule } from 'ng-confirm-box';
 
 
 
@@ -18,7 +19,10 @@ import { ShoesComponent } from './shoes/shoes.component';
     ShoesComponent
   ],
   imports: [
-    CommonModule, ShoesRoutingModule, SharedModule
+    CommonModule,
+    ShoesRoutingModule,
+    SharedModule,
+    NgConfirmModule
   ]
 })
 export class ShoesModule { }

@@ -18,6 +18,7 @@ import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.in
 import { UserStateManagementService } from '../state-management/user-state-management.service';
 import { ErrorsService } from '../errors/errors.service';
 import { ToastrMessageHandlerService } from '../utils/toastr-message-handler.service';
+import { CapitalizeCategoryService } from '../utils/capitalize-category.service';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
 
@@ -75,7 +76,8 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private cartService: ShoppingCartService,
     private cartStateMgmnt: ShoppingCartStateManagementService,
     private catalogManagerService: CatalogManagerService,
-    private toastrMessageHandler: ToastrMessageHandlerService
+    private toastrMessageHandler: ToastrMessageHandlerService,
+    public capitalizeCategoryService: CapitalizeCategoryService
   ) { this.cartItemsCounter = this.cartStateMgmnt.getCartItemsCount() }
 
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;

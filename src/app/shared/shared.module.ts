@@ -25,7 +25,12 @@ import { TrimDirective } from './directives/trim.directive';
     TrimDirective
   ],
   imports: [
-    CommonModule, FormsModule, ReactiveFormsModule, RouterLink, CheckoutRoutingModule, NgxStripeModule.forChild(environment.stripe.publicKey)
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterLink,
+    CheckoutRoutingModule,
+    NgxStripeModule.forChild(environment.stripe.publicKey)
   ],
   exports: [ShoppingCartComponent, LoaderComponent, ProductDetailsComponent, ErrorsComponent, TrimDirective]
 })

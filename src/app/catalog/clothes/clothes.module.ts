@@ -6,6 +6,7 @@ import { LongwearComponent } from './longwear/longwear.component';
 import { ClothesComponent } from './clothes/clothes.component';
 import { ClothesRoutingModule } from './clothes-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { NgConfirmModule } from 'ng-confirm-box';
 
 
 
@@ -16,7 +17,10 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ClothesComponent
   ],
   imports: [
-    CommonModule, ClothesRoutingModule, SharedModule
+    CommonModule,
+    ClothesRoutingModule,
+    SharedModule,
+    NgConfirmModule
   ]
 })
 export class ClothesModule { }

@@ -135,6 +135,7 @@ li.item {
         & div.buttons {
 
             & ul.buttons {
+                flex: 1 1 auto;
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
@@ -142,6 +143,10 @@ li.item {
                 cursor: pointer;
 
                 & {
+                    li.button:not(.buy) {
+                        flex: 0 1 20%;
+                        text-align: center;
+                    }
                     li.button.buy {
                         background-color: #5cb85c;
                         color: #fff;
@@ -193,6 +198,7 @@ li.item:focus-within {
         & div.buttons {
 
             & ul.buttons {
+                flex: 1 1 auto;
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
@@ -200,6 +206,10 @@ li.item:focus-within {
                 cursor: pointer;
 
                 & {
+                    li.button:not(.buy) {
+                        flex: 0 1 20%;
+                        text-align: center;
+                    }
 
                     li.button.buy:hover,
                     li.button.buy:focus-within {

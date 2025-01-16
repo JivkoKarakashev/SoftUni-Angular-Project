@@ -9,6 +9,7 @@ import { TuxedosPartywearComponent } from './tuxedos-partywear/tuxedos-partywear
 import { TiesComponent } from './ties/ties.component';
 import { WorkwearComponent } from './workwear/workwear.component';
 import { SuitsTailoringComponent } from './suits-tailoring/suits-tailoring.component';
+import { NgConfirmModule } from 'ng-confirm-box';
 
 
 
@@ -22,7 +23,10 @@ import { SuitsTailoringComponent } from './suits-tailoring/suits-tailoring.compo
     SuitsTailoringComponent
   ],
   imports: [
-    CommonModule, SuitsTailoringRoutingModule, SharedModule
+    CommonModule,
+    SuitsTailoringRoutingModule,
+    SharedModule,
+    NgConfirmModule
   ]
 })
 export class SuitsTailoringModule { }

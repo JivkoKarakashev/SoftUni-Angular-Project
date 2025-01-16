@@ -15,6 +15,7 @@ import { CatalogManagerService } from 'src/app/catalog-manager/catalog-manager.s
 import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for-item-in-cart-already.service';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
 import { ToastrMessageHandlerService } from 'src/app/shared/utils/toastr-message-handler.service';
+import { NgConfirmService } from 'ng-confirm-box';
 
 @Component({
   selector: 'app-blazers-jackets',
@@ -40,6 +41,7 @@ export class BlazersJacketsComponent implements OnInit, OnDestroy {
     private checkForInCartAlready: CheckForItemInCartAlreadyService,
     private cartService: ShoppingCartService,
     private catalogManagerService: CatalogManagerService,
+    private confirmService: NgConfirmService,
     private toastrMessageHandler: ToastrMessageHandlerService,
     private router: Router
   ) { }
@@ -87,31 +89,41 @@ export class BlazersJacketsComponent implements OnInit, OnDestroy {
   }
 
   onDelete(i: number): void {
-    const { _id, subCat } = this.listItems[i];
-    const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
-      .pipe(
-        catchError(err => { throw err; })
-      )
-      .subscribe(
-        {
-          next: () => {
-            const newListItems = this.listItems.filter((itm, idx) => idx != i ? itm : null);
-            this.listItems = [...newListItems];
-            this.toastrMessageHandler.showInfo();
-          },
-          error: (err) => {
-            const errMsg: string = err.error.message;
-            this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
-            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-            this.toastrMessageHandler.showError(errMsg);
-          }
-        }
-      );
-    this.unsubscriptionArray.push(deleteSub);
+    this.confirmService.showConfirm('Delete this item?',
+      () => {
+        const { _id, subCat } = this.listItems[i];
+        const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
+          .pipe(
+            catchError(err => { throw err; })
+          )
+          .subscribe(
+            {
+              next: () => {
+                const newListItems = this.listItems.filter((itm, idx) => idx != i ? itm : null);
+                this.listItems = [...newListItems];
+                this.toastrMessageHandler.showInfo();
+              },
+              error: (err) => {
+                const errMsg: string = err.error.message;
+                this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+                this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+                this.toastrMessageHandler.showError(errMsg);
+              }
+            }
+          );
+        this.unsubscriptionArray.push(deleteSub);
+      },
+      () => { return; }
+    );
   }
 
   onEdit(i: number): void {
-    this.catalogManagerService.setCatalogItemToEdit({ ...this.listItems[i] });
-    this.router.navigate(['/edit-product']);
+    this.confirmService.showConfirm('Edit this item?',
+      () => {
+        this.catalogManagerService.setCatalogItemToEdit({ ...this.listItems[i] });
+        this.router.navigate(['/edit-product']);
+      },
+      () => { return; }
+    );
   }
 }

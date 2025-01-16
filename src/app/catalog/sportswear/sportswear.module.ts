@@ -11,6 +11,7 @@ import { OutdoorsComponent } from './outdoors/outdoors.component';
 import { BottomsLeggingsComponent } from './bottoms-leggings/bottoms-leggings.component';
 import { SweatersComponent } from './sweaters/sweaters.component';
 import { SportswearComponent } from './sportswear/sportswear.component';
+import { NgConfirmModule } from 'ng-confirm-box';
 
 
 
@@ -26,7 +27,10 @@ import { SportswearComponent } from './sportswear/sportswear.component';
     SportswearComponent
   ],
   imports: [
-    CommonModule, SportswearRoutingModule, SharedModule
+    CommonModule,
+    SportswearRoutingModule,
+    SharedModule,
+    NgConfirmModule
   ]
 })
 export class SportswearModule { }

@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { NgConfirmModule } from 'ng-confirm-box';
+
 import { AccessoriesRoutingModule } from './accessories-routing.module';
 import { CapsHatsComponent } from './caps-hats/caps-hats.component';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -22,7 +24,10 @@ import { AccessoriesComponent } from './accessories/accessories.component';
     AccessoriesComponent
   ],
   imports: [
-    CommonModule, AccessoriesRoutingModule, SharedModule
+    CommonModule,
+    AccessoriesRoutingModule,
+    SharedModule,
+    NgConfirmModule
   ]
 })
 export class AccessoriesModule { }
