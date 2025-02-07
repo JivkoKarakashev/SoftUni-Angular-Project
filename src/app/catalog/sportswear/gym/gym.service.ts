@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment.development';
 import { Gym } from 'src/app/types/item';
@@ -16,8 +17,14 @@ export class GymService {
 
   constructor(private http: HttpClient) { }
 
-  getGym() {
+  getCollectionSize(): Observable<number> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-    return this.http.get<Gym[]>(URL, { headers });
+    return this.http.get<number>(`${URL}?count`, { headers });
+    // return of(0);
+  }
+
+  getGymByPage(skipSizeReq: number, pageSizeReq: number) {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<Gym[]>(`${URL}?offset=${skipSizeReq}&pageSize=${pageSizeReq}`, { headers });
   }
 }

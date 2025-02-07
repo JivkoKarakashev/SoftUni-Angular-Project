@@ -12,7 +12,7 @@ export class TrimDirective {
     ) { }
 
   @HostListener('blur', ['$event'])
-  onBlur(e: FocusEvent) { this.trimUserInput() }
+  onBlur(_e: FocusEvent) { this.trimUserInput() }
 
   private trimUserInput() {
     const value: string = this.element.nativeElement.value;

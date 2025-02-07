@@ -1,7 +1,4 @@
-export type ColorHex = string;
-export type ColorHexArr = [string, string, string, string, string, string, string, string];
-export type ColorNameByHex = string;
-export type ColorsNameHexArr = Array<[ColorHex, ColorNameByHex] | ColorHexArr>
+export type ColorsNameHexArr = Array<string[]>;
 
 export const colorNameByHexArr: ColorsNameHexArr = [
     ["000000", "Black"],

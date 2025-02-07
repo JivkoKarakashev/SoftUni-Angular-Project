@@ -19,6 +19,7 @@ import { UserStateManagementService } from '../state-management/user-state-manag
 import { ErrorsService } from '../errors/errors.service';
 import { ToastrMessageHandlerService } from '../utils/toastr-message-handler.service';
 import { CapitalizeCategoryService } from '../utils/capitalize-category.service';
+import { InvertColorService } from '../utils/invert-color.service';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
 
@@ -77,7 +78,8 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private cartStateMgmnt: ShoppingCartStateManagementService,
     private catalogManagerService: CatalogManagerService,
     private toastrMessageHandler: ToastrMessageHandlerService,
-    public capitalizeCategoryService: CapitalizeCategoryService
+    public capitalizeCategoryService: CapitalizeCategoryService,
+    private invertColorService: InvertColorService
   ) { this.cartItemsCounter = this.cartStateMgmnt.getCartItemsCount() }
 
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;
@@ -158,7 +160,8 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   ngAfterViewInit(): void {
     const spanElementsSubscription = this.spanColorElements.changes.subscribe((els: QueryList<ElementRef>) => {
       els.forEach((el, i) => {
-        this.render.setStyle(el.nativeElement, 'background-color', this.itemCtrlsGr.get('color')?.value[i]);
+        const hexColor = this.invertColorService.nameToHex(this.itemCtrlsGr.get('color')?.value[i]);
+        this.render.setStyle(el.nativeElement, 'background-color', hexColor);
       });
     });
     this.unsubscriptionArray.push(spanElementsSubscription);
@@ -193,7 +196,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     this.selectedImgUrl = this.item.altImages[idx];
   }
 
-  trackByUrl(index: number, url: string): string {
+  trackByUrl(_index: number, url: string): string {
     // console.log(url);
     return url;
   }

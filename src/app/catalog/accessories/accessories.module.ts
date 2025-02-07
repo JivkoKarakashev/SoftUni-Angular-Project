@@ -11,6 +11,7 @@ import { GlovesComponent } from './gloves/gloves.component';
 import { SunglassesComponent } from './sunglasses/sunglasses.component';
 import { WatchesComponent } from './watches/watches.component';
 import { AccessoriesComponent } from './accessories/accessories.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -27,7 +28,8 @@ import { AccessoriesComponent } from './accessories/accessories.component';
     CommonModule,
     AccessoriesRoutingModule,
     SharedModule,
-    NgConfirmModule
+    NgConfirmModule,
+    FormsModule
   ]
 })
 export class AccessoriesModule { }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { DBOrder, dbOrderInitialState } from 'src/app/types/order';
+import { DBOrder } from 'src/app/types/order';
 
 import { CheckForItemTypeService } from '../utils/check-for-item-type.service';
 

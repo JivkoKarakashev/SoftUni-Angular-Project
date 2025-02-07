@@ -13,6 +13,7 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { InvertColorService } from 'src/app/shared/utils/invert-color.service';
 import { ToastrMessageHandlerService } from 'src/app/shared/utils/toastr-message-handler.service';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
+import { CheckForSizeTypeService } from 'src/app/shared/utils/check-for-size-type.service';
 
 @Component({
   selector: 'app-product-edit',
@@ -77,7 +78,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   public item: Item | null = null;
-  private itemInitSubCat: string = '';
+  private itemInitSubCat = '';
   public dropdownList: DropdownList[] = [];
   public dropdownSettings!: IDropdownSettings;
   public altImagesFbArr: string[] = [];
@@ -98,6 +99,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     private toastrMessageHandler: ToastrMessageHandlerService,
     private router: Router,
     private errorsService: ErrorsService,
+    private checkSizeType: CheckForSizeTypeService
   ) { }
 
   ngOnInit(): void {
@@ -143,7 +145,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.loading = true;
     const { image, cat, subCat, description, brand, quantity, price } = this.form.value;
     const altImages = [...this.altImagesFbArr];
-    const size = this.size.value;
+    const sizeArr: Array<string | number> | Array<DropdownList> = this.size.value;
+    // console.log(sizeArr);
+    let size: Array<string | number> = [];
+    if (this.checkSizeType.isDropdownListSize(sizeArr)) {
+      size = sizeArr.map(sz => sz._name);
+    } else {
+      size = [...sizeArr];
+    }
     const color: string[] = [];
     this.colorsFbArr.forEach(col => {
       const validHex = /^#([a-fA-F0-9]{3}){1,2}$/g;

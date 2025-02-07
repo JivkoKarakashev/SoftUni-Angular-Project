@@ -8,7 +8,7 @@ import { CapitalizeCategoryService } from 'src/app/shared/utils/capitalize-categ
 import { ImageUrlValidatorService } from 'src/app/shared/utils/image-url-validator.service';
 import { CatalogCategory, CatalogCategorySelectOption, CatalogSubcategorySelectOption, catalogCategorySelectOptions, catalogSubcategorySelectOptions } from 'src/app/types/catalog';
 import { CatalogManagerService } from '../catalog-manager.service';
-import { Subscription, catchError, pipe } from 'rxjs';
+import { Subscription, catchError } from 'rxjs';
 import { ToastrMessageHandlerService } from 'src/app/shared/utils/toastr-message-handler.service';
 import { Router } from '@angular/router';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';

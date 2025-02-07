@@ -15,8 +15,6 @@ export class ProfileDataStateManagementService {
   private soldItems$$ = new BehaviorSubject<TradedItem[]>([]);
   private soldItems$ = this.soldItems$$.asObservable();
 
-  constructor() { }
-
   /////////////////////<--- Orders State Management--->/////////////////////
   getOrdersState(): Observable<DBOrder[]> {
     return this.orders$;

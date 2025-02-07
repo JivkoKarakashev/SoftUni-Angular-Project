@@ -1,4 +1,73 @@
+.catalog-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pagination {
+    width: 100%;
+
+    & .navbar {
+        display: flex;
+
+        & li {
+            cursor: unset;
+        }
+
+        & .left-navbar-wrapper,
+        .right-navbar-wrapper {
+            flex: 1 1 33%;
+            justify-content: flex-start;
+
+            & select {
+                cursor: pointer;
+            }
+        }
+
+    }
+}
+
+.pagination .navbar .right-navbar-wrapper {
+    flex: 1 1 67%;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    gap: .5em;
+
+    & li.disabled {
+        cursor: unset;
+
+        & a.disabled {
+            pointer-events: none;
+            color: #808080;
+        }
+
+    }
+}
+
+@media screen and (pointer: coarse) {
+    a.nav-icon {
+        color: #5270FF;
+        border: 1px solid rgba(55, 255, 15, 0.001);
+    }
+}
+
+@media screen and (pointer: fine) {
+
+    a.nav-icon:hover,
+    a.nav-icon:focus {
+        color: #5270FF;
+        border: 1px solid rgba(55, 255, 15, 0.001);
+    }
+}
+
 .wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.left-right-wrapper {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -9,12 +78,226 @@ div.left-wrapper {
     flex-direction: row;
     flex-wrap: wrap;
     flex: 0 1 96%;
+
+    & .section-catalog {
+        width: 100%;
+    }
 }
+
+/* ////////////////////////////////////////// */
+
+/* The sidebar menu */
+.sidebar {
+    margin: .9em 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    gap: 1em;
+    width: 0;
+    /* 0 width - change this with JavaScript */
+    background-color: #22292f;
+    color: #fff;
+    overflow-x: hidden;
+    /* Disable horizontal scroll */
+    transition: 0.5s;
+    /* 0.5 second transition effect to slide in the sidebar */
+}
+
+div.filter {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: .5em;
+    gap: .2em;
+    min-width: fit-content;
+
+    & div.clear {
+        width: 100%;
+        display: flex;
+        align-self: flex-end;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        border-bottom: 1px solid #fff;
+        margin-bottom: .5em;
+        padding-bottom: .5em;
+
+        & button.clear-btn {
+            flex: 0 0 40%;
+            cursor: pointer;
+            background-color: #808080;
+            color: #fff;
+            border: 1px solid rgba(55, 255, 15, 0.001);
+            border-radius: 5px;
+            padding: .2em .5em;
+        }
+
+        & button.clear-btn:hover,
+        button.clear-btn:focus {
+            border-color: #9398eb;
+        }
+
+        /* @media screen and (pointer: coarse) {
+            & button.clear-btn {
+                background-color: #808080;
+                color: #fff;
+            }
+        } */
+    }
+
+    & div.filter-btns {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: .2em;
+
+        & button.filter-btn {
+            flex: 1 1 40%;
+            max-width: 40%;
+            cursor: pointer;
+            border: 3px solid rgba(55, 255, 15, 0.001);
+            border-radius: 5px;
+        }
+
+        & button.color-btn:hover,
+        button.color-btn.active {
+            border: 3px solid #9398eb;
+        }
+    }
+
+    & .filter-sliders {
+        position: relative;
+        min-height: 50px;
+
+        & input.price-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            pointer-events: all;
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 1px #C6C6C6;
+            cursor: pointer;
+        }
+
+        & input.price-slider::-moz-range-thumb {
+            -moz-appearance: none;
+            pointer-events: all;
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 1px #C6C6C6;
+            cursor: pointer;
+        }
+
+        & input.price-slider::-webkit-slider-thumb:hover {
+            background: #387bbe;
+        }
+
+        & input.price-slider::-moz-range-thumb:hover {
+            background: #387bbe;
+        }
+
+        & input.price-slider::-webkit-slider-thumb:active {
+            box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+            -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+        }
+
+        input.price-slider::-moz-range-thumb:active {
+            box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+            -moz-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+        }
+
+        & input.price-slider {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            height: 2px;
+            width: 100%;
+            top: 20px;
+            position: absolute;
+            background-color: #C6C6C6;
+            pointer-events: none;
+        }
+
+        & input.price-slider.from-slider {
+            height: 0;
+            z-index: 1;
+        }
+
+    }
+
+    & .filter-input {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        & .filter-input-left-wrapper,
+        .filter-input-right-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        & .filter-input-right-wrapper {
+            align-items: flex-end;
+        }
+    }
+
+}
+
+
+
+div.wrapper {
+    .sidebar.show {
+        padding: .5em;
+        width: 30vw;
+        flex: 1 0 30%;
+    }
+}
+
+/* The sidebar links */
+.sidebar .closebtn {
+    max-width: min-content;
+    align-self: flex-end;
+    cursor: pointer;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidebar .closebtn:hover {
+    color: #808080;
+}
+
+/* The button used to open the sidebar */
+.openbtn {
+    cursor: pointer;
+    background-color: #808080;
+    color: white;
+    padding: .5em 1em;
+    border: none;
+    transition: .3s;
+}
+
+.openbtn:hover,
+.openbtn.active,
+.size-btn:hover,
+.size-btn.active,
+.brand-btn:hover,
+.brand-btn.active {
+    background-color: #5270FF;
+}
+
+/* ////////////////////////////////////////// */
 
 div.right-wrapper {
     flex: 1 1 1%;
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    justify-content: flex-end;
     align-items: flex-end;
     padding: 0 1em 1em 0;
 }
@@ -40,7 +323,11 @@ a.cart {
     /* justify-content: center; */
     aspect-ratio: 1/1;
     border-radius: 50%;
-    padding: 0.5em;
+    padding: .5em;
+
+    &>* {
+        transition: .3s;
+    }
 }
 
 a.cart span.counter {
@@ -79,6 +366,27 @@ div.sticky:focus {
 a.cart:active {
     filter: blur(1px);
 }
+
+/* ////////////////////////////////////// */
+button.scroll-top {
+    border: unset;
+    cursor: pointer;
+    position: sticky;
+    bottom: 30vh;
+    align-self: center;
+    border-radius: 5px;
+    padding: .7em;
+    background-color: #22292F;
+    color: #fff;
+    transition: .3s;
+}
+
+button.scroll-top:hover,
+button.scroll-top:focus {
+    color: #5cb85c;
+}
+
+/* ////////////////////////////////////// */
 
 /* ////////////////////////////////////// */
 div.items ul.items {
@@ -140,13 +448,17 @@ li.item {
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 1em;
-                cursor: pointer;
+
+                & li.button {
+                    cursor: pointer;
+                }
 
                 & {
                     li.button:not(.buy) {
                         flex: 0 1 20%;
                         text-align: center;
                     }
+
                     li.button.buy {
                         background-color: #5cb85c;
                         color: #fff;
@@ -203,7 +515,10 @@ li.item:focus-within {
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 1em;
-                cursor: pointer;
+
+                & li.button {
+                    cursor: pointer;
+                }
 
                 & {
                     li.button:not(.buy) {

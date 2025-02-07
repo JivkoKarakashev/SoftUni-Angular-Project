@@ -73,6 +73,14 @@ a.nav-icon.square-plus:before {
   content: "\f0fe";
 }
 
+a.nav-icon.circle-left:before {
+  content: "\f137";
+}
+
+a.nav-icon.circle-right:before {
+  content: "\f138";
+}
+
 p.nav-icon.menu:before {
   content: "\f0c9";
 }
@@ -83,6 +91,7 @@ p.nav-icon,
 a.nav-icon {
   color: #5270FF;
   border: 1px solid rgba(55, 255, 15, 0.001);
+  transition: .3s;
 }
 
 div.user {

@@ -1,5 +1,5 @@
 export class CustomError extends Error {
-    isUserError: boolean = false;
+    isUserError = false;
 
     constructor(
         name: string,

@@ -18,6 +18,7 @@ img {
 }
 
 html {
+    scroll-behavior: smooth;
     box-sizing: border-box;
     font: 14px/1.5 "Montserrat Alternates", sans-serif;
 }
@@ -44,13 +45,13 @@ h4 { font-size: 1.6em; } /* 14 * 1.6 = 22px */
 h5 { font-size: 1.2em; } /* 14 * 2.2 = 17px */
 h6 { font-size: 1.0em; } /* 14 * 1.0 = 14px */
 
-p, ul, ol {
-    /* padding-bottom: 1.5em; */
-}
+/* p, ul, ol {
+    padding-bottom: 1.5em;
+} */
 
-ul, ol {
-    /* padding-left: 1.6em; */
-}
+/* ul, ol {
+    padding-left: 1.6em;
+} */
 
 li {
     list-style-position: outside;

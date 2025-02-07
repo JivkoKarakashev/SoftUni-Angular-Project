@@ -1,6 +1,6 @@
 import { Injectable, Provider } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpResponse } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { HttpRequest, HttpHandler, /*HttpEvent,*/ HttpInterceptor, HTTP_INTERCEPTORS, HttpResponse } from '@angular/common/http';
+import { /*Observable,*/ of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { UserStateManagementService } from '../shared/state-management/user-state-management.service';
@@ -11,7 +11,7 @@ export class HttpLogoutInterceptor implements HttpInterceptor {
 
   constructor(private userStateMgmnt: UserStateManagementService) { }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler)/*: Observable<HttpEvent<any>>*/ {
     if (req.headers.has(HttpLogoutInterceptorSkipHeader)) {
       const headers = req.headers.delete(HttpLogoutInterceptorSkipHeader);
       return next.handle(req.clone({ headers }));
@@ -32,7 +32,7 @@ export class HttpLogoutInterceptor implements HttpInterceptor {
       userSubscription.unsubscribe();
     }
     return next.handle(req).pipe(
-      map((res: HttpEvent<any>) => {
+      map((res/*: HttpEvent<any>*/) => {
         if (res instanceof HttpResponse && res.status == 204) {
           console.log(res.status);
           res = res.clone({ body: null });

@@ -43,7 +43,8 @@
             "prefix": "app",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "no-control-regex": 0
       }
     },
     {

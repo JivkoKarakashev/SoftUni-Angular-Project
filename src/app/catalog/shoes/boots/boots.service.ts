@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment.development';
 import { Boot } from 'src/app/types/item';
@@ -16,8 +17,14 @@ export class BootsService {
 
   constructor(private http: HttpClient) { }
 
-  getBoots() {
+  getCollectionSize(): Observable<number> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-    return this.http.get<Boot[]>(URL, { headers });
+    return this.http.get<number>(`${URL}?count`, { headers });
+    // return of(0);
+  }
+
+  getBootsByPage(skipSizeReq: number, pageSizeReq: number) {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<Boot[]>(`${URL}?offset=${skipSizeReq}&pageSize=${pageSizeReq}`, { headers });
   }
 }

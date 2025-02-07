@@ -69,7 +69,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // console.log('UnsubArray = 1');
   }
 
-  public trackById(index: number, slide: lastTwoSlideImgs): string {
+  public trackById(_index: number, slide: lastTwoSlideImgs): string {
     // console.log(slide._id);
     return slide._id;
   }

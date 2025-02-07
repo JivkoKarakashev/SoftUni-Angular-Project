@@ -6,46 +6,179 @@
 
 <ng-confirm />
 
-<div class="wrapper" *ngIf="!loading">
-    <div class="left-wrapper">
-        <section class="section-catalog">
-            <div class="container">
-                <div class="items">
-                    <ul class="items">
-                        <li class="item" *ngFor="let item of listItems; let i = index" [id]="item._id">
-                            <div class="image">
-                                <a [routerLink]="['/catalog/', item.cat, item.subCat, item._id]">
-                                    <img src="{{item.image}}" alt="image" />
-                                </a>
-                            </div>
-                            <p>Description: <span>{{item.description}}</span></p>
-                            <p>Size: <span><ng-container *ngFor="let sz of item.size"> {{sz}}</ng-container></span></p>
-                            <p>Color: <span><ng-container *ngFor="let col of item.color"> {{col}}</ng-container></span></p>
-                            <p>Brand: <span>{{item.brand}}</span></p>
-                            <p>Remaining: <span>{{item.quantity}}</span></p>
-                            <p>Price: <span><strong>${{item.price}}</strong></span></p>    
-                            <div class="buttons">
-                                <ul class="buttons">
-                                    <li *ngIf="item._ownerId !== user?._id && !item.inCart && item.quantity > 0" class="button buy" (click)="onAddToCart(i)">Add to basket</li>
-                                    <li *ngIf="item._ownerId === user?._id" class="button edit" (click)="onEdit(i)">Edit</li>
-                                    <li *ngIf="item._ownerId === user?._id" class="button delete" (click)="onDelete(i)">Delete</li>
-                                </ul>
-                            </div>
-                            <p *ngIf="item.inCart" [ngClass]="{'in-cart': item.inCart}">Already in cart</p>
-                            <p *ngIf="item.quantity === 0" class="sold">This item is sold out and out of stock!</p>
-                            <p *ngIf="item._ownerId === user?._id && item.quantity > 0" [ngClass]="{owner: item._ownerId === user?._id}">You are owner! You can't purchase this Item!</p>
-                        </li>
-        
-                    </ul>
+<section class="catalog-wrapper" *ngIf="!loading">
+    
+    <nav class="pagination" *ngIf="paginationConfig.collectionSize > 0">
+        <ul class="navbar upper">
+            <div class="left-navbar-wrapper">
+                <li><button class="openbtn" [ngClass]="{'active': sidebarState === 'open'}" type="button" (click)="onSidebarToggle()">&#9776;Toggle Filters</button></li>
+            </div>
+            <div class="right-navbar-wrapper">
+                <li [ngClass]="{'disabled': selected.page === 1}"><a class="nav-icon circle-left" [ngClass]="{'disabled': selected.page === 1}" (click)="onPageChange(selected.page - 1)"></a></li>
+                <li class="disabled"><span>Page {{ selected.page }} &#8725; {{ paginationConfig.totalPages }}</span></li>
+                <li [ngClass]="{'disabled': selected.page === paginationConfig.totalPages}"><a class="nav-icon circle-right" [ngClass]="{'disabled': selected.page === paginationConfig.totalPages}" (click)="onPageChange(selected.page + 1)"></a></li>
+                <li>
+                    <label for="selected-page-upper">Page:&nbsp;</label>
+                    <select #selectedPage id="selected-page-upper" name="selected-page-upper" (change)="onPageSelect(selectedPage.value)">
+                        <option *ngFor="let page of pageOptionArr" [selected]="page === selected.page" [value]="page">{{ page }}</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="page-size-upper">Items per page:&nbsp;</label>
+                    <select #selectedPageSize id="page-size-upper" name="page-size-upper" (change)="onPageSizeSelect(selectedPageSize.value)">
+                        <option *ngFor="let size of pageSizeOptionArr" [selected]="size === selected.pageSize" [value]="size">{{ size }}</option>
+                    </select>
+                </li>
+            </div>
+        </ul>
+    </nav>
+
+    <div class="wrapper">
+
+        <div *ngIf="paginationConfig.collectionSize > 0" class="sidebar show" [ngClass]="{'show': sidebarState === 'open'}">
+            <div class="closebtn" (click)="onSidebarToggle()"><i class="fa-regular fa-circle-xmark fa-xl"></i></div>
+
+            <fieldset>
+                <legend>Size</legend>
+                <div class="filter size-filter">
+                    <div class="clear">
+                        <button class="clear-btn" type="button" (click)="onSizeFilterClear()">Clear</button>
+                    </div>
+                    <div class="filter-btns">
+                        <ng-container *ngFor="let sizeOpt of sizeFilterOptions; let i = index; trackBy: trackByIdx">
+                            <button #sizeBtns class="size-btn filter-btn" type="button" [id]="'size'+sizeOpt" [value]="sizeOpt" (click)="onSizeFilterChange(i)">{{sizeOpt}}</button>
+                        </ng-container>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Color</legend>
+                <div class="filter color-filter">
+                    <div class="clear">
+                        <button class="clear-btn" type="button" (click)="onColorFilterClear()">Clear</button>
+                    </div>
+                    <div class="filter-btns">
+                        <ng-container *ngFor="let colorOpt of colorFilterOptions; let i = index; trackBy: trackByIdx">
+                            <button #colorBtns class="color-btn filter-btn" type="button" [id]="'color'+colorOpt.hex" [value]="colorOpt.name" [style.background-color]="colorOpt.hex" [style.color]="colorOpt.hexInverted" (click)="onColorFilterChange(i)">{{colorOpt.name}}</button>
+                        </ng-container>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Brand</legend>
+                <div class="filter brand-filter">
+                    <div class="clear">
+                        <button class="clear-btn" type="button" (click)="onBrandFilterClear()">Clear</button>
+                    </div>
+                    <div class="filter-btns">
+                        <ng-container *ngFor="let brandOpt of brandFilterOptions; let i = index; trackBy: trackByIdx">
+                            <button #brandBtns class="brand-btn filter-btn" type="button" [id]="'brand'+brandOpt" [value]="brandOpt" (click)="onBrandFilterChange(i)">{{brandOpt}}</button>
+                        </ng-container>
+                    </div>
+                </div>
+            </fieldset>
+    
+            <fieldset>
+                <legend>Price</legend>
+                <div class="filter price-filter">
+                    <div class="clear">
+                        <button class="clear-btn" type="button" (click)="onPriceFilterClear()">Clear</button>
+                    </div>
+                    <div class="filter-sliders">
+                        <label for="price-from"></label>
+                        <input #fromPriceSlider class="price-slider filter-slider from-slider" type="range" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(0)" id="price-from" name="price-from" (input)="onPriceSliderChange()" />
+                        <label for="price-to"></label>
+                        <input #toPriceSlider class="price-slider filter-slider to-slider" type="range" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(priceFilterOptions.length - 1)" id="price-to" name="price-to" (input)="onPriceSliderChange()" />
+                    </div>
+                    <div class="filter-input">
+                        <div class="filter-input-left-wrapper">
+                            <label for="price-from-input">Min</label>
+                            <input #fromPriceInput class="price-input from-input" type="number" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(0)" id="price-from-input" name="price-from-input" (input)="onPriceInputChange()" />
+                        </div>
+                        <div class="filter-input-right-wrapper">
+                            <label for="price-to-input">Max</label>
+                            <input #toPriceInput class="price-input to-input" type="number" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(priceFilterOptions.length - 1)" id="price-to-input" name="price-to-input" (input)="onPriceInputChange()" />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+        </div>
+
+        <div class="left-right-wrapper">
+
+            <div class="left-wrapper">
+                <section class="section-catalog">
+                    <div class="container">
+                        <div class="items">
+                            <ul class="items">
+                                <li class="item" *ngFor="let item of filteredItems; let i = index" [id]="item._id">
+                                    <div class="image">
+                                        <a [routerLink]="['/catalog/',item.cat, item.subCat, item._id]">
+                                            <img src="{{item.image}}" alt="image" />
+                                        </a>
+                                    </div>
+                                    <p>Description: <span>{{item.description}}</span></p>
+                                    <p>Size: <span>{{item.size.join(' / ')}}</span></p>
+                                    <p>Color: <span>{{item.color.join(' / ')}}</span></p>
+                                    <p>Brand: <span>{{item.brand}}</span></p>
+                                    <p>Remaining: <span>{{item.quantity}}</span></p>
+                                    <p>Price: <span><strong>${{item.price}}</strong></span></p>
+                                    <div class="buttons">
+                                        <ul class="buttons">
+                                            <li *ngIf="item._ownerId !== user?._id && !item.inCart && item.quantity > 0" class="button buy" (click)="onAddToCart(i)">Add to basket</li>
+                                            <li *ngIf="item._ownerId === user?._id" class="button edit" (click)="onEdit(i)">Edit</li>
+                                            <li *ngIf="item._ownerId === user?._id" class="button delete" (click)="onDelete(i)">Delete</li>
+                                        </ul>
+                                    </div>
+                                    <p *ngIf="item.inCart" [ngClass]="{'in-cart': item.inCart}">Already in cart</p>
+                                    <p *ngIf="item.quantity === 0" class="sold">This item is sold out and out of stock!</p>
+                                    <p *ngIf="item._ownerId === user?._id && item.quantity > 0" [ngClass]="{owner: item._ownerId === user?._id}">You are owner! You can't purchase this Item!</p>
+                                </li>
+                
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="right-wrapper">
+                <button *ngIf="showScrollUpBtn" class="scroll-top" type="button" (click)="onScrollTop()">
+                    <i class="fa-solid fa-angles-up fa-2xl"></i>
+                </button>
+                <div class="sticky">
+                    <a class="cart" routerLink="/cart">
+                        <span class="counter">{{cartItemsCounter}}</span><i class="fi fi-rr-shopping-cart-check"></i>
+                    </a>
                 </div>
             </div>
-        </section>
-    </div>
-    <div class="right-wrapper">
-        <div class="sticky">
-            <a class="cart" routerLink="/cart">
-                <span class="counter">{{cartItemsCounter}}</span><i class="fi fi-rr-shopping-cart-check"></i>
-            </a>
+
         </div>
+
     </div>
-</div>
+
+    <nav class="pagination" *ngIf="paginationConfig.collectionSize > 0">
+        <ul class="navbar bottom">
+            <div class="left-navbar-wrapper"></div>
+            <div class="right-navbar-wrapper">
+                <li [ngClass]="{'disabled': selected.page === 1}"><a class="nav-icon circle-left" [ngClass]="{'disabled': selected.page === 1}" (click)="onPageChange(selected.page - 1)"></a></li>
+                <li class="disabled"><span>Page {{ selected.page }} &#8725; {{ paginationConfig.totalPages }}</span></li>
+                <li [ngClass]="{'disabled': selected.page === paginationConfig.totalPages}"><a class="nav-icon circle-right" [ngClass]="{'disabled': selected.page === paginationConfig.totalPages}" (click)="onPageChange(selected.page + 1)"></a></li>
+                <li>
+                    <label for="selected-page-bottom">Page:&nbsp;</label>
+                    <select #selectedPage id="selected-page-bottom" name="selected-page-bottom" (change)="onPageSelect(selectedPage.value)">
+                        <option *ngFor="let page of pageOptionArr" [selected]="page === selected.page">{{ page }}</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="page-size-bottom">Items per page:&nbsp;</label>
+                    <select #selectedPageSize id="page-size-bottom" name="page-size-bottom" (change)="onPageSizeSelect(selectedPageSize.value)">
+                        <option *ngFor="let size of pageSizeOptionArr" [selected]="size === selected.pageSize" [value]="size">{{ size }}</option>
+                    </select>
+                </li>
+            </div>
+        </ul>
+    </nav>
+</section>

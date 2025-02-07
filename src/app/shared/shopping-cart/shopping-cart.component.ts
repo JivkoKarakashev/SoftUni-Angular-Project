@@ -198,20 +198,20 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const colorOptionElementsSubscription = this.colorOptionElements.changes.subscribe((els: QueryList<ElementRef>) => {
       // console.log(els);
-      els.forEach((el, i) => {
+      els.forEach((el, _i) => {
         const nativeEL = el.nativeElement;
         const color = nativeEL.dataset['color'];
         // console.log(el, i);
         // console.log(el.nativeElement.dataset['color']);
-        this.render.setStyle(nativeEL, 'background-color', color);
-        const rgbObj = this.invertColor.standardize_color(color);
-        const hexColor = this.invertColor.invertColor(rgbObj);
-        this.render.setStyle(nativeEL, 'color', hexColor || color);
+        const hexColor = this.invertColor.nameToHex(color);
+        const invertedHexColor = this.invertColor.invertColor(hexColor);
+        this.render.setStyle(nativeEL, 'background-color', hexColor);
+        this.render.setStyle(nativeEL, 'color', invertedHexColor || color);
       });
     });
     this.unsubscriptionArray.push(colorOptionElementsSubscription);
 
-    const colorSelectElementsSubscription = this.colorSelectElements.changes.subscribe((el) => {
+    const colorSelectElementsSubscription = this.colorSelectElements.changes.subscribe(() => {
       this.colorSelectElements.forEach((el, idx) => {
         const nativeEl = el.nativeElement;
         // console.log(this.listItems[idx]);
@@ -220,10 +220,10 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
           const color = nativeEl.value;
           // console.log(nativeEl.value);
           // console.log(el, idx);
-          this.render.setStyle(nativeEl, 'background-color', color);
-          const rgbObj = this.invertColor.standardize_color(color);
-          const hexColor = this.invertColor.invertColor(rgbObj);
-          this.render.setStyle(nativeEl, 'color', hexColor);
+          const hexColor = this.invertColor.nameToHex(color);
+          const invertedHexColor = this.invertColor.invertColor(hexColor);
+          this.render.setStyle(nativeEl, 'background-color', hexColor);
+          this.render.setStyle(nativeEl, 'color', invertedHexColor);
         }
       });
     });
@@ -252,7 +252,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  toggleSelect(e: Event, i: number): void {
+  toggleSelect(_e: Event, i: number): void {
     // const el = e.target as HTMLSelectElement;
     this.cartItems[i] = { ...this.cartItems[i], checked: this.itms.controls[i].get('checked')?.value };
     // console.log(i);
@@ -306,10 +306,10 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     if (color) {
       // this.itms.controls[i].get('selectedColor')?.patchValue(color);
       this.itms.controls[i].patchValue({ selectedColor: color });
-      const rgbObj = this.invertColor.standardize_color(color);
-      const hexColor = this.invertColor.invertColor(rgbObj);
-      this.render.setStyle(el, 'background-color', color);
-      this.render.setStyle(el, 'color', hexColor);
+      const hexColor = this.invertColor.nameToHex(color);
+      const invertedHexColor = this.invertColor.invertColor(hexColor);
+      this.render.setStyle(el, 'background-color', hexColor);
+      this.render.setStyle(el, 'color', invertedHexColor);
     }
     else {
       this.render.removeStyle(el, 'background-color');
@@ -467,7 +467,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
     this.total.setValue(this.subtotalValue - this.discountValue + this.shippingValue);
   }
 
-  public trackById(index: number, item: CartItem): string {
+  public trackById(_index: number, item: CartItem): string {
     // console.log(index);
     // console.log(item._id);
     return item._id;

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
@@ -22,21 +22,13 @@ const CHECKOUT_SESSSION_URL = 'https://stripeembeddedcheckout-n42dg4tbiq-ew.a.ru
   providedIn: 'root'
 })
 export class CheckoutService {
-  // private user: UserForAuth | null = null;
-  // private _ownerId: string | null = null;
-  // private order_url = '';
 
-  constructor(private http: HttpClient, private orderStateMgmnt: OrderStateManagementService, private tradedItmsStateMgmnt: TradedItemsStateManagementService) { }
+  constructor(
+    private http: HttpClient,
+    private orderStateMgmnt: OrderStateManagementService,
+    private tradedItmsStateMgmnt: TradedItemsStateManagementService
+  ) { }
 
-  // getOrder(): Observable<Order[]> {
-  //   this.user$ = JSON.parse(localStorage?.getItem('userData') as string) || null;
-  //   this._ownerId = this.user$?._id as string || null;
-  //   // console.log(this.user$);
-  //   // console.log(this._ownerId);
-  //   this.order_url = `${BASE_URL}?where=_ownerId%3D%22${this._ownerId}%22 AND paymentState IN ("unpaid")`;
-  //   const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-  //   return this.http.get<Order[]>(this.order_url, { headers });
-  // }
   getDBOrder(): DBOrder | null {
     return this.orderStateMgmnt.getDBOrder();
   }
@@ -45,18 +37,11 @@ export class CheckoutService {
     return this.tradedItmsStateMgmnt.getDBTradedItems();
   }
 
-  // getDBOrderData(): Observable<[DBOrder, TradedItem[]]> {
-  //   return forkJoin([
-  //     this.orderStateMgmnt.getDBOrderState(),
-  //     this.tradedItmsStateMgmnt.getDBTradedItemsState()
-  //   ]);
-  // }
-
   createCheckoutSession(dbOrder: DBOrder, purchasedItems: TradedItem[]): Observable<ClientSecret> {
     const checkoutOrder: CheckoutOrder = { ...dbOrder, purchasedItems: [...purchasedItems] };
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     const body = { ...checkoutOrder };
-    console.log(body);
+    // console.log(body);
     return this.http.post<ClientSecret>(CHECKOUT_SESSSION_URL, body, { headers });
   }
 }

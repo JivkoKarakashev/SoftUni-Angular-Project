@@ -24,13 +24,13 @@ export class OverviewComponent implements OnInit {
   private soldItems: TradedItem[] = [];
 
   public purchasesSalesChartOpts: ChartOptions = { ...purchasesSalesChartOptsInit };
-  public purchasesSalesChrtReadyToShow: boolean = false;
+  public purchasesSalesChrtReadyToShow = false;
 
   public purchaseCategoriesChartOpts: ChartOptions = { ...purchaseCategoriesChartOptsInit };
-  public purchaseCategoriesChrtReadyToShow: boolean = false;
+  public purchaseCategoriesChrtReadyToShow = false;
 
   public salesCategoriesChartOpts: ChartOptions = { ...salesCategoriesChartOptsInit };
-  public salesCategoriesChrtReadyToShow: boolean = false;
+  public salesCategoriesChrtReadyToShow = false;
 
   constructor(
     private userStateMgmnt: UserStateManagementService,

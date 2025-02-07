@@ -1,6 +1,6 @@
 import { Injectable, Provider } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpResponse } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { HttpRequest, HttpHandler, /*HttpEvent,*/ HttpInterceptor, HTTP_INTERCEPTORS, HttpResponse } from '@angular/common/http';
+import { /*Observable,*/ catchError, of } from 'rxjs';
 
 import { UserStateManagementService } from '../shared/state-management/user-state-management.service';
 export const HttpAJAXInterceptorSkipHeader = 'X-Skip-HttpAJAXInterceptor';
@@ -10,14 +10,14 @@ export class HttpAJAXInterceptor implements HttpInterceptor {
 
   constructor(private userStateMgmnt: UserStateManagementService) { }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler)/*: Observable<HttpEvent<any>>*/ {
     if (req.headers.has(HttpAJAXInterceptorSkipHeader)) {
       const headers = req.headers.delete(HttpAJAXInterceptorSkipHeader);
       return next.handle(req.clone({ headers }));
     }
     ////////////////////////////////
     console.log('AJAXInterceptor invoked!');
-    let newReq: HttpRequest<any> = req.clone({ ...req });
+    let newReq/*: HttpRequest<any>*/ = req.clone({ ...req });
     // console.log(req.body);
     if (req.url.startsWith('http://localhost:3030/data/') && (req.body || req.method === 'DELETE')) {
       const userSubscription = this.userStateMgmnt.getUserState().subscribe(usr => {

@@ -34,14 +34,14 @@ export class CatalogManagerService {
   }
 
   deleteItem(subCat: string, itemId: string): Observable<OnDeleteItemServerResponse> {
-    const targetUrl: string = `${BASE_URL}/${subCat}/${itemId}`;
+    const targetUrl = `${BASE_URL}/${subCat}/${itemId}`;
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     return this.http.delete<OnDeleteItemServerResponse>(targetUrl, { headers });
   }
 
   createItem(item: CreateItem): Observable<Item> {
     const { subCat } = item;
-    const targetUrl: string = `${BASE_URL}/${subCat}`;
+    const targetUrl = `${BASE_URL}/${subCat}`;
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     const body = JSON.stringify({ ...item });
     return this.http.post<Item>(targetUrl, body, { headers });
@@ -49,7 +49,7 @@ export class CatalogManagerService {
 
   editItem(item: Item): Observable<Item> {
     const { _id, subCat } = item;
-    const targetUrl: string = `${BASE_URL}/${subCat}/${_id}`;
+    const targetUrl = `${BASE_URL}/${subCat}/${_id}`;
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '');
     const body = JSON.stringify({ ...item });
     return this.http.put<Item>(targetUrl, body, { headers });

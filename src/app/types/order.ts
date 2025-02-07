@@ -1,6 +1,6 @@
-import { Discount, discountInitialState } from "./discount";
+import { Discount } from "./discount";
 import { TradedItem } from "./item";
-import { Shipping, shippingInitialState } from "./shipping";
+import { Shipping } from "./shipping";
 
 export interface Order {
     email: string,
@@ -54,35 +54,4 @@ export const addressInitialState: Address = {
     region: '',
     postalCode: '',
     country: ''
-}
-
-export const orderInitialState: Order = {
-    email: '',
-    username: '',
-    address: addressInitialState,
-    subtotal: NaN,
-    discount: discountInitialState,
-    discountValue: NaN,
-    shippingMethod: shippingInitialState,
-    shippingValue: NaN,
-    total: NaN,
-    paymentState: 'unpaid',
-    status: 'pending'
-}
-
-export const dbOrderInitialState: DBOrder = {
-    _createdOn: NaN,
-    _id: '',
-    _ownerId: '',
-    email: '',
-    username: '',
-    address: addressInitialState,
-    subtotal: NaN,
-    discount: discountInitialState,
-    discountValue: NaN,
-    shippingMethod: shippingInitialState,
-    shippingValue: NaN,
-    total: NaN,
-    paymentState: 'unpaid',
-    status: 'pending'
 }

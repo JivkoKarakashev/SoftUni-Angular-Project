@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, catchError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { NgConfirmService } from 'ng-confirm-box';
   templateUrl: './suits-tailoring.component.html',
   styleUrls: ['./suits-tailoring.component.css']
 })
-export class SuitsTailoringComponent {
+export class SuitsTailoringComponent implements OnInit, OnDestroy {
 
   public listItems: ListItem[] = [];
   private cartItms: CartItem[] = [];
