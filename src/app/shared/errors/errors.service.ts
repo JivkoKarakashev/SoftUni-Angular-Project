@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { CustomError } from './custom-error';
 
@@ -9,14 +9,11 @@ import { CustomError } from './custom-error';
 })
 export class ErrorsService {
   private httpErrorsArr$$ = new BehaviorSubject<HttpErrorResponse[]>([]);
-  private httpErrorsArr$ = this.httpErrorsArr$$.asObservable();
-
   private customErrorsArr$$ = new BehaviorSubject<CustomError[]>([]);
-  private customErrorsArr$ = this.customErrorsArr$$.asObservable();
 
-  /////////////////////<--- HTTP Errors Response State Management--->/////////////////////
-  gethttpErrorsArrState(): Observable<HttpErrorResponse[]> {
-    return this.httpErrorsArr$;
+  /////////////////<--- HTTP Errors Response State Management --->//////////////////
+  gethttpErrorsArr(): HttpErrorResponse[] {
+    return this.httpErrorsArr$$.value;
   }
 
   sethttpErrorsArrState(httpErrors: HttpErrorResponse[]): void {
@@ -28,9 +25,9 @@ export class ErrorsService {
     console.log(this.httpErrorsArr$$.value);
   }
 
-  /////////////////////<--- Custom Errors State Management--->/////////////////////
-  getCustomErrorsArrState(): Observable<CustomError[]> {
-    return this.customErrorsArr$;
+  /////////////////////<--- Custom Errors State Management --->/////////////////////
+  getCustomErrorsArr(): CustomError[] {
+    return this.customErrorsArr$$.value;
   }
 
   setCustomErrorsArrState(customErrsArr: CustomError[]): void {

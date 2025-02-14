@@ -12,6 +12,8 @@ import { CheckoutRoutingModule } from '../checkout/checkout-routing.module';
 import { ErrorsComponent } from './errors/errors.component';
 import { Error404Component } from './error-404/error-404.component';
 import { TrimDirective } from './directives/trim.directive';
+import { RelatedProductsComponent } from './related-products/related-products.component';
+import { NgConfirmModule } from 'ng-confirm-box';
 
 
 
@@ -22,7 +24,8 @@ import { TrimDirective } from './directives/trim.directive';
     ProductDetailsComponent,
     ErrorsComponent,
     Error404Component,
-    TrimDirective
+    TrimDirective,
+    RelatedProductsComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +33,8 @@ import { TrimDirective } from './directives/trim.directive';
     ReactiveFormsModule,
     RouterLink,
     CheckoutRoutingModule,
-    NgxStripeModule.forChild(environment.stripe.publicKey)
+    NgxStripeModule.forChild(environment.stripe.publicKey),
+    NgConfirmModule
   ],
   exports: [ShoppingCartComponent, LoaderComponent, ProductDetailsComponent, ErrorsComponent, TrimDirective]
 })

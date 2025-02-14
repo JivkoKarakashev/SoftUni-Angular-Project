@@ -2,7 +2,7 @@
     <app-loader />
 </ng-container>
 
-<app-errors *ngIf="httpErrorsArr.length" />
+<app-errors *ngIf="httpErrorsArr.length || customErrorsArr.length" />
 
 <div class="wrapper" *ngIf="!loading">
     <div class="left-wrapper">
@@ -10,70 +10,85 @@
             <div class="container">
                 <!-- Left Column / Product Image -->
                 <div class="left-column">
-                    <img class="image" alt="image" [src]="selectedImgUrl || item.image">
+                    <img class="image" alt="image" [src]="selectedImgUrl || item?.image">
                 </div>
                 <!-- Right Column -->
                 <div class="right-column">
                     <!-- Product Description -->
                     <div class="product-description">
-                        <span>{{capitalizeCategoryService.capitalize(item.subCat)}}</span>
-                        <h4>{{item.brand}}</h4>
-                        <p>{{item.description}}</p>
+                        <span>{{capitalizeCategoryService.capitalize(item?.subCat || 'null')}}</span>
+                        <h4>{{item?.brand}}</h4>
+                        <p>{{item?.description}}</p>
                     </div>
                     <!-- Product Configuration -->
-                    <div *ngIf="item._ownerId !== user?._id" class="product-configuration">
+                    <div class="product-configuration">
                         <form [formGroup]="form" (ngSubmit)="onAddToCart()">
                             <fieldset formGroupName="fgItem">
                                 <!-- Product Color -->
-                                <div class="product-color">
+                                <div class="product-color user owner">
                                     <span>Color</span>
                                     <div class="color-choose">
-                                        <div [ngClass]="{disabled: item._ownerId === user?._id || item.quantity === 0}" *ngFor="let col of item.color; let i = index" [id]="col+i">
-                                            <input [readonly]="item._ownerId === user?._id || item.quantity === 0" formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="selectColor(i)" required>
+                                        <div [ngClass]="{disabled: item?.quantity === 0}" *ngFor="let col of item?.color; let i = index" [id]="col+i">
+                                            <input [readonly]="item?._ownerId === user?._id || item?.quantity === 0" formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="onColorselect(i)" required>
                                             <label [for]="col"><span #spanColorElements></span></label>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Size Configuration -->
                                 <div class="size-config">
-                                    <span>Size configuration</span>
-
-                                    <div class="size-choose">
-                                        <select [ngClass]="{disabled: item._ownerId === user?._id || item.quantity === 0}" class="itm" formControlName="selectedSize" name="selectedSize" required>
-                                            <option value="">select size</option>
-                                            <option *ngFor="let sz of item.size; let i = index;" [value]="sz">{{sz}}
-                                            </option>
-                                        </select>
+                                    <div *ngIf="item?._ownerId !== user?._id" class="user">
+                                        <span>Size configuration</span>
+    
+                                        <div class="size-choose">
+                                            <select [ngClass]="{disabled: item?.quantity === 0}" class="itm" formControlName="selectedSize" name="selectedSize" required>
+                                                <option value="">select size</option>
+                                                <option *ngFor="let sz of item?.size; let i = index;" [value]="sz">{{sz}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="item?._ownerId === user?._id" class="owner">
+                                        <p><span>Size&colon; </span>{{item ? item.size.join(' / ') : null}}</p>
                                     </div>
                                 </div>
                                 <!-- Quantity Configuration -->
                                 <div class="quantity-config">
-                                    <span>Quantity configuration</span>
-                                    <input [readonly]="item._ownerId === user?._id || item.quantity === 0" class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="item.quantity" required>
+                                    <div *ngIf="item?._ownerId !== user?._id" class="user">
+                                        <span>Quantity configuration</span>
+                                        <input [readonly]="item?.quantity === 0" class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="item?.quantity || null" required>
+                                    </div>
+                                    <div *ngIf="item?._ownerId === user?._id" class="owner">
+                                        <p><span>Available&colon; </span>{{item?.quantity}}</p>
+                                    </div>
                                 </div>
                                 <!-- Product Pricing -->
                                 <div class="product-price">
-                                    <span>${{item.price}}</span>                                    
-                                    <input *ngIf="item._ownerId !== user?._id || item.quantity === 0" [disabled]="form.invalid" type="submit" class="cart-btn" value="Add to cart">
+                                    <span>${{item?.price}}</span>                                    
+                                    <input *ngIf="item?._ownerId !== user?._id && item?.quantity !== 0" [disabled]="form.invalid" type="submit" class="cart-btn" value="Add to cart">
                                 </div>
                             </fieldset>
                         </form>
                     </div>
-                    <ng-container *ngIf="item._ownerId === user?._id">
+                    <ng-container *ngIf="item?._ownerId === user?._id">
                         <div class="buttons">
                             <ul class="buttons">
                                 <li class="button edit" (click)="onEdit()">Edit</li>
                                 <li class="button delete" (click)="onDelete()">Delete</li>
                             </ul>
                         </div>
-                        <p *ngIf="item.quantity > 0" class="owner">You are owner! You can't purchase this Item!</p>
+                        <p *ngIf="item ? item.quantity > 0 : false" class="owner">You are owner! You can't purchase this Item!</p>
                     </ng-container>
-                    <p *ngIf="item.quantity === 0" class="sold">This item is sold out and out of stock!</p>
+                    <p *ngIf="item ? item.quantity === 0 : false" class="sold">This item is sold out and out of stock!</p>
                 </div>
             </div>
+            <!-- Related Products Here -->
+            <app-related-products (relatedProductAddEvent)="incrementCartItemsCounter()" (productDetailsChangeEvent)="onChangeDetails()" />
         </section>
     </div>
     <div class="right-wrapper">
+        <button *ngIf="showScrollUpBtn" class="scroll-top" type="button" (click)="onScrollTop()">
+            <i class="fa-solid fa-angles-up fa-2xl"></i>
+        </button>
         <div class="sticky">
             <a class="cart" routerLink="/cart">
                 <span class="counter">{{cartItemsCounter}}</span><i class="fi fi-rr-shopping-cart-check"></i>

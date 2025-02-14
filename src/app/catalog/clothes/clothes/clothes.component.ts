@@ -17,7 +17,7 @@ import { CheckForItemInCartAlreadyService } from 'src/app/shared/utils/check-for
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
 import { ToastrMessageHandlerService } from 'src/app/shared/utils/toastr-message-handler.service';
 import { NgConfirmService } from 'ng-confirm-box';
-import { PaginationCategoryConfig, PaginationCategoryService, paginationCategoryConfigInit } from 'src/app/shared/utils/pagination-category.service';
+import { CategoryPaginationConfig, CategoryPaginationService, categoryPaginationConfigInit } from 'src/app/shared/utils/category-pagination.service';
 import { CatalogFilters, Color, FilterCatalogDataService, filtersInit, priceFltrInit } from 'src/app/shared/utils/filter-catalog-data.service';
 import { InvertColorService } from 'src/app/shared/utils/invert-color.service';
 
@@ -40,7 +40,7 @@ export class ClothesComponent implements OnInit, OnDestroy {
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
 
-  public paginationConfig: PaginationCategoryConfig = paginationCategoryConfigInit;
+  public paginationConfig: CategoryPaginationConfig = categoryPaginationConfigInit;
   public pageOptionArr: number[] = [];
   public pageSizeOptionArr: number[] = [];
   public selected = {
@@ -66,7 +66,7 @@ export class ClothesComponent implements OnInit, OnDestroy {
     private toastrMessageHandler: ToastrMessageHandlerService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private paginationService: PaginationCategoryService,
+    private paginationService: CategoryPaginationService,
     private render: Renderer2,
     private filterService: FilterCatalogDataService,
     private invertColorService: InvertColorService,
@@ -110,7 +110,7 @@ export class ClothesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.paginationService.resetPaginationCategoryConfig();
+    this.paginationService.resetCategoryPaginationConfig();
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
@@ -213,7 +213,7 @@ export class ClothesComponent implements OnInit, OnDestroy {
           }
 
           this.paginationService.paginationCategoryConfigCalcAndSet(compArr, this.selected.pageSize, this.selected.page);
-          this.paginationConfig = { ...this.paginationService.getpaginationCategoryConfig() };
+          this.paginationConfig = this.paginationService.getCategoryPaginationConfig();
           this.pageSizeOptionArr = Array.from({ length: this.paginationConfig.categorySize }, (_, i) => i + 1);
           this.selected.page = this.paginationConfig.selectedPage;
           this.pageOptionArr = Array.from({ length: this.paginationConfig.totalPages }, (_, i) => i + 1);

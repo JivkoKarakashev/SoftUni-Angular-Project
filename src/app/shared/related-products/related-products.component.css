@@ -1,0 +1,146 @@
+:host {
+    flex: 1 1 100%;
+}
+
+section.carousel-container {
+    /* margin: 0 auto; */
+    min-width: 100%;
+    /* flex-wrap: nowrap; */
+    display: flex;
+    flex-direction: column;
+    /* make it smooth on iOS */
+    -webkit-overflow-scrolling: touch;
+
+    & .slide-container.row {
+        display: flex;
+        flex-wrap: nowrap;
+        /* gap: 0 2em; */
+        justify-content: center;
+
+        & button.slide-arrow {
+            background-color: #5270FF;
+            color: #fff;
+            border: 1px solid rgba(55, 255, 15, 0.001);
+            flex: 1 1 5%;
+            cursor: pointer;
+        }
+
+        & button.slide-arrow.disabled {
+            background-color: #808080;
+            cursor: not-allowed;
+        }
+
+        & .related-items-container {
+            flex: 1 1 90%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            /* overflow-x: hidden; */
+            /* gap: 0 20px; */
+            scroll-behavior: smooth;
+
+            & div.related-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-end;
+                flex: 1 0 33.33%;
+                gap: 1em 0;
+                border: 4px solid #c9c9c9;
+
+                & div.image {
+                    margin-top: 1em;
+                }
+
+                & span.color {
+                    display: inline-block;
+                    width: 1.8em;
+                    height: 1.8em;
+                    vertical-align: middle;
+                    border-radius: 50%;
+                    border: 1px solid #FFFFFF;
+                    box-shadow: 0 .5px 1.5px 0 rgba(0, 0, 0, 0.33);
+                }
+
+                & div.buttons {
+                    display: flex;
+                    flex: 1 1 auto;
+                    flex-wrap: wrap;
+                    gap: 0 .5em;
+                    justify-content: center;
+                    width: 100%;
+
+                    & button {
+                        flex: 0 1 30%;
+                        cursor: pointer;
+                        border: 1px solid rgba(55, 255, 15, 0.001);
+                        border-radius: 5px;
+                        margin-bottom: 1em;
+                        padding: .25em .5em;
+                    }
+                }
+
+
+                & img {
+                    max-height: 8em;
+                    width: auto;
+                }
+
+                & p.owner,
+                p.sold {
+                    width: 100%;
+                    background-color: #890000;
+                    color: #fff;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+}
+
+@media screen and (pointer: coarse) {
+    button.buy {
+        background-color: #64af3d;
+        color: #000;
+    }
+
+    button.edit {
+        background-color: #fdf90a;
+        color: #000;
+    }
+
+    button.delete {
+        background-color: #cc5656;
+        color: #000;
+    }
+}
+
+@media screen and (pointer: fine) {
+    div.buttons>button:not([class='buy']) {
+        background-color: #696969;
+        color: #fff;
+    }
+    div.buttons>button.buy {
+        background-color: #7DC855;
+        color: #000;
+    }
+
+    div.buttons>button.buy:hover {
+        background-color: #64af3d;
+        color: #000;
+        transition: all .5s;
+    }
+
+    div.buttons>button.edit:hover {
+        background-color: #fdf90a;
+        color: #000;
+        transition: all .5s;
+    }
+
+    div.buttons>button.delete:hover {
+        background-color: #cc5656;
+        color: #000;
+        transition: all .5s;
+    }
+}

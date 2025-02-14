@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export interface PaginationSubcategoryConfig {
+export interface SubcategoryPaginationConfig {
   subcategoryUrl: string,
   subcategorySize: number,
   subcategorySizeReq: number,
   subcategorySkipReq: number
 }
 
-export const paginationSubcategoryConfigInit: PaginationSubcategoryConfig = {
+export const subcategoryPaginationConfigInit: SubcategoryPaginationConfig = {
   subcategoryUrl: '',
   subcategorySize: 0,
   subcategorySizeReq: 0,
   subcategorySkipReq: 0
 }
 
-export interface PaginationCategoryConfig {
+export interface CategoryPaginationConfig {
   categoryComposition: Array<number>,
   categorySize: number,
   totalPages: number,
@@ -24,10 +24,10 @@ export interface PaginationCategoryConfig {
   pageSize: number,
   sizeReqAccum: number,
   skipReqAccum: number,
-  subcategoryConfigs: Array<PaginationSubcategoryConfig>
+  subcategoryConfigs: Array<SubcategoryPaginationConfig>
 }
 
-export const paginationCategoryConfigInit: PaginationCategoryConfig = {
+export const categoryPaginationConfigInit: CategoryPaginationConfig = {
   categoryComposition: [],
   categorySize: 0,
   totalPages: 0,
@@ -43,10 +43,10 @@ export const paginationCategoryConfigInit: PaginationCategoryConfig = {
 @Injectable({
   providedIn: 'root'
 })
-export class PaginationCategoryService {
+export class CategoryPaginationService {
 
   private categoryUrls$$ = new BehaviorSubject<Array<string>>([]);
-  private paginationCategoryConfig$$ = new BehaviorSubject<PaginationCategoryConfig>(paginationCategoryConfigInit);
+  private categoryPaginationConfig$$ = new BehaviorSubject<CategoryPaginationConfig>(categoryPaginationConfigInit);
 
   setCategoryUrls(catUrls: string[]): void {
     this.categoryUrls$$.next(catUrls);
@@ -55,12 +55,12 @@ export class PaginationCategoryService {
     return this.categoryUrls$$.value;
   }
 
-  getpaginationCategoryConfig() {
-    return this.paginationCategoryConfig$$.value;
+  getCategoryPaginationConfig() {
+    return this.categoryPaginationConfig$$.value;
   }
-  resetPaginationCategoryConfig() {
+  resetCategoryPaginationConfig() {
     this.categoryUrls$$.next([]);
-    this.paginationCategoryConfig$$.next({ ...paginationCategoryConfigInit });
+    this.categoryPaginationConfig$$.next({ ...categoryPaginationConfigInit });
   }
   //////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +72,7 @@ export class PaginationCategoryService {
     const selectedPage = this.selectedPageCalc(currP, totalPages);
     const skipReqAccum = this.skipReqAccumCalc(selectedPage, pSize);
     const subcategoryConfigs = this.subcategoryConfigsCalc(categoryComposition, skipReqAccum, pSize);
-    this.paginationCategoryConfig$$.next(
+    this.categoryPaginationConfig$$.next(
       {
         categoryComposition,
         categorySize,
@@ -108,8 +108,8 @@ export class PaginationCategoryService {
     return (selectedPage - 1) * pageSize;
   }
 
-  private subcategoryConfigsCalc(catComp: number[], skipReqAccum: number, pageSize: number): Array<PaginationSubcategoryConfig> {
-    const subcatConfigs: PaginationSubcategoryConfig[] = [];
+  private subcategoryConfigsCalc(catComp: number[], skipReqAccum: number, pageSize: number): Array<SubcategoryPaginationConfig> {
+    const subcatConfigs: SubcategoryPaginationConfig[] = [];
     let skipReqCounter = 0;
     let sizeReqAccum = 0;
 

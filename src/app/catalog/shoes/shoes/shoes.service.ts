@@ -7,7 +7,7 @@ import { Item } from 'src/app/types/item';
 
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
-import { PaginationSubcategoryConfig } from 'src/app/shared/utils/pagination-category.service';
+import { SubcategoryPaginationConfig } from 'src/app/shared/utils/category-pagination.service';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
 const TRAINERS_URL = `${BASE_URL}/trainers`;
@@ -38,7 +38,7 @@ export class ShoesService {
     // return of([0]);
   }
 
-  getShoesByPage(subcatConfigs: PaginationSubcategoryConfig[]) {
+  getShoesByPage(subcatConfigs: SubcategoryPaginationConfig[]) {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     const reqArr: Array<Observable<Item[]>> = [];
     for (let i = 0; i < subcatConfigs.length; i++) {

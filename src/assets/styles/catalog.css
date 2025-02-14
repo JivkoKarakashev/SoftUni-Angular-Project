@@ -30,6 +30,7 @@
 .pagination .navbar .right-navbar-wrapper {
     flex: 1 1 67%;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     /* justify-content: center; */
     gap: .5em;
@@ -133,7 +134,9 @@ div.filter {
         }
 
         & button.clear-btn:hover,
-        button.clear-btn:focus {
+        button.clear-btn:active {
+            transform: scale(1.3);
+            transition: all .3s;
             border-color: #9398eb;
         }
 
@@ -161,8 +164,14 @@ div.filter {
         }
 
         & button.color-btn:hover,
-        button.color-btn.active {
+        button.color-btn:active {
+            transform: scale(1.3);
+            transition: all .3s;
+        }
+
+        & button.color-btn.active {
             border: 3px solid #9398eb;
+            transition: .3s;
         }
     }
 
@@ -274,21 +283,35 @@ div.wrapper {
 
 /* The button used to open the sidebar */
 .openbtn {
+    text-align: start;
     cursor: pointer;
     background-color: #808080;
-    color: white;
+    color: #000;
     padding: .5em 1em;
     border: none;
-    transition: .3s;
+    width: 30vw;
+    transition: color .3s, background-color .3s;
 }
 
 .openbtn:hover,
-.openbtn.active,
+.openbtn.active {
+    background-color: #5270FF;
+    color: #fff;
+}
+
 .size-btn:hover,
-.size-btn.active,
+.size-btn:active,
 .brand-btn:hover,
+.brand-btn:active {
+    transform: scale(1.3);
+    transition: all .3s;
+}
+
+.size-btn.active,
 .brand-btn.active {
     background-color: #5270FF;
+    color: #fff;
+    transition: all .3s;
 }
 
 /* ////////////////////////////////////////// */

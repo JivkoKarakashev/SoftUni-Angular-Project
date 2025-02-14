@@ -7,7 +7,7 @@ import { Item } from 'src/app/types/item';
 
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { PaginationSubcategoryConfig } from 'src/app/shared/utils/pagination-category.service';
+import { SubcategoryPaginationConfig } from 'src/app/shared/utils/category-pagination.service';
 
 const BASE_URL = `${environment.apiDBUrl}/data`
 const JACKETS_URL = `${BASE_URL}/jackets`;
@@ -36,7 +36,7 @@ export class ClothesService {
     // return of([0]);
   }
 
-  getClothesByPage(subcatConfigs: PaginationSubcategoryConfig[]) {
+  getClothesByPage(subcatConfigs: SubcategoryPaginationConfig[]) {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     const reqArr: Array<Observable<Item[]>> = [];
     for (let i = 0; i < subcatConfigs.length; i++) {

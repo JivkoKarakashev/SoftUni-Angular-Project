@@ -14,7 +14,8 @@ div.left-wrapper {
 div.right-wrapper {
     flex: 1 1 1%;
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    justify-content: flex-end;
     align-items: flex-end;
     padding: 0 1em 1em 0;
 }
@@ -30,6 +31,24 @@ div.sticky {
     bottom: 1em;
     background-color: #22292F;
     border-radius: 50%;
+}
+
+button.scroll-top {
+    border: unset;
+    cursor: pointer;
+    position: sticky;
+    bottom: 30vh;
+    align-self: center;
+    border-radius: 5px;
+    padding: .7em;
+    background-color: #22292F;
+    color: #fff;
+    transition: .3s;
+}
+
+button.scroll-top:hover,
+button.scroll-top:focus {
+    color: #5cb85c;
 }
 
 a.cart {
@@ -92,12 +111,14 @@ a.cart:active {
 
 /* Columns */
 .left-column {
-    flex: 0 0 65%;
+    display: flex;
+    justify-content: flex-start;
+    flex: 1 1 45%;
     /* min-width: fit-content; */
 }
 
 .right-column {
-    flex: 1 1 25%;
+    flex: 1 1 45%;
     justify-content: flex-start;
     display: flex;
     flex-direction: column;
@@ -107,7 +128,11 @@ a.cart:active {
 
 /* Left Column */
 .left-column img {
-    max-width: 100%;
+    max-width: 90%;
+    height: auto;
+    /* max-height: 65vh;
+    height: 65vh; */
+    /* width: auto; */
     /* object-fit: scale-down; */
     transition: all 0.3s ease;
 }
@@ -216,7 +241,7 @@ a.cart:active {
 .cart-btn:enabled {
     cursor: pointer;
     background-color: #7DC855;
-    color: #FFFFFF;
+    color: #000;
     transition: all .5s;
 }
 
@@ -264,16 +289,20 @@ div.buttons {
 
     & ul.buttons {
         display: flex;
+        flex: 1 1 auto;
         flex-wrap: wrap;
         justify-content: center;
         gap: 1em;
         cursor: pointer;
 
         & li.button {
+            flex: 0 1 30%;
+            text-align: center;
             padding: .3em .5em;
             background-color: #000;
             border-radius: 0.4em;
             color: #fff;
+            transition: all .5s;
         }
 
         @media screen and (pointer: coarse) {
@@ -291,7 +320,7 @@ div.buttons {
     
                 li.button.delete {
                     background-color: #cc5656;
-                    color: #fff;
+                    color: #000;
                 }
             }
         }
@@ -302,6 +331,7 @@ div.buttons {
                 li.button.buy:hover,
                 li.button.buy:focus-within {
                     background-color: #5cb85c;
+                    /* transition: all .5s; */
                 }
     
                 li.button.edit:hover,
@@ -313,7 +343,7 @@ div.buttons {
                 li.button.delete:hover,
                 li.button.delete:focus-within {
                     background-color: #cc5656;
-                    color: #fff;
+                    color: #000;
                 }
             }
         }

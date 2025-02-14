@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { forkJoin } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 
 import { environment } from 'src/environments/environment.development';
-import { Blazer, Jacket, Partywear, Tie, Tuxedo, Waistcoat, Workwear } from 'src/app/types/item';
+import { Item } from 'src/app/types/item';
 
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+import { SubcategoryPaginationConfig } from 'src/app/shared/utils/category-pagination.service';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
 const BLAZERS_JACKETS_URL = `${BASE_URL}/blazers_jackets`;
@@ -19,17 +20,38 @@ const WORKWEAR_URL = `${BASE_URL}/workwear`;
   providedIn: 'root'
 })
 export class SuitsTailoringService {
+  private categoryUrls: Array<string> = [
+    BLAZERS_JACKETS_URL,
+    WAISTCOATS_URL,
+    TUXEDOS_PARTYWEAR_URL,
+    TIES_URL,
+    WORKWEAR_URL
+  ];
+
+  getCategoryUrls() {
+    return this.categoryUrls;
+  }
 
   constructor(private http: HttpClient) { }
 
-  getSuitsTailoring() {
+  getCollectionComposition(): Observable<number[]> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-    return forkJoin([
-      this.http.get<(Blazer | Jacket)[]>(BLAZERS_JACKETS_URL, { headers }),
-      this.http.get<Waistcoat[]>(WAISTCOATS_URL, { headers }),
-      this.http.get<(Tuxedo | Partywear)[]>(TUXEDOS_PARTYWEAR_URL, { headers }),
-      this.http.get<Tie[]>(TIES_URL, { headers }),
-      this.http.get<Workwear[]>(WORKWEAR_URL, { headers })
-    ]);
+    const reqArr: Array<Observable<number>> = [];
+    this.categoryUrls.forEach(url => reqArr.push(this.http.get<number>(`${url}?count`, { headers })));
+    return forkJoin([...reqArr]);
+    // return of([0]);
+  }
+
+  getSuitsTailoringByPage(subcatConfigs: SubcategoryPaginationConfig[]) {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    const reqArr: Array<Observable<Item[]>> = [];
+    for (let i = 0; i < subcatConfigs.length; i++) {
+      const { subcategorySize, subcategoryUrl, subcategorySkipReq, subcategorySizeReq } = subcatConfigs[i];
+      if (subcategorySkipReq >= subcategorySize) {
+        continue;
+      }
+      reqArr.push(this.http.get<Item[]>(`${subcategoryUrl}?offset=${subcategorySkipReq}&pageSize=${subcategorySizeReq}`, { headers }));
+    }
+    return forkJoin([...reqArr]);
   }
 }

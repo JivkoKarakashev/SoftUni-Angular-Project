@@ -1,25 +1,28 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ViewportScroller } from '@angular/common';
 import { EMPTY, Observable, Subscription, catchError, of } from 'rxjs';
 
 import { environment } from 'src/environments/environment.development';
 
 import { UserForAuth } from 'src/app/types/user';
+import { CartItem, Item } from 'src/app/types/item';
 
-import { Belt, Blazer, Boot, Bottom, Cap, CartItem, Glove, Gym, Hat, Item, Jacket, Legging, Longwear, Outdoors, Partywear, Running, Ski, Slippers, Snowboard, Sunglasses, Surf, Sweater, Swim, Tie, Trainers, Tuxedo, Waistcoat, Watch, initialItem } from 'src/app/types/item';
 import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';
 import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
 import { CatalogManagerService } from 'src/app/catalog-manager/catalog-manager.service';
-
-import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { UserStateManagementService } from '../state-management/user-state-management.service';
 import { ErrorsService } from '../errors/errors.service';
 import { ToastrMessageHandlerService } from '../utils/toastr-message-handler.service';
 import { CapitalizeCategoryService } from '../utils/capitalize-category.service';
 import { InvertColorService } from '../utils/invert-color.service';
+import { ProductDetailsService } from './product-details.service';
+
+import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
+import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
+import { CustomError } from '../errors/custom-error';
 
 const BASE_URL = `${environment.apiDBUrl}/data`;
 
@@ -33,13 +36,10 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
   public user: UserForAuth | null = null;
 
-  public item: Jacket | Longwear |
-    Trainers | Boot | Slippers |
-    Cap | Hat | Belt | Glove | Sunglasses | Watch |
-    Gym | Running | Ski | Snowboard | Swim | Surf | Outdoors | Bottom | Legging | Sweater |
-    Blazer | Jacket | Waistcoat | Tuxedo | Partywear | Tie = initialItem;
+  public item: Item | null = null;
   public cartItemsCounter = 0;
   public selectedImgUrl = '';
+  public showScrollUpBtn = false;
 
   public form: FormGroup = this.fb.group({
     fgItem: this.fb.group({
@@ -61,10 +61,10 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       price: ['']
     }),
   });
-  private formInitalValue: FormGroup = this.fb.group({ fgItem: this.fb.group({ ...this.itemCtrlsGr.value }) });
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
+  public customErrorsArr: CustomError[] = [];
 
   constructor(
     private userStateMgmnt: UserStateManagementService,
@@ -79,10 +79,22 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private catalogManagerService: CatalogManagerService,
     private toastrMessageHandler: ToastrMessageHandlerService,
     public capitalizeCategoryService: CapitalizeCategoryService,
-    private invertColorService: InvertColorService
+    private invertColorService: InvertColorService,
+    private viewportScroller: ViewportScroller,
+    private detailsService: ProductDetailsService
   ) { this.cartItemsCounter = this.cartStateMgmnt.getCartItemsCount() }
 
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    const [, yPos] = this.viewportScroller.getScrollPosition();
+    if (yPos > 350 && !this.showScrollUpBtn) {
+      this.showScrollUpBtn = true;
+    } else if (yPos <= 350 && this.showScrollUpBtn) {
+      this.showScrollUpBtn = false;
+    }
+  }
 
   get itemCtrlsGr() {
     return this.form.get("fgItem") as FormGroup;
@@ -113,7 +125,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const { id } = this.route.snapshot.params;
     // console.log(id);
 
-    const detailsSubscription = this.getItem(url, id)
+    const detailsSub = this.getItem(url, id)
       .pipe(
         catchError(err => {
           if (err.status === 404) {
@@ -135,26 +147,10 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         }
         const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = res as Item;
         this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price };
-        this.itemCtrlsGr.patchValue({
-          _ownerId,
-          _id,
-          _createdOn,
-          image,
-          altImages,
-          cat,
-          subCat,
-          description,
-          size,
-          color,
-          brand,
-          quantity,
-          price,
-        });
-        (this.formInitalValue.get('fgItem') as FormGroup).patchValue({ ...this.itemCtrlsGr.value });
-        // console.log({ ...this.itemCtrlsGr.value });
-        // console.log(this.formInitalValue.get('fgItem')?.value);
+        this.detailsService.setProductDetails({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
+        this.populateForm();
       });
-    this.unsubscriptionArray.push(detailsSubscription);
+    this.unsubscriptionArray.push(detailsSub);
   }
 
   ngAfterViewInit(): void {
@@ -168,7 +164,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnDestroy(): void {
-    // this.itemSubscription.unsubscribe();
+    this.detailsService.resetProductDetails();
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');      
@@ -176,24 +172,20 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     // console.log('UnsubArray = 4');
   }
 
-  private getItem(url: string, id: string): Observable<
-    Jacket | Longwear |
-    Trainers | Boot | Slippers |
-    Cap | Hat | Belt | Glove | Sunglasses | Watch |
-    Gym | Running | Ski | Snowboard | Swim | Surf | Outdoors | Bottom | Legging | Sweater |
-    Blazer | Jacket | Waistcoat | Tuxedo | Partywear | Tie> {
+  private getItem(url: string, id: string): Observable<Item> {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-    return this.http.get<
-      Jacket | Longwear |
-      Trainers | Boot | Slippers |
-      Cap | Hat | Belt | Glove | Sunglasses | Watch |
-      Gym | Running | Ski | Snowboard | Swim | Surf | Outdoors | Bottom | Legging | Sweater |
-      Blazer | Jacket | Waistcoat | Tuxedo | Partywear | Tie
-    >(`${BASE_URL}/${url}/${id}`, { headers });
+    return this.http.get<Item>(`${BASE_URL}/${url}/${id}`, { headers });
   }
 
-  selectColor(idx: number): void {
-    this.selectedImgUrl = this.item.altImages[idx];
+  onColorselect(idx: number): void {
+    try {
+      const { altImages } = this.detailsAvailability();
+      this.selectedImgUrl = altImages[idx];
+    } catch (err) {
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
+    }
   }
 
   trackByUrl(_index: number, url: string): string {
@@ -206,29 +198,43 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       console.log('Invalid FORM!');
       return;
     }
-    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price } = this.itemCtrlsGr.value as CartItem;
-    const product = selectedQuantity * price;
-    this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, product, checked: false });
-    this.itemCtrlsGr.reset({ ...this.formInitalValue.get('fgItem')?.value });
-    this.selectedImgUrl = this.item.image;
-    this.cartItemsCounter++;
-    this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
-    // console.log(this.cartItms$$.value);
+
+    try {
+      const item = this.detailsAvailability();
+      const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price } = this.itemCtrlsGr.value as CartItem;
+      const product = selectedQuantity * price;
+      this.cartService.addCartItem({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize, color, selectedColor, quantity, selectedQuantity, price, product, checked: false });
+      this.itemCtrlsGr.reset({ ...item, selectedColor: '', selectedQuantity: '', selectedSize: '' });
+      this.selectedImgUrl = image
+      this.incrementCartItemsCounter();
+      this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
+    } catch (err) {
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
+    }
   }
 
-  onDelete(): void {
-    const { _id, cat, subCat } = this.item;
-    const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
+  incrementCartItemsCounter() {
+    this.cartItemsCounter++;
+  }
+
+  onChangeDetails() {
+    this.loading = true;
+    const detailsSub = this.detailsService.fetchProductDetails()
       .pipe(
         catchError(err => { throw err; })
       )
       .subscribe(
         {
-          next: () => {
-            this.toastrMessageHandler.showInfo();
-            this.router.navigate([`/catalog/${cat}/${subCat}`]);
+          next: (details) => {
+            this.loading = false;
+            this.item = { ...details };
+            this.detailsService.setProductDetails({ ...details });
+            this.populateForm();
           },
           error: (err) => {
+            this.loading = false;
             const errMsg: string = err.error.message;
             this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
             this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
@@ -236,11 +242,93 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           }
         }
       );
-    this.unsubscriptionArray.push(deleteSub);
+    this.unsubscriptionArray.push(detailsSub);
+  }
+
+  onScrollTop() {
+    this.viewportScroller.scrollToPosition([0, 0]);
+  }
+
+  onDelete(): void {
+    try {
+      const { _id, cat, subCat } = this.detailsAvailability();
+      const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
+        .pipe(
+          catchError(err => { throw err; })
+        )
+        .subscribe(
+          {
+            next: () => {
+              this.toastrMessageHandler.showInfo();
+              this.router.navigate([`/catalog/${cat}/${subCat}`]);
+            },
+            error: (err) => {
+              const errMsg: string = err.error.message;
+              this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+              this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+              this.toastrMessageHandler.showError(errMsg);
+            }
+          }
+        );
+      this.unsubscriptionArray.push(deleteSub);
+    } catch (err) {
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
+    }
+
   }
 
   onEdit(): void {
-    this.catalogManagerService.setCatalogItemToEdit({ ...this.item });
-    this.router.navigate(['/edit-product']);
+    try {
+      const item = this.detailsAvailability();
+      this.catalogManagerService.setCatalogItemToEdit({ ...item });
+      this.router.navigate(['/edit-product']);
+    } catch (err) {
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
+    }
   }
+
+  private detailsAvailability() {
+    if (this.item === null) {
+      const error: CustomError = {
+        name: 'Item Error',
+        message: 'Item is null!',
+        isUserError: false,
+      };
+      throw error;
+    }
+    return this.item as Item;
+  }
+
+  private populateForm(): void {
+    try {
+      const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = this.detailsAvailability();
+      this.itemCtrlsGr.patchValue({
+        _ownerId,
+        _id,
+        _createdOn,
+        image,
+        altImages,
+        cat,
+        subCat,
+        description,
+        size,
+        color,
+        brand,
+        quantity,
+        price,
+      });
+      this.itemCtrlsGr.reset({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price, selectedColor: '', selectedQuantity: '', selectedSize: '' });
+      this.selectedImgUrl = image;
+    } catch (err) {
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
+    }
+
+  }
+
 }

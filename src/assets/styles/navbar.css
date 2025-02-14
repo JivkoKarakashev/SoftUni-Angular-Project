@@ -94,7 +94,8 @@ a.nav-icon {
   transition: .3s;
 }
 
-div.user {
+div.user,
+div.owner {
   & span {
     font-weight: 600;
     & a {

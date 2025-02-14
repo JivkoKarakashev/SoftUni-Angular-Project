@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, catchError, of, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
+import { catchError, of } from 'rxjs';
 
 import { ErrorsService } from './errors.service';
 import { CustomError } from './custom-error';
@@ -15,7 +15,6 @@ import { OrderStateManagementService } from '../state-management/order-state-man
   styleUrls: ['./errors.component.css']
 })
 export class ErrorsComponent implements OnInit, OnDestroy {
-  private unsubscriptionArray: Subscription[] = [];
 
   public httpErrorsArr: HttpErrorResponse[] = [];
   public customErrorsArr: CustomError[] = [];
@@ -30,28 +29,20 @@ export class ErrorsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Error component Initialized!');
-    const errsSub = this.errorsService.gethttpErrorsArrState()
-      .pipe(
-        switchMap(httpErrs => {
-          this.httpErrorsArr = [...httpErrs];
-          return this.errorsService.getCustomErrorsArrState();
-        }),
-      )
-      .subscribe(customErrs => {
-        this.customErrorsArr = [...this.customErrorsArr, ...customErrs];
-      });
-    this.unsubscriptionArray.push(errsSub);
-    console.log('Custom Errors:' + this.customErrorsArr);
+    this.httpErrorsArr = this.errorsService.gethttpErrorsArr();
+    this.customErrorsArr = this.errorsService.getCustomErrorsArr();
+    this.customErrorsArr.forEach(err => {
+      const { name, message, isUserError } = err;
+      console.log('Custom Errors Raised');
+      console.log('ErrName: ' + name);
+      console.log('ErrMessage: ' + message);
+      console.log('IsUserErr: ' + isUserError);
+    });
   }
 
   ngOnDestroy(): void {
     this.errorsService.resethttpErrorsArrState();
     this.errorsService.resetCustomErrorsArrState();
-    this.unsubscriptionArray.forEach((subscription) => {
-      subscription.unsubscribe();
-      // console.log('UnsubArray = 1');
-    });
-    // console.log('UnsubArray = 1');
   }
 
   logout(): void {
