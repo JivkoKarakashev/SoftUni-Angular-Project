@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 
 export interface PaginationConfig {
   collectionSize: number,
@@ -26,73 +25,47 @@ export const paginationConfigInit: PaginationConfig = {
 })
 export class PaginationService {
 
-  private paginationConfig$$ = new BehaviorSubject<PaginationConfig>(paginationConfigInit);
-
-  get collectionSize(): number {
-    return this.paginationConfig$$.value.collectionSize;
-  }
-
-  get currentPage(): number {
-    return this.paginationConfig$$.value.selectedPage;
-  }
-
-  get lastPageSize(): number {
-    return this.paginationConfig$$.value.lastPageSize;
-  }
-
-  get pageSize(): number {
-    return this.paginationConfig$$.value.pageSize;
-  }
-
-  get skipSizeReq(): number {
-    return this.paginationConfig$$.value.skipSizeReq;
-  }
-
-  get totalPages(): number {
-    return this.paginationConfig$$.value.totalPages;
-  }
-  //////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////
-  getPaginationConfig(): PaginationConfig {
-    return this.paginationConfig$$.value;
-  }
-  resetPaginationConfig(): void {
-    this.paginationConfig$$.next({ ...paginationConfigInit });
-  }
-
-  paginationConfigCalcAndSet(collectionSize: number, pageSize: number, currentPage: number): PaginationConfig {
-    if (collectionSize === 0) {
-      return this.paginationConfig$$.value;
-    }
-
-    this.partialPaginationConfigCalcAndSet(collectionSize, pageSize, currentPage);
-    this.skipSizeReqCalcAndSet();
-    this.pageSizeReqCalcAndSet();
-    return this.paginationConfig$$.value;
-  }
-
-  private partialPaginationConfigCalcAndSet(collSize: number, pSize: number, currP: number): void {
-    const totalPages = Math.ceil(collSize / pSize);
-    this.paginationConfig$$.next({
-      ...this.paginationConfig$$.value,
-      collectionSize: collSize,
-      selectedPage: ((currP < totalPages) ? currP : totalPages) || 1,
-      lastPageSize: collSize % pSize,
+  paginationConfigCalc(collSize: number, pSize: number, currP: number): PaginationConfig {
+    const collectionSize = collSize;
+    const totalPages = this.totalPagesCalc(collSize, pSize);
+    const lastPageSize = this.lastPageSizeCalc(collSize, pSize);
+    const selectedPage = this.selectedPageCalc(currP, totalPages);
+    const skipSizeReq = this.skipSizeReqCalc(selectedPage, pSize);
+    const pageSizeReq = this.pageSizeReqCalc(selectedPage, totalPages, collSize, pSize, skipSizeReq);
+    return {
+      collectionSize,
+      selectedPage,
+      lastPageSize,
       pageSize: pSize,
+      pageSizeReq,
+      skipSizeReq,
       totalPages
-    });
-  }
-
-  private pageSizeReqCalcAndSet(): void {
-    if (this.currentPage < this.totalPages) {
-      this.paginationConfig$$.next({ ...this.paginationConfig$$.value, pageSizeReq: this.pageSize });
-    } else {
-      this.paginationConfig$$.next({ ...this.paginationConfig$$.value, pageSizeReq: this.collectionSize - this.skipSizeReq });
     }
   }
 
-  private skipSizeReqCalcAndSet(): void {
-    this.paginationConfig$$.next({ ...this.paginationConfig$$.value, skipSizeReq: (this.currentPage - 1) * this.pageSize });
+  private totalPagesCalc(collectionSize: number, pageSize: number): number {
+    return Math.ceil(collectionSize / pageSize);
+  }
+
+  private lastPageSizeCalc(collectionSize: number, pageSize: number): number {
+    return collectionSize % pageSize;
+  }
+
+  private selectedPageCalc(currPage: number, totalPages: number): number {
+    return ((currPage < totalPages) ? currPage : totalPages) || 1;
+  }
+
+  private skipSizeReqCalc(selectedPage: number, pageSize: number): number {
+    return (selectedPage - 1) * pageSize;
+  }
+
+  private pageSizeReqCalc(currPage: number, totalPages: number, collSize: number, pageSize: number, skipSizeReq: number): number {
+    // console.log(currPage, totalPages, collSize);
+    if (currPage < totalPages) {
+      return pageSize;
+    } else {
+      return collSize - skipSizeReq;
+    }
   }
 
 }

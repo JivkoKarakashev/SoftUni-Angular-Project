@@ -28,10 +28,13 @@ export class ProductDetailsService {
     this.productDetails$$.next(null);
   }
 
-  fetchProductDetails(): Observable<Item> {
-    if (this.productDetails$$.value) {
+  fetchProductDetails(url?: string, id?: string): Observable<Item> {
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    if (url && id) {
+      return this.http.get<Item>(`${BASE_URL}/${url}/${id}`, { headers });
+    }
+    else if (this.productDetails$$.value) {
       const { subCat, _id } = this.productDetails$$.value;
-      const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
       return this.http.get<Item>(`${BASE_URL}/${subCat}/${_id}`, { headers });
     }
     return EMPTY;

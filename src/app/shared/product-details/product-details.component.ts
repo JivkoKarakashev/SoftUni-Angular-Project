@@ -1,30 +1,25 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
 import { EMPTY, Observable, Subscription, catchError, of } from 'rxjs';
 
-import { environment } from 'src/environments/environment.development';
-
 import { UserForAuth } from 'src/app/types/user';
-import { CartItem, Item } from 'src/app/types/item';
-
-import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';
-import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
-import { CatalogManagerService } from 'src/app/catalog-manager/catalog-manager.service';
 import { UserStateManagementService } from '../state-management/user-state-management.service';
+
+import { CartItem, Item } from 'src/app/types/item';
+import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
+import { ProductDetailsService } from './product-details.service';
+import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';
+import { CatalogManagerService } from 'src/app/catalog-manager/catalog-manager.service';
+
+import { CustomError } from '../errors/custom-error';
 import { ErrorsService } from '../errors/errors.service';
 import { ToastrMessageHandlerService } from '../utils/toastr-message-handler.service';
+import { NgConfirmService } from 'ng-confirm-box';
 import { CapitalizeCategoryService } from '../utils/capitalize-category.service';
 import { InvertColorService } from '../utils/invert-color.service';
-import { ProductDetailsService } from './product-details.service';
-
-import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
-import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
-import { CustomError } from '../errors/custom-error';
-
-const BASE_URL = `${environment.apiDBUrl}/data`;
 
 @Component({
   selector: 'app-product-details',
@@ -77,6 +72,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private cartService: ShoppingCartService,
     private cartStateMgmnt: ShoppingCartStateManagementService,
     private catalogManagerService: CatalogManagerService,
+    private confirmService: NgConfirmService,
     private toastrMessageHandler: ToastrMessageHandlerService,
     public capitalizeCategoryService: CapitalizeCategoryService,
     private invertColorService: InvertColorService,
@@ -125,7 +121,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const { id } = this.route.snapshot.params;
     // console.log(id);
 
-    const detailsSub = this.getItem(url, id)
+    const detailsSub = this.detailsService.fetchProductDetails(url, id)
       .pipe(
         catchError(err => {
           if (err.status === 404) {
@@ -137,7 +133,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       .subscribe(res => {
         this.loading = false;
         if (res instanceof Observable) {
-          console.log(res instanceof Observable);
+          // console.log(res instanceof Observable);
           this.router.navigate(['**']);
         }
         if (res instanceof HttpErrorResponse) {
@@ -170,11 +166,6 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       // console.log('UnsubArray = 1');      
     });
     // console.log('UnsubArray = 4');
-  }
-
-  private getItem(url: string, id: string): Observable<Item> {
-    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-    return this.http.get<Item>(`${BASE_URL}/${url}/${id}`, { headers });
   }
 
   onColorselect(idx: number): void {
@@ -250,45 +241,54 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   onDelete(): void {
-    try {
-      const { _id, cat, subCat } = this.detailsAvailability();
-      const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
-        .pipe(
-          catchError(err => { throw err; })
-        )
-        .subscribe(
-          {
-            next: () => {
-              this.toastrMessageHandler.showInfo();
-              this.router.navigate([`/catalog/${cat}/${subCat}`]);
-            },
-            error: (err) => {
-              const errMsg: string = err.error.message;
-              this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
-              this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-              this.toastrMessageHandler.showError(errMsg);
-            }
-          }
-        );
-      this.unsubscriptionArray.push(deleteSub);
-    } catch (err) {
-      const { name, message, isUserError } = err as CustomError;
-      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
-      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
-    }
-
+    this.confirmService.showConfirm('Delete this item?',
+      () => {
+        try {
+          const { _id, cat, subCat } = this.detailsAvailability();
+          const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
+            .pipe(
+              catchError(err => { throw err; })
+            )
+            .subscribe(
+              {
+                next: () => {
+                  this.toastrMessageHandler.showInfo();
+                  this.router.navigate([`/catalog/${cat}/${subCat}`]);
+                },
+                error: (err) => {
+                  const errMsg: string = err.error.message;
+                  this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+                  this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+                  this.toastrMessageHandler.showError(errMsg);
+                }
+              }
+            );
+          this.unsubscriptionArray.push(deleteSub);
+        } catch (err) {
+          const { name, message, isUserError } = err as CustomError;
+          this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+          this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
+        }
+      },
+      () => { return; }
+    );
   }
 
   onEdit(): void {
-    try {
-      const item = this.detailsAvailability();
-      this.catalogManagerService.setCatalogItemToEdit({ ...item });
-      this.router.navigate(['/edit-product']);
-    } catch (err) {
-      const { name, message, isUserError } = err as CustomError;
-      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
-      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
-    }
+    this.confirmService.showConfirm('Edit this item?',
+      () => {
+        try {
+          const item = this.detailsAvailability();
+          this.catalogManagerService.setCatalogItemToEdit({ ...item });
+          this.router.navigate(['/edit-product']);
+        } catch (err) {
+          const { name, message, isUserError } = err as CustomError;
+          this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+          this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
+        }
+      },
+      () => { return; }
+    );
   }
 
   private detailsAvailability() {

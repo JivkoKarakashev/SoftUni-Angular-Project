@@ -26,9 +26,7 @@
                     <p><span>{{product.size.join(' / ')}}</span></p>
                     <p><span>${{product.price}}</span></p>
                     <p>
-                        <span *ngFor="let col of product.color; let idx = index" class="color" [attr.color]="col" #spanColorElements></span>
-                        <!-- <span class="color"></span>
-                        <span class="color"></span> -->
+                        <span *ngFor="let col of product.color" class="color" [attr.color]="col" #spanColorElements></span>
                     </p>
                     <div class="buttons">
                         <button *ngIf="product._ownerId !== user?._id && product.quantity > 0" type="button" class="buy" (click)="onAddRelatedProduct(i)">

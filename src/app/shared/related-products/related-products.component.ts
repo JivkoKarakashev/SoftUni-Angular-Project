@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { EMPTY, Subscription, catchError, switchMap, tap } from 'rxjs';
+import { EMPTY, Observable, Subscription, catchError, switchMap, tap } from 'rxjs';
 
 import { UserForAuth } from 'src/app/types/user';
 import { CartItem, Item } from 'src/app/types/item';
 
 import { UserStateManagementService } from '../state-management/user-state-management.service';
 import { RelatedProductsService } from './related-products.service';
-import { RelatedProductsPaginationConfig, RelatedProductsPaginationService, relatedProductsPaginationConfigInit } from '../utils/pagination-related-products.service';
+import { RelatedProductsPaginationConfig, RelatedProductsPaginationService, relatedProductsPaginationConfigInit } from '../utils/related-products-pagination.service';
 import { ErrorsService } from '../errors/errors.service';
 import { InvertColorService } from '../utils/invert-color.service';
 import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
@@ -75,7 +75,6 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
   ngAfterViewInit(): void {
-    // console.log('HERE');
     // console.log(this.spanColorElements);
     const spanElementsSubscription = this.spanColorElements.changes.subscribe((els: QueryList<ElementRef<HTMLSpanElement>>) => {
       els.forEach(el => {
@@ -89,7 +88,6 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     this.unsubscriptionArray.push(spanElementsSubscription);
   }
   ngOnDestroy(): void {
-    // this.itemSubscription.unsubscribe();
     this.unsubscriptionArray.forEach((subscription) => {
       subscription.unsubscribe();
       // console.log('UnsubArray = 1');
@@ -158,7 +156,7 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     this.unsubscriptionArray.push(fetchRelatedProductsSub);
   }
 
-  private fetchRelatedProductss() {
+  private fetchRelatedProductss(): Observable<Item[]> {
     this.loading = true;
     return this.relatedProductsService.getCollectionSize()
       .pipe(
@@ -170,12 +168,10 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
           this.paginationConfig = this.paginationService.relatedProductsPaginationConfigCalc(collSize, this.selected.pageSize, this.selected.page);
           const { selectedPage, skipSizeReq, pageSizeReq } = this.paginationConfig;
           this.selected.page = selectedPage;
-          console.log('fetchCollectionSize');
           return this.relatedProductsService.getRelatedProductsByPage(skipSizeReq, pageSizeReq)
             .pipe(
               tap(
                 rltdProds => {
-                  console.log('fetchRelatedProducts');
                   this.loading = false;
                   this.relatedProducts = [...rltdProds];
                   this.filteredProducts = rltdProds.filter(itm => itm._id !== this.product?._id);

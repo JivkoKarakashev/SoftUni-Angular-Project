@@ -434,6 +434,23 @@ li.item {
         outline: none;
     }
 
+    & p:nth-child(4) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 .2em;
+        align-items: center;
+    }
+
+    & span.color {
+        display: inline-block;
+        width: 1.8em;
+        height: 1.8em;
+        vertical-align: middle;
+        border-radius: 50%;
+        border: 1px solid #c9c9c9;
+        box-shadow: 0 .5px 1.5px 0 rgba(0, 0, 0, 0.33);
+    }
+
     & div.buttons {
         padding: .4em 0;
         min-height: 4em;

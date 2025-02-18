@@ -1,13 +1,13 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
-import { EMPTY, Subscription, catchError, of, switchMap } from 'rxjs';
+import { EMPTY, Subscription, catchError, switchMap, tap } from 'rxjs';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
 
-import { CartItem, Item, ListItem } from 'src/app/types/item';
+import { CartItem, ListItem } from 'src/app/types/item';
 import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { SuitsTailoringService } from './suits-tailoring.service';
 import { ShoppingCartStateManagementService } from 'src/app/shared/state-management/shopping-cart-state-management.service';
@@ -26,7 +26,7 @@ import { InvertColorService } from 'src/app/shared/utils/invert-color.service';
   templateUrl: './suits-tailoring.component.html',
   styleUrls: ['./suits-tailoring.component.css']
 })
-export class SuitsTailoringComponent implements OnInit, OnDestroy {
+export class SuitsTailoringComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public listItems: ListItem[] = [];
   public filteredItems: ListItem[] = [];
@@ -74,6 +74,8 @@ export class SuitsTailoringComponent implements OnInit, OnDestroy {
     private changeDetector: ChangeDetectorRef
   ) { }
 
+  @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef<HTMLSpanElement>>;
+
   @ViewChildren('sizeBtns') private sizeBtns!: QueryList<ElementRef<HTMLButtonElement>>;
   @ViewChildren('colorBtns') private colorBtns!: QueryList<ElementRef<HTMLButtonElement>>;
   @ViewChildren('brandBtns') private brandBtns!: QueryList<ElementRef<HTMLButtonElement>>;
@@ -105,8 +107,23 @@ export class SuitsTailoringComponent implements OnInit, OnDestroy {
     this.cartItemsCounter = this.cartItms.length;
     const categoryUrls = this.suitsTailoringService.getCategoryUrls();
     this.paginationService.setCategoryUrls([...categoryUrls]);
-    this.fetchDataSubscription();
+    const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
+    this.unsubscriptionArray.push(fetchCatalogDataSub);
     this.updateQueryParams();
+  }
+
+  ngAfterViewInit(): void {
+    // console.log(this.spanColorElements);
+    const spanElementsSubscription = this.spanColorElements.changes.subscribe((els: QueryList<ElementRef<HTMLSpanElement>>) => {
+      els.forEach(el => {
+        const color = el.nativeElement.getAttribute('color');
+        if (color) {
+          const hexColor = this.invertColorService.nameToHex(color);
+          this.render.setStyle(el.nativeElement, 'background-color', hexColor);
+        }
+      });
+    });
+    this.unsubscriptionArray.push(spanElementsSubscription);
   }
 
   ngOnDestroy(): void {
@@ -143,13 +160,12 @@ export class SuitsTailoringComponent implements OnInit, OnDestroy {
           .pipe(
             catchError(err => { throw err; }),
             switchMap(() => {
-              return this.fetchData()
+              return this.fetchCatalogData()
             }),
           )
           .subscribe(
             {
               next: () => {
-                this.fetchDataSubscription();
                 this.toastrMessageHandler.showInfo();
               },
               error: (err) => {
@@ -178,17 +194,20 @@ export class SuitsTailoringComponent implements OnInit, OnDestroy {
 
   onPageChange(selectedPage: number) {
     this.selected.page = selectedPage || 1;
-    this.fetchDataSubscription();
+    const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
+    this.unsubscriptionArray.push(fetchCatalogDataSub);
   }
 
   onPageSelect(selectedPage: string) {
     this.selected.page = Number(selectedPage);
-    this.fetchDataSubscription();
+    const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
+    this.unsubscriptionArray.push(fetchCatalogDataSub);
   }
 
   onPageSizeSelect(selectedPageSize: string) {
     this.selected.pageSize = Number(selectedPageSize);
-    this.fetchDataSubscription();
+    const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
+    this.unsubscriptionArray.push(fetchCatalogDataSub);
   }
 
   private updateQueryParams() {
@@ -202,68 +221,70 @@ export class SuitsTailoringComponent implements OnInit, OnDestroy {
     });
   }
 
-  private fetchData() {
+  private fetchCatalogData() {
     this.loading = true;
     return this.suitsTailoringService.getCollectionComposition()
       .pipe(
+        catchError(err => {
+          this.loading = false;
+          this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          return EMPTY;
+        }),
         switchMap(compArr => {
           if (compArr.length === 0) {
             this.loading = false;
             return EMPTY;
           }
-
           this.paginationService.paginationCategoryConfigCalcAndSet(compArr, this.selected.pageSize, this.selected.page);
           this.paginationConfig = this.paginationService.getCategoryPaginationConfig();
           this.pageSizeOptionArr = Array.from({ length: this.paginationConfig.categorySize }, (_, i) => i + 1);
           this.selected.page = this.paginationConfig.selectedPage;
           this.pageOptionArr = Array.from({ length: this.paginationConfig.totalPages }, (_, i) => i + 1);
           this.updateQueryParams();
-          // /////////////////////////////
-          // console.log(this.paginationConfig);
-          // console.log(this.currentPage);
-          // /////////////////////////////
-          return this.suitsTailoringService.getSuitsTailoringByPage([...this.paginationConfig.subcategoryConfigs]);
+          ///////////////////////////////////////
+          // console.log(this.paginationConfig);/
+          // console.log(this.currentPage);//////
+          ///////////////////////////////////////
+          return this.suitsTailoringService.getSuitsTailoringByPage([...this.paginationConfig.subcategoryConfigs])
+            .pipe(
+              catchError(err => {
+                this.loading = false;
+                this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+                this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+                return EMPTY;
+              }),
+              tap(itmsArr => {
+                this.loading = false;
+                // console.log(itmsArr);
+                this.resetFilters();
+                // console.log(this.filters);
+                const flattenedListItems = itmsArr.flat(1);
+                this.listItems = this.checkForInCartAlready.check(itmsArr, this.cartItms);
+                this.filteredItems = [...this.listItems];
+                this.sizeFilterOptions = Array.from(new Set(flattenedListItems.map(itm => itm.size).flat(1).sort()));
+                const colorOpts = Array.from(new Set(flattenedListItems.map(itm => itm.color).flat(1).sort((a, b) => a.localeCompare(b))));
+                this.colorFilterOptions = [];
+                colorOpts.forEach(col => {
+                  const hexColor = this.invertColorService.nameToHex(col);
+                  const invertedColor = this.invertColorService.invertColor(hexColor);
+                  // console.log(hexColor);
+                  if (invertedColor) {
+                    this.colorFilterOptions.push({ hex: hexColor, hexInverted: invertedColor, name: col });
+                  }
+                });
+                this.brandFilterOptions = Array.from(new Set(flattenedListItems.map(itm => itm.brand).sort((a, b) => a.localeCompare(b))));
+                this.priceFilterOptions = Array.from(new Set(flattenedListItems.map((itm, i) => (i !== itmsArr.length - 1) ? Math.trunc(itm.price) : Math.ceil(itm.price)).sort((a, b) => a - b)));
+                const fromPrCurr = this.priceFilterOptions[0];
+                const toPrCurr = this.priceFilterOptions[this.priceFilterOptions.length - 1];
+                const toPrMin = this.priceFilterOptions[0];
+                const toPrMax = this.priceFilterOptions[this.priceFilterOptions.length - 1];
+                this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
+                // console.log(this.listItems);
+              })
+            );
         }),
-        catchError(err => { return of(err); }),
-      )
-  }
-
-  private fetchDataSubscription() {
-    const fetchDataSub = this.fetchData().subscribe(res => {
-      this.loading = false;
-      // console.log(res);
-      if (res instanceof HttpErrorResponse) {
-        this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...res }]);
-        this.httpErrorsArr = [...this.httpErrorsArr, { ...res }];
-        return;
-      }
-      this.resetFilters();
-      // console.log(this.filters);
-      const flattenedListItems = (res as Array<Item[]>).flat(1);
-      this.listItems = [...this.checkForInCartAlready.check(res as Array<Item[]>, this.cartItms)];
-      this.filteredItems = [...this.listItems];
-      this.sizeFilterOptions = [...Array.from(new Set([...(flattenedListItems).map(itm => itm.size).flat(1).sort()]))];
-      const colorOpts = [...Array.from(new Set([...(flattenedListItems).map(itm => itm.color).flat(1).sort((a, b) => a.localeCompare(b))]))];
-      this.colorFilterOptions = [];
-      colorOpts.forEach(col => {
-        const hexColor = this.invertColorService.nameToHex(col);
-        const invertedColor = this.invertColorService.invertColor(hexColor);
-        // console.log(hexColor);
-        if (invertedColor) {
-          this.colorFilterOptions.push({ hex: hexColor, hexInverted: invertedColor, name: col });
-        }
-      });
-      this.brandFilterOptions = [...Array.from(new Set([...(flattenedListItems).map(itm => itm.brand).sort((a, b) => a.localeCompare(b))]))];
-      this.priceFilterOptions = [...Array.from(new Set([...(flattenedListItems).map((itm, i) => (i !== (res as Item[]).length - 1) ? Math.trunc(itm.price) : Math.ceil(itm.price)).sort((a, b) => a - b)]))];
-      const fromPrCurr = this.priceFilterOptions[0];
-      const toPrCurr = this.priceFilterOptions[this.priceFilterOptions.length - 1];
-      const toPrMin = this.priceFilterOptions[0];
-      const toPrMax = this.priceFilterOptions[this.priceFilterOptions.length - 1];
-      this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
-      // console.log(this.listItems);
-    });
-    this.unsubscriptionArray.push(fetchDataSub);
-    return fetchDataSub;
+      );
   }
   /////////////////////////////////////////////////////////
   // <-------------------- FILTERS --------------------> //

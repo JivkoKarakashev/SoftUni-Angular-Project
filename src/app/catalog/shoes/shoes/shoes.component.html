@@ -122,7 +122,9 @@
                                     </div>
                                     <p>Description: <span>{{item.description}}</span></p>
                                     <p>Size: <span>{{item.size.join(' / ')}}</span></p>
-                                    <p>Color: <span>{{item.color.join(' / ')}}</span></p>
+                                    <p>Color:
+                                        <span *ngFor="let col of item.color" class="color" [attr.color]="col" #spanColorElements></span>
+                                    </p>
                                     <p>Brand: <span>{{item.brand}}</span></p>
                                     <p>Remaining: <span>{{item.quantity}}</span></p>
                                     <p>Price: <span><strong>${{item.price}}</strong></span></p>

@@ -27,7 +27,7 @@ section.carousel-container {
 
         & button.slide-arrow.disabled {
             background-color: #808080;
-            cursor: not-allowed;
+            cursor: unset;
         }
 
         & .related-items-container {
@@ -58,7 +58,7 @@ section.carousel-container {
                     height: 1.8em;
                     vertical-align: middle;
                     border-radius: 50%;
-                    border: 1px solid #FFFFFF;
+                    border: 1px solid #c9c9c9;
                     box-shadow: 0 .5px 1.5px 0 rgba(0, 0, 0, 0.33);
                 }
 
