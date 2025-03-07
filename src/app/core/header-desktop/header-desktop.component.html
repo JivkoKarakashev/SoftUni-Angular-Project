@@ -1,20 +1,20 @@
 
     <nav class="desktop">
         <ul class="navbar">
-            <li><a class="nav-icon home" routerLink="/">Home</a></li>
+            <li><a class="nav-icon home" href="/" (click)="onNavigate($event, '/')">Home</a></li>
             <ng-container *ngIf="!user">
-                <li><a class="nav-icon guest" routerLink="/auth/login">Login</a></li>
-                <li><a class="nav-icon user" routerLink="/auth/register">Register</a></li>
+                <li><a class="nav-icon guest" href="/auth/login" (click)="onNavigate($event, '/auth/login')">Login</a></li>
+                <li><a class="nav-icon user" href="/auth/register" (click)="onNavigate($event, '/auth/register')">Register</a></li>
             </ng-container>
             <ng-container *ngIf="user">
-                <li><a class="nav-icon square-plus" routerLink="/create-product">Publish</a></li>
-                <li><a class="nav-icon profile" routerLink="/auth/profile">Profile</a></li>
+                <li><a class="nav-icon square-plus" href="/create-product" (click)="onNavigate($event, '/create-product')">Publish</a></li>
+                <li><a class="nav-icon profile" href="/auth/profile" (click)="onNavigate($event, '/auth/profile')">Profile</a></li>
                 <li><a class="nav-icon logout" (click)="logout()">Logout</a></li>
             </ng-container>
-            <li><a class="nav-icon list" routerLink="/category">Category</a></li>
+            <li><a class="nav-icon list" href="/category" (click)="onNavigate($event, '/category')">Category</a></li>
             <li>
                 <!-- Trigger/Open The Modal -->
-                <a class="nav-icon basket" routerLink="/cart">Cart</a>
+                <a class="nav-icon basket" href="/cart" (click)="onNavigate($event, '/cart')">Cart</a>
             </li>
             <!-- The Modal -->
         </ul>

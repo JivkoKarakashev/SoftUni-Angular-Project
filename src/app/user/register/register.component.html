@@ -6,9 +6,7 @@
         <div class="title">
             <h2>Register</h2>
         </div>
-        <ng-container *ngIf="httpErrorsArr.length">
-            <div class="alert">{{httpErrorsArr.at(0)?.error?.message}}</div>
-        </ng-container>
+        <app-errors *ngIf="httpErrorsArr.length" />
         <form [formGroup]="registerForm" (ngSubmit)="register()" method="post" action="#">
             <fieldset>
                 <div class="row" [ngClass]="{'error': (registerForm.get('email')?.touched || registerForm.get('email')?.dirty) && registerForm.get('email')?.invalid}">

@@ -2,12 +2,13 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, 
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
-import { EMPTY, Subscription, catchError, switchMap, tap } from 'rxjs';
+import { AnimationEvent } from '@angular/animations';
+import { EMPTY, Observable, Subscription, catchError, switchMap, tap } from 'rxjs';
 
 import { UserForAuth } from 'src/app/types/user';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
 
-import { CartItem, ListItem } from 'src/app/types/item';
+import { CartItem, Item, ListItem } from 'src/app/types/item';
 import { ShoppingCartService } from 'src/app/shared/shopping-cart/shopping-cart.service';
 import { SwimSurfService } from './swim-surf.service';
 import { ShoppingCartStateManagementService } from 'src/app/shared/state-management/shopping-cart-state-management.service';
@@ -20,11 +21,18 @@ import { NgConfirmService } from 'ng-confirm-box';
 import { PaginationConfig, PaginationService, paginationConfigInit } from 'src/app/shared/utils/pagination.service';
 import { CatalogFilters, Color, FilterCatalogDataService, filtersInit, priceFltrInit } from 'src/app/shared/utils/filter-catalog-data.service';
 import { InvertColorService } from 'src/app/shared/utils/invert-color.service';
+import { AddToCartBtnAnimationState, CatalogItemAnimationState, addToCartBtnAnimation, catalogItemDelAnimation, catalogItemsEnterLeaveAnimation } from 'src/app/shared/animation-service/animations/catalog-items.animation';
+import { AnimationService } from 'src/app/shared/animation-service/animation.service';
 
 @Component({
   selector: 'app-swim-surf',
   templateUrl: './swim-surf.component.html',
-  styleUrls: ['./swim-surf.component.css']
+  styleUrls: ['./swim-surf.component.css'],
+  animations: [
+    catalogItemDelAnimation,
+    catalogItemsEnterLeaveAnimation,
+    addToCartBtnAnimation
+  ]
 })
 export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -36,6 +44,9 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
   public user: UserForAuth | null = null;
   public showScrollUpBtn = false;
   public sidebarState: 'open' | 'closed' = 'open';
+  public btnAnimStatesArr: AddToCartBtnAnimationState[] = [];
+  public catalogItmAnimDisabled = false;
+  public catalogItmDelAnimStatesArr: CatalogItemAnimationState[] = [];
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
@@ -71,7 +82,8 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
     private filterService: FilterCatalogDataService,
     private invertColorService: InvertColorService,
     private viewportScroller: ViewportScroller,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private animationService: AnimationService
   ) { }
 
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef<HTMLSpanElement>>;
@@ -86,7 +98,7 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('toPriceInput') private toPriceInput!: ElementRef<HTMLInputElement>;
 
   @HostListener('window:scroll')
-  onWindowScroll() {
+  onWindowScroll(): void {
     const [, yPos] = this.viewportScroller.getScrollPosition();
     if (yPos > 350 && !this.showScrollUpBtn) {
       this.showScrollUpBtn = true;
@@ -96,6 +108,7 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.animationService.enableCatalogItemEnterLeaveAnimation();
     this.selected.page = Number(this.activatedRoute.snapshot.queryParamMap.get('page')) || 1;
     this.selected.pageSize = Number(this.activatedRoute.snapshot.queryParamMap.get('pageSize')) || 2;
     this.updateQueryParams();
@@ -103,10 +116,13 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
     /////////////////////////////////////////////
     const user = this.userStateMgmnt.getUser();
     (user) ? this.user = { ...user } : null;
-    this.cartItms = [...this.cartItms, ...this.cartStateMgmnt.getCartItems()];
-    this.cartItemsCounter = this.cartItms.length;
     const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
-    this.unsubscriptionArray.push(fetchCatalogDataSub);
+    const animationDisabledStateSub = this.animationService.getCatalogItemAnimationState()
+      .subscribe(state => {
+        // console.log(state);
+        this.catalogItmAnimDisabled = state;
+      });
+    this.unsubscriptionArray.push(fetchCatalogDataSub, animationDisabledStateSub);
     this.updateQueryParams();
   }
 
@@ -132,51 +148,105 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log('UnsubArray = 1 - infinity');
   }
 
-  onAddToCart(i: number): void {
-    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = this.listItems[i];
-    const newCartItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false };
-    const idx = this.listItems.findIndex(itm => itm._id == _id);
-    this.listItems[idx] = { ...this.listItems[idx], inCart: true };
-    this.filteredItems[idx] = { ...this.filteredItems[idx], inCart: true };
-    this.cartService.addCartItem(newCartItem);
-    this.cartItemsCounter++;
-    this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
-    // console.log(this.listItems);
-    // console.log(this.cartItms);
+  onNavigate(e: Event, route: string): void {
+    e.preventDefault();
+    this.animationService.disableCatalogItemEnterLeaveAnimation();
+    setTimeout(() => {
+      this.router.navigate([route]);
+    }, 10);
   }
 
-  onScrollTop() {
+  onAddToCart(i: number): void {
+    this.btnAnimStatesArr[i] = { ...this.btnAnimStatesArr, animateState: 'animate', btnText: '\u2713' };
+    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = this.listItems[i];
+    const newCartItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false };
+    this.cartService.addCartItem(newCartItem);
+  }
+
+  setAnimationStates(): void {
+    this.btnAnimStatesArr = Array.from({ length: this.filteredItems.length }, () => ({ animateState: 'static', btnText: 'Add to Cart' }) as AddToCartBtnAnimationState);
+    this.catalogItmDelAnimStatesArr = Array.from({ length: this.filteredItems.length }, () => 'static' as CatalogItemAnimationState);
+  }
+
+  onItemEnteringOrLeavingAnimation(e: AnimationEvent): void {
+    // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
+    // console.log(e);
+    // console.log(`${e.fromState} ==> ${e.toState}`);
+    if (e.phaseName === 'start') {
+      this.render.setStyle(e.element, 'pointer-events', 'none');
+    } else if (e.phaseName === 'done') {
+      this.render.removeStyle(e.element, 'pointer-events');
+    }
+  }
+
+  onItemDeletionAnimation(e: AnimationEvent, i: number): void {
+    // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
+    // console.log(e);
+    // console.log(`${e.fromState} ==> ${e.toState}`);
+    if (e.phaseName === 'done') {
+      if (e.fromState === 'static' && e.toState === 'delete' && i !== undefined) {
+        const deleteSub = this.deleteItem(i).subscribe();
+        this.unsubscriptionArray.push(deleteSub);
+      }
+    }
+  }
+
+  onAddToCartBtnAnimate(e: AnimationEvent, i: number): void {
+    // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
+    // console.log(e);
+    // console.log(`${e.fromState} ==> ${e.toState}`);
+    if (e.phaseName === 'start' && e.fromState === 'static' && e.toState === 'animate') {
+      this.render.setStyle(e.element, 'pointer-events', 'none');
+    } else if (e.phaseName === 'done' && e.fromState === 'static' && e.toState === 'animate') {
+      this.render.setStyle(e.element, 'display', 'none');
+      this.btnAnimStatesArr[i] = { ...this.btnAnimStatesArr[i], animateState: 'static', btnText: 'Add to Cart' };
+      this.cartItemsCounter++;
+      this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
+      const idx = this.listItems.findIndex(itm => itm._id == this.listItems[i]._id);
+      this.listItems[idx].inCart = true;
+      this.filteredItems[idx].inCart = true;
+    }
+
+  }
+
+  onScrollTop(): void {
     this.viewportScroller.scrollToPosition([0, 0]);
   }
 
   onDelete(i: number): void {
     this.confirmService.showConfirm('Delete this item?',
       () => {
-        const { _id, subCat } = this.listItems[i];
-        const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
-          .pipe(
-            catchError(err => { throw err; }),
-            switchMap(() => {
-              return this.fetchCatalogData();
-            }),
-          )
-          .subscribe(
-            {
-              next: () => {
-                this.toastrMessageHandler.showInfo();
-              },
-              error: (err) => {
-                const errMsg: string = err.error.message;
-                this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
-                this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-                this.toastrMessageHandler.showError(errMsg);
-              }
-            }
-          );
-        this.unsubscriptionArray.push(deleteSub);
+        this.catalogItmDelAnimStatesArr[i] = 'delete';
       },
       () => { return; }
     );
+  }
+
+  private deleteItem(i: number): Observable<Item[]> {
+    this.loading = true;
+    const { _id, subCat } = this.listItems[i];
+    return this.catalogManagerService.deleteItem(subCat, _id)
+      .pipe(
+        catchError(err => {
+          this.loading = false;
+          this.catalogItmDelAnimStatesArr[i] = 'static';
+          const errMsg: string = err.error.message;
+          this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          this.toastrMessageHandler.showError(errMsg);
+          return EMPTY;
+        }
+        ),
+        switchMap(() => {
+          return this.fetchCatalogData()
+            .pipe(
+              tap(() => {
+                this.loading = false;
+                this.toastrMessageHandler.showInfo()
+              })
+            );
+        }),
+      );
   }
 
   onEdit(i: number): void {
@@ -189,25 +259,25 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  onPageChange(selectedPage: number) {
+  onPageChange(selectedPage: number): void {
     this.selected.page = selectedPage || 1;
     const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
     this.unsubscriptionArray.push(fetchCatalogDataSub);
   }
 
-  onPageSelect(selectedPage: string) {
+  onPageSelect(selectedPage: string): void {
     this.selected.page = Number(selectedPage);
     const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
     this.unsubscriptionArray.push(fetchCatalogDataSub);
   }
 
-  onPageSizeSelect(selectedPageSize: string) {
+  onPageSizeSelect(selectedPageSize: string): void {
     this.selected.pageSize = Number(selectedPageSize);
     const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
     this.unsubscriptionArray.push(fetchCatalogDataSub);
   }
 
-  private updateQueryParams() {
+  private updateQueryParams(): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {
@@ -218,7 +288,7 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private fetchCatalogData() {
+  private fetchCatalogData(): Observable<Item[]> {
     this.loading = true;
     return this.swim_surfService.getCollectionSize()
       .pipe(
@@ -250,34 +320,42 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
                 return EMPTY;
               }),
-              tap(
-                itms => {
-                  this.loading = false;
-                  this.resetFilters();
-                  // console.log(this.filters);
-                  this.listItems = this.checkForInCartAlready.check([itms], this.cartItms);
-                  this.filteredItems = [...this.listItems];
-                  this.sizeFilterOptions = Array.from(new Set(itms.map(itm => itm.size).flat(1).sort()));
-                  const colorOpts = Array.from(new Set(itms.map(itm => itm.color).flat(1).sort((a, b) => a.localeCompare(b))));
-                  this.colorFilterOptions = [];
-                  colorOpts.forEach(col => {
-                    const hexColor = this.invertColorService.nameToHex(col);
-                    const invertedColor = this.invertColorService.invertColor(hexColor);
-                    // console.log(hexColor);
-                    if (invertedColor) {
-                      this.colorFilterOptions.push({ hex: hexColor, hexInverted: invertedColor, name: col });
-                    }
-                  });
-                  this.brandFilterOptions = Array.from(new Set(itms.map(itm => itm.brand).sort((a, b) => a.localeCompare(b))));
-                  this.priceFilterOptions = Array.from(new Set(itms.map((itm, i) => (i !== itms.length - 1) ? Math.trunc(itm.price) : Math.ceil(itm.price)).sort((a, b) => a - b)));
-                  const fromPrCurr = this.priceFilterOptions[0];
-                  const toPrCurr = this.priceFilterOptions[this.priceFilterOptions.length - 1];
-                  const toPrMin = this.priceFilterOptions[0];
-                  const toPrMax = this.priceFilterOptions[this.priceFilterOptions.length - 1];
-                  this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
-                  // console.log(this.listItems);
-                }
-              )
+              tap(itms => {
+                this.loading = false;
+                // console.log(itms);
+                this.resetFilters();
+                // console.log(this.filters);
+                this.cartItms = [...this.cartStateMgmnt.getCartItems()];
+                this.cartItemsCounter = this.cartItms.length;
+                this.listItems = this.checkForInCartAlready.check([itms], this.cartItms);
+                this.filteredItems = [...this.listItems];
+                this.setAnimationStates();
+                this.sizeFilterOptions = Array.from(new Set(itms.map(itm => itm.size).flat(1).sort((a, b) => {
+                  if (typeof (a) === 'number' && typeof (b) === 'number') {
+                    return a - b;
+                  } else {
+                    return String(a).localeCompare(String(b));
+                  }
+                })));
+                const colorOpts = Array.from(new Set(itms.map(itm => itm.color).flat(1).sort((a, b) => a.localeCompare(b))));
+                this.colorFilterOptions = [];
+                colorOpts.forEach(col => {
+                  const hexColor = this.invertColorService.nameToHex(col);
+                  const invertedColor = this.invertColorService.invertColor(hexColor);
+                  // console.log(hexColor);
+                  if (invertedColor) {
+                    this.colorFilterOptions.push({ hex: hexColor, hexInverted: invertedColor, name: col });
+                  }
+                });
+                this.brandFilterOptions = Array.from(new Set(itms.map(itm => itm.brand).sort((a, b) => a.localeCompare(b))));
+                this.priceFilterOptions = Array.from(new Set(itms.map((itm, i) => (i !== itms.length - 1) ? Math.trunc(itm.price) : Math.ceil(itm.price)).sort((a, b) => a - b)));
+                const fromPrCurr = this.priceFilterOptions[0];
+                const toPrCurr = this.priceFilterOptions[this.priceFilterOptions.length - 1];
+                const toPrMin = this.priceFilterOptions[0];
+                const toPrMax = this.priceFilterOptions[this.priceFilterOptions.length - 1];
+                this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
+                // console.log(this.listItems);
+              })
             );
         }),
       );
@@ -286,11 +364,11 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
   // <-------------------- FILTERS --------------------> //
   /////////////////////////////////////////////////////////
 
-  onSidebarToggle() {
+  onSidebarToggle(): void {
     this.sidebarState === 'open' ? this.sidebarState = 'closed' : this.sidebarState = 'open';
   }
 
-  onSizeFilterChange(i: number) {
+  onSizeFilterChange(i: number): void {
     const selectedSize = this.sizeFilterOptions[i];
     const sizeBtnEl = this.sizeBtns.get(i)?.nativeElement;
     if (!sizeBtnEl?.classList.contains('active')) {
@@ -302,18 +380,19 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.removeClass(sizeBtnEl, 'active');
     }
     // console.log(this.filters.size);
-    this.filteredItems = [...this.filterService.accumulativeFilter({ ...this.filters }, [...this.listItems])];
+    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+    this.setAnimationStates();
   }
 
-  onSizeFilterClear() {
+  onSizeFilterClear(): void {
     this.sizeBtns.forEach(btn => this.render.removeClass(btn.nativeElement, 'active'));
     this.clearFilter.clearSizeFilter();
     // console.log(this.filters.size);
-    // this.accumulativeFilter();
-    this.filteredItems = [...this.filterService.accumulativeFilter({ ...this.filters }, [...this.listItems])];
+    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+    this.setAnimationStates();
   }
 
-  onColorFilterChange(i: number) {
+  onColorFilterChange(i: number): void {
     const selectedColor = this.colorFilterOptions[i];
     const colorBtnEl = this.colorBtns.get(i)?.nativeElement;
     if (!colorBtnEl?.classList.contains('active')) {
@@ -325,19 +404,19 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.removeClass(colorBtnEl, 'active');
     }
     // console.log(this.filters.color.map(col => col.bkgnd));
-    this.filteredItems = [...this.filterService.accumulativeFilter({ ...this.filters }, [...this.listItems])];
-    // this.accumulativeFilter();
+    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+    this.setAnimationStates();
   }
 
-  onColorFilterClear() {
+  onColorFilterClear(): void {
     this.colorBtns.forEach(btn => this.render.removeClass(btn.nativeElement, 'active'));
     this.clearFilter.clearColorFilter();
     // console.log(this.filters.color);
-    // this.accumulativeFilter();
-    this.filteredItems = [...this.filterService.accumulativeFilter({ ...this.filters }, [...this.listItems])];
+    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+    this.setAnimationStates();
   }
 
-  onBrandFilterChange(i: number) {
+  onBrandFilterChange(i: number): void {
     const selectedBrand = this.brandFilterOptions[i];
     const brandBtnEl = this.brandBtns.get(i)?.nativeElement;
     if (!brandBtnEl?.classList.contains('active')) {
@@ -349,18 +428,19 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.removeClass(brandBtnEl, 'active');
     }
     // console.log(this.filters.brand);
-    this.filteredItems = [...this.filterService.accumulativeFilter({ ...this.filters }, [...this.listItems])];
-    // this.accumulativeFilter();
+    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+    this.setAnimationStates();
   }
 
-  onBrandFilterClear() {
+  onBrandFilterClear(): void {
     this.brandBtns.forEach(btn => this.render.removeClass(btn.nativeElement, 'active'));
     this.clearFilter.clearBrandFilter();
     // console.log(this.filters.brand);
-    this.filteredItems = [...this.filterService.accumulativeFilter({ ...this.filters }, [...this.listItems])];
+    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+    this.setAnimationStates();
   }
 
-  onPriceSliderChange() {
+  onPriceSliderChange(): void {
     const fromPriceSliderEl = this.fromPriceSlider.nativeElement;
     const toPriceSliderEl = this.toPriceSlider.nativeElement;
 
@@ -374,13 +454,14 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
         to: toPrCurr
       }
       // console.log(this.filters.price);
-      this.filteredItems = [...this.filterService.accumulativeFilter({ ...this.filters }, [...this.listItems])];
+      this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+      this.setAnimationStates();
       this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
       this.priceInputCtrl(fromPrCurr, toPrCurr);
     }
   }
 
-  private priceSliderCtrl(fromPrCurr: number, toPrCurr: number) {
+  private priceSliderCtrl(fromPrCurr: number, toPrCurr: number): void {
     const toPrMin = this.priceFilterOptions[0];
     const toPrMax = this.priceFilterOptions[this.priceFilterOptions.length - 1];
     this.render.setProperty(this.fromPriceSlider.nativeElement, 'value', fromPrCurr);
@@ -388,7 +469,7 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
     this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
   }
 
-  private fillSlider(fromPrCurr: number, toPrCurr: number, toPrMin: number, toPrMax: number) {
+  private fillSlider(fromPrCurr: number, toPrCurr: number, toPrMin: number, toPrMax: number): void {
     const sliderColor = '#C6C6C6';
     const rangeColor = '#387bbe';
 
@@ -411,7 +492,7 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
       ${sliderColor} 100%)`);
   }
 
-  onPriceInputChange() {
+  onPriceInputChange(): void {
     const fromPriceInputEl = this.fromPriceInput.nativeElement;
     const toPriceInputEl = this.toPriceInput.nativeElement;
     const fromPrCurr = Number(fromPriceInputEl.value);
@@ -423,13 +504,13 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(this.filters.price);
     this.render.setAttribute(fromPriceInputEl, 'max', String(toPrCurr));
     this.render.setAttribute(toPriceInputEl, 'min', String(fromPrCurr));
-    this.filteredItems = [...this.filterService.accumulativeFilter({ ...this.filters }, [...this.listItems])];
+    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+    this.setAnimationStates();
     this.priceSliderCtrl(fromPrCurr, toPrCurr);
-
     // console.log(fromPrCurr, toPrCurr);
   }
 
-  private priceInputCtrl(fromPrCurr: number, toPrCurr: number) {
+  private priceInputCtrl(fromPrCurr: number, toPrCurr: number): void {
     // this.frompriceinput.nativeElement.value = String(fromPrCurr);
     // this.topriceinput.nativeElement.value = String(toPrCurr);
     this.render.setProperty(this.fromPriceInput.nativeElement, 'value', String(fromPrCurr));
@@ -437,11 +518,12 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(this.fromPriceInput.nativeElement.value, this.toPriceInput.nativeElement.value);
   }
 
-  onPriceFilterClear() {
+  onPriceFilterClear(): void {
     const fromPrCurr = this.priceFilterOptions[0];
     const toPrCurr = this.priceFilterOptions[this.priceFilterOptions.length - 1];
     this.filters.price = { ...priceFltrInit };
-    this.filteredItems = [...this.filterService.accumulativeFilter({ ...this.filters }, [...this.listItems])];
+    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+    this.setAnimationStates();
     this.priceSliderCtrl(fromPrCurr, toPrCurr);
     this.priceInputCtrl(fromPrCurr, toPrCurr);
   }
@@ -449,6 +531,11 @@ export class SwimSurfComponent implements OnInit, AfterViewInit, OnDestroy {
   trackByIdx(idx: number): number {
     // console.log('INDEXED');
     return idx;
+  }
+
+  trackById(_: number, item: Item): string {
+    // console.log(item._id);
+    return item._id;
   }
 
   private clearFilter = {

@@ -1,6 +1,6 @@
 <ng-container *ngIf="httpErrorsArr.length">
     <div *ngFor="let err of httpErrorsArr" class="alert">{{err.error.message || err.message}}
-        <div *ngIf="err.status === 403" class="buttons">
+        <div *ngIf="err.status === 403 && err.error.message === 'Invalid access token'" class="buttons">
             <a class="nav-icon logout" (click)="resignIn()">Please click HERE to re-sign in</a>
         </div>
     </div>

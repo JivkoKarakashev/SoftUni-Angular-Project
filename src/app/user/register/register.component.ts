@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs';
 
 import { UserService } from '../user.service';
 import { EmailValidaorService } from 'src/app/shared/utils/email-validator.service';
 import { PasswordValidatorService } from 'src/app/shared/utils/passwords-validator.service';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
+import { ErrorsService } from 'src/app/shared/errors/errors.service';
+import { ToastrMessageHandlerService } from 'src/app/shared/utils/toastr-message-handler.service';
 
 @Component({
   selector: 'app-register',
@@ -50,7 +52,16 @@ export class RegisterComponent {
     return this.registerForm.get('passGroup');
   }
 
-  constructor(private fb: FormBuilder, private userService: UserService, private router: Router, private emailValidator: EmailValidaorService, private passwordValidator: PasswordValidatorService, private userStateMgmnt: UserStateManagementService) { }
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private router: Router,
+    private emailValidator: EmailValidaorService,
+    private passwordValidator: PasswordValidatorService,
+    private userStateMgmnt: UserStateManagementService,
+    private errorsService: ErrorsService,
+    private toastrMessageHandler: ToastrMessageHandlerService
+  ) { }
 
   register(): void {
     // console.log(this.passGroup?.value.rePass);
@@ -74,8 +85,10 @@ export class RegisterComponent {
             },
             error: err => {
               this.loading = false;
-              console.log(err);
+              const errMsg: string = err.error.message || err.message;
+              this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
               this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+              this.toastrMessageHandler.showError(errMsg);
             }
           }
         );

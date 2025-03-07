@@ -463,6 +463,9 @@ li.item {
             display: none;
 
             & li.button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 padding: .3em .5em;
                 background-color: #252525;
                 border-radius: 0.4em;

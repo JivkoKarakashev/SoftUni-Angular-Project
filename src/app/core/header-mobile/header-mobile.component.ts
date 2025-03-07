@@ -11,6 +11,7 @@ import { UserService } from 'src/app/user/user.service';
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
+import { AnimationService } from 'src/app/shared/animation-service/animation.service';
 
 @Component({
   selector: 'app-header-mobile',
@@ -31,7 +32,8 @@ export class HeaderMobileComponent implements OnInit, OnDestroy {
     private cartStateMgmnt: ShoppingCartStateManagementService,
     private orderStateMgmnt: OrderStateManagementService,
     private tradedItmsStateMgmnt: TradedItemsStateManagementService,
-    private router: Router
+    private router: Router,
+    private animationService: AnimationService
   ) { }
 
   ngOnInit(): void {
@@ -64,7 +66,18 @@ export class HeaderMobileComponent implements OnInit, OnDestroy {
         this.cartStateMgmnt.emptyCart();
         this.orderStateMgmnt.resetDBOrderState();
         this.tradedItmsStateMgmnt.resetDBTradedItemsState();
-        this.router.navigate(['/auth/login']);
+        this.animationService.disableCatalogItemEnterLeaveAnimation();
+        setTimeout(() => {
+          this.router.navigate(['/auth/login']);
+        }, 10);
       });
+  }
+
+  onNavigate(e: Event, route: string) {
+    e.preventDefault();
+    this.animationService.disableCatalogItemEnterLeaveAnimation();
+    setTimeout(() => {
+      this.router.navigate([route]);
+    }, 10);
   }
 }

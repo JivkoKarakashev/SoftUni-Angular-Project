@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs';
 
 import { UserService } from '../user.service';
 import { EmailValidaorService } from 'src/app/shared/utils/email-validator.service';
 import { UserStateManagementService } from 'src/app/shared/state-management/user-state-management.service';
+import { ErrorsService } from 'src/app/shared/errors/errors.service';
+import { ToastrMessageHandlerService } from 'src/app/shared/utils/toastr-message-handler.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +24,15 @@ export class LoginComponent {
     password: ['', [Validators.required,]],
   });
 
-  constructor(private fb: FormBuilder, private userService: UserService, private router: Router, private emailValidator: EmailValidaorService, private userStateMgmnt: UserStateManagementService) { }
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private router: Router,
+    private emailValidator: EmailValidaorService,
+    private userStateMgmnt: UserStateManagementService,
+    private errorsService: ErrorsService,
+    private toastrMessageHandler: ToastrMessageHandlerService
+    ) { }
 
   login(): void {
     this.loading = true;
@@ -45,8 +55,10 @@ export class LoginComponent {
             },
             error: (err) => {
               this.loading = false;
+              const errMsg: string = err.error.message || err.message;
+              this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
               this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-              console.log(err);
+              this.toastrMessageHandler.showError(errMsg);
             }
           }
         );
