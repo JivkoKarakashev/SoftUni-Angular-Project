@@ -8,6 +8,7 @@ import { CustomError } from './custom-error';
 import { UserService } from 'src/app/user/user.service';
 import { ShoppingCartStateManagementService } from '../state-management/shopping-cart-state-management.service';
 import { OrderStateManagementService } from '../state-management/order-state-management.service';
+import { AnimationService } from '../animation-service/animation.service';
 
 @Component({
   selector: 'app-errors',
@@ -24,7 +25,8 @@ export class ErrorsComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private cartStateMgmnt: ShoppingCartStateManagementService,
     private orderStateMgmnt: OrderStateManagementService,
-    private router: Router
+    private router: Router,
+    private animationService: AnimationService
   ) { }
 
   ngOnInit(): void {
@@ -46,23 +48,29 @@ export class ErrorsComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.userService.logout().pipe(
-      catchError(err => { throw err; })
-    ).subscribe(
-      () => {
-        this.cartStateMgmnt.emptyCart();
-        this.orderStateMgmnt.resetDBOrderState();
-        this.router.navigate(['/auth/login']);
-      }
-    );
+    this.userService.logout()
+      .pipe(
+        catchError(err => { throw err; })
+      ).subscribe(
+        () => {
+          this.cartStateMgmnt.emptyCart();
+          this.orderStateMgmnt.resetDBOrderState();
+          this.animationService.disableAllAnimations();
+          this.router.navigate(['/auth/login']);
+        }
+      );
   }
 
   resignIn(): void {
-    this.userService.logout().pipe(
-      catchError(err => { return of(err); })
-    ).subscribe(
-      () => this.router.navigate(['/auth/login'])
-    );
+    this.userService.logout()
+      .pipe(
+        catchError(err => { return of(err); })
+      ).subscribe(
+        () => {
+          this.animationService.disableAllAnimations();
+          this.router.navigate(['/auth/login']);
+        }
+      );
   }
 
 }

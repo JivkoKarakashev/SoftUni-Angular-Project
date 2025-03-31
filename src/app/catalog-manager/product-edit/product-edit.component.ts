@@ -231,7 +231,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   removeColor(i: number) {
-    this.colorsFbArr = this.colorsFbArr.filter(col => col !== this.colorsFbArr[i]);
+    this.colorsFbArr = this.colorsFbArr.filter((_, idx) => idx !== i);
     this.colors.removeAt(i);
   }
 

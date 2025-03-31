@@ -96,7 +96,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
     private toastrMessageHandler: ToastrMessageHandlerService,
     private router: Router,
     private errorsService: ErrorsService,
-    private invertColor: InvertColorService,
+    private invertColor: InvertColorService
   ) { }
 
   ngOnInit(): void {
@@ -180,7 +180,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   }
 
   removeColor(i: number) {
-    this.colorsFbArr = this.colorsFbArr.filter(col => col !== this.colorsFbArr[i]);
+    this.colorsFbArr = this.colorsFbArr.filter((_, idx) => idx !== i);
     this.colors.removeAt(i);
   }
 

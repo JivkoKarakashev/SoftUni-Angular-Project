@@ -8,9 +8,15 @@
     <div class="container">
         <nav class="tabs">
             <ul>
-                <li #tabLiElements><a #tabAnchorElements routerLink="/auth/profile/overview" [attr.data-title]="'overview'">Overview</a></li>
-                <li #tabLiElements><a #tabAnchorElements routerLink="/auth/profile/purchases" [attr.data-title]="'purchases'">Purchases</a></li>
-                <li #tabLiElements><a #tabAnchorElements routerLink="/auth/profile/sales" [attr.data-title]="'sales'">Sales</a></li>
+                <li #tabLiElements>
+                    <a routerLink="/auth/profile/overview" (click)="switchActiveTab($event, 'overview')">Overview</a>
+                </li>
+                <li #tabLiElements>
+                    <a routerLink="/auth/profile/purchases" (click)="switchActiveTab($event, 'purchases')">Purchases</a>
+                </li>
+                <li #tabLiElements>
+                    <a routerLink="/auth/profile/sales" (click)="switchActiveTab($event, 'sales')">Sales</a>
+                </li>
             </ul>
         </nav>
         <app-overview *ngIf="activeTab === 'overview'" />

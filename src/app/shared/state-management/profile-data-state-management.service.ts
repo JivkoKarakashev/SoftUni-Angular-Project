@@ -55,8 +55,8 @@ export class ProfileDataStateManagementService {
     this.orders$$.next([]);
     this.purchasedItemsByOrder$$.next([]);
     this.soldItems$$.next([]);
-    console.log(this.orders$$.value);
-    console.log(this.purchasedItemsByOrder$$.value);
-    console.log(this.soldItems$$.value);
+    // console.log(this.orders$$.value);
+    // console.log(this.purchasedItemsByOrder$$.value);
+    // console.log(this.soldItems$$.value);
   }
 }

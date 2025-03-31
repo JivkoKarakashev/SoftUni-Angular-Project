@@ -1,69 +1,48 @@
 import { animate, animateChild, group, keyframes, query, sequence, stagger, style, transition, trigger } from "@angular/animations";
 
-export type CatalogItemAnimationState = 'static' | 'enter' | 'leave' | 'delete';
+export type CatalogItemAnimationState = 'static' | 'enter' | 'leave' | 'delete' | 'filter';
 
-export interface AddToCartBtnAnimationState {
+export interface AddToCartButtonAnimationState {
     animateState: 'static' | 'animate',
-    btnText: 'Add to Cart' | '' | string;
+    btnText: 'Add to Cart' | '' | string
 }
 
-export const catalogItemsEnterLeaveAnimation = trigger('catalogItemsEnterLeaveAnim', [
-    transition('* <=> *', [
-        group([
-            query(':enter', [
-                style({ opacity: 0, transform: 'scale(.7)' }),
-                stagger(10, [
-                    animate('.2s ease-in', style({ opacity: 1, transform: 'scale(1)' }))
-                ])
-            ], { optional: true }),
-            query('@catalogItemDelAnim', animateChild(),
-                { optional: true }
-            ),
-            query(':leave', [
-                style({ opacity: 1, transform: 'scale(1)' }),
-                stagger(-10, [
-                    animate('.2s ease-in', style({ opacity: 0, transform: 'scale(.7)' }))
-                ])
-            ], { optional: true }),
-        ])
-    ]),
-]);
-
-export const catalogItemEnterAnimation = trigger('catalogItemEnterAnimation', [
-    trigger('void => static', [
-        sequence([
+export const catalogItemEnterLeaveAnimation = trigger('catalogItemEnterLeaveAnimation', [
+    transition('void => static, filter => static', [
+        query(':enter.item', [
             style({ opacity: 0, transform: 'scale(.7)' }),
-            animate('.5s ease-in',
-                keyframes([
+            stagger(10, [
+                animate('.2s ease-in',
                     style({
                         opacity: 1,
-                        transform: 'scale(1)',
-                        offset: 1
+                        transform: 'scale(1)'
                     })
-                ])
-            )
-        ])
-    ])
-]);
-
-export const catalogItemLeaveAnimation = trigger('catalogItemLeaveAnim', [
-    trigger('static => leave', [
-        sequence([
+                )
+            ])
+        ], { optional: true })
+    ]),
+    transition('static => leave, static => filter', [
+        query('@catalogItemDeleteAnimation', animateChild(),
+            { optional: true }
+        ),
+        query(':leave', [
             style({ opacity: 1, transform: 'scale(1)' }),
-            animate('.5s ease-in',
-                keyframes([
+            stagger(-10, [
+                animate('.2s ease-in',
                     style({
                         opacity: 0,
-                        transform: 'scale(.7)',
-                        offset: 1
+                        transform: 'scale(.7)'
                     })
-                ])
-            )
-        ])
+                )
+            ])
+        ], { optional: true }),
+    ]),
+    transition('leave => void', [
+        animate('0.001s ease-in', style({ opacity: 0 }))
     ])
 ]);
 
-export const catalogItemDelAnimation = trigger('catalogItemDelAnim', [
+export const catalogItemDeleteAnimation = trigger('catalogItemDeleteAnimation', [
     transition('static => delete', [
         sequence([
             style({ opacity: 0 }),
@@ -83,8 +62,8 @@ export const catalogItemDelAnimation = trigger('catalogItemDelAnim', [
                         offset: .5
                     }),
                     style({
-                        width: 0,
-                        minWidth: 0,
+                        width: '250px',
+                        minWidth: '250px',
                         transform: 'scale(0)',
                         opacity: 0,
                         padding: 0,
@@ -101,7 +80,7 @@ export const catalogItemDelAnimation = trigger('catalogItemDelAnim', [
     ])
 ]);
 
-export const addToCartBtnAnimation = trigger('addToCartBtnAnim', [
+export const addToCartButtonAnimation = trigger('addToCartButtonAnimation', [
     transition('static => animate', [
         group([
             query('.buy', [

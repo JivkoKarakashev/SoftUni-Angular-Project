@@ -81,7 +81,7 @@
                 </ng-container>
 
                 <div class="row color" formArrayName="color">
-                    <button [disabled]="colors.length === altImages.length" class="button add-color" type="button" (click)="addColorPicker()">Add color</button>
+                    <button [disabled]="colors.length >= altImages.length" class="button add-color" type="button" (click)="addColorPicker()">Add color</button>
                     <div class="row custom" *ngIf="colors.errors?.['required'] || (colors.length < 1 || colors.length !== altImages.length)" [ngClass]="{'error': colors.errors?.['required'] || (colors.length < 1 || colors.length !== altImages.length)}">Colors must be equal to the addt'l Images!</div>
                     <div class="column-wrapper">
                         <div class="row" *ngFor="let color of colors.controls; let i = index" [formGroupName]="i">

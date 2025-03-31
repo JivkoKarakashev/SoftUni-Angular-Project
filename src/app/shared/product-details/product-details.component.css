@@ -112,8 +112,13 @@ a.cart:active {
 /* Columns */
 .left-column {
     display: flex;
+    flex-direction: row;
+    /* flex-wrap: wrap; */
     justify-content: flex-start;
     flex: 1 1 45%;
+    position: relative;
+    max-height: 80vh;
+    overflow: hidden;
     /* min-width: fit-content; */
 }
 
@@ -128,13 +133,41 @@ a.cart:active {
 
 /* Left Column */
 .left-column img {
-    max-width: 90%;
-    height: auto;
-    /* max-height: 65vh;
-    height: 65vh; */
-    /* width: auto; */
-    /* object-fit: scale-down; */
-    transition: all 0.3s ease;
+    max-height: 80vh;
+    object-fit: scale-down;
+}
+
+.nav-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    cursor: pointer;
+}
+
+.nav-arrow.prev {
+    left: 2em;
+}
+
+.nav-arrow.next {
+    right: 2em;
+}
+
+.nav-arrow.not-allowed {
+    background-color: rgba(0, 0, 0, 0.66);
+    cursor: unset;
+}
+.nav-arrow.not-clickable {
+    cursor: unset;
+    pointer-events: none;
 }
 
 /* Product Description */
@@ -255,7 +288,7 @@ input[type='submit']:disabled {
     color: #faf0e6;
     opacity: 1;
     filter: none;
-    cursor: not-allowed;
+    cursor: unset;
 }
 
 p.owner,
@@ -308,38 +341,39 @@ div.buttons {
         @media screen and (pointer: coarse) {
 
             & {
-    
+
                 li.button.buy {
                     background-color: #5cb85c;
                 }
-    
+
                 li.button.edit {
                     background-color: #fdf90a;
                     color: #000;
                 }
-    
+
                 li.button.delete {
                     background-color: #cc5656;
                     color: #000;
                 }
             }
         }
+
         @media screen and (pointer: fine) {
 
             & {
-    
+
                 li.button.buy:hover,
                 li.button.buy:focus-within {
                     background-color: #5cb85c;
                     /* transition: all .5s; */
                 }
-    
+
                 li.button.edit:hover,
                 li.button.edit:focus-within {
                     background-color: #fdf90a;
                     color: #000;
                 }
-    
+
                 li.button.delete:hover,
                 li.button.delete:focus-within {
                     background-color: #cc5656;

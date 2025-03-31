@@ -1,8 +1,8 @@
+<app-errors *ngIf="httpErrorsArr.length" />
+
 <ng-container *ngIf="loading">
     <app-loader />
 </ng-container>
-
-<app-errors *ngIf="httpErrorsArr.length" />
 
 <ng-confirm />
 
@@ -114,14 +114,16 @@
                     <div class="container">
                         <div class="items">
                             <ul class="items"
-                            [@.disabled]="catalogItmAnimDisabled"
-                            [@catalogItemsEnterLeaveAnim]="filteredItems"
-                            (@catalogItemsEnterLeaveAnim.start)="onItemEnteringOrLeavingAnimation($event)"
-                            (@catalogItemsEnterLeaveAnim.done)="onItemEnteringOrLeavingAnimation($event)"
+                            [@.disabled]="catalogItemEnterLeaveAnimationDisabled"
+                            [@catalogItemEnterLeaveAnimation]="catalogItemEnterLeaveAnimationState"
+                            (@catalogItemEnterLeaveAnimation.start)="onItemEnterOrLeaveAnimation($event)"
+                            (@catalogItemEnterLeaveAnimation.done)="onItemEnterOrLeaveAnimation($event)"
                             >
                                 <li class="item" *ngFor="let item of filteredItems; let i = index; trackBy: trackById" [id]="item._id"
-                                [@catalogItemDelAnim]="catalogItmDelAnimStatesArr[i] === 'delete' ? 'delete' : 'static'"
-                                (@catalogItemDelAnim.done)="onItemDeletionAnimation($event, i)"
+                                [@.disabled]="catalogItemDeleteAnimationDisabled"
+                                [@catalogItemDeleteAnimation]="catalogItemDeleteAnimationStateArr[i] === 'delete' ? 'delete' : 'static'"
+                                (@catalogItemDeleteAnimation.start)="onItemDeleteAnimation($event, i)"
+                                (@catalogItemDeleteAnimation.done)="onItemDeleteAnimation($event, i)"
                                 >
                                     <div class="image">
                                         <a href="'/catalog/'{{item.cat}}/{{item.subCat}}/{{item._id}}" (click)="onNavigate($event, ['/catalog/', item.cat, item.subCat, item._id].join('/'))">
@@ -138,12 +140,12 @@
                                     <p>Price: <span><strong>${{item.price}}</strong></span></p>
                                     <div class="buttons">
                                         <ul class="buttons"
-                                        [@addToCartBtnAnim]="btnAnimStatesArr[i].animateState"
-                                        (@addToCartBtnAnim.start)="onAddToCartBtnAnimate($event, i)"
-                                        (@addToCartBtnAnim.done)="onAddToCartBtnAnimate($event, i)"
+                                        [@addToCartButtonAnimation]="addToCartButtonAnimationStateArr[i].animateState"
+                                        (@addToCartButtonAnimation.start)="onAddToCartButtonAnimation($event, i)"
+                                        (@addToCartButtonAnimation.done)="onAddToCartButtonAnimation($event, i)"
                                         >
                                             <li *ngIf="item._ownerId !== user?._id && !item.inCart && item.quantity > 0" class="button buy" (click)="onAddToCart(i)">
-                                                <span class="btn-text">{{btnAnimStatesArr[i].btnText}}</span>
+                                                <span class="btn-text">{{addToCartButtonAnimationStateArr[i].btnText}}</span>
                                             </li>
                                             <li *ngIf="item._ownerId === user?._id" class="button edit" (click)="onEdit(i)">Edit</li>
                                             <li *ngIf="item._ownerId === user?._id" class="button delete" (click)="onDelete(i)">Delete</li>

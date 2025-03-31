@@ -39,6 +39,10 @@ p.cat-icon.suits::before {
     align-items: center;
     justify-content: center;
     gap: 0 1em;
+
+    & .card {
+        flex: 1 1 auto;
+    }
 }
 
 .card .content {
@@ -89,7 +93,9 @@ p.cat-icon.suits::before {
 .card .slide.slide2 .content {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+    justify-content: center;
+    align-items: center;
 }
 
 .card .slide.slide2 .content ul {

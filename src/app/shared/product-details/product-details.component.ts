@@ -1,8 +1,9 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
+import { AnimationEvent } from '@angular/animations';
 import { EMPTY, Observable, Subscription, catchError, of } from 'rxjs';
 
 import { UserForAuth } from 'src/app/types/user';
@@ -20,11 +21,17 @@ import { ToastrMessageHandlerService } from '../utils/toastr-message-handler.ser
 import { NgConfirmService } from 'ng-confirm-box';
 import { CapitalizeCategoryService } from '../utils/capitalize-category.service';
 import { InvertColorService } from '../utils/invert-color.service';
+import { CarouselImageUrl, carouselMoveAnimation, detailsDeleteAnimation } from '../animation-service/animations/product-details.animation';
+import { AnimationService } from '../animation-service/animation.service';
 
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
-  styleUrls: ['./product-details.component.css']
+  styleUrls: ['./product-details.component.css'],
+  animations: [
+    carouselMoveAnimation,
+    detailsDeleteAnimation
+  ]
 })
 export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = [];
@@ -35,6 +42,14 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   public cartItemsCounter = 0;
   public selectedImgUrl = '';
   public showScrollUpBtn = false;
+
+  public carouselImages: CarouselImageUrl[] = [];
+  public selectedImageIdx: number | null = 0; // Controls displayed image
+  public pendingIndex: number | null = null; // Controls animation
+  public animationDirection: 'right' | 'left' = 'right';
+  public detailsDeleteAnimationDisabled = true;
+  public carouselMoveAnimationDisabled = true;
+  public itemState: 'static' | 'delete' = 'static';
 
   public form: FormGroup = this.fb.group({
     fgItem: this.fb.group({
@@ -65,7 +80,6 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private userStateMgmnt: UserStateManagementService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private http: HttpClient,
     private errorsService: ErrorsService,
     private router: Router,
     private render: Renderer2,
@@ -77,10 +91,14 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     public capitalizeCategoryService: CapitalizeCategoryService,
     private invertColorService: InvertColorService,
     private viewportScroller: ViewportScroller,
-    private detailsService: ProductDetailsService
+    private detailsService: ProductDetailsService,
+    private animationService: AnimationService,
+    private changeDetector: ChangeDetectorRef,
   ) { this.cartItemsCounter = this.cartStateMgmnt.getCartItemsCount() }
 
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef>;
+  @ViewChild('prevCarouselButton') private prevCarouselButton!: ElementRef<HTMLDivElement>;
+  @ViewChild('nextCarouselButton') private nextCarouselButton!: ElementRef<HTMLDivElement>;
 
   @HostListener('window:scroll')
   onWindowScroll() {
@@ -143,10 +161,23 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         }
         const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = res as Item;
         this.item = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price };
+        this.carouselImages = [image, ...altImages];
         this.detailsService.setProductDetails({ _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price });
         this.populateForm();
+        this.animationService.enableProductDetailsDeleteAnimation();
+        this.animationService.enableCarouselMoveAnimation();
       });
-    this.unsubscriptionArray.push(detailsSub);
+    const detailsDeleteAnimationStateSub = this.animationService.getProductDetailsDeleteAnimationState()
+      .subscribe(state => {
+        this.detailsDeleteAnimationDisabled = state;
+        this.changeDetector.detectChanges();
+      });
+    const carouselMoveAnimationStateSub = this.animationService.getCarouselMoveAnimationState()
+      .subscribe(state => {
+        this.carouselMoveAnimationDisabled = state;
+        this.changeDetector.detectChanges();
+      });
+    this.unsubscriptionArray.push(detailsSub, detailsDeleteAnimationStateSub, carouselMoveAnimationStateSub);
   }
 
   ngAfterViewInit(): void {
@@ -167,11 +198,71 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     });
     // console.log('UnsubArray = 4');
   }
+  onCarouselMoveAnimation(e: AnimationEvent) {
+    // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
+    // console.log(e);
+    // console.log(`${e.fromState} ==> ${e.toState}`);
+    if (e.phaseName === 'done' && this.pendingIndex !== null) {
+      this.enableCarouselButtons();
+      this.updateSelectedImageIdx();
+    }
+  }
+
+  onPrevImage() {
+    if (this.selectedImageIdx !== null && this.selectedImageIdx > 0) {
+      this.disableCarouselButtons();
+      this.animationDirection = 'right';
+      // console.log("Prev Image Clicked ✅: Moving Right");
+      this.triggerCarouselAnimation(this.selectedImageIdx - 1);
+    }
+  }
+
+  onNextImage() {
+    if (!this.item) {
+      return;
+    }
+    if (this.selectedImageIdx !== null && this.selectedImageIdx < this.carouselImages.length - 1) {
+      this.disableCarouselButtons();
+      this.animationDirection = 'left';
+      // console.log("Next Image Clicked ✅: Moving Left");
+      this.triggerCarouselAnimation(this.selectedImageIdx + 1);
+    }
+  }
+
+  private updateSelectedImageIdx(): void {
+    this.selectedImageIdx = this.pendingIndex;
+    this.pendingIndex = null; //Reset pendingIndex State
+  }
+
+  private triggerCarouselAnimation(selectedImageIdx: number): void {
+    this.pendingIndex = selectedImageIdx;
+    this.selectedImageIdx = null;
+  }
+
+  private enableCarouselButtons(): void {
+    const prevButton = this.prevCarouselButton.nativeElement;
+    const nextButton = this.nextCarouselButton.nativeElement;
+    this.render.removeClass(prevButton, 'not-clickable');
+    this.render.removeClass(nextButton, 'not-clickable');
+  }
+  private disableCarouselButtons(): void {
+    const prevButton = this.prevCarouselButton.nativeElement;
+    const nextButton = this.nextCarouselButton.nativeElement;
+    this.render.addClass(prevButton, 'not-clickable');
+    this.render.addClass(nextButton, 'not-clickable');
+  }
 
   onColorselect(idx: number): void {
     try {
       const { altImages } = this.detailsAvailability();
       this.selectedImgUrl = altImages[idx];
+      if (this.selectedImageIdx !== null && (idx + 1 > this.selectedImageIdx)) {
+        this.animationDirection = 'left';
+        this.triggerCarouselAnimation(idx + 1);
+      } else {
+        this.animationDirection = 'right';
+        this.triggerCarouselAnimation(idx + 1);
+      }
     } catch (err) {
       const { name, message, isUserError } = err as CustomError;
       this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
@@ -179,9 +270,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  trackByUrl(_index: number, url: string): string {
+  trackByUrl(_: number, imgUrl: string): string {
     // console.log(url);
-    return url;
+    return imgUrl;
   }
 
   onAddToCart(): void {
@@ -221,8 +312,13 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           next: (details) => {
             this.loading = false;
             this.item = { ...details };
+            const { image, altImages } = details;
+            this.carouselImages = [image, ...altImages];
+            this.selectedImageIdx = 0;
             this.detailsService.setProductDetails({ ...details });
             this.populateForm();
+            this.animationService.enableProductDetailsDeleteAnimation();
+            this.animationService.enableCarouselMoveAnimation();
           },
           error: (err) => {
             this.loading = false;
@@ -243,38 +339,61 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   onDelete(): void {
     this.confirmService.showConfirm('Delete this item?',
       () => {
-        try {
-          const { _id, cat, subCat } = this.detailsAvailability();
-          const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
-            .pipe(
-              catchError(err => { throw err; })
-            )
-            .subscribe(
-              {
-                next: () => {
-                  this.toastrMessageHandler.showInfo();
-                  this.router.navigate([`/catalog/${cat}/${subCat}`]);
-                },
-                error: (err) => {
-                  const errMsg: string = err.error.message;
-                  this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
-                  this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-                  this.toastrMessageHandler.showError(errMsg);
-                }
-              }
-            );
-          this.unsubscriptionArray.push(deleteSub);
-        } catch (err) {
-          const { name, message, isUserError } = err as CustomError;
-          this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
-          this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
-        }
+        this.animationService.disableCarouselMoveAnimation();
+        this.itemState = 'delete';
       },
       () => { return; }
     );
   }
+  private deleteItem(): void {
+    try {
+      const { _id, cat, subCat } = this.detailsAvailability();
+      this.loading = true;
+      const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
+        .pipe(
+          catchError(err => {
+            this.loading = false;
+            this.itemState = 'static';
+            const errMsg: string = err.error.message;
+            this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+            this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+            this.toastrMessageHandler.showError(errMsg);
+            return EMPTY;
+          })
+        )
+        .subscribe(() => {
+          this.toastrMessageHandler.showInfo();
+          this.animationService.disableCarouselMoveAnimation();
+          this.router.navigate([`/catalog/${cat}/${subCat}`]);
+        });
+      this.unsubscriptionArray.push(deleteSub);
+    } catch (err) {
+      this.itemState = 'static';
+      const { name, message, isUserError } = err as CustomError;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
+      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
+    }
+  }
+
+  onItemDeleteAnimation(e: AnimationEvent) {
+    // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
+    // console.log(e);
+    // console.log(`${e.fromState} ==> ${e.toState}`);
+    if (e.phaseName === 'done' && e.toState === 'delete') {
+      this.deleteItem();
+    } else if (e.phaseName === 'done' && e.toState === 'static') {
+      this.animationService.enableCarouselMoveAnimation();
+    }
+  }
+
+  onNavigateToCart(e: Event, route: string): void {
+    e.preventDefault();
+    this.animationService.disableCarouselMoveAnimation();
+    this.router.navigate([route]);
+  }
 
   onEdit(): void {
+    this.animationService.disableCarouselMoveAnimation();
     this.confirmService.showConfirm('Edit this item?',
       () => {
         try {

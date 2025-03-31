@@ -42,7 +42,7 @@ export class AccessoriesService {
     // return of([0]);
   }
 
-  getAccessoriesByPage(subcatConfigs:SubcategoryPaginationConfig[]) {
+  getAccessoriesByPage(subcatConfigs: SubcategoryPaginationConfig[]) {
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     const reqArr: Array<Observable<Item[]>> = [];
     for (let i = 0; i < subcatConfigs.length; i++) {

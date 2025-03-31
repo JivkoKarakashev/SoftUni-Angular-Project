@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
-import { EMPTY, Subscription, catchError, switchMap } from 'rxjs';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { EMPTY, Subscription, catchError, switchMap } from 'rxjs';
 
 import { UserStateManagementService } from '../shared/state-management/user-state-management.service';
 import { CustomError } from '../shared/errors/custom-error';
@@ -11,16 +11,13 @@ import { DBOrder } from '../types/order';
 import { TradedItem } from '../types/item';
 import { ProfileDataStateManagementService } from '../shared/state-management/profile-data-state-management.service';
 
-type MyVoid = () => void;
-
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProfileComponent implements OnInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = [];
-  private unsubscriptionEventsArray: MyVoid[] = [];
   
   public user: UserForAuth | null = null;
 
@@ -42,8 +39,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     private profileDataStateMgmnt: ProfileDataStateManagementService
   ) { }
 
-  @ViewChildren('tabLiElements') private tabLiElements!: QueryList<ElementRef>;
-  @ViewChildren('tabAnchorElements') private tabAnchorElements!: QueryList<ElementRef>;
+  @ViewChildren('tabLiElements') private tabLiElements!: QueryList<ElementRef<HTMLLIElement>>;
 
   ngOnInit(): void {
     console.log('Profile Initialized!');
@@ -76,7 +72,6 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
             return this.profileService.getAllPurchasesByUserOrders([...dbOrdersArr]);
           }),
           catchError(err => {
-            console.log('HERE');
             this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
             this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
             return EMPTY;
@@ -91,7 +86,6 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       const dbTradedItemsSub = this.profileService.getAllSalesByUserId(this.user._id)
         .pipe(
           catchError(err => {
-            console.log('HERE');
             this.loading = false;
             this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
             this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
@@ -107,14 +101,6 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit(): void {
-    this.tabAnchorElements.forEach(anchorEl => {
-      // console.log(anchorEl);
-      const currAnchorElEvent = this.render.listen(anchorEl.nativeElement, 'click', this.switchActiveTab.bind(this));
-      this.unsubscriptionEventsArray.push(currAnchorElEvent);
-    });
-  }
-
   ngOnDestroy(): void {
     this.profileDataStateMgmnt.clearProfileDataState();
     this.unsubscriptionArray.forEach((subscription) => {
@@ -122,22 +108,18 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       // console.log('UnsubArray = 1');
     });
     // console.log('UnsubArray = 1');
-    this.unsubscriptionEventsArray.forEach((eventFn) => {
-      eventFn();
-      // console.log('UnsubEVENTSArray = 1');
-    });
-    // console.log('UnsubEVENTSArray = 3');
   }
 
   // Function to handle tab click and content display
-  switchActiveTab(e: Event) {
+  switchActiveTab(e: Event, activeTab: string) {
     // console.log(e.target);
     const anchorNativeEL = e.target as HTMLAnchorElement;
     // Assign current 'activeTab' title to the 'activeTab' prop when switch between tabs and corresponding section
-    this.activeTab = anchorNativeEL.getAttribute('data-title');
+    // this.activeTab = anchorNativeEL.getAttribute('data-title');
+    this.activeTab = activeTab;
     // Add/Remove 'active' class to/from tabs depending on current 'activeTab' selection
     this.tabLiElements.forEach(tabLiEl => {
-      const nativeLiEL = tabLiEl.nativeElement as HTMLLIElement;
+      const nativeLiEL = tabLiEl.nativeElement;
       nativeLiEL === anchorNativeEL.parentElement ? this.render.addClass(nativeLiEL, 'active') : this.render.removeClass(nativeLiEL, 'active');
     });
 

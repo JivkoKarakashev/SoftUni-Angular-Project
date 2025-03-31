@@ -4,26 +4,28 @@
     <!-- <app-main></app-main>
     <app-footer></app-footer> -->
 
-    <div class="site-container">
+    <div class="site-container"
+    #siteContainer
+    [@shoppingCartLeaveAnimation]="shoppingCartAnimationState"
+    (@shoppingCartLeaveAnimation.done)="onShoppingCartLeaveAnimation($event)"
+    >
       <header class="section-header">
         <div class="site-title">
-          <a class="title-icon store" routerLink="/">eStore</a>
+          <a class="title-icon store" href="/" (click)="onNavigate($event, '/')">eStore</a>
         </div>
         <div class="user">
           <span>
-            <a [ngClass]="{'disabled': !user}" routerLink="/auth/profile">Welcome {{user?.username || guest}}</a>
+            <a [ngClass]="{'disabled': !user}" href="/auth/profile" (click)="onNavigate($event, '/auth/profile')">Welcome {{user?.username || guest}}</a>
           </span>
         </div>
-        <app-header-desktop></app-header-desktop>
-        <div class="drop-down">
-          <label for="check-box">
-            <p class="nav-icon menu">Menu</p>
-          </label>
+        <app-header-desktop />
+        <div class="drop-down" (click)="toggleMobileNavMenu()">
+          <p class="nav-icon menu">Menu</p>
         </div>
       </header>
-      <app-header-mobile></app-header-mobile>
+      <app-header-mobile />
 
-      <router-outlet></router-outlet>
+      <router-outlet />
     </div>
 
   </app-extract-states>

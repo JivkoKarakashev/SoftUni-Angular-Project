@@ -68,7 +68,7 @@ export class PurchasesComponent implements OnInit, OnDestroy {
     this.dbTradedItemsArr = [...this.profileDataStateMgmnt.getPurchasedItemsByOrder()];
     this.dbTradedItemsArr.forEach((trItms, idx) => {
       const status = this.orderStatusCheck.check(trItms);
-      console.log(status);
+      // console.log(status);
       this.dbOrders[idx] = { ...this.dbOrders[idx], status };
       this.dbOrdersDates[idx] = this.numToDateService.convert(this.dbOrders[idx]._createdOn);
       this.filterButtons[idx] = { ref: this.dbOrders[idx].referenceNumber || '', status, state: 'active' };

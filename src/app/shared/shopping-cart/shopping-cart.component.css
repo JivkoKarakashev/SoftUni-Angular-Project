@@ -38,11 +38,12 @@
     background-color: #fefefe;
     border: 1px solid rgba(136, 136, 136, 0.8);
     width: 80%;
+    min-height: 65vh;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     -webkit-animation-name: animatetop;
-    -webkit-animation-duration: .2s;
+    -webkit-animation-duration: .5s;
     animation-name: animatetop;
-    animation-duration: .2s
+    animation-duration: .5s
 }
 
 input[type='number'] {
@@ -137,6 +138,7 @@ section.header {
 
 fieldset {
     display: flex;
+    min-height: 65vh;
     flex-direction: column;
 }
 
@@ -231,8 +233,8 @@ div.buttons {
             color: #fff;
         }
 
-        & .finish:hover:enabled {
-            cursor: pointer;
+        & .finish:disabled {
+            cursor: unset;
         }
     }
 }

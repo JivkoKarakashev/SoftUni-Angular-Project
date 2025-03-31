@@ -19,8 +19,7 @@ import { OrderStateManagementService } from '../state-management/order-state-man
 import { TradedItemsStateManagementService } from '../state-management/traded-items-state-management.service';
 import { CustomError } from '../errors/custom-error';
 import { ErrorsService } from '../errors/errors.service';
-
-type MyVoid = () => void;
+import { AnimationService } from '../animation-service/animation.service';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -35,7 +34,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
   public selectAllButtonStatement = false;
 
   private unsubscriptionArray: Subscription[] = [];
-  private unsubscriptionEventsArray: MyVoid[] = [];
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
   public customErrorsArr: CustomError[] = [];
@@ -65,7 +63,8 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       private router: Router,
       private orderStateMgmnt: OrderStateManagementService,
       private tradedItmsStateMgmnt: TradedItemsStateManagementService,
-      private errorsService: ErrorsService
+      private errorsService: ErrorsService,
+      private animationService: AnimationService
     ) { }
 
   @ViewChild('modal') private modal!: ElementRef;
@@ -170,7 +169,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(res => {
         this.loading = false;
         if (res instanceof HttpErrorResponse) {
-          console.log('HERE');
           this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...res }]);
           this.httpErrorsArr = [...this.httpErrorsArr, { ...res }];
           return;
@@ -180,6 +178,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
         const shippMthds = Object.entries(shippingMthdsObjs).map(method => method[1]);
         this.discountCodes = [...discounts];
         this.shippingMethods = [...shippMthds];
+        this.animationService.setShoppingCartAnimationState('enter');
       });
     this.unsubscriptionArray.push(availPurchSvcSub);
 
@@ -192,9 +191,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    const closeModalBtnEvent = this.render.listen(this.closeBtn.nativeElement, 'click', this.closeModal.bind(this));
-    const closeModalEvent = this.render.listen(this.modal.nativeElement, 'click', this.closeModal.bind(this));
-    this.unsubscriptionEventsArray.push(closeModalBtnEvent, closeModalEvent);
 
     const colorOptionElementsSubscription = this.colorOptionElements.changes.subscribe((els: QueryList<ElementRef>) => {
       // console.log(els);
@@ -237,18 +233,13 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       // console.log('UnsubArray = 1');
     });
     // console.log('UnsubArray = 3');
-    this.unsubscriptionEventsArray.forEach((eventFn) => {
-      eventFn();
-      // console.log('UnsubEVENTSArray = 1');
-    });
-    // console.log('UnsubEVENTSArray = 2');
   }
 
   closeModal(e: Event) {
     // console.log(e.target);
     e.stopPropagation();
     if (e.target == this.closeBtn.nativeElement || e.target == this.modal.nativeElement) {
-      this.location.back();
+      this.animationService.setShoppingCartAnimationState('leave');
     }
   }
 
@@ -352,16 +343,16 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   discountCalc(e?: Event, subTotVal?: number): void {
     if (e) {
-      console.log('Event Invoked!: ', e.target as HTMLSelectElement);
+      // console.log('Event Invoked!: ', e.target as HTMLSelectElement);
       const el = e.target as HTMLSelectElement;
       const idx = el.selectedIndex;
-      console.log('Index:', idx);
+      // console.log('Index:', idx);
       const { code, rate } = this.discountCodes[idx];
       this.discount.patchValue({ code, rate });
       this.cartStateMgmnt.setDiscountState(code, rate);
       this.discountValue = this.subtotal.value * (rate || 0) / 100;
     } else if (subTotVal || subTotVal == 0) {
-      console.log('SubTotalVal Invoked!', subTotVal);
+      // console.log('SubTotalVal Invoked!', subTotVal);
       const rate = this.discount.value.rate || 0;
       this.discountValue = subTotVal * rate / 100;
     }
@@ -412,8 +403,8 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           error: err => {
             this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-            console.log(err);
-            console.log(this.httpErrorsArr);
+            // console.log(err);
+            // console.log(this.httpErrorsArr);
           }
         }
       );
@@ -446,7 +437,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setProduct(i: number): void {/*///// -> triggered on Quantity changes/////*/
     // console.log(i);
-    console.log('setProduct Invoked!');
+    // console.log('setProduct Invoked!');
     const selectedQuantity = this.itms.controls[i].get('selectedQuantity')?.value;
     const product = selectedQuantity * this.cartItems[i].price;
     this.cartItems[i] = { ...this.cartItems[i], selectedQuantity: selectedQuantity, product: product };
@@ -457,13 +448,13 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   subtotalCalc(): void {
-    console.log('subtotalCalc Invoked!');
+    // console.log('subtotalCalc Invoked!');
     this.subtotal.setValue(this.cartItems.map(itm => itm.product).reduce((acc, currVal) => acc += currVal, 0));
     // console.log(subTotal);
   }
 
   totalCalc(): void {
-    console.log('totalCalc invoked!');
+    // console.log('totalCalc invoked!');
     this.total.setValue(this.subtotalValue - this.discountValue + this.shippingValue);
   }
 

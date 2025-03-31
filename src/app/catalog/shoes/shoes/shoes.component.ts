@@ -21,7 +21,7 @@ import { NgConfirmService } from 'ng-confirm-box';
 import { CategoryPaginationConfig, CategoryPaginationService, categoryPaginationConfigInit } from 'src/app/shared/utils/category-pagination.service';
 import { CatalogFilters, Color, FilterCatalogDataService, filtersInit, priceFltrInit } from 'src/app/shared/utils/filter-catalog-data.service';
 import { InvertColorService } from 'src/app/shared/utils/invert-color.service';
-import { AddToCartBtnAnimationState, CatalogItemAnimationState, addToCartBtnAnimation, catalogItemDelAnimation, catalogItemsEnterLeaveAnimation } from 'src/app/shared/animation-service/animations/catalog-items.animation';
+import { AddToCartButtonAnimationState, CatalogItemAnimationState, addToCartButtonAnimation, catalogItemDeleteAnimation, catalogItemEnterLeaveAnimation } from 'src/app/shared/animation-service/animations/catalog-items.animation';
 import { AnimationService } from 'src/app/shared/animation-service/animation.service';
 
 @Component({
@@ -29,9 +29,9 @@ import { AnimationService } from 'src/app/shared/animation-service/animation.ser
   templateUrl: './shoes.component.html',
   styleUrls: ['./shoes.component.css'],
   animations: [
-    catalogItemDelAnimation,
-    catalogItemsEnterLeaveAnimation,
-    addToCartBtnAnimation
+    catalogItemDeleteAnimation,
+    catalogItemEnterLeaveAnimation,
+    addToCartButtonAnimation
   ]
 })
 export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -44,9 +44,11 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
   public user: UserForAuth | null = null;
   public showScrollUpBtn = false;
   public sidebarState: 'open' | 'closed' = 'open';
-  public btnAnimStatesArr: AddToCartBtnAnimationState[] = [];
-  public catalogItmAnimDisabled = false;
-  public catalogItmDelAnimStatesArr: CatalogItemAnimationState[] = [];
+  public addToCartButtonAnimationStateArr: AddToCartButtonAnimationState[] = [];
+  public catalogItemEnterLeaveAnimationState: CatalogItemAnimationState = 'static';
+  public catalogItemEnterLeaveAnimationDisabled = false;
+  public catalogItemDeleteAnimationDisabled = true;
+  public catalogItemDeleteAnimationStateArr: CatalogItemAnimationState[] = [];
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
@@ -108,7 +110,7 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.animationService.enableCatalogItemEnterLeaveAnimation();
+    this.animationService.enableCatalogItemAnimations();
     this.selected.page = Number(this.activatedRoute.snapshot.queryParamMap.get('page')) || 1;
     this.selected.pageSize = Number(this.activatedRoute.snapshot.queryParamMap.get('pageSize')) || 2;
     this.updateQueryParams();
@@ -119,12 +121,17 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
     const categoryUrls = this.shoesService.getCategoryUrls();
     this.paginationService.setCategoryUrls([...categoryUrls]);
     const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
-    const animationDisabledStateSub = this.animationService.getCatalogItemAnimationState()
+    const enterLeaveAnimationStateSub = this.animationService.getCatalogItemEnterLeaveAnimationState()
       .subscribe(state => {
-        // console.log(state);
-        this.catalogItmAnimDisabled = state;
+        this.catalogItemEnterLeaveAnimationDisabled = state;
+        this.changeDetector.detectChanges();
       });
-    this.unsubscriptionArray.push(fetchCatalogDataSub, animationDisabledStateSub);
+    const deleteAnimationStateSub = this.animationService.getCatalogItemDeleteAnimationState()
+      .subscribe(state => {
+        this.catalogItemDeleteAnimationDisabled = state;
+        this.changeDetector.detectChanges();
+      });
+    this.unsubscriptionArray.push(fetchCatalogDataSub, enterLeaveAnimationStateSub, deleteAnimationStateSub);
     this.updateQueryParams();
   }
 
@@ -153,25 +160,23 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onNavigate(e: Event, route: string): void {
     e.preventDefault();
-    this.animationService.disableCatalogItemEnterLeaveAnimation();
-    setTimeout(() => {
-      this.router.navigate([route]);
-    }, 10);
+    this.animationService.disableCatalogItemAnimations();
+    this.router.navigate([route]);
   }
 
   onAddToCart(i: number): void {
-    this.btnAnimStatesArr[i] = { ...this.btnAnimStatesArr, animateState: 'animate', btnText: '\u2713' };
+    this.addToCartButtonAnimationStateArr[i] = { ...this.addToCartButtonAnimationStateArr, animateState: 'animate', btnText: '\u2713' };
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = this.listItems[i];
     const newCartItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false };
     this.cartService.addCartItem(newCartItem);
   }
 
   setAnimationStates(): void {
-    this.btnAnimStatesArr = Array.from({ length: this.filteredItems.length }, () => ({ animateState: 'static', btnText: 'Add to Cart' }) as AddToCartBtnAnimationState);
-    this.catalogItmDelAnimStatesArr = Array.from({ length: this.filteredItems.length }, () => 'static' as CatalogItemAnimationState);
+    this.addToCartButtonAnimationStateArr = Array.from({ length: this.filteredItems.length }, () => ({ animateState: 'static', btnText: 'Add to Cart' }) as AddToCartButtonAnimationState);
+    this.catalogItemDeleteAnimationStateArr = Array.from({ length: this.filteredItems.length }, () => 'static' as CatalogItemAnimationState);
   }
 
-  onItemEnteringOrLeavingAnimation(e: AnimationEvent): void {
+  onItemEnterOrLeaveAnimation(e: AnimationEvent): void {
     // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
     // console.log(e);
     // console.log(`${e.fromState} ==> ${e.toState}`);
@@ -179,22 +184,34 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.setStyle(e.element, 'pointer-events', 'none');
     } else if (e.phaseName === 'done') {
       this.render.removeStyle(e.element, 'pointer-events');
+      if (this.catalogItemEnterLeaveAnimationState === 'leave') {
+        this.catalogItemEnterLeaveAnimationState = 'enter';
+        const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
+        this.unsubscriptionArray.push(fetchCatalogDataSub);
+      } else if (this.catalogItemEnterLeaveAnimationState === 'enter') {
+        this.catalogItemEnterLeaveAnimationState = 'static';
+      } else if (this.catalogItemEnterLeaveAnimationState === 'filter') {
+        this.catalogItemEnterLeaveAnimationState = 'static';
+        this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
+        this.setAnimationStates();
+      }
     }
   }
 
-  onItemDeletionAnimation(e: AnimationEvent, i: number): void {
+  onItemDeleteAnimation(e: AnimationEvent, i: number): void {
     // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
     // console.log(e);
     // console.log(`${e.fromState} ==> ${e.toState}`);
     if (e.phaseName === 'done') {
       if (e.fromState === 'static' && e.toState === 'delete' && i !== undefined) {
+        this.render.setStyle(e.element, 'opacity', 0);
         const deleteSub = this.deleteItem(i).subscribe();
         this.unsubscriptionArray.push(deleteSub);
       }
     }
   }
 
-  onAddToCartBtnAnimate(e: AnimationEvent, i: number): void {
+  onAddToCartButtonAnimation(e: AnimationEvent, i: number): void {
     // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
     // console.log(e);
     // console.log(`${e.fromState} ==> ${e.toState}`);
@@ -202,7 +219,7 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.setStyle(e.element, 'pointer-events', 'none');
     } else if (e.phaseName === 'done' && e.fromState === 'static' && e.toState === 'animate') {
       this.render.setStyle(e.element, 'display', 'none');
-      this.btnAnimStatesArr[i] = { ...this.btnAnimStatesArr[i], animateState: 'static', btnText: 'Add to Cart' };
+      this.addToCartButtonAnimationStateArr[i] = { ...this.addToCartButtonAnimationStateArr[i], animateState: 'static', btnText: 'Add to Cart' };
       this.cartItemsCounter++;
       this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
       const idx = this.listItems.findIndex(itm => itm._id == this.listItems[i]._id);
@@ -219,7 +236,7 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
   onDelete(i: number): void {
     this.confirmService.showConfirm('Delete this item?',
       () => {
-        this.catalogItmDelAnimStatesArr[i] = 'delete';
+        this.catalogItemDeleteAnimationStateArr[i] = 'delete';
       },
       () => { return; }
     );
@@ -232,7 +249,7 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         catchError(err => {
           this.loading = false;
-          this.catalogItmDelAnimStatesArr[i] = 'static';
+          this.catalogItemDeleteAnimationStateArr[i] = 'static';
           const errMsg: string = err.error.message;
           this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
           this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
@@ -264,20 +281,20 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onPageChange(selectedPage: number): void {
     this.selected.page = selectedPage || 1;
-    const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
-    this.unsubscriptionArray.push(fetchCatalogDataSub);
+    this.catalogItemEnterLeaveAnimationState = 'leave';
+    this.filteredItems = [];
   }
 
   onPageSelect(selectedPage: string): void {
     this.selected.page = Number(selectedPage);
-    const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
-    this.unsubscriptionArray.push(fetchCatalogDataSub);
+    this.catalogItemEnterLeaveAnimationState = 'leave';
+    this.filteredItems = [];
   }
 
   onPageSizeSelect(selectedPageSize: string): void {
     this.selected.pageSize = Number(selectedPageSize);
-    const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
-    this.unsubscriptionArray.push(fetchCatalogDataSub);
+    this.catalogItemEnterLeaveAnimationState = 'leave';
+    this.filteredItems = [];
   }
 
   private updateQueryParams(): void {
@@ -302,7 +319,8 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
           return EMPTY;
         }),
         switchMap(compArr => {
-          if (compArr.length === 0) {
+          const categorySize = compArr.reduce((acc, curr) => acc += curr, 0);
+          if (compArr.length === 0 || categorySize === 0) {
             this.loading = false;
             return EMPTY;
           }
@@ -374,6 +392,8 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSizeFilterChange(i: number): void {
+    this.catalogItemEnterLeaveAnimationState = 'filter';
+    this.filteredItems = [];
     const selectedSize = this.sizeFilterOptions[i];
     const sizeBtnEl = this.sizeBtns.get(i)?.nativeElement;
     if (!sizeBtnEl?.classList.contains('active')) {
@@ -385,19 +405,19 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.removeClass(sizeBtnEl, 'active');
     }
     // console.log(this.filters.size);
-    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
-    this.setAnimationStates();
   }
 
   onSizeFilterClear(): void {
+    this.catalogItemEnterLeaveAnimationState = 'filter';
+    this.filteredItems = [];
     this.sizeBtns.forEach(btn => this.render.removeClass(btn.nativeElement, 'active'));
     this.clearFilter.clearSizeFilter();
     // console.log(this.filters.size);
-    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
-    this.setAnimationStates();
   }
 
   onColorFilterChange(i: number): void {
+    this.catalogItemEnterLeaveAnimationState = 'filter';
+    this.filteredItems = [];
     const selectedColor = this.colorFilterOptions[i];
     const colorBtnEl = this.colorBtns.get(i)?.nativeElement;
     if (!colorBtnEl?.classList.contains('active')) {
@@ -409,19 +429,19 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.removeClass(colorBtnEl, 'active');
     }
     // console.log(this.filters.color.map(col => col.bkgnd));
-    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
-    this.setAnimationStates();
   }
 
   onColorFilterClear(): void {
+    this.catalogItemEnterLeaveAnimationState = 'filter';
+    this.filteredItems = [];
     this.colorBtns.forEach(btn => this.render.removeClass(btn.nativeElement, 'active'));
     this.clearFilter.clearColorFilter();
     // console.log(this.filters.color);
-    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
-    this.setAnimationStates();
   }
 
   onBrandFilterChange(i: number): void {
+    this.catalogItemEnterLeaveAnimationState = 'filter';
+    this.filteredItems = [];
     const selectedBrand = this.brandFilterOptions[i];
     const brandBtnEl = this.brandBtns.get(i)?.nativeElement;
     if (!brandBtnEl?.classList.contains('active')) {
@@ -433,19 +453,19 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.removeClass(brandBtnEl, 'active');
     }
     // console.log(this.filters.brand);
-    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
-    this.setAnimationStates();
   }
 
   onBrandFilterClear(): void {
+    this.catalogItemEnterLeaveAnimationState = 'filter';
+    this.filteredItems = [];
     this.brandBtns.forEach(btn => this.render.removeClass(btn.nativeElement, 'active'));
     this.clearFilter.clearBrandFilter();
     // console.log(this.filters.brand);
-    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
-    this.setAnimationStates();
   }
 
   onPriceSliderChange(): void {
+    this.catalogItemEnterLeaveAnimationState = 'filter';
+    this.filteredItems = [];
     const fromPriceSliderEl = this.fromPriceSlider.nativeElement;
     const toPriceSliderEl = this.toPriceSlider.nativeElement;
 
@@ -459,8 +479,6 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
         to: toPrCurr
       }
       // console.log(this.filters.price);
-      this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
-      this.setAnimationStates();
       this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
       this.priceInputCtrl(fromPrCurr, toPrCurr);
     }
@@ -498,6 +516,8 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onPriceInputChange(): void {
+    this.catalogItemEnterLeaveAnimationState = 'filter';
+    this.filteredItems = [];
     const fromPriceInputEl = this.fromPriceInput.nativeElement;
     const toPriceInputEl = this.toPriceInput.nativeElement;
     const fromPrCurr = Number(fromPriceInputEl.value);
@@ -509,26 +529,22 @@ export class ShoesComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(this.filters.price);
     this.render.setAttribute(fromPriceInputEl, 'max', String(toPrCurr));
     this.render.setAttribute(toPriceInputEl, 'min', String(fromPrCurr));
-    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
-    this.setAnimationStates();
     this.priceSliderCtrl(fromPrCurr, toPrCurr);
     // console.log(fromPrCurr, toPrCurr);
   }
 
   private priceInputCtrl(fromPrCurr: number, toPrCurr: number): void {
-    // this.frompriceinput.nativeElement.value = String(fromPrCurr);
-    // this.topriceinput.nativeElement.value = String(toPrCurr);
     this.render.setProperty(this.fromPriceInput.nativeElement, 'value', String(fromPrCurr));
     this.render.setProperty(this.toPriceInput.nativeElement, 'value', String(toPrCurr));
     // console.log(this.fromPriceInput.nativeElement.value, this.toPriceInput.nativeElement.value);
   }
 
   onPriceFilterClear(): void {
+    this.catalogItemEnterLeaveAnimationState = 'filter';
+    this.filteredItems = [];
     const fromPrCurr = this.priceFilterOptions[0];
     const toPrCurr = this.priceFilterOptions[this.priceFilterOptions.length - 1];
     this.filters.price = { ...priceFltrInit };
-    this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
-    this.setAnimationStates();
     this.priceSliderCtrl(fromPrCurr, toPrCurr);
     this.priceInputCtrl(fromPrCurr, toPrCurr);
   }

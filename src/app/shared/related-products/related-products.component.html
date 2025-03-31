@@ -14,9 +14,15 @@
         <button class="slide-arrow prev" [ngClass]="{'disabled': selected.page === 1}" (click)="onCarouselMove(selected.page - 1)" [disabled]="selected.page === 1">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
-        <div class="related-items-container">
+        <div class="related-items-container"
+        [@relatedProductCarouselMoveAnimation]="carouselMoveAnimationAnimationState"
+        (@relatedProductCarouselMoveAnimation.done)="onCarouselMoveAnimation($event)"
+        >
             <ng-container *ngFor="let product of filteredProducts; let i = index; trackBy: trackById">
-                <div class="related-item">
+                <div class="related-item"
+                [@relatedProductDeleteAnimation]="relatedProductsAnimationStatesArr[i] === 'delete' ? 'delete' : 'static'"
+                (@relatedProductDeleteAnimation.done)="onRelatedProductDeleteAnimation($event, i)"
+                >
                     <div class="image">
                         <a [routerLink]="['/catalog/',product.cat, product.subCat, product._id]" (click)="onDetailsChange(i)">
                             <img class="image" alt="image" [src]="product.image">
@@ -28,12 +34,16 @@
                     <p>
                         <span *ngFor="let col of product.color" class="color" [attr.color]="col" #spanColorElements></span>
                     </p>
-                    <div class="buttons">
-                        <button *ngIf="product._ownerId !== user?._id && product.quantity > 0" type="button" class="buy" (click)="onAddRelatedProduct(i)">
+                    <div class="buttons"
+                    [@relatedProductAddToCartButtonAnimation]="addToCartButtonAnimationStateArr[i].animateState"    
+                    (@relatedProductAddToCartButtonAnimation.start)="onAddToCartButtonAnimation($event, i)"
+                    (@relatedProductAddToCartButtonAnimation.done)="onAddToCartButtonAnimation($event, i)"
+                    >
+                        <button *ngIf="product._ownerId !== user?._id && product.quantity > 0" type="button" class="buy" (click)="onRelatedProductAdd(i)">
                             <i class="fa-solid fa-cart-arrow-down fa-lg"></i>
                         </button>
-                        <button *ngIf="product._ownerId === user?._id" type="button" class="edit" (click)="onEditRelatedProduct(i)">Edit</button>
-                        <button *ngIf="product._ownerId === user?._id" type="button" class="delete" (click)="onDeleteRelatedProduct(i)">Delete</button>
+                        <button *ngIf="product._ownerId === user?._id" type="button" class="edit" (click)="onRelatedProductEdit(i)">Edit</button>
+                        <button *ngIf="product._ownerId === user?._id" type="button" class="delete" (click)="onRelatedProductDelete(i)">Delete</button>
                     </div>
                     <p *ngIf="product.quantity === 0" class="sold">This item is sold out and out of stock!</p>
                     <p *ngIf="product._ownerId === user?._id && product.quantity > 0" [ngClass]="{owner: product._ownerId === user?._id}">You are owner! You can't purchase this Item!</p>

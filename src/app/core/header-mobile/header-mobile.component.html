@@ -1,8 +1,11 @@
 <section class="nav-wrapper">
-    <input type="checkbox" name="check-box" id="check-box">
-    <nav class="mobile">
+    <nav class="mobile closed"
+    [@mobileNavMenuAnimation]="mobileNavMenuState"
+    (@mobileNavMenuAnimation.start)="onNavMenuAnimate($event)"
+    (@mobileNavMenuAnimation.done)="onNavMenuAnimate($event)"
+    >
         <ul class="navbar">
-            <li><a class="nav-icon home" href="/" (click)="onNavigate($event, '/')">Home</a></li>
+            <li><a class="nav-icon home" href="/" (click)="onNavigate($event, '/')"><span class="icon"></span>Home</a></li>
             <ng-container *ngIf="!user">
                 <li><a class="nav-icon guest" href="/auth/login" (click)="onNavigate($event, '/auth/login')">Login</a></li>
                 <li><a class="nav-icon user" href="/auth/register" (click)="onNavigate($event, '/auth/register')">Register</a></li>
@@ -19,6 +22,7 @@
             </li>
             <!-- The Modal -->
         </ul>
+        <button #closeMenuBtn class="menu" (click)="onCloseNavMenu()"></button>
     </nav>
 
     <app-errors *ngIf="httpErrorsArr.length" />

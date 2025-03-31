@@ -66,18 +66,14 @@ export class HeaderDesktopComponent implements OnInit, OnDestroy {
         this.cartStateMgmnt.emptyCart();
         this.orderStateMgmnt.resetDBOrderState();
         this.tradedItmsStateMgmnt.resetDBTradedItemsState();
-        this.animationService.disableCatalogItemEnterLeaveAnimation();
-        setTimeout(() => {
-          this.router.navigate(['/auth/login']);
-        }, 10);
+        this.animationService.disableAllAnimations();
+        this.router.navigate(['/auth/login']);
       });
   }
 
   onNavigate(e: Event, route: string) {
     e.preventDefault();
-    this.animationService.disableCatalogItemEnterLeaveAnimation();
-    setTimeout(() => {
-      this.router.navigate([route]);
-    }, 10);
+    this.animationService.disableAllAnimations();
+    this.router.navigate([route]);
   }
 }

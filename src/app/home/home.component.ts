@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, catchError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Subscription, catchError } from 'rxjs';
 
 import { CartItem } from '../types/item';
 
@@ -58,7 +58,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       );
     this.unsubscriptionArray.push(recentTwoItemsSubscription);
-
   }
 
   ngOnDestroy(): void {

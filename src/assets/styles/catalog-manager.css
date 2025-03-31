@@ -3,7 +3,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    flex: 1 1 100%;
+    /* flex: 1 1 100%; */
     min-width: 70vw;
     flex-wrap: wrap;
     gap: 1em;
@@ -12,7 +12,7 @@
 div.header,
 h1 {
     color: #BABECC;
-    text-shadow: 1px 1px 1px #FFF;
+    text-shadow: 1px 1px 1px #000;
 }
 
 .section-product-create form
@@ -82,7 +82,6 @@ input {
     border-radius: 10px;
     padding: .5em;
     background-color: #EBECF0;
-    text-shadow: 1px 1px 0 #FFF;
 }
 
 input {
@@ -113,7 +112,7 @@ button:not([class='remove']) {
     display: block;
     width: 100%;
     background-color: #7DC855;
-    color: #fff;
+    color: #000;
 }
 
 button:not([class='remove']):hover,
@@ -148,7 +147,7 @@ button:not([class='remove']):active {
     color: #faf0e6;
     opacity: 1;
     filter: none;
-    cursor: not-allowed;
+    cursor: unset;
 }
 
 .container form fieldset .row input.fieldCtr:focus {

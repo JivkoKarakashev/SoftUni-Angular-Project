@@ -7,10 +7,38 @@
 <div class="wrapper" *ngIf="!loading">
     <div class="left-wrapper">
         <section class="section-product-details">
-            <div class="container">
+            <div class="container"
+            [@.disabled]="detailsDeleteAnimationDisabled"
+            [@detailsDeleteAnimation]="itemState === 'delete' ? 'delete' : 'static'"
+            (@detailsDeleteAnimation.done)="onItemDeleteAnimation($event)"
+            >
                 <!-- Left Column / Product Image -->
-                <div class="left-column">
+                <!-- <div class="left-column">
                     <img class="image" alt="image" [src]="selectedImgUrl || item?.image">
+                </div> -->
+                <div class="left-column"
+                [@.disabled]="carouselMoveAnimationDisabled"
+                [@carouselMoveAnimation]="{
+                    value: selectedImageIdx,
+                    params: {
+                      leaveEnd: animationDirection === 'right' ? '100%' : '-100%',
+                      enterStart: animationDirection === 'right' ? '-100%' : '100%'
+                    }
+                  }"
+                  (@carouselMoveAnimation.done)="onCarouselMoveAnimation($event)"
+                >
+                    <div #prevCarouselButton class="nav-arrow prev" [ngClass]="{'not-allowed': selectedImageIdx === 0}" (click)="onPrevImage()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <ng-container *ngFor="let imgUrl of carouselImages; let i = index; trackBy: trackByUrl">
+                        <img *ngIf="i === selectedImageIdx" class="image" alt="image" [src]="imgUrl"
+                        
+                        >
+                    </ng-container>
+                    <!-- <img class="image" alt="image" [src]="item?.image"> -->
+                    <div #nextCarouselButton class="nav-arrow next" [ngClass]="{'not-allowed': selectedImageIdx === carouselImages.length - 1}" (click)="onNextImage()">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
                 </div>
                 <!-- Right Column -->
                 <div class="right-column">
@@ -48,7 +76,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="item?._ownerId === user?._id" class="owner">
-                                        <p><span>Size&colon; </span>{{item ? item.size.join(' / ') : null}}</p>
+                                        <p><span>Size&colon; </span>{{item ? item.size.join('/') : null}}</p>
                                     </div>
                                 </div>
                                 <!-- Quantity Configuration -->
@@ -90,7 +118,7 @@
             <i class="fa-solid fa-angles-up fa-2xl"></i>
         </button>
         <div class="sticky">
-            <a class="cart" routerLink="/cart">
+            <a class="cart" href="/cart" (click)="onNavigateToCart($event, '/cart')">
                 <span class="counter">{{cartItemsCounter}}</span><i class="fi fi-rr-shopping-cart-check"></i>
             </a>
         </div>

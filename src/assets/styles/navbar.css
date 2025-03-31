@@ -17,17 +17,6 @@ nav.mobile {
   width: 100%;
 }
 
-nav.mobile ul.navbar {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.5s;
-}
-
 a.title-icon::before,
 p.nav-icon::before,
 a.nav-icon::before {
@@ -38,7 +27,6 @@ a.nav-icon::before {
 
 a.title-icon.store::before {
   content: "\f54e";
-  /* font-size: 3em; */
 }
 
 a.nav-icon.user::before {
@@ -98,9 +86,11 @@ div.user,
 div.owner {
   & span {
     font-weight: 600;
+
     & a {
       color: #ffffff;
     }
+
     & a.disabled {
       pointer-events: none;
     }
@@ -112,6 +102,7 @@ ul.navbar li {
 }
 
 @media screen and (pointer: coarse) {
+
   a.title-icon,
   p.nav-icon,
   a.nav-icon {
@@ -124,6 +115,7 @@ ul.navbar li {
 }
 
 @media screen and (pointer: fine) {
+
   a.title-icon:hover,
   a.title-icon:focus,
   p.nav-icon:hover,
@@ -148,13 +140,4 @@ div.site-title:active,
 p.nav-icon:active,
 a.nav-icon:active {
   filter: blur(1px);
-}
-
-#check-box {
-  display: none;
-}
-
-#check-box:checked ~ nav.mobile ul.navbar {
-  max-height: 120px;
-  transition: all .5s;
 }

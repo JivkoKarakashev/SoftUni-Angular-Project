@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AnimationEvent } from '@angular/animations';
 import { EMPTY, Observable, Subscription, catchError, switchMap, tap } from 'rxjs';
 
 import { UserForAuth } from 'src/app/types/user';
@@ -17,11 +18,19 @@ import { ProductDetailsService } from '../product-details/product-details.servic
 import { NgConfirmService } from 'ng-confirm-box';
 import { CatalogManagerService } from 'src/app/catalog-manager/catalog-manager.service';
 import { CustomError } from '../errors/custom-error';
+import { CarouselMoveAnimationState, RelatedProductAnimationState, relatedProductAddToCartButtonAnimation, relatedProductCarouselMoveAnimation, relatedProductDeleteAnimation } from '../animation-service/animations/related-products.animation';
+import { AddToCartButtonAnimationState } from '../animation-service/animations/catalog-items.animation';
+import { AnimationService } from '../animation-service/animation.service';
 
 @Component({
   selector: 'app-related-products',
   templateUrl: './related-products.component.html',
-  styleUrls: ['./related-products.component.css']
+  styleUrls: ['./related-products.component.css'],
+  animations: [
+    relatedProductCarouselMoveAnimation,
+    relatedProductDeleteAnimation,
+    relatedProductAddToCartButtonAnimation
+  ]
 })
 export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscriptionArray: Subscription[] = [];
@@ -35,6 +44,9 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     page: 0,
     pageSize: 3
   }
+  public carouselMoveAnimationAnimationState: CarouselMoveAnimationState = 'static';
+  public relatedProductsAnimationStatesArr: RelatedProductAnimationState[] = [];
+  public addToCartButtonAnimationStateArr: AddToCartButtonAnimationState[] = [];
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
@@ -51,6 +63,7 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     private router: Router,
     private toastrMessageHandler: ToastrMessageHandlerService,
     private detailsService: ProductDetailsService,
+    private animationService: AnimationService,
     private catalogManagerService: CatalogManagerService,
     private confirmService: NgConfirmService
   ) { }
@@ -65,7 +78,7 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     (user) ? this.user = { ...user } : null;
     try {
       this.product = this.detailsAvailability();
-      const fetchRelatedProductsSub = this.fetchRelatedProductss().subscribe();
+      const fetchRelatedProductsSub = this.fetchRelatedProducts().subscribe();
       this.unsubscriptionArray.push(fetchRelatedProductsSub);
     } catch (err) {
       this.loading = false;
@@ -95,14 +108,15 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     // console.log('UnsubArray = 4 - infinity');
   }
 
-  onAddRelatedProduct(i: number): void {
+  onRelatedProductAdd(i: number): void {
+    this.addToCartButtonAnimationStateArr[i] = { ...this.addToCartButtonAnimationStateArr[i], animateState: 'animate', btnText: '' };
     const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = this.filteredProducts[i];
     const newCartItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false };
     this.cartService.addCartItem({ ...newCartItem });
-    this.relatedProductAddEvent.emit();
-    this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
+    // this.relatedProductAddEvent.emit();
+    // this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
   }
-  onEditRelatedProduct(i: number): void {
+  onRelatedProductEdit(i: number): void {
     this.confirmService.showConfirm('Edit this item?',
       () => {
         this.catalogManagerService.setCatalogItemToEdit({ ...this.filteredProducts[i] });
@@ -111,36 +125,82 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
       () => { return; }
     );
   }
-  onDeleteRelatedProduct(i: number): void {
+  onRelatedProductDelete(i: number): void {
     this.confirmService.showConfirm('Delete this item?',
       () => {
-        const { _id, subCat } = this.filteredProducts[i];
-        const deleteSub = this.catalogManagerService.deleteItem(subCat, _id)
-          .pipe(
-            catchError(err => { throw err; }),
-            switchMap(() => {
-              return this.fetchRelatedProductss();
-            }),
-          )
-          .subscribe(
-            {
-              next: () => {
-                this.toastrMessageHandler.showInfo();
-              },
-              error: (err) => {
-                const errMsg: string = err.error.message;
-                this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
-                this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
-                this.toastrMessageHandler.showError(errMsg);
-              }
-            }
-          );
-        this.unsubscriptionArray.push(deleteSub);
+        this.relatedProductsAnimationStatesArr[i] = 'delete';
       },
       () => { return; }
     );
   }
+
+  private relatedProductDelete(i: number): Observable<Item[]> {
+    this.loading = true;
+    const { _id, subCat } = this.filteredProducts[i];
+    return this.catalogManagerService.deleteItem(subCat, _id)
+      .pipe(
+        catchError(err => {
+          this.loading = false;
+          this.relatedProductsAnimationStatesArr[i] = 'static';
+          const errMsg: string = err.error.message;
+          this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          this.toastrMessageHandler.showError(errMsg);
+          return EMPTY;
+        }
+        ),
+        switchMap(() => {
+          return this.fetchRelatedProducts()
+            .pipe(
+              tap(() => {
+                this.loading = false;
+                this.toastrMessageHandler.showInfo()
+              })
+            );
+        }),
+      );
+  }
+
+  setAnimationStates(): void {
+    this.addToCartButtonAnimationStateArr = Array.from({ length: this.filteredProducts.length }, () => ({ animateState: 'static', btnText: '' }) as AddToCartButtonAnimationState);
+    this.relatedProductsAnimationStatesArr = Array.from({ length: this.filteredProducts.length }, () => 'static' as RelatedProductAnimationState);
+  }
+
+  onRelatedProductDeleteAnimation(e: AnimationEvent, i: number): void {
+    // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
+    // console.log(e);
+    // console.log(`${e.fromState} ==> ${e.toState}`);
+    if (e.phaseName === 'done') {
+      if (e.fromState === 'static' && e.toState === 'delete' && i !== undefined) {
+        const deleteSub = this.relatedProductDelete(i).subscribe();
+        this.unsubscriptionArray.push(deleteSub);
+      }
+    }
+  }
+
+  onAddToCartButtonAnimation(e: AnimationEvent, i: number): void {
+    // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
+    // console.log(e);
+    // console.log(`${e.fromState} ==> ${e.toState}`);
+    if (e.phaseName === 'start' && e.fromState === 'static' && e.toState === 'animate') {
+      const btnIconEl = e.element.querySelector('i.fa-solid');
+      this.render.removeClass(btnIconEl, 'fa-cart-arrow-down');
+      this.render.addClass(btnIconEl, 'fa-circle-check');
+      this.render.setStyle(e.element, 'pointer-events', 'none');
+    } else if (e.phaseName === 'done' && e.fromState === 'static' && e.toState === 'animate') {
+      const btnIconEl = e.element.querySelector('i.fa-solid');
+      this.render.removeClass(btnIconEl, 'fa-circle-check');
+      this.render.addClass(btnIconEl, 'fa-cart-arrow-down');
+      this.render.setStyle(e.element, 'pointer-events', 'initial');
+      this.addToCartButtonAnimationStateArr[i] = { ...this.addToCartButtonAnimationStateArr[i], animateState: 'static', btnText: '' };
+      this.relatedProductAddEvent.emit();
+      this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
+    }
+
+  }
+
   onDetailsChange(i: number) {
+    this.animationService.disableAllAnimations();
     this.detailsService.setProductDetails({ ...this.filteredProducts[i] });
     this.productDetailsChangeEvent.emit();
   }
@@ -152,11 +212,28 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
 
   onCarouselMove(selectedPage: number) {
     this.selected.page = selectedPage || 1;
-    const fetchRelatedProductsSub = this.fetchRelatedProductss().subscribe();
-    this.unsubscriptionArray.push(fetchRelatedProductsSub);
+    this.carouselMoveAnimationAnimationState = 'leave';
+    this.filteredProducts = [];
   }
 
-  private fetchRelatedProductss(): Observable<Item[]> {
+  onCarouselMoveAnimation(e: AnimationEvent): void {
+    // console.log(`Animation Triggered: ${e.triggerName}, Phase: ${e.phaseName}, Time: ${e.totalTime}`);
+    // console.log(e);
+    // console.log(`${e.fromState} ==> ${e.toState}`);
+    if (e.phaseName === 'done' && this.carouselMoveAnimationAnimationState === 'leave') {
+      this.carouselMoveAnimationAnimationState = 'enter';
+      const fetchRelatedProductsSub = this.fetchRelatedProducts().subscribe();
+      this.unsubscriptionArray.push(fetchRelatedProductsSub);
+    } else
+      if (e.phaseName === 'done' && this.carouselMoveAnimationAnimationState === 'enter') {
+        console.log(this.carouselMoveAnimationAnimationState);
+        this.carouselMoveAnimationAnimationState = 'static';
+        console.log(this.carouselMoveAnimationAnimationState);
+      }
+
+  }
+
+  private fetchRelatedProducts(): Observable<Item[]> {
     this.loading = true;
     return this.relatedProductsService.getCollectionSize()
       .pipe(
@@ -174,7 +251,10 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
                 rltdProds => {
                   this.loading = false;
                   this.relatedProducts = [...rltdProds];
-                  this.filteredProducts = rltdProds.filter(itm => itm._id !== this.product?._id);
+                  if (this.carouselMoveAnimationAnimationState !== 'leave') {
+                    this.filteredProducts = rltdProds.filter(itm => itm._id !== this.product?._id);
+                  }
+                  this.setAnimationStates();
                 }
               )
             );

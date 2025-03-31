@@ -151,7 +151,7 @@ div.wrapper {
     color: #faf0e6;
     opacity: 1;
     filter: none;
-    cursor: not-allowed;
+    cursor: unset;
 }
 
 .wrapper div.alert {
