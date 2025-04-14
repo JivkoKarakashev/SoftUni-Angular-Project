@@ -9,6 +9,7 @@ import { UserForAuth } from './types/user';
 import { HeaderMobileService, mobileNavMenuState } from './core/header-mobile/header-mobile.service';
 import { AnimationService } from './shared/animation-service/animation.service';
 import { ShoppingCartAnimationState, shoppingCartLeaveAnimation } from './shared/animation-service/animations/shopping-cart.animation';
+import { NgZoneOnStableEventProviderService } from './shared/utils/ng-zone-on-stable-event-provider.service';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private userStateMgmnt: UserStateManagementService,
     private headerMobileService: HeaderMobileService,
     private ngZone: NgZone,
+    private ngZoneOnStableEventProviderService: NgZoneOnStableEventProviderService,
     private router: Router,
     private animationService: AnimationService,
     private location: Location,
@@ -71,7 +73,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   onNavigate(e: Event, route: string): void {
     e.preventDefault();
     this.animationService.disableAllAnimations();
-    this.router.navigate([route]);
+    this.ngZoneOnStableEventProviderService.ngZoneOnStableEvent()
+      .subscribe(
+        () => this.ngZone.run(
+          () => this.router.navigate([route])
+        )
+      );
   }
 
   toggleMobileNavMenu() {

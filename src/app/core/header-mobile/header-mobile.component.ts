@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AnimationEvent } from '@angular/animations';
 import { Observable, Subscription, catchError, of, tap } from 'rxjs';
@@ -15,6 +15,7 @@ import { ErrorsService } from 'src/app/shared/errors/errors.service';
 import { AnimationService } from 'src/app/shared/animation-service/animation.service';
 import { mobileNavMenuAnimation } from 'src/app/shared/animation-service/animations/mobile-nav-menu.animation';
 import { HeaderMobileService, mobileNavMenuState } from './header-mobile.service';
+import { NgZoneOnStableEventProviderService } from 'src/app/shared/utils/ng-zone-on-stable-event-provider.service';
 
 @Component({
   selector: 'app-header-mobile',
@@ -46,7 +47,9 @@ export class HeaderMobileComponent implements OnInit, OnDestroy {
     private router: Router,
     private animationService: AnimationService,
     private headerMobileService: HeaderMobileService,
-    private render: Renderer2
+    private render: Renderer2,
+    private ngZone: NgZone,
+    private ngZoneOnStableEventProviderService: NgZoneOnStableEventProviderService
   ) { }
 
   @ViewChild('closeMenuBtn') closeMenuBtn!: ElementRef<HTMLButtonElement>;
@@ -119,7 +122,12 @@ export class HeaderMobileComponent implements OnInit, OnDestroy {
         this.render.addClass(e.element, 'closed');
       }
       if (this.mobileNavMenuState === 'navigate') {
-        this.router.navigate([this.route]);
+        this.ngZoneOnStableEventProviderService.ngZoneOnStableEvent()
+          .subscribe(
+            () => this.ngZone.run(
+              () => this.router.navigate([this.route])
+            )
+          );
       }
     }
   }

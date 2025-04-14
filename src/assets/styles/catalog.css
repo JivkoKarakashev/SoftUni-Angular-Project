@@ -179,7 +179,7 @@ div.filter {
         position: relative;
         min-height: 50px;
 
-        & input.price-slider::-webkit-slider-thumb {
+        & input[type="range"].price-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             pointer-events: all;
             width: 24px;
@@ -190,7 +190,7 @@ div.filter {
             cursor: pointer;
         }
 
-        & input.price-slider::-moz-range-thumb {
+        & input[type="range"].price-slider::-moz-range-thumb {
             -moz-appearance: none;
             pointer-events: all;
             width: 24px;
@@ -201,25 +201,25 @@ div.filter {
             cursor: pointer;
         }
 
-        & input.price-slider::-webkit-slider-thumb:hover {
+        & input[type="range"].price-slider::-webkit-slider-thumb:hover {
             background: #387bbe;
         }
 
-        & input.price-slider::-moz-range-thumb:hover {
+        & input[type="range"].price-slider::-moz-range-thumb:hover {
             background: #387bbe;
         }
 
-        & input.price-slider::-webkit-slider-thumb:active {
-            box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+        & input[type="range"].price-slider::-webkit-slider-thumb:active {
             -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
-        }
-
-        input.price-slider::-moz-range-thumb:active {
             box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
-            -moz-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
         }
 
-        & input.price-slider {
+        input[type="range"].price-slider::-moz-range-thumb:active {
+            -moz-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+            box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+        }
+
+        & input[type="range"].price-slider {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
@@ -231,7 +231,7 @@ div.filter {
             pointer-events: none;
         }
 
-        & input.price-slider.from-slider {
+        & input[type="range"].price-slider.from-slider {
             height: 0;
             z-index: 1;
         }
@@ -263,6 +263,11 @@ div.wrapper {
         padding: .5em;
         width: 30vw;
         flex: 1 0 30%;
+    }
+
+    .sidebar.disabled {
+        cursor: unset;
+        pointer-events: none;
     }
 }
 

@@ -4,6 +4,19 @@ export type CatalogSubcategory = 'belts' | 'caps_hats' | 'gloves' | 'sunglasses'
 export const catalogCategories: Array<CatalogCategory> = ['accessories', 'clothes', 'shoes', 'sportswear', 'suits_tailoring'];
 export const catalogSubcategories: Array<CatalogSubcategory> = ['belts', 'caps_hats', 'gloves', 'sunglasses', 'watches', 'jackets', 'longwear', 'boots', 'slippers', 'trainers', 'bottoms_leggings', 'gym', 'outdoors', 'running', 'ski_snowboard', 'sweaters', 'blazers_jackets', 'ties', 'tuxedos_partywear', 'waistcoats', 'workwear'];
 
+export interface CatalogPriceFilterSliderParams {
+    fromPriceCurrV: number,
+    toPriceCurrV: number,
+    toPriceMinV: number,
+    toPriceMaxV: number
+}
+
+export const catalogPriceFilterSliderInitParams: CatalogPriceFilterSliderParams = {
+    fromPriceCurrV: 0,
+    toPriceCurrV: 0,
+    toPriceMinV: 0,
+    toPriceMaxV: 0
+}
 
 export interface CatalogCategorySelectOption {
     _id: CatalogCategory | ''

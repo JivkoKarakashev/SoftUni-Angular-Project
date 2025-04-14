@@ -4,7 +4,7 @@
 
 <app-errors *ngIf="httpErrorsArr.length || customErrorsArr.length" />
 
-<div class="wrapper" *ngIf="!loading">
+<div class="wrapper" *ngIf="!loading && item">
     <div class="left-wrapper">
         <section class="section-product-details">
             <div class="container"
@@ -12,10 +12,6 @@
             [@detailsDeleteAnimation]="itemState === 'delete' ? 'delete' : 'static'"
             (@detailsDeleteAnimation.done)="onItemDeleteAnimation($event)"
             >
-                <!-- Left Column / Product Image -->
-                <!-- <div class="left-column">
-                    <img class="image" alt="image" [src]="selectedImgUrl || item?.image">
-                </div> -->
                 <div class="left-column"
                 [@.disabled]="carouselMoveAnimationDisabled"
                 [@carouselMoveAnimation]="{
@@ -44,9 +40,9 @@
                 <div class="right-column">
                     <!-- Product Description -->
                     <div class="product-description">
-                        <span>{{capitalizeCategoryService.capitalize(item?.subCat || 'null')}}</span>
-                        <h4>{{item?.brand}}</h4>
-                        <p>{{item?.description}}</p>
+                        <span>{{capitalizeCategoryService.capitalize(item.subCat || 'null')}}</span>
+                        <h4>{{item.brand}}</h4>
+                        <p>{{item.description}}</p>
                     </div>
                     <!-- Product Configuration -->
                     <div class="product-configuration">
@@ -56,8 +52,8 @@
                                 <div class="product-color user owner">
                                     <span>Color</span>
                                     <div class="color-choose">
-                                        <div [ngClass]="{disabled: item?.quantity === 0}" *ngFor="let col of item?.color; let i = index" [id]="col+i">
-                                            <input [readonly]="item?._ownerId === user?._id || item?.quantity === 0" formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="onColorselect(i)" required>
+                                        <div [ngClass]="{disabled: item.quantity === 0}" *ngFor="let col of item?.color; let i = index" [id]="col+i">
+                                            <input [readonly]="item._ownerId === user?._id || item.quantity === 0" formControlName="selectedColor" [attr.data-image]="col" type="radio" [id]="col" name="selectedColor" [value]="col" (change)="onColorSelect(i)" required>
                                             <label [for]="col"><span #spanColorElements></span></label>
                                         </div>
                                     </div>
@@ -68,7 +64,7 @@
                                         <span>Size configuration</span>
     
                                         <div class="size-choose">
-                                            <select [ngClass]="{disabled: item?.quantity === 0}" class="itm" formControlName="selectedSize" name="selectedSize" required>
+                                            <select [ngClass]="{disabled: item.quantity === 0}" class="itm" formControlName="selectedSize" name="selectedSize" required>
                                                 <option value="">select size</option>
                                                 <option *ngFor="let sz of item?.size; let i = index;" [value]="sz">{{sz}}
                                                 </option>
@@ -83,15 +79,15 @@
                                 <div class="quantity-config">
                                     <div *ngIf="item?._ownerId !== user?._id" class="user">
                                         <span>Quantity configuration</span>
-                                        <input [readonly]="item?.quantity === 0" class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="item?.quantity || null" required>
+                                        <input [readonly]="item.quantity === 0" class="itm" formControlName="selectedQuantity" class="quantity" type="number" name="selectedQuantity" min="1" [max]="item.quantity || null" required>
                                     </div>
                                     <div *ngIf="item?._ownerId === user?._id" class="owner">
-                                        <p><span>Available&colon; </span>{{item?.quantity}}</p>
+                                        <p><span>Available&colon; </span>{{item.quantity}}</p>
                                     </div>
                                 </div>
                                 <!-- Product Pricing -->
                                 <div class="product-price">
-                                    <span>${{item?.price}}</span>                                    
+                                    <span>${{item.price}}</span>                                    
                                     <input *ngIf="item?._ownerId !== user?._id && item?.quantity !== 0" [disabled]="form.invalid" type="submit" class="cart-btn" value="Add to cart">
                                 </div>
                             </fieldset>
@@ -110,7 +106,7 @@
                 </div>
             </div>
             <!-- Related Products Here -->
-            <app-related-products (relatedProductAddEvent)="incrementCartItemsCounter()" (productDetailsChangeEvent)="onChangeDetails()" />
+            <app-related-products (relatedProductAddEvent)="incrementCartItemsCounter()" />
         </section>
     </div>
     <div class="right-wrapper">

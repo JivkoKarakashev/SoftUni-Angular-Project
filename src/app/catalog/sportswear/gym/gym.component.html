@@ -9,11 +9,11 @@
 <section class="catalog-wrapper" *ngIf="!loading">
     
     <nav class="pagination" *ngIf="paginationConfig.collectionSize > 0">
-        <ul class="navbar upper">
-            <div class="left-navbar-wrapper">
+        <div class="navbar upper">
+            <ul class="left-navbar-wrapper">
                 <li><button class="openbtn" [ngClass]="{'active': sidebarState === 'open'}" type="button" (click)="onSidebarToggle()">&#9776;Toggle Filters</button></li>
-            </div>
-            <div class="right-navbar-wrapper">
+            </ul>
+            <ul class="right-navbar-wrapper">
                 <li [ngClass]="{'disabled': selected.page === 1}"><a class="nav-icon circle-left" [ngClass]="{'disabled': selected.page === 1}" (click)="onPageChange(selected.page - 1)"></a></li>
                 <li class="disabled"><span>Page {{ selected.page }} &#8725; {{ paginationConfig.totalPages }}</span></li>
                 <li [ngClass]="{'disabled': selected.page === paginationConfig.totalPages}"><a class="nav-icon circle-right" [ngClass]="{'disabled': selected.page === paginationConfig.totalPages}" (click)="onPageChange(selected.page + 1)"></a></li>
@@ -29,13 +29,13 @@
                         <option *ngFor="let size of pageSizeOptionArr" [selected]="size === selected.pageSize" [value]="size">{{ size }}</option>
                     </select>
                 </li>
-            </div>
-        </ul>
+            </ul>
+        </div>
     </nav>
 
     <div class="wrapper">
 
-        <div *ngIf="paginationConfig.collectionSize > 0" class="sidebar show" [ngClass]="{'show': sidebarState === 'open'}">
+        <div *ngIf="paginationConfig.collectionSize > 0" class="sidebar show" [ngClass]="{'show': sidebarState === 'open'}" [class.disabled]="filterEventsDisabled">
             <div class="closebtn" (click)="onSidebarToggle()"><i class="fa-regular fa-circle-xmark fa-xl"></i></div>
 
             <fieldset>
@@ -88,18 +88,18 @@
                     </div>
                     <div class="filter-sliders">
                         <label for="price-from"></label>
-                        <input #fromPriceSlider class="price-slider filter-slider from-slider" type="range" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(0)" id="price-from" name="price-from" (input)="onPriceSliderChange()" />
+                        <input #fromPriceSlider class="price-slider filter-slider from-slider" type="range" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(0)" id="price-from" name="price-from" (change)="onPriceSliderChange()" />
                         <label for="price-to"></label>
-                        <input #toPriceSlider class="price-slider filter-slider to-slider" type="range" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(priceFilterOptions.length - 1)" id="price-to" name="price-to" (input)="onPriceSliderChange()" />
+                        <input #toPriceSlider class="price-slider filter-slider to-slider" type="range" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(priceFilterOptions.length - 1)" id="price-to" name="price-to" (change)="onPriceSliderChange()" />
                     </div>
                     <div class="filter-input">
                         <div class="filter-input-left-wrapper">
                             <label for="price-from-input">Min</label>
-                            <input #fromPriceInput class="price-input from-input" type="number" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(0)" id="price-from-input" name="price-from-input" (input)="onPriceInputChange()" />
+                            <input #fromPriceInput class="price-input from-input" type="number" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(0)" id="price-from-input" name="price-from-input" (change)="onPriceInputChange()" />
                         </div>
                         <div class="filter-input-right-wrapper">
                             <label for="price-to-input">Max</label>
-                            <input #toPriceInput class="price-input to-input" type="number" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(priceFilterOptions.length - 1)" id="price-to-input" name="price-to-input" (input)="onPriceInputChange()" />
+                            <input #toPriceInput class="price-input to-input" type="number" [min]="priceFilterOptions.at(0)" [max]="priceFilterOptions.at(priceFilterOptions.length - 1)" [value]="priceFilterOptions.at(priceFilterOptions.length - 1)" id="price-to-input" name="price-to-input" (change)="onPriceInputChange()" />
                         </div>
                     </div>
                 </div>
@@ -178,9 +178,9 @@
     </div>
 
     <nav class="pagination" *ngIf="paginationConfig.collectionSize > 0">
-        <ul class="navbar bottom">
-            <div class="left-navbar-wrapper"></div>
-            <div class="right-navbar-wrapper">
+        <div class="navbar bottom">
+            <ul class="left-navbar-wrapper"></ul>
+            <ul class="right-navbar-wrapper">
                 <li [ngClass]="{'disabled': selected.page === 1}"><a class="nav-icon circle-left" [ngClass]="{'disabled': selected.page === 1}" (click)="onPageChange(selected.page - 1)"></a></li>
                 <li class="disabled"><span>Page {{ selected.page }} &#8725; {{ paginationConfig.totalPages }}</span></li>
                 <li [ngClass]="{'disabled': selected.page === paginationConfig.totalPages}"><a class="nav-icon circle-right" [ngClass]="{'disabled': selected.page === paginationConfig.totalPages}" (click)="onPageChange(selected.page + 1)"></a></li>
@@ -196,7 +196,7 @@
                         <option *ngFor="let size of pageSizeOptionArr" [selected]="size === selected.pageSize" [value]="size">{{ size }}</option>
                     </select>
                 </li>
-            </div>
-        </ul>
+            </ul>
+        </div>
     </nav>
 </section>

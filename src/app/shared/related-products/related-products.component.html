@@ -15,16 +15,18 @@
             <i class="fa-solid fa-chevron-left"></i>
         </button>
         <div class="related-items-container"
+        [@.disabled]="relatedProductCarouselMoveAnimationDisabled"
         [@relatedProductCarouselMoveAnimation]="carouselMoveAnimationAnimationState"
         (@relatedProductCarouselMoveAnimation.done)="onCarouselMoveAnimation($event)"
         >
             <ng-container *ngFor="let product of filteredProducts; let i = index; trackBy: trackById">
                 <div class="related-item"
+                [@.disabled]="relatedProductDeleteAnimationDisabled"
                 [@relatedProductDeleteAnimation]="relatedProductsAnimationStatesArr[i] === 'delete' ? 'delete' : 'static'"
                 (@relatedProductDeleteAnimation.done)="onRelatedProductDeleteAnimation($event, i)"
                 >
                     <div class="image">
-                        <a [routerLink]="['/catalog/',product.cat, product.subCat, product._id]" (click)="onDetailsChange(i)">
+                        <a href="/catalog/{{product.cat}}/{{product.subCat}}/{{product._id}}" (click)="onDetailsChange($event, i)">
                             <img class="image" alt="image" [src]="product.image">
                         </a>
                     </div>

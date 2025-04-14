@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
-import { Location } from '@angular/common';
 import { EMPTY, Subject, Subscription, catchError, of, switchMap } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -57,7 +56,6 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
       private cartService: ShoppingCartService,
       private cartStateMgmnt: ShoppingCartStateManagementService,
       private render: Renderer2,
-      private location: Location,
       private fb: FormBuilder,
       private invertColor: InvertColorService,
       private router: Router,
@@ -418,7 +416,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onContinue(): void {
-    this.location.back();
+    this.animationService.setShoppingCartAnimationState('leave');
   }
 
   onRemoveItem(ItmIdx: number) {

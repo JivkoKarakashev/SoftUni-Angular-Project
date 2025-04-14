@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { Item } from 'src/app/types/item';
 import { environment } from 'src/environments/environment.development';
@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment.development';
 import { HttpAJAXInterceptorSkipHeader } from 'src/app/interceptors/http-ajax.interceptor';
 import { HttpLogoutInterceptorSkipHeader } from 'src/app/interceptors/http-logout.interceptor';
 import { ProductDetailsService } from '../product-details/product-details.service';
+import { CustomError } from '../errors/custom-error';
 
 const BASE_URL = `${environment.apiDBUrl}/data`
 
@@ -21,26 +22,28 @@ export class RelatedProductsService {
     private detailsService: ProductDetailsService
   ) { }
 
-  getCollectionSize(): Observable<number> {
+  getCollectionSize(): Observable<number | CustomError> {
     const product = this.detailsService.getProductDetails();
-    if (product) {
-      const { subCat } = product;
-      const url = `${BASE_URL}/${subCat}?count`;
-      const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-      return this.http.get<number>(url, { headers });
+    if (product instanceof CustomError) {
+      const error = product;
+      return of(error);
     }
-    return EMPTY;
+    const { subCat } = product;
+    const url = `${BASE_URL}/${subCat}?count`;
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<number>(url, { headers });
     // return of(0);
   }
 
-  getRelatedProductsByPage(skipSizeReq: number, pageSizeReq: number) {
+  getRelatedProductsByPage(skipSizeReq: number, pageSizeReq: number): Observable<Item[] | CustomError> {
     const product = this.detailsService.getProductDetails();
-    if (product) {
-      const { subCat } = product;
-      const url = `${BASE_URL}/${subCat}?offset=${skipSizeReq}&pageSize=${pageSizeReq}`;
-      const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
-      return this.http.get<Item[]>(url, { headers });
+    if (product instanceof CustomError) {
+      const error = product;
+      return of(error);
     }
-    return EMPTY;
+    const { subCat } = product;
+    const url = `${BASE_URL}/${subCat}?offset=${skipSizeReq}&pageSize=${pageSizeReq}`;
+    const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
+    return this.http.get<Item[]>(url, { headers });
   }
 }

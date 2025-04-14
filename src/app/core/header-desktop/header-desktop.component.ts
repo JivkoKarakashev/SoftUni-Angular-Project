@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, catchError, of } from 'rxjs';
 
@@ -12,6 +12,7 @@ import { UserService } from 'src/app/user/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorsService } from 'src/app/shared/errors/errors.service';
 import { AnimationService } from 'src/app/shared/animation-service/animation.service';
+import { NgZoneOnStableEventProviderService } from 'src/app/shared/utils/ng-zone-on-stable-event-provider.service';
 
 @Component({
   selector: 'app-header-desktop',
@@ -33,7 +34,9 @@ export class HeaderDesktopComponent implements OnInit, OnDestroy {
     private orderStateMgmnt: OrderStateManagementService,
     private tradedItmsStateMgmnt: TradedItemsStateManagementService,
     private router: Router,
-    private animationService: AnimationService
+    private animationService: AnimationService,
+    private ngZone: NgZone,
+    private ngZoneOnStableEventProviderService: NgZoneOnStableEventProviderService
   ) { }
 
   ngOnInit(): void {
@@ -67,13 +70,23 @@ export class HeaderDesktopComponent implements OnInit, OnDestroy {
         this.orderStateMgmnt.resetDBOrderState();
         this.tradedItmsStateMgmnt.resetDBTradedItemsState();
         this.animationService.disableAllAnimations();
-        this.router.navigate(['/auth/login']);
+        this.ngZoneOnStableEventProviderService.ngZoneOnStableEvent()
+          .subscribe(
+            () => this.ngZone.run(
+              () => this.router.navigate(['/auth/login'])
+            )
+          );
       });
   }
 
   onNavigate(e: Event, route: string) {
     e.preventDefault();
-    this.animationService.disableAllAnimations();
-    this.router.navigate([route]);
+    this.animationService.disableAllAnimations()
+    this.ngZoneOnStableEventProviderService.ngZoneOnStableEvent()
+      .subscribe(
+        () => this.ngZone.run(
+          () => this.router.navigate([route])
+        )
+      );
   }
 }

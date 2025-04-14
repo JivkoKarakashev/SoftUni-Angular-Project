@@ -20,6 +20,12 @@ div.left-wrapper {
     display: flex;
     flex-direction: column;
     max-width: 100%;
+
+    & .slide.slick-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 div.right-wrapper {

@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AnimationEvent } from '@angular/animations';
-import { EMPTY, Observable, Subscription, catchError, switchMap, tap } from 'rxjs';
+import { EMPTY, Observable, Subscription, catchError, of, switchMap, tap } from 'rxjs';
 
 import { UserForAuth } from 'src/app/types/user';
 import { CartItem, Item } from 'src/app/types/item';
@@ -21,6 +21,7 @@ import { CustomError } from '../errors/custom-error';
 import { CarouselMoveAnimationState, RelatedProductAnimationState, relatedProductAddToCartButtonAnimation, relatedProductCarouselMoveAnimation, relatedProductDeleteAnimation } from '../animation-service/animations/related-products.animation';
 import { AddToCartButtonAnimationState } from '../animation-service/animations/catalog-items.animation';
 import { AnimationService } from '../animation-service/animation.service';
+import { NgZoneOnStableEventProviderService } from '../utils/ng-zone-on-stable-event-provider.service';
 
 @Component({
   selector: 'app-related-products',
@@ -47,6 +48,8 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
   public carouselMoveAnimationAnimationState: CarouselMoveAnimationState = 'static';
   public relatedProductsAnimationStatesArr: RelatedProductAnimationState[] = [];
   public addToCartButtonAnimationStateArr: AddToCartButtonAnimationState[] = [];
+  public relatedProductCarouselMoveAnimationDisabled = true;
+  public relatedProductDeleteAnimationDisabled = true;
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
@@ -65,27 +68,40 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     private detailsService: ProductDetailsService,
     private animationService: AnimationService,
     private catalogManagerService: CatalogManagerService,
-    private confirmService: NgConfirmService
+    private confirmService: NgConfirmService,
+    private ngZone: NgZone,
+    private ngZoneOnStableEventProviderService: NgZoneOnStableEventProviderService
   ) { }
 
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef<HTMLSpanElement>>;
   @Output() relatedProductAddEvent = new EventEmitter();
-  @Output() productDetailsChangeEvent = new EventEmitter();
 
   ngOnInit(): void {
     console.log('Related Products Page INITIALIZED!');
     const user = this.userStateMgmnt.getUser();
     (user) ? this.user = { ...user } : null;
-    try {
-      this.product = this.detailsAvailability();
-      const fetchRelatedProductsSub = this.fetchRelatedProducts().subscribe();
-      this.unsubscriptionArray.push(fetchRelatedProductsSub);
-    } catch (err) {
+    const product = this.detailsService.getProductDetails();
+    if (product instanceof CustomError) {
       this.loading = false;
-      const { name, message, isUserError } = err as CustomError;
-      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
-      this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
+      const error = product;
+      this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { ...error }]);
+      this.customErrorsArr = [...this.customErrorsArr, { ...error }];
+      return;
     }
+    this.product = { ...product };
+    const relProdCarouselMoveAnimationStateSub = this.animationService.getRelatedProductCarouselMoveAnimationState()
+      .subscribe(state => this.relatedProductCarouselMoveAnimationDisabled = state);
+    const relProdDetailsDeleteAnimationStateSub = this.animationService.getRelatedProductDeleteAnimationState()
+      .subscribe(state => this.relatedProductDeleteAnimationDisabled = state);
+    const fetchRelatedProductsSub = this.fetchRelatedProducts()
+      .subscribe((res) => {
+        if (res instanceof CustomError) {
+          const error = { ...res };
+          this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { ...error }]);
+          this.customErrorsArr = [...this.customErrorsArr, { ...error }];
+        }
+      });
+    this.unsubscriptionArray.push(relProdCarouselMoveAnimationStateSub, relProdDetailsDeleteAnimationStateSub, fetchRelatedProductsSub);
   }
   ngAfterViewInit(): void {
     // console.log(this.spanColorElements);
@@ -117,6 +133,7 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     // this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
   }
   onRelatedProductEdit(i: number): void {
+    this.animationService.disableDetailsAnimations();
     this.confirmService.showConfirm('Edit this item?',
       () => {
         this.catalogManagerService.setCatalogItemToEdit({ ...this.filteredProducts[i] });
@@ -134,7 +151,7 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     );
   }
 
-  private relatedProductDelete(i: number): Observable<Item[]> {
+  private relatedProductDelete(i: number): Observable<Item[] | CustomError> {
     this.loading = true;
     const { _id, subCat } = this.filteredProducts[i];
     return this.catalogManagerService.deleteItem(subCat, _id)
@@ -152,7 +169,13 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
         switchMap(() => {
           return this.fetchRelatedProducts()
             .pipe(
-              tap(() => {
+              tap((res) => {
+                if (res instanceof CustomError) {
+                  const error = { ...res };
+                  this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { ...error }]);
+                  this.customErrorsArr = [...this.customErrorsArr, { ...error }];
+                  return;
+                }
                 this.loading = false;
                 this.toastrMessageHandler.showInfo()
               })
@@ -199,10 +222,17 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
 
   }
 
-  onDetailsChange(i: number) {
-    this.animationService.disableAllAnimations();
-    this.detailsService.setProductDetails({ ...this.filteredProducts[i] });
-    this.productDetailsChangeEvent.emit();
+  onDetailsChange(e: Event, i: number) {
+    e.preventDefault();
+    const { _id, cat, subCat } = this.filteredProducts[i];
+    const newPath = `/catalog/${cat}/${subCat}/${_id}`;
+    this.animationService.disableDetailsAnimations();
+    this.ngZoneOnStableEventProviderService.ngZoneOnStableEvent()
+      .subscribe(
+        () => this.ngZone.run(
+          () => this.router.navigate([newPath])
+        )
+      );
   }
 
   public trackById(_index: number, product: Item): string {
@@ -222,7 +252,14 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
     // console.log(`${e.fromState} ==> ${e.toState}`);
     if (e.phaseName === 'done' && this.carouselMoveAnimationAnimationState === 'leave') {
       this.carouselMoveAnimationAnimationState = 'enter';
-      const fetchRelatedProductsSub = this.fetchRelatedProducts().subscribe();
+      const fetchRelatedProductsSub = this.fetchRelatedProducts()
+        .subscribe(res => {
+          if (res instanceof CustomError) {
+            const error = { ...res };
+            this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { ...error }]);
+            this.customErrorsArr = [...this.customErrorsArr, { ...error }];
+          }
+        });
       this.unsubscriptionArray.push(fetchRelatedProductsSub);
     } else
       if (e.phaseName === 'done' && this.carouselMoveAnimationAnimationState === 'enter') {
@@ -233,45 +270,65 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
 
   }
 
-  private fetchRelatedProducts(): Observable<Item[]> {
+  private fetchRelatedProducts(): Observable<Item[] | CustomError> {
     this.loading = true;
     return this.relatedProductsService.getCollectionSize()
       .pipe(
-        switchMap(collSize => {
-          if (collSize === 0) {
+        catchError(err => {
+          this.loading = false;
+          const errMsg: string = err.error.message;
+          this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+          this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+          this.toastrMessageHandler.showError(errMsg);
+          return EMPTY;
+        }),
+        switchMap(res => {
+          if (res instanceof CustomError) {
             this.loading = false;
-            return EMPTY;
+            const error = { ...res };
+            return of(error);
           }
-          this.paginationConfig = this.paginationService.relatedProductsPaginationConfigCalc(collSize, this.selected.pageSize, this.selected.page);
+          if (res === 0) {
+            this.loading = false;
+            const error = this.customError();
+            return of(error);
+          }
+          const collectionSize = res;
+          this.paginationConfig = this.paginationService.relatedProductsPaginationConfigCalc(collectionSize, this.selected.pageSize, this.selected.page);
           const { selectedPage, skipSizeReq, pageSizeReq } = this.paginationConfig;
           this.selected.page = selectedPage;
           return this.relatedProductsService.getRelatedProductsByPage(skipSizeReq, pageSizeReq)
             .pipe(
-              tap(
-                rltdProds => {
-                  this.loading = false;
-                  this.relatedProducts = [...rltdProds];
-                  if (this.carouselMoveAnimationAnimationState !== 'leave') {
-                    this.filteredProducts = rltdProds.filter(itm => itm._id !== this.product?._id);
-                  }
-                  this.setAnimationStates();
+              catchError(err => {
+                this.loading = false;
+                const errMsg: string = err.error.message;
+                this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
+                this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
+                this.toastrMessageHandler.showError(errMsg);
+                return EMPTY;
+              }),
+              tap(res => {
+                this.loading = false;
+                if (res instanceof CustomError) {
+                  return;
                 }
+                this.relatedProducts = [...res];
+                // if (this.carouselMoveAnimationAnimationState !== 'leave') {
+                this.filteredProducts = res.filter(itm => itm._id !== this.product?._id);
+                // }
+                this.setAnimationStates();
+                this.animationService.enableDetailsAnimations();
+              }
               )
             );
         }),
       );
   }
 
-  private detailsAvailability() {
-    const product = this.detailsService.getProductDetails();
-    if (product === null) {
-      const error: CustomError = {
-        name: 'Item Error',
-        message: 'Item is null!',
-        isUserError: false,
-      };
-      throw error;
-    }
-    return product;
+  private customError(): CustomError {
+    const name = 'Collection Size Error';
+    const message = 'Collection is EMPTY!';
+    const isUserError = false;
+    return new CustomError(name, message, isUserError);
   }
 }

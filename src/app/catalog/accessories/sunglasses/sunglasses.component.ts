@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
@@ -20,9 +20,11 @@ import { ToastrMessageHandlerService } from 'src/app/shared/utils/toastr-message
 import { NgConfirmService } from 'ng-confirm-box';
 import { PaginationConfig, PaginationService, paginationConfigInit } from 'src/app/shared/utils/pagination.service';
 import { CatalogFilters, Color, FilterCatalogDataService, filtersInit, priceFltrInit } from 'src/app/shared/utils/filter-catalog-data.service';
+import { CatalogPriceFilterSliderParams, catalogPriceFilterSliderInitParams } from 'src/app/types/catalog';
 import { InvertColorService } from 'src/app/shared/utils/invert-color.service';
 import { AddToCartButtonAnimationState, CatalogItemAnimationState, addToCartButtonAnimation, catalogItemDeleteAnimation, catalogItemEnterLeaveAnimation } from 'src/app/shared/animation-service/animations/catalog-items.animation';
 import { AnimationService } from 'src/app/shared/animation-service/animation.service';
+import { NgZoneOnStableEventProviderService } from 'src/app/shared/utils/ng-zone-on-stable-event-provider.service';
 
 @Component({
   selector: 'app-sunglasses',
@@ -49,6 +51,7 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
   public catalogItemEnterLeaveAnimationDisabled = false;
   public catalogItemDeleteAnimationDisabled = true;
   public catalogItemDeleteAnimationStateArr: CatalogItemAnimationState[] = [];
+  public filterEventsDisabled = false;
 
   public loading = true;
   public httpErrorsArr: HttpErrorResponse[] = [];
@@ -66,6 +69,7 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
   public colorFilterOptions: Array<Color> = [];
   public brandFilterOptions: Array<string> = [];
   public priceFilterOptions: Array<number> = [];
+  private priceSliderParams: CatalogPriceFilterSliderParams = { ...catalogPriceFilterSliderInitParams };
 
   constructor(
     private userStateMgmnt: UserStateManagementService,
@@ -84,8 +88,9 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
     private filterService: FilterCatalogDataService,
     private invertColorService: InvertColorService,
     private viewportScroller: ViewportScroller,
-    private changeDetector: ChangeDetectorRef,
-    private animationService: AnimationService
+    private animationService: AnimationService,
+    private ngZone: NgZone,
+    private ngZoneOnStableEventProviderService: NgZoneOnStableEventProviderService
   ) { }
 
   @ViewChildren('spanColorElements') private spanColorElements!: QueryList<ElementRef<HTMLSpanElement>>;
@@ -119,16 +124,12 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
     const user = this.userStateMgmnt.getUser();
     (user) ? this.user = { ...user } : null;
     const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
-    const enterLeaveAnimationStateSub = this.animationService.getCatalogItemEnterLeaveAnimationState()
-      .subscribe(state => {
-        this.catalogItemEnterLeaveAnimationDisabled = state;
-        this.changeDetector.detectChanges();
-      });
-    const deleteAnimationStateSub = this.animationService.getCatalogItemDeleteAnimationState()
-      .subscribe(state => {
-        this.catalogItemDeleteAnimationDisabled = state;
-        this.changeDetector.detectChanges();
-      });
+    const enterLeaveAnimationStateSub = this.animationService
+      .getCatalogItemEnterLeaveAnimationState()
+      .subscribe(state => this.catalogItemEnterLeaveAnimationDisabled = state);
+    const deleteAnimationStateSub = this.animationService
+      .getCatalogItemDeleteAnimationState()
+      .subscribe(state => this.catalogItemDeleteAnimationDisabled = state);
     this.unsubscriptionArray.push(fetchCatalogDataSub, enterLeaveAnimationStateSub, deleteAnimationStateSub);
     this.updateQueryParams();
   }
@@ -181,13 +182,13 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.render.setStyle(e.element, 'pointer-events', 'none');
     } else if (e.phaseName === 'done') {
       this.render.removeStyle(e.element, 'pointer-events');
-      if (this.catalogItemEnterLeaveAnimationState === 'leave') {
-        this.catalogItemEnterLeaveAnimationState = 'enter';
+      if (e.fromState === 'filter' && e.toState === 'static') {
+        this.filterEventsDisabled = false;
+      } else if (e.fromState === 'static' && e.toState === 'leave') {
+        this.catalogItemEnterLeaveAnimationState = 'static';
         const fetchCatalogDataSub = this.fetchCatalogData().subscribe();
         this.unsubscriptionArray.push(fetchCatalogDataSub);
-      } else if (this.catalogItemEnterLeaveAnimationState === 'enter') {
-        this.catalogItemEnterLeaveAnimationState = 'static';
-      } else if (this.catalogItemEnterLeaveAnimationState === 'filter') {
+      } else if (e.fromState === 'static' && e.toState === 'filter') {
         this.catalogItemEnterLeaveAnimationState = 'static';
         this.filteredItems = this.filterService.accumulativeFilter(this.filters, this.listItems);
         this.setAnimationStates();
@@ -246,14 +247,22 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         catchError(err => {
           this.loading = false;
+          this.ngZoneOnStableEventProviderService.ngZoneOnStableEvent()
+            .subscribe(
+              () => this.ngZone.run(
+                () => {
+                  this.priceSliderCtrl();
+                  this.priceInputCtrl();
+                }
+              )
+            );
           this.catalogItemDeleteAnimationStateArr[i] = 'static';
           const errMsg: string = err.error.message;
           this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
           this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];
           this.toastrMessageHandler.showError(errMsg);
           return EMPTY;
-        }
-        ),
+        }),
         switchMap(() => {
           return this.fetchCatalogData()
             .pipe(
@@ -366,11 +375,17 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
                 });
                 this.brandFilterOptions = Array.from(new Set(itms.map(itm => itm.brand).sort((a, b) => a.localeCompare(b))));
                 this.priceFilterOptions = Array.from(new Set(itms.map((itm, i) => (i !== itms.length - 1) ? Math.trunc(itm.price) : Math.ceil(itm.price)).sort((a, b) => a - b)));
-                const fromPrCurr = this.priceFilterOptions[0];
-                const toPrCurr = this.priceFilterOptions[this.priceFilterOptions.length - 1];
-                const toPrMin = this.priceFilterOptions[0];
-                const toPrMax = this.priceFilterOptions[this.priceFilterOptions.length - 1];
-                this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
+                const fromPriceCurrV = this.priceFilterOptions[0];
+                const toPriceCurrV = this.priceFilterOptions[this.priceFilterOptions.length - 1];
+                const toPriceMinV = this.priceFilterOptions[0];
+                const toPriceMaxV = this.priceFilterOptions[this.priceFilterOptions.length - 1];
+                this.setPriceSliderParams({ fromPriceCurrV, toPriceCurrV, toPriceMinV, toPriceMaxV });
+                this.ngZoneOnStableEventProviderService.ngZoneOnStableEvent()
+                  .subscribe(
+                    () => this.ngZone.run(
+                      () => this.fillSlider()
+                    )
+                  );
                 // console.log(this.listItems);
               })
             );
@@ -386,6 +401,7 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSizeFilterChange(i: number): void {
+    this.filterEventsDisabled = true;
     this.catalogItemEnterLeaveAnimationState = 'filter';
     this.filteredItems = [];
     const selectedSize = this.sizeFilterOptions[i];
@@ -402,6 +418,7 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSizeFilterClear(): void {
+    this.filterEventsDisabled = true;
     this.catalogItemEnterLeaveAnimationState = 'filter';
     this.filteredItems = [];
     this.sizeBtns.forEach(btn => this.render.removeClass(btn.nativeElement, 'active'));
@@ -410,6 +427,7 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onColorFilterChange(i: number): void {
+    this.filterEventsDisabled = true;
     this.catalogItemEnterLeaveAnimationState = 'filter';
     this.filteredItems = [];
     const selectedColor = this.colorFilterOptions[i];
@@ -426,6 +444,7 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onColorFilterClear(): void {
+    this.filterEventsDisabled = true;
     this.catalogItemEnterLeaveAnimationState = 'filter';
     this.filteredItems = [];
     this.colorBtns.forEach(btn => this.render.removeClass(btn.nativeElement, 'active'));
@@ -434,6 +453,7 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onBrandFilterChange(i: number): void {
+    this.filterEventsDisabled = true;
     this.catalogItemEnterLeaveAnimationState = 'filter';
     this.filteredItems = [];
     const selectedBrand = this.brandFilterOptions[i];
@@ -450,6 +470,7 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onBrandFilterClear(): void {
+    this.filterEventsDisabled = true;
     this.catalogItemEnterLeaveAnimationState = 'filter';
     this.filteredItems = [];
     this.brandBtns.forEach(btn => this.render.removeClass(btn.nativeElement, 'active'));
@@ -457,90 +478,98 @@ export class SunglassesComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(this.filters.brand);
   }
 
+  private getPriceSliderParams(): CatalogPriceFilterSliderParams {
+    return this.priceSliderParams;
+  }
+
+  private setPriceSliderParams(params: CatalogPriceFilterSliderParams): void {
+    this.priceSliderParams = params;
+  }
+
   onPriceSliderChange(): void {
+    this.filterEventsDisabled = true;
     this.catalogItemEnterLeaveAnimationState = 'filter';
     this.filteredItems = [];
     const fromPriceSliderEl = this.fromPriceSlider.nativeElement;
     const toPriceSliderEl = this.toPriceSlider.nativeElement;
 
-    if (fromPriceSliderEl && toPriceSliderEl) {
-      const fromPrCurr = (Number(fromPriceSliderEl.value) >= Number(toPriceSliderEl.value)) ? Number(toPriceSliderEl.value) : Number(fromPriceSliderEl.value);
-      const toPrCurr = (Number(toPriceSliderEl.value) <= Number(fromPriceSliderEl.value)) ? Number(fromPriceSliderEl.value) : Number(toPriceSliderEl.value);
-      const toPrMin = Number(toPriceSliderEl.min);
-      const toPrMax = Number(toPriceSliderEl.max);
-      this.filters.price = {
-        from: fromPrCurr,
-        to: toPrCurr
-      }
-      // console.log(this.filters.price);
-      this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
-      this.priceInputCtrl(fromPrCurr, toPrCurr);
+    const fromPriceCurrV = (Number(fromPriceSliderEl.value) >= Number(toPriceSliderEl.value)) ? Number(toPriceSliderEl.value) : Number(fromPriceSliderEl.value);
+    const toPriceCurrV = (Number(toPriceSliderEl.value) <= Number(fromPriceSliderEl.value)) ? Number(fromPriceSliderEl.value) : Number(toPriceSliderEl.value);
+    const toPriceMinV = Number(toPriceSliderEl.min);
+    const toPriceMaxV = Number(toPriceSliderEl.max);
+    this.filters.price = {
+      from: fromPriceCurrV,
+      to: toPriceCurrV
     }
+    // console.log(this.filters.price);
+    this.setPriceSliderParams({ fromPriceCurrV, toPriceCurrV, toPriceMinV, toPriceMaxV });
+    this.priceSliderCtrl();
+    this.priceInputCtrl();
   }
 
-  private priceSliderCtrl(fromPrCurr: number, toPrCurr: number): void {
-    const toPrMin = this.priceFilterOptions[0];
-    const toPrMax = this.priceFilterOptions[this.priceFilterOptions.length - 1];
-    this.render.setProperty(this.fromPriceSlider.nativeElement, 'value', fromPrCurr);
-    this.render.setProperty(this.toPriceSlider.nativeElement, 'value', toPrCurr);
-    this.fillSlider(fromPrCurr, toPrCurr, toPrMin, toPrMax);
+  private priceSliderCtrl(): void {
+    const { fromPriceCurrV, toPriceCurrV } = this.getPriceSliderParams();
+    this.render.setProperty(this.fromPriceSlider.nativeElement, 'value', fromPriceCurrV);
+    this.render.setProperty(this.toPriceSlider.nativeElement, 'value', toPriceCurrV);
+    this.fillSlider();
   }
 
-  private fillSlider(fromPrCurr: number, toPrCurr: number, toPrMin: number, toPrMax: number): void {
+  private fillSlider(): void {
+    const { fromPriceCurrV, toPriceCurrV, toPriceMinV, toPriceMaxV } = this.priceSliderParams;
     const sliderColor = '#C6C6C6';
     const rangeColor = '#387bbe';
 
-    const rangeDist = toPrMax - toPrMin;
-    const fromPos = fromPrCurr - toPrMin;
-    const toPos = toPrCurr - toPrMin;
+    const rangeDist = toPriceMaxV - toPriceMinV;
+    const fromPos = fromPriceCurrV - toPriceMinV;
+    const toPos = toPriceCurrV - toPriceMinV;
     // console.log(fromPrCurr, toPrCurr);
     // console.log(rangeDist, fromPos, toPos);
-    if (!this.toPriceSlider) {
-      this.changeDetector.detectChanges();
-    }
-
-    this.render.setStyle(this.toPriceSlider.nativeElement, 'background', `linear-gradient(
-      to right,
-      ${sliderColor} 0%,
-      ${sliderColor} ${(fromPos) / (rangeDist) * 100}%,
-      ${rangeColor} ${((fromPos) / (rangeDist)) * 100}%,
-      ${rangeColor} ${(toPos) / (rangeDist) * 100}%, 
-      ${sliderColor} ${(toPos) / (rangeDist) * 100}%, 
-      ${sliderColor} 100%)`);
+    this.render.setStyle(
+      this.toPriceSlider.nativeElement,
+      'background',
+      `linear-gradient(to right, ${sliderColor} 0%, ${sliderColor} ${(fromPos) / (rangeDist) * 100}%, ${rangeColor} ${((fromPos) / (rangeDist)) * 100}%, ${rangeColor} ${(toPos) / (rangeDist) * 100}%, ${sliderColor} ${(toPos) / (rangeDist) * 100}%, ${sliderColor} 100%)`
+    );
   }
 
   onPriceInputChange(): void {
+    this.filterEventsDisabled = true;
     this.catalogItemEnterLeaveAnimationState = 'filter';
     this.filteredItems = [];
     const fromPriceInputEl = this.fromPriceInput.nativeElement;
     const toPriceInputEl = this.toPriceInput.nativeElement;
-    const fromPrCurr = Number(fromPriceInputEl.value);
-    const toPrCurr = Number(toPriceInputEl.value);
+    const fromPriceCurrV = Number(fromPriceInputEl.value);
+    const toPriceCurrV = Number(toPriceInputEl.value);
+    const { toPriceMinV, toPriceMaxV } = this.getPriceSliderParams();
+    this.setPriceSliderParams({ fromPriceCurrV, toPriceCurrV, toPriceMinV, toPriceMaxV });
     this.filters.price = {
-      from: fromPrCurr,
-      to: toPrCurr
+      from: fromPriceCurrV,
+      to: toPriceCurrV
     }
     // console.log(this.filters.price);
-    this.render.setAttribute(fromPriceInputEl, 'max', String(toPrCurr));
-    this.render.setAttribute(toPriceInputEl, 'min', String(fromPrCurr));
-    this.priceSliderCtrl(fromPrCurr, toPrCurr);
+    this.render.setAttribute(fromPriceInputEl, 'max', String(toPriceCurrV));
+    this.render.setAttribute(toPriceInputEl, 'min', String(fromPriceCurrV));
+    this.priceSliderCtrl();
     // console.log(fromPrCurr, toPrCurr);
   }
 
-  private priceInputCtrl(fromPrCurr: number, toPrCurr: number): void {
-    this.render.setProperty(this.fromPriceInput.nativeElement, 'value', String(fromPrCurr));
-    this.render.setProperty(this.toPriceInput.nativeElement, 'value', String(toPrCurr));
+  private priceInputCtrl(): void {
+    const { fromPriceCurrV, toPriceCurrV } = this.getPriceSliderParams();
+    this.render.setProperty(this.fromPriceInput.nativeElement, 'value', String(fromPriceCurrV));
+    this.render.setProperty(this.toPriceInput.nativeElement, 'value', String(toPriceCurrV));
     // console.log(this.fromPriceInput.nativeElement.value, this.toPriceInput.nativeElement.value);
   }
 
   onPriceFilterClear(): void {
+    this.filterEventsDisabled = true;
     this.catalogItemEnterLeaveAnimationState = 'filter';
     this.filteredItems = [];
-    const fromPrCurr = this.priceFilterOptions[0];
-    const toPrCurr = this.priceFilterOptions[this.priceFilterOptions.length - 1];
+    const fromPriceCurrV = this.priceFilterOptions[0];
+    const toPriceCurrV = this.priceFilterOptions[this.priceFilterOptions.length - 1];
+    const { toPriceMinV, toPriceMaxV } = this.getPriceSliderParams();
+    this.setPriceSliderParams({ fromPriceCurrV, toPriceCurrV, toPriceMinV, toPriceMaxV });
     this.filters.price = { ...priceFltrInit };
-    this.priceSliderCtrl(fromPrCurr, toPrCurr);
-    this.priceInputCtrl(fromPrCurr, toPrCurr);
+    this.priceSliderCtrl();
+    this.priceInputCtrl();
   }
   ///////////////////////////////////////////
   trackByIdx(idx: number): number {
