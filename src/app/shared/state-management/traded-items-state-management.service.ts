@@ -37,7 +37,7 @@ export class TradedItemsStateManagementService {
 
   removeDBTradedItemsStateFromLStor(): void {
     localStorage.removeItem('dbTradedItemsState');
-    console.log('REMOVE DATABASE TRADED ITEMS STATE FROM LSTOR INVOKED!');
+    // console.log('REMOVE DATABASE TRADED ITEMS STATE FROM LSTOR INVOKED!');
   }
 
   resetDBTradedItemsState(): void {

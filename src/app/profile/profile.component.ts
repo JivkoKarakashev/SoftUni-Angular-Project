@@ -42,7 +42,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @ViewChildren('tabLiElements') private tabLiElements!: QueryList<ElementRef<HTMLLIElement>>;
 
   ngOnInit(): void {
-    console.log('Profile Initialized!');
+    // console.log('Profile Initialized!');
     const user = this.userStateMgmnt.getUser();
     try {
       if (user) {

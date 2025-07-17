@@ -77,7 +77,7 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
   @Output() relatedProductAddEvent = new EventEmitter();
 
   ngOnInit(): void {
-    console.log('Related Products Page INITIALIZED!');
+    // console.log('Related Products Page INITIALIZED!');
     const user = this.userStateMgmnt.getUser();
     (user) ? this.user = { ...user } : null;
     const product = this.detailsService.getProductDetails();
@@ -263,9 +263,9 @@ export class RelatedProductsComponent implements OnInit, AfterViewInit, OnDestro
       this.unsubscriptionArray.push(fetchRelatedProductsSub);
     } else
       if (e.phaseName === 'done' && this.carouselMoveAnimationAnimationState === 'enter') {
-        console.log(this.carouselMoveAnimationAnimationState);
+        // console.log(this.carouselMoveAnimationAnimationState);
         this.carouselMoveAnimationAnimationState = 'static';
-        console.log(this.carouselMoveAnimationAnimationState);
+        // console.log(this.carouselMoveAnimationAnimationState);
       }
 
   }

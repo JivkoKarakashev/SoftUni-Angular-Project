@@ -39,7 +39,7 @@ export class OverviewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('Overview Tab Initialized!');
+    // console.log('Overview Tab Initialized!');
 
     const user = this.userStateMgmnt.getUser();
     (user) ? this.user = { ...user } : null;

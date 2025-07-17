@@ -1,14 +1,11 @@
 <app-authenticate>
   <app-extract-states>
-
-    <!-- <app-main></app-main>
-    <app-footer></app-footer> -->
-
-    <div class="site-container"
-    #siteContainer
-    [@shoppingCartLeaveAnimation]="shoppingCartAnimationState"
-    (@shoppingCartLeaveAnimation.done)="onShoppingCartLeaveAnimation($event)"
-    >
+      
+      <div class="site-container"
+      #siteContainer
+      [@shoppingCartLeaveAnimation]="shoppingCartAnimationState"
+      (@shoppingCartLeaveAnimation.done)="onShoppingCartLeaveAnimation($event)"
+      >
       <header class="section-header">
         <div class="site-title">
           <a class="title-icon store" href="/" (click)="onNavigate($event, '/')">eStore</a>
@@ -24,8 +21,10 @@
         </div>
       </header>
       <app-header-mobile />
-
+      
       <router-outlet />
+
+      <app-footer></app-footer>
     </div>
 
   </app-extract-states>

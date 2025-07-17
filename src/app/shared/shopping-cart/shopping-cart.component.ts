@@ -97,7 +97,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('Shopping Cart Page INITIALIZED!');
+    // console.log('Shopping Cart Page INITIALIZED!');
     /////////////////////<--- Get User Data --->/////////////////////
     const user = this.userStateMgmnt.getUser();
     try {

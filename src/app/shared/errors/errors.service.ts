@@ -22,7 +22,7 @@ export class ErrorsService {
 
   resethttpErrorsArrState(): void {
     this.httpErrorsArr$$.next([]);
-    console.log(this.httpErrorsArr$$.value);
+    // console.log(this.httpErrorsArr$$.value);
   }
 
   /////////////////////<--- Custom Errors State Management --->/////////////////////
@@ -31,13 +31,13 @@ export class ErrorsService {
   }
 
   setCustomErrorsArrState(customErrsArr: CustomError[]): void {
-    console.log('CUSTOME ERRORS');
+    // console.log('CUSTOME ERRORS');
     this.customErrorsArr$$.next([...customErrsArr]);
-    console.log(this.customErrorsArr$$.value);
+    // console.log(this.customErrorsArr$$.value);
   }
 
   resetCustomErrorsArrState(): void {
     this.customErrorsArr$$.next([]);
-    console.log(this.customErrorsArr$$.value);
+    // console.log(this.customErrorsArr$$.value);
   }
 }

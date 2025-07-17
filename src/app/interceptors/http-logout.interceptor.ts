@@ -4,6 +4,9 @@ import { /*Observable,*/ of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { UserStateManagementService } from '../shared/state-management/user-state-management.service';
+import { environment } from 'src/environments/environment.development';
+
+const BASE_URL = `${environment.apiDBUrl}/users`;
 export const HttpLogoutInterceptorSkipHeader = 'X-Skip-HttpLogoutInterceptor';
 
 @Injectable()
@@ -17,8 +20,8 @@ export class HttpLogoutInterceptor implements HttpInterceptor {
       return next.handle(req.clone({ headers }));
     }
     ////////////////////////////////
-    console.log('LogoutInterceptor invoked!');
-    if (req.url == 'http://localhost:3030/users/logout') {
+    // console.log('LogoutInterceptor invoked!');
+    if (req.url == `${BASE_URL}/logout`) {
       const userSubscription = this.userStateMgmnt.getUserState().subscribe(usr => {
         if (usr) {
           const { accessToken } = usr;
@@ -34,18 +37,18 @@ export class HttpLogoutInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       map((res/*: HttpEvent<any>*/) => {
         if (res instanceof HttpResponse && res.status == 204) {
-          console.log(res.status);
+          // console.log(res.status);
           res = res.clone({ body: null });
           // console.log(res);
         }
         return res;
       }),
       catchError((err) => {
-        if (req.url == 'http://localhost:3030/users/logout' && err.status == 403) {
-          console.log('Error catched!');
+        if (req.url == `${BASE_URL}/logout` && err.status == 403) {
+          // console.log('Error catched!');
           return of(new HttpResponse({ body: null, status: 204 }));
         }
-        console.log('Error:', err);
+        // console.log('Error:', err);
         throw err;
       })
     )

@@ -37,8 +37,8 @@ export class CheckoutService {
     return this.tradedItmsStateMgmnt.getDBTradedItems();
   }
 
-  createCheckoutSession(dbOrder: DBOrder, purchasedItems: TradedItem[]): Observable<ClientSecret> {
-    const checkoutOrder: CheckoutOrder = { ...dbOrder, purchasedItems: [...purchasedItems] };
+  createCheckoutSession(dbOrder: DBOrder, purchasedItems: TradedItem[], locationOrigin: string): Observable<ClientSecret> {
+    const checkoutOrder: CheckoutOrder = { ...dbOrder, purchasedItems: [...purchasedItems], locationOrigin };
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     const body = { ...checkoutOrder };
     // console.log(body);

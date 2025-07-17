@@ -25,6 +25,11 @@ a.nav-icon::before {
   padding-right: 0.3em;
 }
 
+.title-icon,
+.nav-icon {
+  padding: .5em;
+}
+
 a.title-icon.store::before {
   content: "\f54e";
 }
@@ -71,6 +76,21 @@ a.nav-icon.circle-right:before {
 
 p.nav-icon.menu:before {
   content: "\f0c9";
+}
+
+a.nav-icon.github::before {
+  content: "\f09b";
+  padding-right: unset;
+}
+
+a.nav-icon.linkedin::before {
+  content: "\f08c";
+  padding-right: unset;
+}
+
+a.nav-icon.x-twitter::before {
+  content: "\e61a";
+  padding-right: unset;
 }
 
 div.site-title,

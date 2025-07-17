@@ -53,7 +53,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   @ViewChild('inputFilterElement') private inputFilterElement!: ElementRef<HTMLInputElement>;
 
   ngOnInit(): void {
-    console.log('Sales Tab Initialized!');
+    // console.log('Sales Tab Initialized!');
 
     const user = this.userStateMgmnt.getUser();
     (user) ? this.user = { ...user } : null;

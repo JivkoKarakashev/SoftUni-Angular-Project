@@ -103,7 +103,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    console.log('Edit FORM INITIALIZED!');
+    // console.log('Edit FORM INITIALIZED!');
     this.dropdownList = [...dropdownList];
     this.dropdownSettings = { ...dropdownSettings };
     this.categories = [...catalogCategorySelectOptions];

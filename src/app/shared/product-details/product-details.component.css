@@ -165,6 +165,7 @@ a.cart:active {
     background-color: rgba(0, 0, 0, 0.66);
     cursor: unset;
 }
+
 .nav-arrow.not-clickable {
     cursor: unset;
     pointer-events: none;
@@ -340,45 +341,40 @@ div.buttons {
 
         @media screen and (pointer: coarse) {
 
-            & {
-
-                li.button.buy {
-                    background-color: #5cb85c;
-                }
-
-                li.button.edit {
-                    background-color: #fdf90a;
-                    color: #000;
-                }
-
-                li.button.delete {
-                    background-color: #cc5656;
-                    color: #000;
-                }
+            & li.button.buy {
+                background-color: #5cb85c;
             }
+
+            & li.button.edit {
+                background-color: #fdf90a;
+                color: #000;
+            }
+
+            & li.button.delete {
+                background-color: #cc5656;
+                color: #000;
+            }
+
         }
 
         @media screen and (pointer: fine) {
 
-            & {
+            & li.button.buy:hover,
+            li.button.buy:focus-within {
+                background-color: #5cb85c;
+                /* transition: all .5s; */
+            }
 
-                li.button.buy:hover,
-                li.button.buy:focus-within {
-                    background-color: #5cb85c;
-                    /* transition: all .5s; */
-                }
+            & li.button.edit:hover,
+            li.button.edit:focus-within {
+                background-color: #fdf90a;
+                color: #000;
+            }
 
-                li.button.edit:hover,
-                li.button.edit:focus-within {
-                    background-color: #fdf90a;
-                    color: #000;
-                }
-
-                li.button.delete:hover,
-                li.button.delete:focus-within {
-                    background-color: #cc5656;
-                    color: #000;
-                }
+            & li.button.delete:hover,
+            li.button.delete:focus-within {
+                background-color: #cc5656;
+                color: #000;
             }
         }
     }

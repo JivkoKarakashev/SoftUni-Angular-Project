@@ -214,7 +214,7 @@ div.filter {
             box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
         }
 
-        input[type="range"].price-slider::-moz-range-thumb:active {
+        & input[type="range"].price-slider::-moz-range-thumb:active {
             -moz-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
             box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
         }
@@ -501,26 +501,24 @@ li.item {
                     cursor: pointer;
                 }
 
-                & {
-                    li.button:not(.buy) {
-                        flex: 0 1 20%;
-                        text-align: center;
-                    }
+                & li.button:not(.buy) {
+                    flex: 0 1 20%;
+                    text-align: center;
+                }
 
-                    li.button.buy {
-                        background-color: #5cb85c;
-                        color: #fff;
-                    }
+                & li.button.buy {
+                    background-color: #5cb85c;
+                    color: #fff;
+                }
 
-                    li.button.edit {
-                        background-color: #fdf90a;
-                        color: #000;
-                    }
+                & li.button.edit {
+                    background-color: #fdf90a;
+                    color: #000;
+                }
 
-                    li.button.delete {
-                        background-color: #cc5656;
-                        color: #fff;
-                    }
+                & li.button.delete {
+                    background-color: #cc5656;
+                    color: #fff;
                 }
             }
         }
@@ -568,29 +566,27 @@ li.item:focus-within {
                     cursor: pointer;
                 }
 
-                & {
-                    li.button:not(.buy) {
-                        flex: 0 1 20%;
-                        text-align: center;
-                    }
+                & li.button:not(.buy) {
+                    flex: 0 1 20%;
+                    text-align: center;
+                }
 
-                    li.button.buy:hover,
-                    li.button.buy:focus-within {
-                        background-color: #5cb85c;
-                        color: #fff;
-                    }
+                & li.button.buy:hover,
+                li.button.buy:focus-within {
+                    background-color: #5cb85c;
+                    color: #fff;
+                }
 
-                    li.button.edit:hover,
-                    li.button.edit:focus-within {
-                        background-color: #fdf90a;
-                        color: #000;
-                    }
+                & li.button.edit:hover,
+                li.button.edit:focus-within {
+                    background-color: #fdf90a;
+                    color: #000;
+                }
 
-                    li.button.delete:hover,
-                    li.button.delete:focus-within {
-                        background-color: #cc5656;
-                        color: #fff;
-                    }
+                & li.button.delete:hover,
+                li.button.delete:focus-within {
+                    background-color: #cc5656;
+                    color: #fff;
                 }
             }
         }

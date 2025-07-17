@@ -1,0 +1,33 @@
+.section-footer {
+    background-color: #22292f;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+
+    .author {
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.2em;
+        flex: 1 1 45%;
+        text-align: end;
+    }
+
+    .footer {
+        flex: 1 1 45%;
+
+        .navbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 1em;
+            padding: .5em 0;
+        }
+    }
+
+    .nav-icon {
+        font-size: 2em;
+    }
+}

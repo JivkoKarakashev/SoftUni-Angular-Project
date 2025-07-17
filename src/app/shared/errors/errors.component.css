@@ -8,7 +8,7 @@ div.alert {
     background-color: #f44336;
     color: #fff;
 
-    div.buttons {
+    & div.buttons {
         padding: .2em 0;
         display: flex;
         justify-content: center;

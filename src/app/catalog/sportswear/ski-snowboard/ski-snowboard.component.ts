@@ -164,7 +164,7 @@ export class SkiSnowboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onAddToCart(i: number): void {
     this.addToCartButtonAnimationStateArr[i] = { ...this.addToCartButtonAnimationStateArr, animateState: 'animate', btnText: '\u2713' };
-    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = this.listItems[i];
+    const { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, size, color, brand, quantity, price } = this.filteredItems[i];
     const newCartItem: CartItem = { _ownerId, _id, _createdOn, image, altImages, cat, subCat, description, brand, size, selectedSize: '', color, selectedColor: '', quantity, selectedQuantity: NaN, price, product: 0, checked: false };
     this.cartService.addCartItem(newCartItem);
   }
@@ -220,9 +220,9 @@ export class SkiSnowboardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.addToCartButtonAnimationStateArr[i] = { ...this.addToCartButtonAnimationStateArr[i], animateState: 'static', btnText: 'Add to Cart' };
       this.cartItemsCounter++;
       this.toastrMessageHandler.showSuccess('Item was successfully added to the cart!');
-      const idx = this.listItems.findIndex(itm => itm._id == this.listItems[i]._id);
-      this.listItems[idx].inCart = true;
-      this.filteredItems[idx].inCart = true;
+      const idx = this.listItems.findIndex(itm => itm._id == this.filteredItems[i]._id);
+      this.listItems[idx] = { ...this.listItems[idx], inCart: true };
+      this.filteredItems[i] = { ...this.filteredItems[i], inCart: true };
     }
 
   }
@@ -242,7 +242,7 @@ export class SkiSnowboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private deleteItem(i: number): Observable<Item[]> {
     this.loading = true;
-    const { _id, subCat } = this.listItems[i];
+    const { _id, subCat } = this.filteredItems[i];
     return this.catalogManagerService.deleteItem(subCat, _id)
       .pipe(
         catchError(err => {

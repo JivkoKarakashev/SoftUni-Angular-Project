@@ -133,8 +133,8 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
                 this.errorsService.setCustomErrorsArrState([...this.customErrorsArr, { name, message, isUserError }]);
                 this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
               }
-              console.log(err);
-              console.log(this.httpErrorsArr);
+              // console.log(err);
+              // console.log(this.httpErrorsArr);
             }
           }
         );

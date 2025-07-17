@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
-import { MainComponent } from './main/main.component';
 import { HomeComponent } from './home/home.component';
 import { httpLogoutInterceptorProvider } from './interceptors/http-logout.interceptor';
 import { httpAJAXInterceptorProvider } from './interceptors/http-ajax.interceptor';
@@ -17,13 +16,13 @@ import { ExtractStatesComponent } from './extract-states/extract-states.componen
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { HttpHeadersInterceptorProvider } from './interceptors/http-headers.interceptor';
 // import { NgxStripeModule } from 'ngx-stripe';
 // import { environment } from 'src/environments/environment';
 
 @NgModule({
     declarations: [
         AppComponent,
-        MainComponent,
         HomeComponent,
         AuthenticateComponent,
         ExtractStatesComponent
@@ -43,6 +42,7 @@ import { ToastrModule } from 'ngx-toastr';
         })
     ],
     providers: [
+        HttpHeadersInterceptorProvider,
         httpLogoutInterceptorProvider,
         httpAJAXInterceptorProvider,
         provideHttpClient(withInterceptorsFromDi())

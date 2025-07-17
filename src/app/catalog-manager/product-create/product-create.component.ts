@@ -100,7 +100,7 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    console.log('Publish FORM Initialized!');
+    // console.log('Publish FORM Initialized!');
     this.dropdownList = [...dropdownList];
     this.dropdownSettings = { ...dropdownSettings };
     this.categories = [...catalogCategorySelectOptions];

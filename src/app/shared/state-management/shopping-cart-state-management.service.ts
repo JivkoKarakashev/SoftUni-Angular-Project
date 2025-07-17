@@ -45,7 +45,7 @@ export class ShoppingCartStateManagementService {
     localStorage.removeItem('cartItemsState');
     localStorage.removeItem('discountState');
     localStorage.removeItem('shippingState');
-    console.log('CLEAR CART STATE INVOKED!');
+    // console.log('CLEAR CART STATE INVOKED!');
   }
 
   emptyCart(): void {

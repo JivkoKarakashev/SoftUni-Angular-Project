@@ -36,6 +36,7 @@ export interface DBOrder {
 
 export interface CheckoutOrder extends DBOrder {
     purchasedItems: TradedItem[],
+    locationOrigin: string
 }
 
 export interface Address {

@@ -78,10 +78,10 @@ export class CheckForItemTypeService {
         const inputItmPropsArr = Object.keys(inputItm);
         const cartItemPropsArr = Object.keys(cartItemSchema);
         if (cartItemPropsArr.some((prop) => !inputItmPropsArr.includes(prop))) {
-            console.log('Item type');
+            // console.log('Item type');
             return true;
         } else {
-            console.log('WRONG Item type!');
+            // console.log('WRONG Item type!');
             return false;
         }
     }
@@ -89,10 +89,10 @@ export class CheckForItemTypeService {
         const inputItmPropsArr = Object.keys(inputItm);
         const cartItemPropsArr = Object.keys(cartItemSchema);
         if (cartItemPropsArr.every((prop) => inputItmPropsArr.includes(prop))) {
-            console.log('CartItem type');
+            // console.log('CartItem type');
             return true;
         } else {
-            console.log('WRONG CartItem type!');
+            // console.log('WRONG CartItem type!');
             return false;
         }
     }
@@ -102,9 +102,9 @@ export class CheckForItemTypeService {
         for (const itm of inputItmsArr) {
             const inputItmPropsArr = Object.keys(itm);
             if (tradedItmPropsArr.every((prop) => inputItmPropsArr.includes(prop))) {
-                console.log('TradedItem type');
+                // console.log('TradedItem type');
             } else {
-                console.log('WRONG TradedItem type!');
+                // console.log('WRONG TradedItem type!');
                 result = false;
                 break;
             }
@@ -116,10 +116,10 @@ export class CheckForItemTypeService {
         const itmPropsArr = Object.keys(itm);
         const orderPropsArr = Object.keys(DBOrderSchema);
         if (orderPropsArr.some((prop) => !itmPropsArr.includes(prop))) {
-            console.log('Order type');
+            // console.log('Order type');
             return true;
         } else {
-            console.log('WRONG DBOrder type!');
+            // console.log('WRONG DBOrder type!');
             return false;
         }
     }
@@ -127,10 +127,10 @@ export class CheckForItemTypeService {
         const itmPropsArr = Object.keys(itm);
         const cartItemPropsArr = Object.keys(DBOrderSchema);
         if (cartItemPropsArr.every((prop) => itmPropsArr.includes(prop))) {
-            console.log('DBOrder type');
+            // console.log('DBOrder type');
             return true;
         } else {
-            console.log('WRONG DBOrder type!');
+            // console.log('WRONG DBOrder type!');
             return false;
         }
     }

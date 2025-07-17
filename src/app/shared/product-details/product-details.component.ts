@@ -117,7 +117,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnInit(): void {
-    console.log('Details Page INITIALIZED!');
+    // console.log('Details Page INITIALIZED!');
     const user = this.userStateMgmnt.getUser();
     (user) ? this.user = { ...user } : null;
     const detailsDeleteAnimationStateSub = this.animationService.getProductDetailsDeleteAnimationState()
@@ -261,7 +261,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
   onAddToCart(): void {
     if (this.form.invalid) {
-      console.log('Invalid FORM!');
+      // console.log('Invalid FORM!');
       return;
     }
 

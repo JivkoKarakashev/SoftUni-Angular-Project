@@ -57,7 +57,7 @@ export class PurchasesComponent implements OnInit, OnDestroy {
   @ViewChild('inputFilterElement') private inputFilterElement!: ElementRef<HTMLInputElement>;
 
   ngOnInit(): void {
-    console.log('Purchase Tab Initialized!');
+    // console.log('Purchase Tab Initialized!');
 
     const user = this.userStateMgmnt.getUser();
     (user) ? this.user = { ...user } : null;
@@ -155,7 +155,6 @@ export class PurchasesComponent implements OnInit, OnDestroy {
             this.profileDataStateMgmnt.setPurchasedItemsByOrderState([...this.dbTradedItemsArr]);
           },
           error: (err) => {
-            console.log('HERE');
             this.loading = false;
             this.errorsService.sethttpErrorsArrState([...this.httpErrorsArr, { ...err }]);
             this.httpErrorsArr = [...this.httpErrorsArr, { ...err }];

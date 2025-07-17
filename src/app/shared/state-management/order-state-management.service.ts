@@ -37,7 +37,7 @@ export class OrderStateManagementService {
 
   removeDBOrderStateFromLStor(): void {
     localStorage.removeItem('dbOrderState');
-    console.log('REMOVE DATABASE ORDER STATE FROM LSTOR INVOKED!');
+    // console.log('REMOVE DATABASE ORDER STATE FROM LSTOR INVOKED!');
   }
 
   resetDBOrderState(): void {

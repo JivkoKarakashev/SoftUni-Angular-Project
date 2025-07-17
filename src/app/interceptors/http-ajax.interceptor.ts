@@ -3,6 +3,9 @@ import { HttpRequest, HttpHandler, /*HttpEvent,*/ HttpInterceptor, HTTP_INTERCEP
 import { /*Observable,*/ catchError, of } from 'rxjs';
 
 import { UserStateManagementService } from '../shared/state-management/user-state-management.service';
+import { environment } from 'src/environments/environment.development';
+
+const BASE_URL = `${environment.apiDBUrl}/data`;
 export const HttpAJAXInterceptorSkipHeader = 'X-Skip-HttpAJAXInterceptor';
 
 @Injectable()
@@ -19,7 +22,7 @@ export class HttpAJAXInterceptor implements HttpInterceptor {
     console.log('AJAXInterceptor invoked!');
     let newReq/*: HttpRequest<any>*/ = req.clone({ ...req });
     // console.log(req.body);
-    if (req.url.startsWith('http://localhost:3030/data/') && (req.body || req.method === 'DELETE')) {
+    if (req.url.startsWith(`${BASE_URL}/`) && (req.body || req.method === 'DELETE')) {
       const userSubscription = this.userStateMgmnt.getUserState().subscribe(usr => {
         if (usr) {
           // console.log(usr);
@@ -44,7 +47,7 @@ export class HttpAJAXInterceptor implements HttpInterceptor {
     }
     return next.handle(newReq).pipe(
       catchError((err) => {
-        if ((newReq.url.startsWith('http://localhost:3030/data/orders?where=_ownerId') && err.status == 404) || (newReq.url.startsWith('http://localhost:3030/data/traded_items?where=sellerId') && err.status == 404)) {
+        if ((newReq.url.startsWith(`${BASE_URL}/orders?where=_ownerId`) && err.status == 404) || (newReq.url.startsWith(`${BASE_URL}/traded_items?where=sellerId`) && err.status == 404)) {
           console.log('ERROR HANDLED!');
           return of(new HttpResponse({ body: [], status: 204 }));
         }

@@ -27,7 +27,7 @@ export class UserService {
 
   login(userData: UserForLogin): Observable<UserForAuth> {
     const { email, password } = userData;
-    console.log(email, password);
+    // console.log(email, password);
     const headers = new HttpHeaders().set(HttpLogoutInterceptorSkipHeader, '').set(HttpAJAXInterceptorSkipHeader, '');
     const body = JSON.stringify({ email, password });
     // console.log(body);    
@@ -49,7 +49,7 @@ export class UserService {
       .pipe(
         tap(
           (emptyRes) => {
-            console.log(emptyRes);
+            // console.log(emptyRes);
             if (emptyRes == null) {
               // throw new HttpErrorResponse({statusText: 'Error'});
               this.userStateMgmnt.setUserState(emptyRes);

@@ -30,16 +30,16 @@ export class ErrorsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    console.log('Error component Initialized!');
+    // console.log('Error component Initialized!');
     this.httpErrorsArr = this.errorsService.gethttpErrorsArr();
     this.customErrorsArr = this.errorsService.getCustomErrorsArr();
-    this.customErrorsArr.forEach(err => {
-      const { name, message, isUserError } = err;
-      console.log('Custom Errors Raised');
-      console.log('ErrName: ' + name);
-      console.log('ErrMessage: ' + message);
-      console.log('IsUserErr: ' + isUserError);
-    });
+    // this.customErrorsArr.forEach(err => {
+    //   const { name, message, isUserError } = err;
+    //   console.log('Custom Errors Raised');
+    //   console.log('ErrName: ' + name);
+    //   console.log('ErrMessage: ' + message);
+    //   console.log('IsUserErr: ' + isUserError);
+    // });
   }
 
   ngOnDestroy(): void {

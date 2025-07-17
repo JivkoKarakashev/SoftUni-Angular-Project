@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Subscription, catchError, switchMap } from 'rxjs';
 import { injectStripe } from 'ngx-stripe';
 
@@ -35,12 +36,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   public loading = true;
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     private userStateMgmnt: UserStateManagementService,
     private checkoutService: CheckoutService,
     private errorsService: ErrorsService
   ) { }
 
   ngOnInit(): void {
+    const locationOrigin: string = this.document.location.origin;
 
     // Create a Checkout Session
     const user = this.userStateMgmnt.getUser();
@@ -78,11 +81,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.customErrorsArr = [...this.customErrorsArr, { name, message, isUserError }];
       }
       if (this.dbOrder && this.dbTradedItems) {
-        const embeddedCheckoutSub = this.checkoutService.createCheckoutSession({ ...this.dbOrder }, [...this.dbTradedItems])
+        const embeddedCheckoutSub = this.checkoutService.createCheckoutSession({ ...this.dbOrder }, [...this.dbTradedItems], locationOrigin)
           .pipe(
             switchMap(secret => {
               const { clientSecret } = secret;
-              console.log(clientSecret);
+              // console.log(clientSecret);
               return this.stripe.initEmbeddedCheckout({ clientSecret });
             }),
             catchError(err => { throw err; })
@@ -98,8 +101,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               error: err => {
                 this.loading = false;
                 (err instanceof HttpErrorResponse) ? this.httpErrorsArr = [...this.httpErrorsArr, { ...err }] : null;
-                console.log(err);
-                console.log(this.httpErrorsArr);
+                // console.log(err);
+                // console.log(this.httpErrorsArr);
               }
             }
           );
