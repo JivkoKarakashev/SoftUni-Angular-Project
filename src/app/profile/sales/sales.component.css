@@ -83,6 +83,8 @@ h2 {
 
 .status-btn,
 .clear-btn {
+    flex: 1 1 0;
+    min-width: fit-content;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
@@ -151,6 +153,7 @@ h2 {
 
 .sales-list .item {
     display: flex;
+    flex-wrap: wrap;
     gap: .5em;
     justify-content: space-between;
     min-width: fit-content;

@@ -10,6 +10,7 @@ div.left-wrapper {
     flex-direction: row;
     flex-wrap: wrap;
     flex: 0 1 96%;
+
     & .content.purchases {
         flex: 1 1 100%;
     }
@@ -82,6 +83,8 @@ h2 {
 
 .status-btn,
 .clear-btn {
+    flex: 1 1 0;
+    min-width: fit-content;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
@@ -162,6 +165,7 @@ h2 {
 
 .order-card .item {
     display: flex;
+    flex-wrap: wrap;
     gap: .5em;
     justify-content: space-between;
     min-width: fit-content;
@@ -228,6 +232,10 @@ h2 {
         font-size: 1.5em;
         font-weight: 600;
     }
+
+    & .bill {
+        flex-wrap: wrap;
+    }
 }
 
 .order-status>* {
@@ -276,7 +284,7 @@ h2 {
     border-radius: 5px;
     cursor: pointer;
     background-color: #e9fcff;
-    color: #0275d8  ;
+    color: #0275d8;
     border: 1px solid rgba(2, 117, 216, 255);
 }
 
@@ -285,9 +293,10 @@ h2 {
     border-radius: 5px;
     cursor: pointer;
     background-color: #e9fcff;
-    color: #0275d8  ;
+    color: #0275d8;
     border: 1px solid rgba(2, 117, 216, 255);
 }
+
 /* END OF SHIPPED STATUS */
 
 .order-status .delivered,

@@ -9,7 +9,8 @@ section.section-register {
 }
 
 div.wrapper {
-    flex: 0 1 50%;
+    min-width: fit-content;
+    flex: 0 1 70%;
     display: flex;
     flex-direction: column;
     justify-content: center;
